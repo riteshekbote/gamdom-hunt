@@ -1175,3 +1175,213 @@ testability: AUTH_HELPED
 
 ### STEP 7 — RISK
 [RISK] gamdom: 62 reason: Expanded confirmed operating surface to 7 mirror domains sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification path and high impact; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-03 23:50:18 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" "https://gamdommirrors.com/socket.io/?EIO=4&transport=polling" --max-time 10
+200
+[0m
+[0m$ [0mcurl -s "https://gamdommirrors.com/socket.io/?EIO=4&transport=polling" --max-time 10
+0{"sid":"_EDMwKXb0he9pQH_AVOG","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":20000,"maxPayload":1000000}
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" "https://gamdommirrors.com/api/status-page/gamdom-domains/incidents" --max-time 10
+200
+[0m
+[0m$ [0mcurl -s "https://gamdommirrors.com/api/status-page/gamdom-domains/incidents" --max-time 10
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" id="theme-color" content="" />
+    <meta name="description" content="Uptime Kuma monitoring tool" />
+    <title>Uptime Kuma</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+<body>
+<noscript>
+<div class="noscript-message">
+    Sorry, you don't seem to have JavaScript enabled or your browser
+    doesn't support it.<br />This website requires JavaScript to function.
+    Please enable JavaScript in your browser settings to continue.
+</div>
+</noscript>
+<div id="app"></div>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-CProAAlf.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-PIuZWdNf.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>
+[0m
+[0m$ [0mcurl -s "https://gamdommirrors.com/api/status-page/gamdom-domains" --max-time 10
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right: 0 !important;\n}\n\n#app .title-flex > span:not(.logo-wrapper) {\n  display: none;\n}\n\n.overall-status {\n  display: none;\n}\n\n#app .group-title {\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 24px;\n  margin-bottom: 0;\n}\n\n#app .monitor-list {\n  border: none !important;\n  border-radius: 0 !important;\n  box-shadow: none;\n  padding: 0;\n}\n\n#app .monitor-list .item {\n  background-color: #131A22;\n  border: none;\n  border-radius: 0;\n  padding: 12px 16px;\n}\n\n#app .monitor-list .item:not(:last-child) {\n  margin-bottom: 2px;\n}\n\n#app .monitor-list .beat {\n  margin: 0 1.875px !important;\n}\n\n#app .monitor-list .item:last-child {\n  border-radius: 0 0 16px 16px;\n}\n\n#app .monitor-list .item:first-child {\n  border-radius: 16px 16px 0 0;\n}\n\n#app .monitor-list .row {\n  align-items: center;\n  margin: 0;\n}\n\n#app .monitor-list .extra-info {\n  display: none;\n}\n\n#app .monitor-list .info {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n#app .monitor-list .badge {\n  height: 23px;\n  width: 53px;\n  border-radius: 10px !important;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #06090E;\n  font-size: 12px;\n  line-height: 12px;\n  font-weight: 700;\n  letter-spacing: 1px;\n}\n\n#app .monitor-list .item-name {\n  color: #fff;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: 700;\n  text-decoration: underline;\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .monitor-list .item-name:hover {\n  opacity: 0.9;\n}\n\n#app .monitor-list .item-name:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}\n\n#app .monitor-list .wrap div {\n  color: #818E9D;\n}\n\n#app .monitor-list .beat {\n  width: 4px !important;\n  height: 18px !important;\n}\n\n#app footer {\n  margin: 0 !important;\n  display: flex;\n  flex-direction: column;\n}\n\n#app .refresh-info {\n  order: 1;\n  color: #818E9D;\n  font-size: 14px;\n  line-height: 16px;\n  font-weight: 500;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  margin-top: 24px;\n  margin-bottom: 48px !important;\n}\n\n#app .alert-heading {\n  order: 2;\n}\n\n#app .alert-heading a {\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .alert-heading a:hover {\n  opacity: 0.9;\n}\n\n#app .alert-heading a:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}","footerText":"[![Instagram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ3OSkiLz4KPHBhdGggZD0iTTE4IDcuMDY2MDVDMTMuNTMzOCA3LjA2NjA1IDkuMjkyNTUgNi42NjkxMSA3LjY3MjU2IDEwLjgyMzNDNy4wMDM0NiAxMi41MzkxIDcuMTAwNjIgMTQuNzY3NCA3LjEwMDYyIDE3Ljk1ODFDNy4xMDA2MiAyMC43NTc4IDcuMDEwODYgMjMuMzg5NCA3LjY3MjU2IDI1LjA5MTZDOS4yODg3OSAyOS4yNDgzIDEzLjU2NDQgMjguODUgMTcuOTk3NiAyOC44NUMyMi4yNzQ0IDI4Ljg1IDI2LjY4NDEgMjkuMjk1IDI4LjMyMzggMjUuMDkxNkMyOC45OTQyIDIzLjM1ODYgMjguODk1NyAyMS4xNjM1IDI4Ljg5NTcgMTcuOTU4MUMyOC44OTU3IDEzLjcwMzEgMjkuMTMwNyAxMC45NTYgMjcuMDY1NSA4Ljg5MzcyQzI0Ljk3NDQgNi44MDQyNSAyMi4xNDY1IDcuMDY2MDUgMTcuOTk1MSA3LjA2NjA1SDE4Wk0xNy4wMjM0IDkuMDI4ODZDMjYuMzM5OCA5LjAxNDIxIDI3LjUyNTUgNy45NzkyMiAyNi44NzExIDIyLjM1NTdDMjYuNjM4NiAyNy40NDAzIDIyLjc2NCAyNi44ODI0IDE4LjAwMTIgMjYuODgyNEM5LjMxNzE4IDI2Ljg4MjQgOS4wNjc0MSAyNi42MzQgOS4wNjc0MSAxNy45NTMxQzkuMDY3NDEgOS4xNzE1MyA5Ljc1NjI5IDkuMDMzODQgMTcuMDIzNCA5LjAyNjQ0VjkuMDI4ODZaTTIzLjgxODEgMTAuODM2OUMyMy4wOTYxIDEwLjgzNjkgMjIuNTEwNiAxMS40MjE4IDIyLjUxMDYgMTIuMTQzNEMyMi41MTA2IDEyLjg2NDggMjMuMDk2MSAxMy40NDk5IDIzLjgxODEgMTMuNDQ5OUMyNC41NDAxIDEzLjQ0OTkgMjUuMTI1NiAxMi44NjQ4IDI1LjEyNTYgMTIuMTQzNEMyNS4xMjU2IDExLjQyMTggMjQuNTQwMSAxMC44MzY5IDIzLjgxODEgMTAuODM2OVpNMTggMTIuMzY0NkMxNC45MDkgMTIuMzY0NiAxMi40MDMzIDE0Ljg2OTQgMTIuNDAzMyAxNy45NTgxQzEyLjQwMzMgMjEuMDQ2NyAxNC45MDkgMjMuNTUwMyAxOCAyMy41NTAzQzIxLjA5MTEgMjMuNTUwMyAyMy41OTU1IDIxLjA0NjcgMjMuNTk1NSAxNy45NTgxQzIzLjU5NTUgMTQuODY5NCAyMS4wOTExIDEyLjM2NDYgMTggMTIuMzY0NlpNMTggMTQuMzI3NEMyMi44MDMzIDE0LjMyNzQgMjIuODA5NSAyMS41ODg3IDE4IDIxLjU4ODdDMTMuMTk3OSAyMS41ODg3IDEzLjE5MDYgMTQuMzI3NCAxOCAxNC4zMjc0WiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0NzkiIHgxPSIzNiIgeTE9IjEuMDcwNDhlLTA2IiB4Mj0iMC4wODA5MDAyIiB5Mj0iMzUuOTk5OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjRkQwM0ExIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0ZGQzMwMyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==)](https://instagram.com/gamdom)\n[![X](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0Y5RjlGOSIvPgo8cGF0aCBkPSJNMTkuODMyOSAxNi40ODcxTDI2Ljk5NzEgOC4zMzgzOEgyNS4yOTk3TDE5LjA3NjIgMTUuNDEyM0wxNC4xMDkxIDguMzM4MzhIOC4zNzg5MUwxNS44OTE4IDE5LjAzNjRMOC4zNzg5MSAyNy41ODA4SDEwLjA3NjRMMTYuNjQ0NSAyMC4xMDg3TDIxLjg5MTEgMjcuNTgwOEgyNy42MjEzTDE5LjgzMjkgMTYuNDg3MVpNMTcuNTA3MyAxOS4xMzAzTDE2Ljc0NDkgMTguMDY0M0wxMC42ODg1IDkuNTkwNTVIMTMuMjk2MkwxOC4xODUzIDE2LjQzMTdMMTguOTQ0NCAxNy40OTc3TDI1LjI5ODkgMjYuMzg5NkgyMi42OTEyTDE3LjUwNzMgMTkuMTMwM1oiIGZpbGw9IiMwODBEMTMiLz4KPC9zdmc+Cg==)](https://twitter.com/gamdom)\n[![Telegram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzI3QTREQiIvPgo8cGF0aCBkPSJNMTUuMjk2OSAyNS45OTVDMTQuNjQ3MyAyNS45OTUgMTQuNzU3NiAyNS43NDk3IDE0LjUzMzUgMjUuMTMxTDEyLjYyMyAxOC44NDMxTDI3LjMyOTYgMTAuMTE4NSIgZmlsbD0iI0M4REFFQSIvPgo8cGF0aCBkPSJNMTUuMjk4OCAyNS45OTc2QzE1LjgwMDIgMjUuOTk3NiAxNi4wMjE4IDI1Ljc2ODMgMTYuMzAxNyAyNS40OTYxTDE4Ljk3NTUgMjIuODk2MUwxNS42NDAyIDIwLjg4NDciIGZpbGw9IiNBOUM5REQiLz4KPHBhdGggZD0iTTE1LjYzOTIgMjAuODg1TDIzLjcyMSAyNi44NTYyQzI0LjY0MzQgMjcuMzY1IDI1LjMwOSAyNy4xMDE1IDI1LjUzODYgMjUuOTk5OUwyOC44Mjg1IDEwLjQ5NzJDMjkuMTY1MyA5LjE0NjgxIDI4LjMxMzcgOC41MzQzNSAyNy40MzE0IDguOTM1MDNMOC4xMTM5MiAxNi4zODM4QzYuNzk1MzIgMTYuOTEyNSA2LjgwMzA1IDE3LjY0ODIgNy44NzM2MSAxNy45NzZMMTIuODMwOSAxOS41MjMzTDI0LjMwNzUgMTIuMjgyOUMyNC44NDkzIDExLjk1NDIgMjUuMzQ2NiAxMi4xMzA5IDI0LjkzODUgMTIuNDkzMSIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ4NSkiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0ODUiIHgxPSIxNy40OTciIHkxPSIxOC41NTY5IiB4Mj0iMjAuNjM1NSIgeTI9IjI1LjY5ODQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0VGRjdGQyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IndoaXRlIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==)](https://t.me/+JrVfUQipUmM0OGM0)\n[![Facebook](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzQwNl8xNjQ5NCkiPgo8cmVjdCB4PSItMC42MDE1NjIiIHk9Ii0wLjY0MTQ3OSIgd2lkdGg9IjM3LjIwMiIgaGVpZ2h0PSIzNy4yMDIiIGZpbGw9IiM0MjY3QjIiLz4KPHBhdGggZD0iTTIyLjE0MzEgMzYuNTYwNlYyMy4xMjA0SDI2Ljk5NTJMMjcuNzE5NyAxNy44NTkzSDIyLjE0MzFWMTQuNTA5N0MyMi4xNDMxIDEyLjk4NzcgMjIuNTk4MyAxMS45NTcxIDI0LjkzMTQgMTEuOTU3MUgyNy45MTE5VjcuMjU5M0MyNi40NzQ1IDcuMTIwNDMgMjUuMDMwNSA3LjA1MjQzIDIzLjU4NTMgNy4wNTU1OUMxOS4yOTczIDcuMDU1NTkgMTYuMzc0NSA5LjUwMDM0IDE2LjM3NDUgMTMuOTg4NFYxNy44NTkzSDExLjUzNTJWMjMuMTIwNEgxNi4zNzQ1VjM2LjU2MDZIMjIuMTQzMVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDA2XzE2NDk0Ij4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K)](https://facebook.com/gamdomcasino)\n[![Youtube](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNMTIuODY5MSAyNi4yOThMMjUuNjk3NCAxNy45NjAxTDEyLjg2OTEgOS42MjEyMlYyNi4yOThaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)](https://www.youtube.com/@officialgamdom)\n[![Discord](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNMjYuMDE1MyAxMC40ODM5QzI0LjQ5ODIgOS43NzExMSAyMi44OTY2IDkuMjY1NDQgMjEuMjUxNCA4Ljk3OThDMjEuMDI2MyA5LjM5Mjc5IDIwLjgyMjYgOS44MTc3MSAyMC42NDEyIDEwLjI1MjhDMTguODg4OCA5Ljk4MTc4IDE3LjEwNjcgOS45ODE3OCAxNS4zNTQzIDEwLjI1MjhDMTUuMTcyOCA5LjgxNzc2IDE0Ljk2OTEgOS4zOTI4NCAxNC43NDQxIDguOTc5OEMxMy4wOTc5IDkuMjY3ODUgMTEuNDk1MiA5Ljc3NDcyIDkuOTc2NjMgMTAuNDg3NkM2Ljk2MTc3IDE1LjA2NTEgNi4xNDQ0OSAxOS41Mjg5IDYuNTUzMTMgMjMuOTI5NEM4LjMxODcxIDI1LjI2OCAxMC4yOTQ5IDI2LjI4NjEgMTIuMzk1OCAyNi45Mzk0QzEyLjg2ODggMjYuMjg2NSAxMy4yODc0IDI1LjU5MzggMTMuNjQ3MSAyNC44Njg3QzEyLjk2MzkgMjQuNjA2OSAxMi4zMDQ1IDI0LjI4MzggMTEuNjc2NiAyMy45MDMzQzExLjg0MTggMjMuNzgwMiAxMi4wMDM1IDIzLjY1MzUgMTIuMTU5NyAyMy41MzA1QzEzLjk4NjkgMjQuNDEyMyAxNS45ODEzIDI0Ljg2OTYgMTguMDAwNSAyNC44Njk2QzIwLjAxOTcgMjQuODY5NiAyMi4wMTQxIDI0LjQxMjMgMjMuODQxMyAyMy41MzA1QzIzLjk5OTMgMjMuNjYyOCAyNC4xNjEgMjMuNzg5NiAyNC4zMjQ0IDIzLjkwMzNDMjMuNjk1MiAyNC4yODQ0IDIzLjAzNDYgMjQuNjA4MSAyMi4zNTAyIDI0Ljg3MDZDMjIuNzA5NSAyNS41OTUzIDIzLjEyODEgMjYuMjg3NCAyMy42MDE2IDI2LjkzOTRDMjUuNzA0MyAyNi4yODg4IDI3LjY4MiAyNS4yNzExIDI5LjQ0NzggMjMuOTMxMkMyOS45MjczIDE4LjgyODEgMjguNjI4OCAxNC40MDUzIDI2LjAxNTMgMTAuNDgzOVpNMTQuMTY0NyAyMS4yMjMxQzEzLjAyNiAyMS4yMjMxIDEyLjA4NTIgMjAuMTYyNiAxMi4wODUyIDE4Ljg1NzlDMTIuMDg1MiAxNy41NTMzIDEyLjk5MzMgMTYuNDgzNSAxNC4xNjExIDE2LjQ4MzVDMTUuMzI4OSAxNi40ODM1IDE2LjI2MjQgMTcuNTUzMyAxNi4yNDI0IDE4Ljg1NzlDMTYuMjIyNSAyMC4xNjI2IDE1LjMyNTMgMjEuMjIzMSAxNC4xNjQ3IDIxLjIyMzFaTTIxLjgzNjMgMjEuMjIzMUMyMC42OTU3IDIxLjIyMzEgMTkuNzU4NSAyMC4xNjI2IDE5Ljc1ODUgMTguODU3OUMxOS43NTg1IDE3LjU1MzMgMjAuNjY2NiAxNi40ODM1IDIxLjgzNjMgMTYuNDgzNUMyMy4wMDU5IDE2LjQ4MzUgMjMuOTMyMSAxNy41NTMzIDIzLjkxMjEgMTguODU3OUMyMy44OTIyIDIwLjE2MjYgMjIuOTk2OCAyMS4yMjMxIDIxLjgzNjMgMjEuMjIzMVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://discord.gg/vNfHXkMW)","showPoweredBy":false,"googleAnalyticsId":null,"showCertificateExpiry":false},"incident":null,"publicGroupList":[{"id":1,"name":"Gamdom Official Domains","weight":1,"monitorList":[{"id":13,"name":"Gamdom.com","sendUrl":1,"type":"http","url":"https://gamdom.com"},{"id":3,"name":"Gamdom.eu","sendUrl":1,"type":"http","url":"https://gamdom.eu"},{"id":2,"name":"Gamdom.io","sendUrl":1,"type":"http","url":"https://gamdom.io"},{"id":6,"name":"Gamdom.vip","sendUrl":1,"type":"http","url":"https://gamdom.vip"},{"id":5,"name":"Gamdom.win","sendUrl":1,"type":"http","url":"https://gamdom.win"},{"id":217,"name":"gamdom80006.com","sendUrl":1,"type":"http","url":"https://gamdom80006.com"},{"id":219,"name":"gamdom80007.com","sendUrl":1,"type":"http","url":"https://gamdom80007.com"}]}],"maintenanceList":[]}
+[0m
+[0m$ [0mcurl -s "https://gamdommirrors.com/api/heartbeat/13" --max-time 10
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" id="theme-color" content="" />
+    <meta name="description" content="Uptime Kuma monitoring tool" />
+    <title>Uptime Kuma</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+<body>
+<noscript>
+<div class="noscript-message">
+    Sorry, you don't seem to have JavaScript enabled or your browser
+    doesn't support it.<br />This website requires JavaScript to function.
+    Please enable JavaScript in your browser settings to continue.
+</div>
+</noscript>
+<div id="app"></div>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-CProAAlf.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-PIuZWdNf.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>
+[0m
+[0m$ [0mcurl -s "https://gamdommirrors.com/api/monitor" --max-time 10
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" id="theme-color" content="" />
+    <meta name="description" content="Uptime Kuma monitoring tool" />
+    <title>Uptime Kuma</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+<body>
+<noscript>
+<div class="noscript-message">
+    Sorry, you don't seem to have JavaScript enabled or your browser
+    doesn't support it.<br />This website requires JavaScript to function.
+    Please enable JavaScript in your browser settings to continue.
+</div>
+</noscript>
+<div id="app"></div>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-CProAAlf.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/index-legacy-PIuZWdNf.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+</html>
+[0m
+[0m$ [0mcurl -s -H "Host: gamdom80007.com" "https://gamdom4567.com/client-api" --max-time 10
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [969754744ae11624efd9fb29aa6d18e2f8e28fb44dfd296b6097c2c84440ab90] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" "https://gamdom4567.com/client-api" --max-time 10
+400
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" "https://gamdom4567.com" --max-time 10
+404
+[0m
+### STEP 1 — DELTA
+- [NEW] `gamdommirrors.com/socket.io/?EIO=4&transport=polling` returns valid socket.io handshake (sid, upgrades: websocket, pingInterval: 25000)
+- [NEW] `gamdommirrors.com/api/status-page/gamdom-domains` returns full JSON config with 7 monitors (ids 13,3,2,6,5,217,219) + custom CSS/footer with social links
+- [NEW] All Uptime Kuma API routes (`/api/heartbeat/*`, `/api/monitor`, `/api/status-page/*/incidents`, `/api/badge/*`, `/api/doc`, `/api/push/*`) serve SPA HTML — no unauthenticated JSON surface beyond status-page config
+- [NEW] `gamdom4567.com` root 404, `/client-api` 400 (POST-only), TLS cert SAN mismatch prevents Host-header routing tests
+- [CHANGED] Confirmed: two Fastly origin pools (Pool A: 151.101.x.52 for 5 core mirrors; Pool B: 151.101.x.72 for 8000x mirrors + gamdom4567.com) serve byte-identical apps with identical CSP and POST-only `/client-api`
+- [CHANGED] `api.gamdom.com` and `auth.gamdom.com` return 000 (connection failed) — not publicly reachable
+
+### STEP 2 — PRIORITIZE
+[PRIO] gamdom80006.com /client-api,8.5,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdom80007.com /client-api,8.5,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdom4567.com /client-api,8.2,attack_surface=10 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdommirrors.com /socket.io/,6.2,attack_surface=7 business_value=5 tech_exposure=7 gate_ease=8 cloud_surface=4 freshness=7
+[PRIO] gamdommirrors.com /api/status-page/gamdom-domains,6.8,attack_surface=7 business_value=6 tech_exposure=6 gate_ease=10 cloud_surface=5 freshness=8
+
+### STEP 3 — HYPOTHESES
+[HYP] Mirror-domain session sharing via /client-api enables cross-domain ATO
+class: AUTH
+asset: gamdom80006.com /client-api (and gamdom.eu, gamdom.io, gamdom.vip, gamdom.win, gamdom80007.com, gamdom4567.com)
+confidence: 55
+reasoning: All 7 mirrors serve byte-identical app with identical CSP (frame-ancestors 'self' https://*.faucetcrypto.com), identical nginx/Varnish headers, identical POST-only /client-api proxy (400 "only POST" on GET). Uptime Kuma groups them as single "Gamdom Official Domains" account. Two distinct Fastly origin pools (Pool A: .52 IPs for 5 core mirrors; Pool B: .72 IPs for 8000x mirrors + gamdom4567.com) but shared upstream identity/wallet origin inferred from identical /client-api behavior.
+evidence_needed: Auth cookie/session issued on one mirror honored by /client-api on another mirror; or DNS resolution showing distinct upstreams per mirror
+verify_steps: PASSIVE: DNS A/AAAA comparison of all 7 mirrors vs canonical (done — two pools confirmed). AUTH_HELPED: Authenticate on one mirror, test if session cookie valid on /client-api of another mirror (requires authorized tester). No live POST without valid session.
+impact: Cross-domain account takeover across all mirrors; phishing persistence via lookalike domains (medium-high)
+testability: AUTH_HELPED
+
+[HYP] Uptime Kuma socket.io admin/mutation events exposed without auth
+class: MISCONFIG
+asset: gamdommirrors.com /socket.io/
+confidence: 38
+reasoning: gamdommirrors.com exposes socket.io endpoint returning valid handshake (sid, upgrades: websocket). Uptime Kuma uses socket.io for real-time monitor updates; admin panel mutations (acknowledge incidents, toggle maintenance, delete monitors) may be exposed via unauthenticated socket events if instance misconfigured. Distinct from status page SPA — thinner attack surface targeting monitoring infra.
+evidence_needed: Unauthenticated socket.io events accepting mutation payloads (e.g., "deleteMonitor", "createIncident", "updateMonitor") returning success; or hidden admin panel returning 200 with controls
+verify_steps: PASSIVE: Socket.io handshake probe (GET /socket.io/?EIO=4&transport=polling) to capture sid/handshake data (done). Enumerate event names via client JS bundle analysis. No POST/mutation against third-party SaaS (REJECTED class risk).
+impact: Deface official "Gamdom Official Domains" trust page; brand/SEO/trust impact; users routed to malicious mirrors (low-med)
+testability: PASSIVE
+
+[HYP] /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment
+class: OTHER
+asset: gamdom.com /client-api (and all 6 mirrors)
+confidence: 48
+reasoning: /client-api is POST-only catch-all proxy (400 on GET/OPTIONS for /v1, /v2, /health, /graphql, /openapi.json). Minified bundle shows api factory (o.kT with base "/client-api") calling methods by action name. If proxy forwards subpath/payload to upstream identity/wallet service, SSRF-on-proxy or mass-assignment-by-copy risks emerge.
+evidence_needed: POST with crafted body returning upstream internal error/stack/truthy status differing by injected subpath; or bundle resolving action->endpoint table
+verify_steps: PASSIVE: status-code differential on GET/OPTIONS variants (done — all 400). Bundle analysis for action routing map (requires authorized access). No live POST without authorized session (REJECTED auth-bypass). Await authorized tester with valid session to probe action routing.
+impact: If wallet/deposit/withdrawal/auth endpoint reachable via /client-api without correct authorization -> fund theft or ATO (critical) — unproven
+testability: AUTH_HELPED
+
+### STEP 4 — SELF-CRITIQUE
+[PARKED] Uptime Kuma socket.io admin/mutation events exposed without auth: confidence 38 < 40 threshold; mutation against monitoring infra = REJECTED class risk per scope (no clear path to Gamdom-owned asset compromise)
+[PARKED] /client-api catch-all proxy SSRF/mass-assignment: confidence 48 but verify_steps requires AUTH_HELPED live POST with valid session; currently blocked by REJECTED auth-bypass learning; no passive-only verification path to confirm upstream routing behavior
+[FINAL] Mirror-domain session sharing via /client-api enables cross-domain ATO (confidence 55, AUTH_HELPED testability, medium-high impact)
+
+### STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET (read-only) `https://gamdommirrors.com/socket.io/?EIO=4&transport=polling&sid=_EDMwKXb0he9pQH_AVOG` to capture socket.io polling response and enumerate available event namespaces — passive, <=1 rps, no auth, no mutation
+
+### STEP 6 — LEARNING
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+[LEARN] ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root
+[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors
+
+### STEP 7 — RISK
+[RISK] gamdom: 62 reason: Expanded confirmed operating surface to 7 mirror domains sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification path and high impact; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

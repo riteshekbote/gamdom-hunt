@@ -1,4 +1,4 @@
-## 2026-09-03 21:53:01 UTC [target] (model bigpickle)
+## 2026-09-03 23:46:29 UTC [target] (model bigpickle)
 [PRIO] gamdom4567.com,6.3,origin-of-clone-set (attack:7 business:6 tech:6 gate:7 cloud:6 fresh:6)
 [PRIO] gamdom80007.com,6.0,fresh-7th-casino-mirror (attack:7 business:5 tech:6 gate:8 cloud:5 fresh:8)
 [PRIO] gamdommirrors.com,4.8,misconfig-status-admin (attack:4 business:5 tech:5 gate:5 cloud:4 fresh:7)
@@ -30,8 +30,6 @@ verify_steps: POST login event via socket.io with empty token on pinned edge (re
 impact: Deface official "Gamdom Official Domains" trust page; low-med
 testability: HUMAN_ONLY
 [PARKED] gamdommirrors.com Kuma admin: conf 38 below 40 threshold, Fastly pool breaks session persistence
+[PARKED] gamdom80007.com session replay: requires authenticated session first (AUTH_HELPED), cannot verify passively
 [FINAL] survivors:
 [NEXT] PROBE: GET (read-only) `https://gamdom4567.com/client-api` with `Host: gamdom80007.com` and compare response headers/body to `https://gamdom80007.com/client-api` to confirm gamdom4567 is the exact origin (shared trust boundary, no mutation, no auth tokens).
-[LEARN] ACCEPTED inventory @ gamdom80007.com: verified 7th mirror (same Fastly origin + POST-only /client-api + listed on status page) and gamdom4567.com as CNAME origin root.
-[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page publicly publishes full monitor config + 24h heartbeats for all 7 domains.
-[RISK] gamdom: 55 reason: Confirmed 7 mirrors sharing one Fastly edge and POST-only /client-api identity/wallet proxy; established shadow origin gamdom4567.com; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads need authenticated POST/session testing against scoped identity endpoints.
