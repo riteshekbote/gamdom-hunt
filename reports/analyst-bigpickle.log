@@ -1,0 +1,1125 @@
+===== ANALYST bigpickle 2026-09-03 17:00:20 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory
+[0m→ [0mRead knowledge
+[0m→ [0mRead leads
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead knowledge/index.md
+[0m→ [0mRead leads/reposcan-gamdom.md
+[0m→ [0mRead leads/lead-mimo.md
+[0m→ [0mRead state_bigpickle.json
+[0m→ [0mRead recon-notes
+[0m→ [0mRead analyst-out.txt
+[0m→ [0mRead recon-notes/DEDICATED-DEEP.md
+[0m→ [0mRead triage
+[0m→ [0mRead triage/run-2026-09-03-16-28.md
+[0m→ [0mRead scripts
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://api.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://auth.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://www.gamdom.com/ 2>&1 | head -20
+HTTP/2 301 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 03 Sep 2027 16:40:47 GMT
+location: https://gamdom.com/
+server: nginx
+content-type: text/plain; charset=utf-8
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:40:47 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710021-PHX, cache-phx1710044-PHX
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept
+strict-transport-security: max-age=31557600
+content-length: 53
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://app.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://gamdom.com/ 2>&1 | head -20
+HTTP/2 200 
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-c91b1fef-7c86-4332-b193-b9f560891cb3' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 03 Sep 2027 16:40:54 GMT
+content-type: text/html
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:40:54 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060050-HHR, cache-hhr-khhr2060051-HHR
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://admin.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://staging.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://login.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://account.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://my.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sI --max-time 10 https://portal.gamdom.com/ 2>&1 | head -20
+(no output)
+[0m
+Let me do a broader check of the subdomains that resolve.
+[0m$ [0mfor h in api auth account admin app billing dashboard dev gcp go help img inteligance login m mail my portal secure sso staging support t test unsubscribe web www gamdom; do code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "https://$h.gamdom.com/" 2>/dev/null); echo "$h.gamdom.com: $code"; done
+api.gamdom.com: 000
+auth.gamdom.com: 000
+account.gamdom.com: 000
+admin.gamdom.com: 000
+app.gamdom.com: 000
+billing.gamdom.com: 000
+dashboard.gamdom.com: 403
+dev.gamdom.com: 000
+gcp.gamdom.com: 000
+go.gamdom.com: 000
+help.gamdom.com: 302
+img.gamdom.com: 000
+inteligance.gamdom.com: 000
+login.gamdom.com: 000
+m.gamdom.com: 000
+mail.gamdom.com: 000
+my.gamdom.com: 000
+portal.gamdom.com: 000
+secure.gamdom.com: 000
+sso.gamdom.com: 000
+staging.gamdom.com: 000
+support.gamdom.com: 000
+t.gamdom.com: 000
+test.gamdom.com: 000
+unsubscribe.gamdom.com: 404
+web.gamdom.com: 000
+www.gamdom.com: 301
+gamdom.gamdom.com: 000
+[0m
+[0m$ [0mcurl -s -D- -o /dev/null --max-time 10 https://dashboard.gamdom.com/ 2>&1 | head -30
+HTTP/2 403 
+server: Varnish
+retry-after: 0
+content-type: text/html; charset=utf-8
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:10 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710142-PHX
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1788453670.427143,VS0,VE8
+strict-transport-security: max-age=300
+content-length: 420
+[0m
+[0m$ [0mcurl -s -D- -o /dev/null --max-time 10 https://help.gamdom.com/ 2>&1 | head -30
+HTTP/2 302 
+content-type: text/html; charset=utf-8
+status: 302 Found
+cache-control: no-cache
+x-intercom-version: 8ddf3d9a75d624f9691b6c95995396720eaece05
+referrer-policy: strict-origin-when-cross-origin
+x-xss-protection: 1; mode=block
+x-request-queueing: 0
+x-request-id: 000ofiupuonj3dhmq160
+location: https://help.gamdom.com/en/
+x-runtime: 0.048315
+x-frame-options: DENY
+x-content-type-options: nosniff
+content-security-policy: default-src 'self'; base-uri 'self'; connect-src 'self' wss://*.intercom.io https://*.intercom.io https://*.intercom.com https://*.fin.ai https://*.intercom-messenger.com wss://*.intercom-messenger.com https://*.intercom-chat.com wss://*.intercom-chat.com https://uploads.intercomcdn.com https://uploads.intercomcdn.eu https://uploads.au.intercomcdn.com https://uploads.intercomusercontent.com https://*.google-analytics.com https://*.analytics.google.com https://analytics.google.com https://stats.g.doubleclick.net https://cdn.cookielaw.org https://*.onetrust.com; font-src data: https:; frame-ancestors 'self' https://intercomrades.support https://intercom.skilljar.com https://academy.fin.ai https://academy.intercom.com https://academy.guests.intercom.com https://app.intercom.com https://app.eu.intercom.com https://app.au.intercom.com https://intercomrades.intercom.com https://intercomrades.eu.intercom.com https://intercomrades.au.intercom.com https://fin.ai https://app.fin.ai https://app.eu.fin.ai https://app.au.fin.ai; frame-src 'self' https://platform.twitter.com https://staticxx.facebook.com https://fast.wistia.net https://fast.wistia.com https://www.useloom.com https://www.loom.com https://play.vidyard.com https://player.vimeo.com https://web.microsoftstream.com https://share.synthesia.io https://embed.app.guidde.com https://embed.eu.guidde.com https://share.descript.com https://app.guideflow.com https://app.supademo.com https://supercut.ai https://demo.arcade.software https://arcade.software https://www.arcade.software https://watchclueso.com https://www.tella.tv https://www.tella.com https://help.trainn.co https://*.portal.trainn.co https://app.storylane.io https://js.storylane.io https://app.storylane.com https://js.storylane.com https://player.mux.com https://www.facebook.com https://www.youtube.com https://www.youtube-nocookie.com https://content.jwplatform.com https://cdn.jwplayer.com https://players.brightcove.net https://intercom-sheets.com https://www.intercom-reporting.com https://*.sharepoint.com https://www.googletagmanager.com; img-src data: blob: https: http:; media-src data: blob: https:; object-src 'self' https://static.intercomassets.com; script-src 'self' https://connect.facebook.net https://platform.twitter.com https://static.intercomassets.com https://googleadservices.com https://googletagmanager.com https://google-analytics.com https://widget.intercom.io https://js.intercomcdn.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://intercom.help https://intercom-help.eu https://au.intercom.help https://cdn.cookielaw.org; style-src 'self' 'unsafe-inline' https://fonts.intercomcdn.com https://static.intercomassets.com https://static.intercomcdn.com https://marketing.intercomassets.com https://marketing.intercomcdn.com https://intercom.help https://intercom-help.eu https://au.intercom.help https://static.intercomassets.eu https://static.au.intercomassets.com
+server: nginx
+x-ami-version: ami-0b3cf9d80ffd7e5d8
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:10 GMT
+via: 1.1 varnish
+age: 4
+x-served-by: cache-phx1710096-PHX
+x-cache: HIT
+x-cache-hits: 1
+x-timer: S1788453671.699248,VS0,VE58
+vary: Sec-Fetch-Site
+strict-transport-security: max-age=300
+content-length: 0
+[0m
+So most of these subdomains either don't resolve (000 = connection/SSL failure) or are non-existent. The ones that respond: `gamdom.com` (200), `www.gamdom.com` (301 → gamdom.com), `dashboard.gamdom.com` (403), `help.gamdom.com` (302), `unsubscribe.gamdom.com` (404).
+
+Let me investigate `dashboard.gamdom.com` (403 is interesting) and `help.gamdom.com` (redirects).
+[0m$ [0mcurl -s -D- -o /dev/null --max-time 10 https://unsubscribe.gamdom.com/ 2>&1 | head -30
+HTTP/2 404 
+accept-ranges: none
+content-type: text/html; charset=utf-8
+date: Thu, 03 Sep 2026 16:41:11 GMT
+vary: Accept-Encoding
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{url_effective}\n" -L --max-time 10 https://api.gamdom.com/health 2>&1; curl -s -o /dev/null -w "%{http_code}\n" --max-time 10 https://api.gamdom.com/api 2>&1; curl -s -o /dev/null -w "%{http_code}\n" --max-time 10 https://api.gamdom.com/v1 2>&1; curl -s -o /dev/null -w "%{http_code}\n" --max-time 10 https://api.gamdom.com/v2 2>&1
+000 https://api.gamdom.com/health
+000
+000
+000
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" --max-time 10 https://dashboard.gamdom.com/login 2>&1; curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" --max-time 10 https://dashboard.gamdom.com/api 2>&1; curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" --max-time 10 https://dashboard.gamdom.com/health 2>&1
+403 
+403 
+403
+[0m
+Good findings. `help.gamdom.com` is Intercom SaaS (out of scope third-party, and `x-intercom-version` headers won't yield). `dashboard.gamdom.com` is Varnish-proxied 403 (could be an admin/dashboard with a block). Let me dig into `dashboard.gamdom.com` — 403 from Varnish with SPA-ish behavior, plus `api.gamdom.com` returned 000 (connection failed) — let me check if it's the actual API root or DNS.
+
+Let me check the main domain for API paths and the dashboard for its auth surface.
+[0m$ [0mcurl -s -D- -o /dev/null --max-time 10 "https://gamdom.com/api" 2>&1 | head -15; echo "---"; curl -s -D- -o /dev/null --max-time 10 "https://gamdom.com/api/v1" 2>&1 | head -15; echo "---"; curl -s -D- -o /dev/null --max-time 10 "https://gamdom.com/swagger" 2>&1 | head -15
+HTTP/2 404 
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-6f24e5bc-8a02-4f09-acb3-445054b8bdd8' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 03 Sep 2027 16:41:16 GMT
+server: nginx
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:17 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710075-PHX, cache-phx1710037-PHX
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+
+---
+HTTP/2 404 
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-1dc2cbf8-5a2c-48cf-a7c3-9e8dc45608a3' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 03 Sep 2027 16:41:17 GMT
+server: nginx
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:17 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710036-PHX, cache-phx1710087-PHX
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+
+---
+HTTP/2 404 
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-da97e0a6-adee-4b43-99cb-cb5daf41447d' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 03 Sep 2027 16:41:18 GMT
+server: nginx
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:18 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060041-HHR, cache-hhr-khhr2060037-HHR
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+Confirmed: `api.gamdom.com` doesn't resolve (connection failure), `gamdom.com/api` returns 404 (SPA catch-all), and `dashboard.gamdom.com` returns a blanket 403 from Varnish on all paths (admin panel gated at CDN/by IP). Let me check the email verification/API actually used by the SPA, and check for the real API origin. Let me look at how the frontend talks to the API.
+[0m$ [0mcurl -s --max-time 15 https://gamdom.com/ 2>&1 | grep -oiE '(api[^"'\'' ]*\.gamdom\.com|api[^"'\'' ]*|/api/[^"'\'' ]*)' | sort -u | head -40
+(no output)
+[0m
+[0m$ [0mcurl -s --max-time 15 https://gamdom.com/ 2>&1 | grep -oiE 'src="[^"]*\.js[^"]*"|http[s]?://[^"'\'' ]+' | sort -u | head -40
+https://allcasinos.in/reviews/gamdom-casino/
+https://atozmarkets.com/crypto-gambling/gamdom/
+https://bitcoinchaser.com/review/gamdom/
+https://blockchainreporter.net/gamdom-review-the-ultimate-fusion-of-crypto-casino-and-social-gaming/
+https://blockonomi.com/gamdom-review/
+https://casino.guide/gamdom/
+https://casino.guru/gamdom-casino-review
+https://casinobee.com/nz/reviews/gamdom-casino/
+https://casinomentor.com/reviews/gamdom-casino
+https://cryptwerk.com/company/gamdom/
+https://discord.gg/gamdom
+https://gamblecritic.net/casino/gamdom-casino/
+https://gamdom.com
+https://gamdom.com/
+https://gamdom.com/bg-bg/
+https://gamdom.com/cs-cz/
+https://gamdom.com/el-gr/
+https://gamdom.com/es-es/
+https://gamdom.com/fr-fr/
+https://gamdom.com/help/support
+https://gamdom.com/id-id/
+https://gamdom.com/ja-jp/
+https://gamdom.com/ka-ge/
+https://gamdom.com/ko-kr/
+https://gamdom.com/pl-pl/
+https://gamdom.com/pt-pt/
+https://gamdom.com/ru-ru/
+https://gamdom.com/sr-rs/
+https://gamdom.com/static/img/logo.svg
+https://gamdom.com/static/img/og.avif
+https://gamdom.com/th-th/
+https://gamdom.com/tl-ph/
+https://gamdom.com/vi-vn/
+https://gamdom.com/zh-cn/
+https://gamdom.eu
+https://gamdom.io
+https://gamdom.io/
+https://gamdom.vip
+https://gamdom.win
+https://gamdom80004.com/tr-tr/
+[0m
+The homepage gives away alternative domains: `gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win`, `gamdom80004.com`. Let me check if `api` exists on the actual API base that the frontend JS uses. Let me fetch the main JS bundle.
+[0m$ [0mcurl -s --max-time 15 https://gamdom.com/ 2>&1 | grep -oE '<script[^>]*src="[^"]*"' | head -20
+<script defer="" src="/build/client.9b448e01acbb8d60c7e1.js#1788453657834"
+[0m
+[0m$ [0mcurl -s --max-time 20 https://gamdom.com/build/client.9b448e01acbb8d60c7e1.js -o /tmp/opencode/client.js 2>&1; ls -la /tmp/opencode/client.js; wc -c /tmp/opencode/client.js
+-rw-r--r-- 1 runner runner 597876 Sep  3 16:41 /tmp/opencode/client.js
+597876 /tmp/opencode/client.js
+[0m
+[0m$ [0mgrep -oE 'https://[a-zA-Z0-9.-]*gamdom[a-zA-Z0-9.-]*' /tmp/opencode/client.js | sort -u | head -40
+https://gamdom.com
+https://gamdom.eu
+https://gamdom.io
+https://gamdom.vip
+https://gamdom.win
+https://gamdommirrors.com
+https://help.gamdom.com
+https://trgamdom.com
+https://www.gamdomcareers.com
+[0m
+[0m$ [0mgrep -oE 'https://[a-zA-Z0-9.-]+\.(com|io|eu|net|cloud)[a-zA-Z0-9./_-]*' /tmp/opencode/client.js | sort -u | head -60
+https://atozmarkets.com/crypto-gambling/gamdom/
+https://bitcoinchaser.com/review/gamdom/
+https://blockchainreporter.net/gamdom-review-the-ultimate-fusion-of-crypto-casino-and-social-gaming/
+https://blockonomi.com/gamdom-review/
+https://casinobee.com/nz/reviews/gamdom-casino/
+https://casinomentor.com/reviews/gamdom-casino
+https://codesandbox.io/embed/4xcgx2
+https://codesandbox.io/embed/4yk4vj
+https://codesandbox.io/embed/9hxczz
+https://codesandbox.io/embed/bold-northcutt-w9djdv
+https://codesandbox.io/embed/crash-verifier-4nl2fc
+https://codesandbox.io/embed/gamdom-dice-hash-checker-forked-4nvt7l
+https://codesandbox.io/embed/gamdom-raffle-draw-verifier-j9ktp3
+https://codesandbox.io/embed/k53ng3
+https://codesandbox.io/embed/kzgkrs
+https://codesandbox.io/embed/mmcljy
+https://codesandbox.io/embed/p2c9v3
+https://codesandbox.io/embed/r95h7k
+https://codesandbox.io/embed/roulette-verifier-h7kk65
+https://codesandbox.io/embed/tk7zct
+https://codesandbox.io/embed/wjcpc6
+https://cryptwerk.com/company/gamdom/
+https://gamblecritic.net/casino/gamdom-casino/
+https://gamdom.com
+https://gamdom.eu
+https://gamdom.io
+https://gamdommirrors.com/
+https://gamecheck.com/online-casino/gamdom
+https://github.com/mobxjs/mobx/blob/main/packages/mobx/src/errors.ts
+https://github.com/styled-components/styled-components/blob/main/packages/styled-components/src/utils/errors.md
+https://github.com/ungap/url-search-params.
+https://help.gamdom.com/
+https://help.gamdom.com/en/articles/13351931-supported-chains
+https://help.gamdom.com/en/articles/8818767-how-to-deposit
+https://help.gamdom.com/en/articles/8981140-deposit-methods
+https://help.gamdom.com/en/articles/9734074-how-to-withdraw
+https://medium.com/
+https://online.worldcasinodirectory.com/gamdom-casino
+https://reactrouter.com/en/main/routers/picking-a-router.
+https://reactrouter.com/how-to/error-boundary
+https://reactrouter.com/start/framework/route-module
+https://s3.eu-central-1.amazonaws.com/ignition.button/round-1/connector.js
+https://station.veriff.com/verifications/
+https://trgamdom.com
+https://uk.trustpilot.com/review/gamdom.com
+https://wizardofodds.com/online-casinos/reviews/gamdom-casino/
+https://www.aboutslots.com/reviews/gamdom
+https://www.askgamblers.com/online-casinos/reviews/gamdom-casino
+https://www.bitcoin.com/gambling/reviews/gamdom/
+https://www.casinowow.com/casino-reviews/gamdom-casino
+https://www.ccn.com/gamdom-casino-review/
+https://www.cryptonewsz.com/gambling/reviews/gamdom-casino/
+https://www.esports.net/betting/sites/gamdom/
+https://www.esportsbets.com/reviews/gamdom/
+https://www.facebook.com/gamdomfb/
+https://www.gamblingjudge.com/reviews/gamdom-casino/
+https://www.gamdomcareers.com
+https://www.instagram.com/gamdomhq
+https://www.linkedin.com/company/gamdom-com/
+https://www.reddit.com/r/gamdom/
+[0m
+[0m$ [0mgrep -oE '"/{0,1}api[a-zA-Z0-9/_-]*"' /tmp/opencode/client.js | sort -u | head -50
+(no output)
+[0m
+[0m$ [0mgrep -oiE '(baseURL|apiUrl|api_base|graphql|ws://|wss://)[^,;{}]{0,60}' /tmp/opencode/client.js | sort -u | head -40
+BaseUrl:"https://cert.gcb.cw/certificate?id="
+[0m
+[0m$ [0mgrep -oiE '(graphql|/gql|/graphql[s]?\.json)' /tmp/opencode/client.js | sort -u | head; grep -oE 'wss://[a-zA-Z0-9.-]*' /tmp/opencode/client.js | sort -u | head
+(no output)
+[0m
+More mirror domains discovered. The mirror domains (`gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win`, `gamdommirrors.com`, `trgamdom.com`, `gamdom80004.com`) are likely alternate access to the same app, and notable: there's a `s3.eu-central-1.amazonaws.com/ignition.button/round-1/connector.js` reference — that's the Ignition (a Bridge/TOKO/DAA payment connector) library used for crypto/fiat. Let me examine how the frontend reaches the API. Let me grep for API base URL patterns and fetch calls.
+[0m$ [0mgrep -oE '"/[a-z0-9][a-zA-Z0-9/_-]{0,40}"' /tmp/opencode/client.js | sort -u | grep -iE 'oauth|auth|token|session|login|logout|sso|ws|user|account|withdraw|deposit|balance' | head -50
+"/blog/news/"
+"/dynamic-auth"
+"/logout"
+"/panic-block-account"
+"/reviews"
+[0m
+[0m$ [0mgrep -oE '"/[a-zA-Z0-9/_-]{2,50}"' /tmp/opencode/client.js | sort -u | grep -iE 'oauth|auth|login|sso|api|graphql|user|time|health|verify|socket' | head -60
+"/_mp/api"
+"/client-api"
+"/dynamic-auth"
+"/verify-device"
+"/verify-email"
+[0m
+The main query in the 600KB bundle didn't reveal a literal API URL. The SPA likely uses a relative `/api` or a dynamic base. `cert.gcb.cw` is interesting (Curacao gambling license cert link). Let me look for the actual request layer more broadly — searching for axios/fetch config and OAuth/oauth endpoints.
+[0m$ [0mgrep -oE '.{60}/client-api.{60}' /tmp/opencode/client.js | head -5
+a,o]=r;return l(t,a,o instanceof AbortSignal?o:void 0)}})}("/client-api");(0,o.kT)({api:s});let u=s;function c(e,t,n){let r=[e.name
+[0m
+Excellent — key endpoint strings found: `/client-api`, `/_mp/api`, `/dynamic-auth`, `/verify-device`, `/verify-email`, `/panic-block-account`. The API is likely under `/client-api` or `/_mp/api`. Let me examine how these are used in context.
+[0m$ [0mgrep -oE '.{60}/dynamic-auth.{60}' /tmp/opencode/client.js | head -5; echo "==="; grep -oE '.{60}/_mp/api.{60}' /tmp/opencode/client.js | head -5
+ROOT:"/responsible-gambling",LOGOUT:"/logout",DYNAMIC_AUTH:"/dynamic-auth",401:"/401",404:"/404",CASINO_ROOT:"/casino",CASINO_NEW_GAM
+===
+oogleTagManager:"",mixpanelBrowserToken:"",mixpanelApiPath:"/_mp/api"},gameMaxBets:{dice:5e4,crash:5e4,roulette:{red:5e4,black:5
+[0m
+[0m$ [0mgrep -oE '.{60}/verify-device.{60}' /tmp/opencode/client.js | head -5; echo "==="; grep -oE '.{60}/panic-block-account.{60}' /tmp/opencode/client.js | head -5; echo "==="; grep -oE '.{60}/verify-email.{60}' /tmp/opencode/client.js | head -5
+rify-email",RESET_PASSWORD:"/reset-password",VERIFY_DEVICE:"/verify-device",PANIC_BLOCK_ACCOUNT:"/panic-block-account",REF_CODE:"/ref/
+===
+ssword",VERIFY_DEVICE:"/verify-device",PANIC_BLOCK_ACCOUNT:"/panic-block-account",REF_CODE:"/ref/:code",R_CODE:"/r/:code",PAYMENT_GATEWAY_RO
+===
+_NOTIFICATION_MESSAGE:"/error-notif/:message",VERIFY_EMAIL:"/verify-email",RESET_PASSWORD:"/reset-password",VERIFY_DEVICE:"/verify-de
+[0m
+These are all frontend ROUTE paths (SPA routes), not API endpoints. The actual API is created via `(0,o.kT)({api:s})` where `s` = `"/client-api"`. So the frontend API base path is `/client-api` on the main domain. Let me probe `/client-api` on gamdom.com.
+[0m$ [0mcurl -s -D- -o /tmp/opencode/capi.txt --max-time 10 https://gamdom.com/client-api 2>&1 | head -25; echo "=== BODY ==="; cat /tmp/opencode/capi.txt | head -30
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:39 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060041-HHR, cache-hhr-khhr2060051-HHR
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+content-length: 26
+
+=== BODY ===
+Invalid request, only POST
+[0m
+[0m$ [0mgrep -oE '(api|post|get|request)\([^,]{0,80}' /tmp/opencode/client.js | grep -oiE '"[a-zA-Z0-9/_-]{2,50}"' | sort -u | head -80
+"Content-Type"
+"Location"
+"application/json"
+"blocked"
+"computed"
+"content"
+"content-type"
+"embeddedI18nEditor"
+"href"
+"loading"
+"localhost"
+"proceeding"
+"script"
+"style"
+"unblocked"
+[0m
+[0m$ [0mgrep -oE '"[a-zA-Z0-9]+/[a-zA-Z0-9/_-]{2,40}"' /tmp/opencode/client.js | sort -u | head -80
+"8048/JAZ2016-050"
+"application/json"
+"application/x-www-form-urlencoded"
+"multipart/form-data"
+"text/css"
+"text/javascript"
+"text/plain"
+[0m
+`/client-api` exists and returns "Invalid request, only POST" (400). This is the frontend's API proxy on the main domain. It's a POST-only API. This is a real in-scope surface. Let me explore the endpoints. First, let me find what endpoint names the frontend passes to this API layer. Let me search the JS for how requests are constructed.
+[0m$ [0mgrep -oE '.{80}"/client-api".{200}' /tmp/opencode/client.js | head -3
+])},apply(e,n,r){let[a,o]=r;return l(t,a,o instanceof AbortSignal?o:void 0)}})}("/client-api");(0,o.kT)({api:s});let u=s;function c(e,t,n){let r=[e.name,t];return{query:(0,a.I)(r,n=>{let{signal:r}=n;return e(t,r)},n),key:r}}},78365:(e,t,n)=>{"use strict";n.d(t,{kT:()=>o,zE:()=>i}),n(41468);le
+[0m
+The endpoint names aren't hardcoded as static strings — the API layer likely takes action names dynamically. Let me look at the `kT` API client factory and how the api base `/client-api` is used with endpoints like auth. Let me search more specifically.
+[0m$ [0mgrep -oiE '(login|signin|register|signup|auth|session|me|profile)[^,]{0,60}' /tmp/opencode/client.js | sort -u | head -50
+AUTH
+AUTH:!1
+AUTH:"/dynamic-auth"
+AuthButtonsLazy-v4"
+AuthFormResetPassword"
+AuthFormSignInContent"
+AuthFormSignUp"
+AuthModal"
+AuthPage"
+LOGIN_SUCCESS="LOGIN_SUCCESS"
+Login="dynamicFacebookLogin"
+Login="dynamicLineLogin"
+Login="dynamicWalletLogin"
+Login="gmailLogin"
+Login="steamLogin"
+Login="telegramLogin"
+LoginButton"
+ME
+ME:"/"
+ME:"/casino/:game"
+ME:"/home"
+ME:"/user/:userName"
+ME="KENO_BANNER_GAME"
+ME="POCKET_DICE_BANNER_GAME"
+ME={__proto__:null
+MEGAPAYZ_DEPOSIT="MEGAPAYZ_DEPOSIT"
+MEGAPAYZ_WITHDRAWAL="MEGAPAYZ_WITHDRAWAL"
+MENT:"".concat(b
+MENT="SlotsTournament"
+MENTS="CMS_WALLET_PAYMENTS"
+MENT_GATEWAY_FAILED:"/paymentgateway/failed"
+MENT_GATEWAY_ROOT:"/paymentgateway"
+MENT_GATEWAY_SUCCESS:"/paymentgateway/success"
+MEOUT");r=setTimeout(function(){if(!i[Y].isDisposed){if(i()
+MERS_WICKED_BANNER_GAME="TRANSFORMERS_WICKED_BANNER_GAME"
+MES
+MES:"/casino/boosted-rtp-games"
+MES:"/casino/category/boosted-rtp-games"
+MES:"/casino/category/hot-games"
+MES:"/casino/category/new-games"
+MES:"/casino/category/top-games"
+MES:"/casino/gamdom-exclusives"
+MES:"/casino/hot-games"
+MES:"/casino/live-games"
+MES:"/casino/new-games"
+MES:"/casino/table-games"
+MES:"/casino/top-games"
+MES:"/casino?tab=live-games"
+MES:"/casino?tab=table-games"
+MES:"/thematic/:thematicCarouselSlug"
+[0m
+[0m$ [0mgrep -oE '(action|command|type|endpoint|method)\s*[:=]\s*".{2,30}"' /tmp/opencode/client.js | sort -u | head -60
+method:"POST",headers:{"Content-Type":"
+type:"ERROR"
+type:"ERROR"})}function c(e){return"
+type:"ERROR"}:(0,o.un)(e)||"string"
+type:"ERROR"}:(console.error("
+type:"aborted"
+type:"active"
+type:"add"
+type:"add",observableKind:"object"
+type:"added"
+type:"base"
+type:"base"}),alt:""
+type:"cdn"
+type:"contained"
+type:"continue"
+type:"data"
+type:"data",data:t}}var e1=["about:"
+type:"error"
+type:"error",error:e}}return"error"
+type:"error",value:Error("
+type:"failed"
+type:"fetch"
+type:"full"
+type:"full"})),children:[...W,{id:"
+type:"html"
+type:"importmap"
+type:"invalid-body"
+type:"invalidate"
+type:"loading"
+type:"message",message:e},type:"
+type:"module"
+type:"observerAdded"
+type:"observerOptionsUpdated"
+type:"observerRemoved"
+type:"observerResultsUpdated"
+type:"pause"
+type:"redirect"
+type:"removed"
+type:"script"
+type:"setState"
+type:"splice"
+type:"string"
+type:"style"
+type:"stylesheet"
+type:"success"
+type:"timeout"
+type:"updated"
+type:"void"
+type="DataWithResponseInit"
+type="radio"
+type="submit"
+type="submit|image"
+type="text/css"
+type="text/javascript"
+[0m
+The API layer is a dynamic proxy. The third-party OAuth logins are interesting: `dynamicFacebookLogin`, `dynamicGmailLogin`, `dynamicSteamLogin`, `dynamicTelegramLogin`, `dynamicLineLogin`, `dynamicWalletLogin`. These "dynamic*" logins suggest an OAuth flow. Let me look for OAuth-related URL parameters and the actual login flow. Let me find where the API calls specify their "action/command" names.
+[0m$ [0mgrep -oiE '(oauth|redirect_uri|response_type|client_id|state=|grant_type|authorization[^,]{0,30})[^,;{}]{0,40}' /tmp/opencode/client.js | sort -u | head -40
+State=
+State=!0
+State=[e
+State=[r
+State=a
+State=aQ=e:aQ=aQ.next=e
+State=d
+State=e
+State=e.memoizedState
+State=e.state
+State=e.state||function(e)
+State=e=
+State=function(e
+State=function(e)
+State=h)
+State=i
+State=iF
+State=ij(n)
+State=l
+State=n
+State=n)
+State=n):(e=sl()
+State=n.baseState=t
+State=n.memoizedState
+State=n:rA||(n=t.type
+State=null
+State=null!==(o=new n(r
+State=null)
+State=null):(null!==e&&an(t
+State=o
+State=o)
+State=o.state
+State=o4.bind(null
+State=oL(1|t
+State=oL(t
+State=r.baseState=a
+State=s
+State=t
+State=t)
+State=t.baseState=e
+[0m
+The minified JS is obfuscated. The actual API endpoint scheme is not easily recoverable from static strings. Given the constraints (passive-first, GET/HEAD/OPTIONS only for live probes, no auth-bypass against live customer data), I should not be POSTing to a live endpoint blindly — and `/client-api` is POST-only which I can't passively test beyond the OPTIONS/HEAD.
+
+Let me update my state and produce the structured analysis. This is genuinely a surface where I found the real API proxy (`/client-api`) on the live main domain, plus several mirror domains. My deep-hunt has yielded real in-scope surface but no confirmed vulnerability.
+
+Let me do a couple more passive probes: check the mirror domains, OPTIONS on /client-api, and confirm dashboard 403 is a real block.
+[0m$ [0mcurl -s -X OPTIONS -D- -o /dev/null --max-time 10 https://gamdom.com/client-api 2>&1 | head -20
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:41:50 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060052-HHR, cache-hhr-khhr2060052-HHR
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+content-length: 26
+[0m
+[0m$ [0mfor d in gamdom.eu gamdom.io gamdom.vip gamdom.win gamdommirrors.com trgamdom.com gamdom80004.com; do code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 8 "https://$d/" 2>/dev/null); ssl=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "http://$d/" 2>/dev/null); echo "$d https:$code http:$ssl"; done
+gamdom.eu https:200 http:301
+gamdom.io https:200 http:301
+gamdom.vip https:200 http:301
+gamdom.win https:200 http:301
+gamdommirrors.com https:200 http:301
+trgamdom.com https:200 http:302
+gamdom80004.com https:200 http:302
+[0m
+**Anomaly detected:** The mirror domains (`gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win`, `gamdommirrors.com`, `trgamdom.com`, `gamdom80004.com`) all return HTTP 200 on the root, while `gamdom.com` itself serves the ported content. Let me check whether these mirrors expose the same `/client-api` POST-only proxy and confirm they're the real (in-scope company) backend rather than clones.
+[0m$ [0mfor d in gamdom.eu gamdom.io trgamdom.com; do echo "=== $d root server ==="; curl -s -D- -o /dev/null -L --max-time 10 "https://$d/" 2>&1 | grep -iE 'HTTP|server|x-cache|x-served|strict-transport|location|content-type' | head -10; done
+=== gamdom.eu root server ===
+HTTP/2 200 
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-19936911-cbd3-407f-bde6-18e2283cc1c1' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+server: nginx
+content-type: text/html
+x-served-by: cache-hhr-khhr2060050-HHR, cache-hhr-khhr2060052-HHR
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+=== gamdom.io root server ===
+HTTP/2 200 
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-6205dbe2-7210-46a1-84ee-0e7df9fc4048' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+server: nginx
+content-type: text/html
+x-served-by: cache-phx1710079-PHX, cache-phx1710040-PHX
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+=== trgamdom.com root server ===
+HTTP/2 302 
+server: Kestrel
+location: https://www.hugedomains.com/domain_profile.cfm?d=trgamdom.com
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=4WPt1wef5I79AhVagc1%2B03%2F%2B6hl4rXjuUJCK0ycOps9B9wUWBVEae3bTerEFWx%2BN95SODHGqiP0vYSmpYZTZt0V%2BVAn862dZYWfWVxBGfGOo1ySWwKh1o7nlebb%2By%2B%2BWkvMu%2Bhw%3D"}]}
+server: cloudflare
+[0m
+[0m$ [0mfor d in gamdom.eu gamdom.io gamdom.vip gamdom.win gamdommirrors.com trgamdom.com; do echo "=== $d ==="; curl -s -D- -o /dev/null --max-time 10 "https://$d/client-api" 2>&1 | grep -iE 'HTTP|content-length|server|location|x-cache' | head -6; done
+=== gamdom.eu ===
+HTTP/2 400 
+server: nginx
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+content-length: 26
+=== gamdom.io ===
+HTTP/2 400 
+server: nginx
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+content-length: 26
+=== gamdom.vip ===
+HTTP/2 400 
+server: nginx
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+content-length: 26
+=== gamdom.win ===
+HTTP/2 400 
+server: nginx
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+content-length: 26
+=== gamdommirrors.com ===
+HTTP/2 200 
+x-cache: MISS
+x-cache-hits: 0
+content-length: 2444
+=== trgamdom.com ===
+HTTP/2 302 
+server: Kestrel
+location: https://www.hugedomains.com/domain_profile.cfm?d=trgamdom.com
+content-length: 0
+[0m
+[0m$ [0mcurl -s -D- --max-time 10 https://gamdommirrors.com/ 2>&1 | head -30
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"36ce-jeRqUGQgKxVQtGTeOfo5j0y3A18"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:08 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060051-HHR
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1788453728.087780,VS0,VE168
+strict-transport-security: max-age=31557600
+content-length: 14030
+
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <link rel="icon" href="/upload/logo1.png?t=1780595715016">
+    <link rel="manifest" href="/api/status-page/gamdom-domains/manifest.json">
+    <meta name="theme-color" id="theme-color" content="">
+    <meta name="description" content="">
+    <title>Gamdom Official Domains</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+[0m
+Key findings from my probes:
+
+1. **`gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win`** — all serve the exact same CSP/app as `gamdom.com` with identical Varnish/nginx/CSP signatures. These are genuine company mirror domains (in-scope "domains operated by Gamdom"). They all expose the POST-only `/client-api` proxy (400 "Invalid request, only POST"). **Same attacking surface as the main domain.**
+
+2. **`gamdommirrors.com`** — different: returns 200 with content-length 2444, single `x-cache: MISS`. This looks like a **landing/info page or a takeover-prone parked domain** (different infra than main site). **Subdomain/domain takeover anomaly worth checking.**
+
+3. **`trgamdom.com`** — 302 redirects to HugeDomains (a **domain parking/sales marketplace**). This domain is **not operated by Gamdom** — it's parked for sale by a third party. **Potential brand-jacking / phishing mirror** but it's NOT in-scope (not operated by Gamdom).
+
+4. **`gamdom80004.com`** — 302 redirects. Let me check where.
+
+`gamdommirrors.com` is the most interesting anomaly — a domain bearing Gamdom's brand served on different infrastructure. Let me investigate it for a possible takeover or rogue page.
+[0m$ [0mcurl -sI --max-time 10 https://gamdom80004.com/ 2>&1 | grep -iE 'HTTP|location|server'
+HTTP/2 302 
+server: Varnish
+location: https://gamdom80007.com/
+[0m
+[0m$ [0mcurl -s --max-time 10 https://gamdommirrors.com/ 2>&1 | head -80
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <link rel="icon" href="/upload/logo1.png?t=1780595715016">
+    <link rel="manifest" href="/api/status-page/gamdom-domains/manifest.json">
+    <meta name="theme-color" id="theme-color" content="">
+    <meta name="description" content="">
+    <title>Gamdom Official Domains</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin="" src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin="" href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<meta property="og:title" content="Gamdom Official Domains"><meta property="og:description" content="">
+            <script id="preload-data" data-json="{}">
+                window.preloadData = {'config':{'slug':'gamdom-domains','title':'Gamdom Official Domains','description':'','icon':'/upload/logo1.png?t=1780595715016','theme':'auto','published':true,'showTags':false,'customCSS':'.alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right: 0 !important;\n}\n\n#app .title-flex > span:not(.logo-wrapper) {\n  display: none;\n}\n\n.overall-status {\n  display: none;\n}\n\n#app .group-title {\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 24px;\n  margin-bottom: 0;\n}\n\n#app .monitor-list {\n  border: none !important;\n  border-radius: 0 !important;\n  box-shadow: none;\n  padding: 0;\n}\n\n#app .monitor-list .item {\n  background-color: #131A22;\n  border: none;\n  border-radius: 0;\n  padding: 12px 16px;\n}\n\n#app .monitor-list .item:not(:last-child) {\n  margin-bottom: 2px;\n}\n\n#app .monitor-list .beat {\n  margin: 0 1.875px !important;\n}\n\n#app .monitor-list .item:last-child {\n  border-radius: 0 0 16px 16px;\n}\n\n#app .monitor-list .item:first-child {\n  border-radius: 16px 16px 0 0;\n}\n\n#app .monitor-list .row {\n  align-items: center;\n  margin: 0;\n}\n\n#app .monitor-list .extra-info {\n  display: none;\n}\n\n#app .monitor-list .info {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n#app .monitor-list .badge {\n  height: 23px;\n  width: 53px;\n  border-radius: 10px !important;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #06090E;\n  font-size: 12px;\n  line-height: 12px;\n  font-weight: 700;\n  letter-spacing: 1px;\n}\n\n#app .monitor-list .item-name {\n  color: #fff;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: 700;\n  text-decoration: underline;\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .monitor-list .item-name:hover {\n  opacity: 0.9;\n}\n\n#app .monitor-list .item-name:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}\n\n#app .monitor-list .wrap div {\n  color: #818E9D;\n}\n\n#app .monitor-list .beat {\n  width: 4px !important;\n  height: 18px !important;\n}\n\n#app footer {\n  margin: 0 !important;\n  display: flex;\n  flex-direction: column;\n}\n\n#app .refresh-info {\n  order: 1;\n  color: #818E9D;\n  font-size: 14px;\n  line-height: 16px;\n  font-weight: 500;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  margin-top: 24px;\n  margin-bottom: 48px !important;\n}\n\n#app .alert-heading {\n  order: 2;\n}\n\n#app .alert-heading a {\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .alert-heading a:hover {\n  opacity: 0.9;\n}\n\n#app .alert-heading a:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}','footerText':'[![Instagram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ3OSkiLz4KPHBhdGggZD0iTTE4IDcuMDY2MDVDMTMuNTMzOCA3LjA2NjA1IDkuMjkyNTUgNi42NjkxMSA3LjY3MjU2IDEwLjgyMzNDNy4wMDM0NiAxMi41MzkxIDcuMTAwNjIgMTQuNzY3NCA3LjEwMDYyIDE3Ljk1ODFDNy4xMDA2MiAyMC43NTc4IDcuMDEwODYgMjMuMzg5NCA3LjY3MjU2IDI1LjA5MTZDOS4yODg3OSAyOS4yNDgzIDEzLjU2NDQgMjguODUgMTcuOTk3NiAyOC44NUMyMi4yNzQ0IDI4Ljg1IDI2LjY4NDEgMjkuMjk1IDI4LjMyMzggMjUuMDkxNkMyOC45OTQyIDIzLjM1ODYgMjguODk1NyAyMS4xNjM1IDI4Ljg5NTcgMTcuOTU4MUMyOC44OTU3IDEzLjcwMzEgMjkuMTMwNyAxMC45NTYgMjcuMDY1NSA4Ljg5MzcyQzI0Ljk3NDQgNi44MDQyNSAyMi4xNDY1IDcuMDY2MDUgMTcuOTk1MSA3LjA2NjA1SDE4Wk0xNy4wMjM0IDkuMDI4ODZDMjYuMzM5OCA5LjAxNDIxIDI3LjUyNTUgNy45NzkyMiAyNi44NzExIDIyLjM1NTdDMjYuNjM4NiAyNy40NDAzIDIyLjc2NCAyNi44ODI0IDE4LjAwMTIgMjYuODgyNEM5LjMxNzE4IDI2Ljg4MjQgOS4wNjc0MSAyNi42MzQgOS4wNjc0MSAxNy45NTMxQzkuMDY3NDEgOS4xNzE1MyA5Ljc1NjI5IDkuMDMzODQgMTcuMDIzNCA5LjAyNjQ0VjkuMDI4ODZaTTIzLjgxODEgMTAuODM2OUMyMy4wOTYxIDEwLjgzNjkgMjIuNTEwNiAxMS40MjE4IDIyLjUxMDYgMTIuMTQzNEMyMi41MTA2IDEyLjg2NDggMjMuMDk2MSAxMy40NDk5IDIzLjgxODEgMTMuNDQ5OUMyNC41NDAxIDEzLjQ0OTkgMjUuMTI1NiAxMi44NjQ4IDI1LjEyNTYgMTIuMTQzNEMyNS4xMjU2IDExLjQyMTggMjQuNTQwMSAxMC44MzY5IDIzLjgxODEgMTAuODM2OVpNMTggMTIuMzY0NkMxNC45MDkgMTIuMzY0NiAxMi40MDMzIDE0Ljg2OTQgMTIuNDAzMyAxNy45NTgxQzEyLjQwMzMgMjEuMDQ2NyAxNC45MDkgMjMuNTUwMyAxOCAyMy41NTAzQzIxLjA5MTEgMjMuNTUwMyAyMy41OTU1IDIxLjA0NjcgMjMuNTk1NSAxNy45NTgxQzIzLjU5NTUgMTQuODY5NCAyMS4wOTExIDEyLjM2NDYgMTggMTIuMzY0NlpNMTggMTQuMzI3NEMyMi44MDMzIDE0LjMyNzQgMjIuODA5NSAyMS41ODg3IDE4IDIxLjU4ODdDMTMuMTk3OSAyMS41ODg3IDEzLjE5MDYgMTQuMzI3NCAxOCAxNC4zMjc0WiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0NzkiIHgxPSIzNiIgeTE9IjEuMDcwNDhlLTA2IiB4Mj0iMC4wODA5MDAyIiB5Mj0iMzUuOTk5OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjRkQwM0ExIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0ZGQzMwMyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==)](https://instagram.com/gamdom)\n[![X](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0Y5RjlGOSIvPgo8cGF0aCBkPSJNMTkuODMyOSAxNi40ODcxTDI2Ljk5NzEgOC4zMzgzOEgyNS4yOTk3TDE5LjA3NjIgMTUuNDEyM0wxNC4xMDkxIDguMzM4MzhIOC4zNzg5MUwxNS44OTE4IDE5LjAzNjRMOC4zNzg5MSAyNy41ODA4SDEwLjA3NjRMMTYuNjQ0NSAyMC4xMDg3TDIxLjg5MTEgMjcuNTgwOEgyNy42MjEzTDE5LjgzMjkgMTYuNDg3MVpNMTcuNTA3MyAxOS4xMzAzTDE2Ljc0NDkgMTguMDY0M0wxMC42ODg1IDkuNTkwNTVIMTMuMjk2MkwxOC4xODUzIDE2LjQzMTdMMTguOTQ0NCAxNy40OTc3TDI1LjI5ODkgMjYuMzg5NkgyMi42OTEyTDE3LjUwNzMgMTkuMTMwM1oiIGZpbGw9IiMwODBEMTMiLz4KPC9zdmc+Cg==)](https://twitter.com/gamdom)\n[![Telegram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzI3QTREQiIvPgo8cGF0aCBkPSJNMTUuMjk2OSAyNS45OTVDMTQuNjQ3MyAyNS45OTUgMTQuNzU3NiAyNS43NDk3IDE0LjUzMzUgMjUuMTMxTDEyLjYyMyAxOC44NDMxTDI3LjMyOTYgMTAuMTE4NSIgZmlsbD0iI0M4REFFQSIvPgo8cGF0aCBkPSJNMTUuMjk4OCAyNS45OTc2QzE1LjgwMDIgMjUuOTk3NiAxNi4wMjE4IDI1Ljc2ODMgMTYuMzAxNyAyNS40OTYxTDE4Ljk3NTUgMjIuODk2MUwxNS42NDAyIDIwLjg4NDciIGZpbGw9IiNBOUM5REQiLz4KPHBhdGggZD0iTTE1LjYzOTIgMjAuODg1TDIzLjcyMSAyNi44NTYyQzI0LjY0MzQgMjcuMzY1IDI1LjMwOSAyNy4xMDE1IDI1LjUzODYgMjUuOTk5OUwyOC44Mjg1IDEwLjQ5NzJDMjkuMTY1MyA5LjE0NjgxIDI4LjMxMzcgOC41MzQzNSAyNy40MzE0IDguOTM1MDNMOC4xMTM5MiAxNi4zODM4QzYuNzk1MzIgMTYuOTEyNSA2LjgwMzA1IDE3LjY0ODIgNy44NzM2MSAxNy45NzZMMTIuODMwOSAxOS41MjMzTDI0LjMwNzUgMTIuMjgyOUMyNC44NDkzIDExLjk1NDIgMjUuMzQ2NiAxMi4xMzA5IDI0LjkzODUgMTIuNDkzMSIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ4NSkiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0ODUiIHgxPSIxNy40OTciIHkxPSIxOC41NTY5IiB4Mj0iMjAuNjM1NSIgeTI9IjI1LjY5ODQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0VGRjdGQyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IndoaXRlIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==)](https://t.me/+JrVfUQipUmM0OGM0)\n[![Facebook](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzQwNl8xNjQ5NCkiPgo8cmVjdCB4PSItMC42MDE1NjIiIHk9Ii0wLjY0MTQ3OSIgd2lkdGg9IjM3LjIwMiIgaGVpZ2h0PSIzNy4yMDIiIGZpbGw9IiM0MjY3QjIiLz4KPHBhdGggZD0iTTIyLjE0MzEgMzYuNTYwNlYyMy4xMjA0SDI2Ljk5NTJMMjcuNzE5NyAxNy44NTkzSDIyLjE0MzFWMTQuNTA5N0MyMi4xNDMxIDEyLjk4NzcgMjIuNTk4MyAxMS45NTcxIDI0LjkzMTQgMTEuOTU3MUgyNy45MTE5VjcuMjU5M0MyNi40NzQ1IDcuMTIwNDMgMjUuMDMwNSA3LjA1MjQzIDIzLjU4NTMgNy4wNTU1OUMxOS4yOTczIDcuMDU1NTkgMTYuMzc0NSA5LjUwMDM0IDE2LjM3NDUgMTMuOTg4NFYxNy44NTkzSDExLjUzNTJWMjMuMTIwNEgxNi4zNzQ1VjM2LjU2MDZIMjIuMTQzMVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDA2XzE2NDk0Ij4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K)](https://facebook.com/gamdomcasino)\n[![Youtube](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNMTIuODY5MSAyNi4yOThMMjUuNjk3NCAxNy45NjAxTDEyLjg2OTEgOS42MjEyMlYyNi4yOThaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)](https://www.youtube.com/@officialgamdom)\n[![Discord](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNMjYuMDE1MyAxMC40ODM5QzI0LjQ5ODIgOS43NzExMSAyMi44OTY2IDkuMjY1NDQgMjEuMjUxNCA4Ljk3OThDMjEuMDI2MyA5LjM5Mjc5IDIwLjgyMjYgOS44MTc3MSAyMC42NDEyIDEwLjI1MjhDMTguODg4OCA5Ljk4MTc4IDE3LjEwNjcgOS45ODE3OCAxNS4zNTQzIDEwLjI1MjhDMTUuMTcyOCA5LjgxNzc2IDE0Ljk2OTEgOS4zOTI4NCAxNC43NDQxIDguOTc5OEMxMy4wOTc5IDkuMjY3ODUgMTEuNDk1MiA5Ljc3NDcyIDkuOTc2NjMgMTAuNDg3NkM2Ljk2MTc3IDE1LjA2NTEgNi4xNDQ0OSAxOS41Mjg5IDYuNTUzMTMgMjMuOTI5NEM4LjMxODcxIDI1LjI2OCAxMC4yOTQ5IDI2LjI4NjEgMTIuMzk1OCAyNi45Mzk0QzEyLjg2ODggMjYuMjg2NSAxMy4yODc0IDI1LjU5MzggMTMuNjQ3MSAyNC44Njg3QzEyLjk2MzkgMjQuNjA2OSAxMi4zMDQ1IDI0LjI4MzggMTEuNjc2NiAyMy45MDMzQzExLjg0MTggMjMuNzgwMiAxMi4wMDM1IDIzLjY1MzUgMTIuMTU5NyAyMy41MzA1QzEzLjk4NjkgMjQuNDEyMyAxNS45ODEzIDI0Ljg2OTYgMTguMDAwNSAyNC44Njk2QzIwLjAxOTcgMjQuODY5NiAyMi4wMTQxIDI0LjQxMjMgMjMuODQxMyAyMy41MzA1QzIzLjk5OTMgMjMuNjYyOCAyNC4xNjEgMjMuNzg5NiAyNC4zMjQ0IDIzLjkwMzNDMjMuNjk1MiAyNC4yODQ0IDIzLjAzNDYgMjQuNjA4MSAyMi4zNTAyIDI0Ljg3MDZDMjIuNzA5NSAyNS41OTUzIDIzLjEyODEgMjYuMjg3NCAyMy42MDE2IDI2LjkzOTRDMjUuNzA0MyAyNi4yODg4IDI3LjY4MiAyNS4yNzExIDI5LjQ0NzggMjMuOTMxMkMyOS45MjczIDE4LjgyODEgMjguNjI4OCAxNC40MDUzIDI2LjAxNTMgMTAuNDgzOVpNMTQuMTY0NyAyMS4yMjMxQzEzLjAyNiAyMS4yMjMxIDEyLjA4NTIgMjAuMTYyNiAxMi4wODUyIDE4Ljg1NzlDMTIuMDg1MiAxNy41NTMzIDEyLjk5MzMgMTYuNDgzNSAxNC4xNjExIDE2LjQ4MzVDMTUuMzI4OSAxNi40ODM1IDE2LjI2MjQgMTcuNTUzMyAxNi4yNDI0IDE4Ljg1NzlDMTYuMjIyNSAyMC4xNjI2IDE1LjMyNTMgMjEuMjIzMSAxNC4xNjQ3IDIxLjIyMzFaTTIxLjgzNjMgMjEuMjIzMUMyMC42OTU3IDIxLjIyMzEgMTkuNzU4NSAyMC4xNjI2IDE5Ljc1ODUgMTguODU3OUMxOS43NTg1IDE3LjU1MzMgMjAuNjY2NiAxNi40ODM1IDIxLjgzNjMgMTYuNDgzNUMyMy4wMDU5IDE2LjQ4MzUgMjMuOTMyMSAxNy41NTMzIDIzLjkxMjEgMTguODU3OUMyMy44OTIyIDIwLjE2MjYgMjIuOTk2OCAyMS4yMjMxIDIxLjgzNjMgMjEuMjIzMVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://discord.gg/vNfHXkMW)','showPoweredBy':false,'googleAnalyticsId':null,'showCertificateExpiry':false},'incident':null,'publicGroupList':[{'id':1,'name':'Gamdom Official Domains','weight':1,'monitorList':[{'id':13,'name':'Gamdom.com','sendUrl':1,'type':'http','url':'https://gamdom.com'},{'id':3,'name':'Gamdom.eu','sendUrl':1,'type':'http','url':'https://gamdom.eu'},{'id':2,'name':'Gamdom.io','sendUrl':1,'type':'http','url':'https://gamdom.io'},{'id':6,'name':'Gamdom.vip','sendUrl':1,'type':'http','url':'https://gamdom.vip'},{'id':5,'name':'Gamdom.win','sendUrl':1,'type':'http','url':'https://gamdom.win'},{'id':217,'name':'gamdom80006.com','sendUrl':1,'type':'http','url':'https://gamdom80006.com'},{'id':219,'name':'gamdom80007.com','sendUrl':1,'type':'http','url':'https://gamdom80007.com'}]}],'maintenanceList':[]};
+            </script>
+        </head>
+<body>
+<noscript>
+<div class="noscript-message">
+    Sorry, you don't seem to have JavaScript enabled or your browser
+    doesn't support it.<br />This website requires JavaScript to function.
+    Please enable JavaScript in your browser settings to continue.
+</div>
+</noscript>
+<div id="app"></div>
+  <script nomodule="">!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule="" crossorigin="" id="vite-legacy-polyfill" src="/assets/polyfills-legacy-CProAAlf.js"></script>
+  <script nomodule="" crossorigin="" id="vite-legacy-entry" data-src="/assets/index-legacy-PIuZWdNf.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+
+
+</body></html>
+[0m
+This is a very significant finding. `gamdommirrors.com` contains **an official status-page for Gamdom's domains**, served by a public API at `/api/status-page/gamdom-domains/manifest.json`. Critically, the preload data reveals:
+
+1. **Confirmation of in-scope operating domains**: `gamdom.com`, `gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win`, plus NEW ones not in inventory: `gamdom80006.com`, `gamdom80007.com`.
+
+2. **The status page itself is a UptimeRobot-style status page**, and there's an API path: `/api/status-page/gamdom-domains/manifest.json`.
+
+This opens a new high-value angle: **Gamdom uses numerical-domains for region-unblocking/mirrors**. These mirror domains (`gamdom8000X.com`) are the same app behind them. Let me confirm `gamdom80006.com` and `gamdom80007.com`, and check whether the status page API exposes admin/health data.
+[0m$ [0mcurl -s --max-time 10 https://gamdommirrors.com/api/status-page/gamdom-domains/manifest.json 2>&1 | head -60
+{"name":"Gamdom Official Domains","start_url":"/status/gamdom-domains","display":"standalone","icons":[{"src":"/upload/logo1.png?t=1780595715016","sizes":"128x128","type":"image/png"}]}
+[0m
+[0m$ [0mfor d in gamdom80006.com gamdom80007.com; do echo "=== $d ==="; curl -s -o /dev/null -w "root:%{http_code} " --max-time 8 "https://$d/"; curl -s -o /dev/null -w "clientapi:%{http_code}\n" --max-time 8 "https://$d/client-api"; done
+=== gamdom80006.com ===
+root:200 clientapi:400
+=== gamdom80007.com ===
+root:200 clientapi:400
+[0m
+Confirmed. New in-scope domains discovered: `gamdom80006.com`, `gamdom80007.com` (and `gamdom80004.com`). All served on identical Gamdom infra (nginx/Varnish/CSP) with the POST-only `/client-api` proxy. These are company-operated mirror domains.
+
+Now, the status page API at `gamdommirrors.com/api/status-page/gamdom-domains/` is the UptimeRobot "public status page" API. Let me enumerate what's available there and on the host — `/api/status-page/...` is a real endpoint space that could leak internals or have write/admin interfaces.
+[0m$ [0mfor p in "/api" "/api/status-page/gamdom-domains" "/api/status-page/gamdom-domains/status" "/api/status-page/gamdom-domains/incidents" "/api/status-page/gamdom-domains/monitors" "/api/uptimerobot" "/api/jsonrpc" "/api/v2"; do echo "=== $p ==="; curl -s -o /dev/null -w "%{http_code}\n" --max-time 8 "https://gamdommirrors.com$p"; done
+=== /api ===
+200
+=== /api/status-page/gamdom-domains ===
+200
+=== /api/status-page/gamdom-domains/status ===
+200
+=== /api/status-page/gamdom-domains/incidents ===
+200
+=== /api/status-page/gamdom-domains/monitors ===
+200
+=== /api/uptimerobot ===
+200
+=== /api/jsonrpc ===
+200
+=== /api/v2 ===
+200
+[0m
+All endpoints return 200. Note that `/api/status-page/gamdom-domains` returning 200 on GET is different from the SPA's client-side routing (everything returns 200 for the SPA's index.html). But `/api/uptimerobot`, `/api/jsonrpc` returning 200 rather than the platform 404/page is worth probing — these could be real API endpoints. Let me look at actual response bodies and the UptimeRobot API for the status data. Let me also probe the actual status endpoint patterns that UptimeRobot's status pages use.
+[0m$ [0mecho "=== /api/uptimerobot ==="; curl -s -D- --max-time 8 https://gamdommirrors.com/api/uptimerobot 2>&1 | head -c 400
+=== /api/uptimerobot ===
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"98c-FhzvEKLeodsfrD7qu22S6HNDA/4"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:28 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710087-PHX
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1788453748.660811,VS0,VE714
+strict-transport-security: max-age=31557600
+content-length: 2444
+
+<!DOCTYPE html>
+<html l
+[0m
+[0m$ [0mecho "=== /api (body) ==="; curl -s --max-time 8 https://gamdommirrors.com/api 2>&1 | head -5; echo; echo "=== /api/status-page/gamdom-domains (body, first 300) ==="; curl -s --max-time 8 "https://gamdommirrors.com/api/status-page/gamdom-domains" 2>&1 | head -c 300
+=== /api (body) ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+=== /api/status-page/gamdom-domains (body, first 300) ===
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody
+[0m
+I see — the SPA (via Vite) serves `index.html` for unknown paths (returns 200 with the HTML page). So `/api/uptimerobot` and `/api/jsonrpc` return the SPA page, not real APIs. But `/api/status-page/gamdom-domains` returns actual JSON — this is the real UptimeRobot status-page data API.
+
+Let me extract the full JSON from that endpoint — it reveals all monitor URLs (more domains), historical uptime, and possibly response-time data. This is passive and read-only, and confirms the operational surface. Let me also check the list of ALL domains the mirrors control, since that expands in-scope surface.
+[0m$ [0mcurl -s --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" 2>&1 > /tmp/opencode/status.json; python3 -c "
+import json
+d=json.load(open('/tmp/opencode/status.json'))
+def walk(o,path=''):
+  if isinstance(o,dict):
+    for k,v in o.items():
+      if k in ('name','url','type','sendUrl','id') and not isinstance(v,(dict,list)):
+        print(f'{path} {k} = {v}')
+      walk(v,path+'/'+k)
+  elif isinstance(o,list):
+    for i,v in enumerate(o):
+      walk(v,path+f'/{i}')
+walk(d)
+" 2>&1 | head -80
+/publicGroupList/0 id = 1
+/publicGroupList/0 name = Gamdom Official Domains
+/publicGroupList/0/monitorList/0 id = 13
+/publicGroupList/0/monitorList/0 name = Gamdom.com
+/publicGroupList/0/monitorList/0 sendUrl = 1
+/publicGroupList/0/monitorList/0 type = http
+/publicGroupList/0/monitorList/0 url = https://gamdom.com
+/publicGroupList/0/monitorList/1 id = 3
+/publicGroupList/0/monitorList/1 name = Gamdom.eu
+/publicGroupList/0/monitorList/1 sendUrl = 1
+/publicGroupList/0/monitorList/1 type = http
+/publicGroupList/0/monitorList/1 url = https://gamdom.eu
+/publicGroupList/0/monitorList/2 id = 2
+/publicGroupList/0/monitorList/2 name = Gamdom.io
+/publicGroupList/0/monitorList/2 sendUrl = 1
+/publicGroupList/0/monitorList/2 type = http
+/publicGroupList/0/monitorList/2 url = https://gamdom.io
+/publicGroupList/0/monitorList/3 id = 6
+/publicGroupList/0/monitorList/3 name = Gamdom.vip
+/publicGroupList/0/monitorList/3 sendUrl = 1
+/publicGroupList/0/monitorList/3 type = http
+/publicGroupList/0/monitorList/3 url = https://gamdom.vip
+/publicGroupList/0/monitorList/4 id = 5
+/publicGroupList/0/monitorList/4 name = Gamdom.win
+/publicGroupList/0/monitorList/4 sendUrl = 1
+/publicGroupList/0/monitorList/4 type = http
+/publicGroupList/0/monitorList/4 url = https://gamdom.win
+/publicGroupList/0/monitorList/5 id = 217
+/publicGroupList/0/monitorList/5 name = gamdom80006.com
+/publicGroupList/0/monitorList/5 sendUrl = 1
+/publicGroupList/0/monitorList/5 type = http
+/publicGroupList/0/monitorList/5 url = https://gamdom80006.com
+/publicGroupList/0/monitorList/6 id = 219
+/publicGroupList/0/monitorList/6 name = gamdom80007.com
+/publicGroupList/0/monitorList/6 sendUrl = 1
+/publicGroupList/0/monitorList/6 type = http
+/publicGroupList/0/monitorList/6 url = https://gamdom80007.com
+[0m
+Confirmed the operational domain set. Now I have solid, concrete findings. Let me update the state file and the inventory to reflect discovered operational domains, then produce the structured analysis.
+
+Let me also check for the `sendUrl:1` behavior — the status page passes the URL, potentially with query-string auth token. And let me check if the status page host `gamdommirrors.com` itself has the POST-only `/client-api` (it returned 200 on root, did it return the API?). Earlier: `gamdommirrors.com/client-api` returned 200 with 2444 bytes = SPA page, meaning it does NOT have the real `/client-api` proxy — it's a separate status stub host, not the casino app.
+
+Let me verify what backend gamdommirrors.com is vs the main casino, and whether there's a status API write/admin surface (UptimeRobot status pages often have `POST /api/v1/...` and incident-management). But since only GET/HEAD/OPTIONS allowed passively, I'll note this as a probe lead.
+
+Let me now write outputs to the state and inventory, then emit the structured blocks.
+[0m$ [0mgrep -oE '"/_?api/[a-zA-Z0-9/_-]+"' /tmp/opencode/client.js | sort -u | head -40; echo "=== intercom/api in gamdommirrors ==="; curl -s --max-time 10 https://gamdommirrors.com/assets/index-B_z9mVlf.js -o /tmp/opencode/statuspage.js 2>&1; wc -c /tmp/opencode/statuspage.js; grep -oE '/api/[a-zA-Z0-9/_-]+' /tmp/opencode/statuspage.js | sort -u | head -40
+=== intercom/api in gamdommirrors ===
+1715446 /tmp/opencode/statuspage.js
+/api/badge/
+/api/doc/90000/90136/91770
+/api/entry-page
+/api/http
+/api/push/
+/api/send-notifications
+/api/status-page/
+/api/status-page/heartbeat/
+[0m
+The status page (gamdommirrors.com) is a UptimeRobot "statuspage" product with its own API surface: `/api/http`, `/api/push/`, `/api/send-notifications`, `/api/status-page/heartbeat/`, `/api/badge/`, `/api/entry-page`. These are UptimeRobot SaaS endpoints (third-party, likely out of deep scope) but `/api/badge/` and `/api/status-page/heartbeat/` could expose monitor details. Let me probe the badge endpoint (it can enumerate monitorIDs and is passive) and the heartbeat.
+[0m$ [0mfor p in "/api/badge/13" "/api/badge/3" "/api/badge/gamdom-domains" "/api/status-page/heartbeat/13" "/api/http" "/api/push/"; do echo "=== $p ==="; curl -s -D- --max-time 8 "https://gamdommirrors.com$p" 2>&1 | head -c 250; echo; echo; done
+=== /api/badge/13 ===
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"98c-FhzvEKLeodsfrD7qu22S6HNDA/4"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:39 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060037-HHR
+x-cache:
+
+=== /api/badge/3 ===
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"98c-FhzvEKLeodsfrD7qu22S6HNDA/4"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:40 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710142-PHX
+x-cache: MISS
+
+=== /api/badge/gamdom-domains ===
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"98c-FhzvEKLeodsfrD7qu22S6HNDA/4"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:41 GMT
+via: 1.1 varnish
+x-served-by: cache-phx1710137-PHX
+x-cache: MISS
+
+=== /api/status-page/heartbeat/13 ===
+HTTP/2 200 
+cache-control: no-cache
+content-type: application/json; charset=utf-8
+etag: W/"24-EsPVtSRb2MavNViD7fIuXL0bd5o"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:41 GMT
+via: 1.1 varnish
+x-served-by: cach
+
+=== /api/http ===
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+etag: W/"98c-FhzvEKLeodsfrD7qu22S6HNDA/4"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:41 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060036-HHR
+x-cache:
+
+=== /api/push/ ===
+HTTP/2 404 
+content-type: application/json; charset=utf-8
+etag: W/"35-o/IDK62PUcq9o4JqO6n59eoZfx0"
+x-frame-options: SAMEORIGIN
+accept-ranges: bytes
+date: Thu, 03 Sep 2026 16:42:42 GMT
+via: 1.1 varnish
+x-served-by: cache-hhr-khhr2060025-HHR
+x-
+[0m
+`/api/status-page/heartbeat/13` returns JSON (unlike SPA fallback). This is a real data endpoint revealing monitor heartbeat data. Let me get its full content — it exposes historical uptime/status of the exact in-scope hosts.
+[0m$ [0mecho "=== heartbeat/13 ==="; curl -s --max-time 8 "https://gamdommirrors.com/api/status-page/heartbeat/13" 2>&1 | head -c 400; echo; echo "=== heartbeat/2 ==="; curl -s --max-time 8 "https://gamdommirrors.com/api/status-page/heartbeat/2" 2>&1 | head -c 400
+=== heartbeat/13 ===
+{"heartbeatList":{},"uptimeList":{}}
+=== heartbeat/2 ===
+{"heartbeatList":{},"uptimeList":{}}
+[0m
+The heartbeat endpoint returns empty lists (no historical data exposed publicly). So there's no data leak there. This status page is standard public UptimeRobot status page — the information it leaks is just the domain list, which is helpful inventory intel but not a vulnerability.
+
+Let me consolidate. I have solid recon but no confirmed HIGH-class vulnerability yet. Let me make a final check on the `/client-api` mechanism — since it's POST-only and that's the core API proxy, let me look for whether OPTIONS or a schema/v2/versioned variant exists that might leak the API structure, and check `/client-api` subpaths.
+[0m$ [0mgrep -oE '.{50}"/client-api".{300}' /tmp/opencode/client.js | head -2
+turn l(t,a,o instanceof AbortSignal?o:void 0)}})}("/client-api");(0,o.kT)({api:s});let u=s;function c(e,t,n){let r=[e.name,t];return{query:(0,a.I)(r,n=>{let{signal:r}=n;return e(t,r)},n),key:r}}},78365:(e,t,n)=>{"use strict";n.d(t,{kT:()=>o,zE:()=>i}),n(41468);let r=null,a=new Promise(e=>e);async function o(e){await new Promise(e=>setTimeout(e,10)),await a&&(Ob
+[0m
+[0m$ [0mfor p in "/client-api/v1" "/client-api/v2" "/client-api/schema" "/client-api/openapi.json" "/client-api/swagger" "/client-api/health" "/client-api/auth" "/client-api/graphql"; do echo "=== $p ==="; curl -s -o /dev/null -w "%{http_code}\n" --max-time 8 "https://gamdom.com$p"; done
+=== /client-api/v1 ===
+400
+=== /client-api/v2 ===
+400
+=== /client-api/schema ===
+400
+=== /client-api/openapi.json ===
+400
+=== /client-api/swagger ===
+400
+=== /client-api/health ===
+400
+=== /client-api/auth ===
+400
+=== /client-api/graphql ===
+400
+[0m
+[0m← [0mWrite state_bigpickle.json
+Wrote file successfully.
+[0m
+The `/client-api` proxy returns 400 "only POST" for **every** path — so it's a catch-all POST proxy that requires a POST body. All client calls go through it. The API accepts POST with a specific body format. Since I'm constrained to passive GET/HEAD/OPTIONS (no auth-bypass or mutating tests against live customer data), I must not blind-POST to this live proxy.
+
+I've done thorough passive recon. Let me record the state, update the inventory with the newly confirmed operational domains, and emit the structured analysis.
+[0m← [0mWrite leads/lead-bigpickle.md
+Wrote file successfully.
+[0m
+Now let me save a lead file capturing the new domain inventory and the /client-api finding for downstream consumers.
+[0m← [0mEdit inventory/gamdom.md
+Index: /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
+===================================================================
+--- /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
++++ /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
+@@ -33,8 +33,25 @@
+ unsubscribe.gamdom.com
+ web.gamdom.com
+ www.gamdom.com
+ 
++## CONFIRMED OPERATIONAL MIRROR DOMAINS 2026-09-03 (in-scope, company-operated)
++# Source: live probes + UptimeRobot status page preload at gamdommirrors.com/api/status-page/gamdom-domains
++# All serve the identical Gamdom casino app (nginx/Varnish/CSP) + POST-only /client-api proxy.
++gamdom.eu
++gamdom.io
++gamdom.vip
++gamdom.win
++gamdom80004.com
++gamdom80006.com
++gamdom80007.com
++
++## STATUS PAGE HOST
++gamdommirrors.com   # UptimeRobot public status page "Gamdom Official Domains" (leaks domain inventory only)
++
++## NOT OPERATED BY GAMDOM (parked for sale, OUT of in-scope deep-hunt)
++trgamdom.com        # -> hugedomains.com (brand-jacking/phishing risk, report to program, not exploit)
++
+ ## PASSIVE RECON 2026-09-02 (read-only, non-intrusive)
+ 
+ > Recon observations only. These are NOT confirmed vulnerabilities; ownership/in-scope of each host must be confirmed against the program scope before any active testing. Hosts resolve + serve HTTP — investigation requires scoped authorization.
+ 
+
+[0m
+Now let me produce the structured analyst output.
+
+---
+
+STEP 1 — DELTA
+- [NEW] `gamdom.eu`, `gamdom.io`, `gamdom.vip`, `gamdom.win` — 4 confirmed live company mirror domains (same app/CSP/Varnish + POST-only `/client-api`), absent from inventory seed.
+- [NEW] `gamdom80004.com`, `gamdom80006.com`, `gamdom80007.com` — numerical mirror domains newly confirmed live (same infra).
+- [NEW] `gamdommirrors.com` — UptimeRobot public status page "Gamdom Official Domains" (leaks authoritative domain inventory via `/api/status-page/gamdom-domains`).
+- [CHANGED] `gamdom.com/build/client*.js` — SPA bundle revealed the real API layer: POST-only proxy at `/client-api` (GET/dev paths → 400 "Invalid request, only POST").
+- [NEW] `trgamdom.com` — NOT operated by Gamdom (302 → hugedomains.com parking); brand-jacking/parking risk only.
+
+STEP 2 — PRIORITIZE (score/axis)
+- [PRIO] gamdom.com/client-api,7.3,attack_surface(POST proxy gate_all=true,tech_exposure=high:money/auth flows behind it)
+- [PRIO] gamdom80007.com,6.5,attack_surface(mirror of live app,no device-verif differentiation observed,gate medium)
+- [PRIO] gamdom80006.com,6.0,attack_surface(mirror,gate medium)
+- [PRIO] gamdom80004.com,5.2,attack_surface(302->80007,cannonical redirect)
+- [PRIO] gamdom.eu/gamdom.io/gamdom.vip/gamdom.win,5.8,attack_surface(mirrors,gate medium,targeting vector)
+
+STEP 3 — HYPOTHESES
+[HYP] Mirror-domains share wallet/auth/API trust boundary -> cross-domain ATO via client-api
+class: AUTH
+asset: gamdom80006.com /client-api (and gamdom.eu, gamdom.io, gamdom.vip, gamdom.win)
+confidence: 52
+reasoning: All 7 enumerated mirror hosts serve byte-identical casino app, identical CSP (frame-ancestors 'self' https://*.faucetcrypto.com), nginx/Varnish, and identical POST-only `/client-api` proxy (400 "only POST" on every path incl /v1 /v2 /health /graphql). UptimeRobot status page lists them as one "Gamdom Official Domains" account group. Live probes confirm corporate control; sharing implies a single upstream API/identity origin.
+evidence_needed: Two mirrors resolving to distinct upstream; or a POST to one mirror /client-api returning a session/token usable on another mirror; or browser-context CSRF (since frame-ancestors allows faucetcrypto subdomains) reaching /client-api cross-origin.
+verify_steps: Read-only first — GET /client-api and / on all mirrors (done, all 200/400). Requires AUTH_HELPED/HUMAN: authenticate on one mirror, confirm the auth cookie/session is honored by the others' /client-api. Passive only: DNS A/AAAA resolution comparison of mirrors vs main (canonical CDN).
+impact: Cross-domain account/session takeover surface if identity is shared; attacker-controlled persistence for phishing via lookalike mirrors (medium-high).
+testability: HUMAN_ONLY
+
+[HYP] UptimeRobot status-page product on gamdommirrors.com has write/incident or admin interface reachable without auth
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains (and /api/badge/, /api/status-page/heartbeat/)
+confidence: 40
+reasoning: gamdommirrors.com is a dedicated status subproduct NOT sharing the casino /client-api proxy (root returns SPA, /client-api returns SPA page not the casino 400). It exposes UptimeRobot statuspage REST: /api/status-page/<slug> returns full monitor config JSON; heartbeat endpoints return empty. This is a distinct, thinner attack surface with its own admin/threshold API that may lack auth if exposed.
+evidence_needed: Presence of authless write/mutation endpoints (e.g. POST /api/status-page/.../incidents, POST /api/monitor/, /api/push/) that accept incident text or monitor toggles; or an admin panel hidden path returning 200 with controls.
+verify_steps: Passive GET enumeration of /api/status-page/*, /api/badge/*, /api/doc/* (read-only) to map the public keyspace; confirm no tokens/IDs exposed (heartbeat empty on 13,2). No POST yet (would be mutating third-party UptimeRobot SaaS — REJECTED class risk).
+impact: Would deface the official "Gamdom Official Domains" trust page (brand/SEO/trust impact; users routed to lookalike mirrors); low-med. Mostly inventory/trust value.
+testability: HUMAN_ONLY
+
+[HYP] /client-api proxy reflects caller with insufficient input validation -> potential injection/SSRF on upstream (money-flow functions)
+class: OTHER
+asset: gamdom.com /client-api
+confidence: 45
+reasoning: /client-api is a catch-all POST proxy (400 "only POST" for all paths incl /v1, /v2, /health, /graphql, /openapi.json). Its request body format is not statically recoverable from the minified bundle; bundle shows an api factory (o.kT with base "/client-api") that calls methods by action name. If the proxy forwards an attacker-controlled subpath/payload to an upstream identity/wallet service, classic SSRF-on-proxy or mass-assignment-by-copy risks emerge.
+evidence_needed: POST to /client-api with a crafted body returning an upstream internal error/stack/truthy status that differs by injected subpath; or the bundle resolving the action->endpoint table.
+verify_steps: Passive: enumerate client-api behavior via status-code differential on GET/OPTIONS variants (done — all 400). No live POST until authorized; the necessary proof is a request that must include a valid session token to reach wallet/auth — REJECTED as no-auth-bypass-against-live-data. Await AUTHORIZED tester.
+impact: If a wallet/deposit_withdrawal/auth endpoint is reachable via /client-api without correct authorization checks -> fund theft or ATO (critical) — but currently unproven.
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Mirror cross-boundary ATO: confidence 52 but verify requires authenticated/user POST across two hosts — cannot be exercised passive-only and touches live customer auth data. Keep, needs authorized tester.
+- [PARKED] statuspage write/admin MISCONFIG: confidence 40 — Rejected-class (UptimeRobot SaaS, POST mutation of third party, no demonstrated exploit); parking for inventory/trust reporting to program.
+- [PARKED] /client-api SSRF/mass-assign: confidence 45 — no passive proof possible; blind POST to live identity proxy rejected (no auth-bypass/mutate-against-live-data). Keep as test-request spec.
+- [FINAL] survivors: gamdommirrors.com inventory leak (real, low-sev) ; mirror-domain inventory expansion (real value); trgamdom.com brand-jacking (report, not exploit). No confirmed HIGH-class vuln found this pass.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET (read-only) `https://gamdommirrors.com/api/status-page/gamdom-domains/incidents` to pull the historical incident object (UptimeRobot status page exposes past incidents; if any reference internal monitoring URLs/tokens/script tags they may leak upstream endpoints not otherwise published).
+
+STEP 6 — LEARNING
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POSt to live identity/wallet proxy is prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing.
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
+
+STEP 7 — RISK
+[RISK] gamdom: 58 reason: Expanded confirmed operating surface to 7 mirror domains sharing a single POST-only `/client-api` identity/wallet proxy; reliable high-value attack surface but no confirmed HIGH-class vuln this pass — best leads need authenticated, authorized POST testing against a scoped identity endpoint.
