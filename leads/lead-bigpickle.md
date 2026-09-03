@@ -63,3 +63,40 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root.
 [LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors.
 [RISK] gamdom: 58 reason: Confirmed 7th mirror (gamdom80007.com) and real origin gamdom4567.com behind the clone set, all sharing one Fastly edge and POST-only /client-api identity/wallet proxy; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads (cross-mirror ATO, origin boundary) need authenticated, authorized POST/session testing against scoped identity endpoints.
+## 2026-09-03 21:53:01 UTC [target] (model bigpickle)
+[PRIO] gamdom4567.com,6.3,origin-of-clone-set (attack:7 business:6 tech:6 gate:7 cloud:6 fresh:6)
+[PRIO] gamdom80007.com,6.0,fresh-7th-casino-mirror (attack:7 business:5 tech:6 gate:8 cloud:5 fresh:8)
+[PRIO] gamdommirrors.com,4.8,misconfig-status-admin (attack:4 business:5 tech:5 gate:5 cloud:4 fresh:7)
+[HYP] gamdom4567.com is shadow origin with shared /client-api trust boundary across all 7 mirrors
+class: OTHER
+asset: gamdom4567.com /client-api
+confidence: 50
+reasoning: gamdom80006 and gamdom80007 both CNAME to gamdom4567.com which resolves to Fastly edge (151.101.x.72); gamdom4567 root returns 404 while clones return 200; identical POST-only /client-api behavior implies shared upstream wallet/identity origin
+evidence_needed: Host-header on gamdom4567 returning same app as clones; or identical etag/Vary headers between 4567 and 8000x on /client-api
+verify_steps: GET https://gamdom4567.com/client-api with Host: gamdom80007.com and compare headers/body to https://gamdom80007.com/client-api (read-only, single Fastly edge)
+impact: Establishes single trust boundary across all mirrors, making any session/CSRF from any mirror valid for all; medium-high
+testability: HUMAN_ONLY
+[HYP] gamdom80007.com shares exact origin with gamdom80006 enabling cross-mirror session replay
+class: AUTH
+asset: gamdom80007.com /client-api
+confidence: 45
+reasoning: Byte-identical app, same CSP, same Fastly edge, same POST-only proxy; session cookies from one mirror may be honored by the other
+evidence_needed: Same session cookie accepted across both mirrors
+verify_steps: Authenticate on gamdom80006, attempt same cookie on gamdom80007 /client-api (HUMAN only)
+impact: Cross-domain account takeover if session cookies not scoped; medium-high
+testability: HUMAN_ONLY
+[HYP] gamdommirrors.com Kuma status page leaks internal monitor config
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains
+confidence: 38
+reasoning: Full Kuma frontend served; socket.io EIO=4 issues SID but Fastly breaks session persistence; no login observed in passive reads
+evidence_needed: Non-null response from getMonitorList or needSetup without valid admin token
+verify_steps: POST login event via socket.io with empty token on pinned edge (read-only auth check)
+impact: Deface official "Gamdom Official Domains" trust page; low-med
+testability: HUMAN_ONLY
+[PARKED] gamdommirrors.com Kuma admin: conf 38 below 40 threshold, Fastly pool breaks session persistence
+[FINAL] survivors:
+[NEXT] PROBE: GET (read-only) `https://gamdom4567.com/client-api` with `Host: gamdom80007.com` and compare response headers/body to `https://gamdom80007.com/client-api` to confirm gamdom4567 is the exact origin (shared trust boundary, no mutation, no auth tokens).
+[LEARN] ACCEPTED inventory @ gamdom80007.com: verified 7th mirror (same Fastly origin + POST-only /client-api + listed on status page) and gamdom4567.com as CNAME origin root.
+[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page publicly publishes full monitor config + 24h heartbeats for all 7 domains.
+[RISK] gamdom: 55 reason: Confirmed 7 mirrors sharing one Fastly edge and POST-only /client-api identity/wallet proxy; established shadow origin gamdom4567.com; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads need authenticated POST/session testing against scoped identity endpoints.
