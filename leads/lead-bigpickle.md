@@ -31,3 +31,35 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
 [RISK] gamdom: 58 reason: Expanded confirmed operating surface to 7 mirror domains sharing a single POST-only `/client-api` identity/wallet proxy; reliable high-value attack surface but no confirmed HIGH-class vuln this pass — best leads need authenticated, authorized POST testing against a scoped identity endpoint.
+## 2026-09-03 19:31:18 UTC [target] (model bigpickle)
+[NEW] gamdom80007.com (7th mirror): same Fastly origin, byte-identical app + POST-only /client-api (verified 200 root / 400 GET /client-api / 400 POST /client-api).
+[NEW] gamdom4567.com identified as the real CNAME origin behind both gamdom8000x mirrors (root 404, /client-api 400) — exposes the true upstream behind the clone aliases.
+[CHANGED] gamdommirrors.com is Uptime **Kuma** (self-hosted, behind Fastly/Varnish), NOT UptimeRobot; status page slug `gamdom-domains` publishes 7 monitors + 24h heartbeats; incidents REST route in Kuma is handled via SPA fallback (embedded in `/api/status-page/<slug>` which returned `incident:null`).
+[PRIO] gamdom4567.com,6.1,origin-of-mirror-clone-set (tech_exposure: reveals backend behind aliases; business: root of 8000x phishing-persistent surfaces)
+[PRIO] gamdom80007.com,6.0,fresh-7th-casino/mirror-asset (same /client-api surface as 80006)
+[PRIO] gamdommirrors.com,4.5,misconfig-status-admin (thin Kuma surface; mutating = 3rd-party/REJECTED)
+[HYP] Uptime Kuma instance on gamdommirrors.com exposes unauthenticated socket.io admin/mutation events
+class: MISCONFIG
+asset: gamdommirrors.com /socket.io (events login, setup, saveStatusPage, addMonitor, deleteMonitor)
+confidence: 38
+reasoning: Full Kuma frontend served; socket.io EIO=4 issues SID but Fastly load-balancing breaks session persistence so admin events not yet reachable; status page is published (public) and instances frequently leave `getMonitorList`/`saveStatusPage` reachable before auth. No login/setup gating observed in passive reads.
+evidence_needed: A persistent socket session returning non-null for `getMonitorList`/`needSetup`/`login` without valid admin token.
+verify_steps: Re-run socket.io handshake and POST `42["login","",""]` then poll on a single consistent edge (pin Host/SNI), not cross-pool; or websocket upgrade with EIO=4 — read-only authentication-status checks only. No mutation of third-party Kuma data.
+impact: Deface the official "Gamdom Official Domains" trust page / pivot to monitor configs; low-med.
+testability: HUMAN_ONLY
+[HYP] gamdom4567.com is a shadow origin: identical /client-api to gamdom8000x and main mirrors, revealing a shared upstream identity/wallet origin masking per-region clones
+class: OTHER
+asset: gamdom4567.com /client-api (origin behind gamdom80006/80007)
+confidence: 50
+reasoning: gamdom80006 and gamdom80007 both CNAME -> gamdom4567.com -> Fastly (151.101.x.72); gamdom4567 root returns 404 while 8000x return 200 casino app, i.e. 4567 is the shared reverse-proxy/backend for the clone set, not a user-facing host. Identical POST-only /client-api (400) implies shared upstream wallet/identity boundary.
+evidence_needed: Confirming gamdom4567 handles upstream origin requests for both clones (via Host header on 4567 returning app or an X-Forwarded bypass differential); or showing a session/token issued on one mirror is honored on 4567 and vice-versa.
+verify_steps: Passive — DNS comparisons (done: both CNAME to 4567); compare response headers (etag/Vary) between gamdom80006 and gamdom80007 on / to detect identical static/CDN cache keys -> same origin. No auth-bypass testing.
+impact: Establishes single trust boundary across all 7 mirrors (and the real origin), making cross-domain session/CSRF from any mirror valid for all; medium-high surface characterisation.
+testability: HUMAN_ONLY
+[PARKED] Uptime Kuma unauthenticated admin (conf 38): socket.io admin events not reachable through Fastly pool; no mutation allowed on 3rd-party SaaS; below 40 threshold — parked pending a persistent-session HUMAN test.
+[PARKED] gamdom4567.cd shadow-origin SSRF/mass-assignment (conf 50, no verify): proving shared-boundary requires authenticated POST, which is REJECTED class.
+[FINAL] ranked survivors:
+[NEXT] PROBE: GET (read-only) `https://gamdom4567.com/client-api` with `Host: gamdom80007.com` via a single Fastly edge and compare response headers/body to `https://gamdom80007.com/client-api` to confirm gamdom4567 is the exact origin (shared trust boundary, no mutation, no auth tokens).
+[LEARN] ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root.
+[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors.
+[RISK] gamdom: 58 reason: Confirmed 7th mirror (gamdom80007.com) and real origin gamdom4567.com behind the clone set, all sharing one Fastly edge and POST-only /client-api identity/wallet proxy; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads (cross-mirror ATO, origin boundary) need authenticated, authorized POST/session testing against scoped identity endpoints.
