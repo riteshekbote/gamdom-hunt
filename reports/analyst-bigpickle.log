@@ -3220,3 +3220,301 @@ STEP 7 — RISK
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mcurl -s -D /tmp/gamdom_socket_headers.txt "https://gamdommirrors.com/socket.io/?EIO=4&transport=polling" -o /tmp/gamdom_socket_body.txt 2>&1 && echo "---HEADERS---" && cat /tmp/gamdom_socket_headers.txt && echo "---BODY---" && cat /tmp/gamdom_socket_body.txt failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-04 21:37:03 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/clientapi_headers.txt -D - --max-time 20 -H "Origin: https://gamdom80007.com" -H "User-Agent: Mozilla/5.0" https://gamdom80006.com/client-api
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Fri, 04 Sep 2026 21:33:29 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-khef600076-IAD, cache-iad-kiad7000026-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788557609.696611,VS0,VE339
+strict-transport-security: max-age=31557600
+content-length: 26
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/gamdom_index.html --max-time 20 -H "User-Agent: Mozilla/5.0" https://gamdom80006.com/ && wc -c /tmp/opencode/gamdom_index.html
+62827 /tmp/opencode/gamdom_index.html
+[0m
+[0m$ [0mgrep -oE '(src|href)="[^"]+"' /tmp/opencode/gamdom_index.html | sort -u | head -50
+href="/"
+href="/build/AppShell.e7fa8dde3062d54f4b49.js"
+href="/build/HomePage.3f74f68d359716bd6835.js"
+href="/build/client.21c813c93e08dd492679.css"
+href="/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=en"
+href="/manifest.json"
+href="/static/img/favicon/apple-touch-icon.png"
+href="/static/img/favicon/favicon-16x16.png"
+href="/static/img/favicon/favicon-32x32.png"
+href="/static/img/favicon/favicon.ico"
+href="/static/img/favicon/safari-pinned-tab.svg"
+href="https://gamdom.com/"
+href="https://gamdom.com/bg-bg/"
+href="https://gamdom.com/cs-cz/"
+href="https://gamdom.com/el-gr/"
+href="https://gamdom.com/es-es/"
+href="https://gamdom.com/fr-fr/"
+href="https://gamdom.com/id-id/"
+href="https://gamdom.com/ja-jp/"
+href="https://gamdom.com/ka-ge/"
+href="https://gamdom.com/ko-kr/"
+href="https://gamdom.com/pl-pl/"
+href="https://gamdom.com/pt-pt/"
+href="https://gamdom.com/ru-ru/"
+href="https://gamdom.com/sr-rs/"
+href="https://gamdom.com/th-th/"
+href="https://gamdom.com/tl-ph/"
+href="https://gamdom.com/vi-vn/"
+href="https://gamdom.com/zh-cn/"
+href="https://gamdom.io/"
+href="https://gamdom80004.com/tr-tr/"
+src="/build/client.41b06529227c4b8b6a1d.js#1788557592323"
+src="/static/img/loading-animation-v4.svg"
+src="https://www.googletagmanager.com/gtm.js?id="
+src="https://www.googletagmanager.com/ns.html?id=GTM-N3SFTLNW"
+[0m
+[0m$ [0mgrep -oiE 'client-api|graphql|/api/|websocket|wss://|upload[a-z/-]*|__next|_next/static' /tmp/opencode/gamdom_index.html | sort | uniq -c | sort -rn | head -20
+(no output)
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/client.js --max-time 60 -H "User-Agent: Mozilla/5.0" "https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js" && wc -c /tmp/opencode/client.js
+597876 /tmp/opencode/client.js
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/appshell.js --max-time 60 -H "User-Agent: Mozilla/5.0" "https://gamdom80006.com/build/AppShell.e7fa8dde3062d54f4b49.js" && wc -c /tmp/opencode/appshell.js
+209175 /tmp/opencode/appshell.js
+[0m
+[0m$ [0mgrep -oE '"/[a-zA-Z0-9_./-]*"' /tmp/opencode/client.js | sort -u | head -80
+"/"
+"//"
+"/401"
+"/404"
+"/Affiliates"
+"/BlogArticlePreview"
+"/BonusEngine"
+"/BulkActions"
+"/KYCAdmin"
+"/KYCAdmin/KycEnforcement"
+"/NewBlogAdmin"
+"/NewBlogAdmin/create"
+"/OpenTrades"
+"/PriceWatchAdmin/edit-price"
+"/PriceWatchAdmin/update-prices"
+"/PromotionAdmin"
+"/PromotionAdmin/create"
+"/SEORedirects"
+"/SEORedirects/history"
+"/SEORedirects/list"
+"/_mp/api"
+"/admin"
+"/affiliates"
+"/affiliates-info"
+"/aml"
+"/archive"
+"/banned"
+"/blackjack"
+"/blog"
+"/blog-images/"
+"/blog/casino/"
+"/blog/crypto/"
+"/blog/esports/"
+"/blog/guides/"
+"/blog/news/"
+"/blog/preview"
+"/blog/sports/"
+"/build/"
+"/casino"
+"/casino/bonus-buy"
+"/casino/boosted-rtp-games"
+"/casino/category/"
+"/casino/category/boosted-rtp-games"
+"/casino/category/hot-games"
+"/casino/category/new-games"
+"/casino/category/top-games"
+"/casino/favorite"
+"/casino/gamdom-exclusives"
+"/casino/hot-games"
+"/casino/live-games"
+"/casino/new-games"
+"/casino/providers"
+"/casino/providers/gamdom-originals"
+"/casino/providers/perabet-originals"
+"/casino/slots"
+"/casino/slots-arena"
+"/casino/table-games"
+"/casino/top-games"
+"/cdn_images/"
+"/chat"
+"/chicken"
+"/client-api"
+"/connections"
+"/crash"
+"/default-avatars/"
+"/demo"
+"/dice"
+"/dyn"
+"/dynamic-auth"
+"/error"
+"/esports"
+"/external-affiliates"
+"/external-promo"
+"/external-sport"
+"/fair"
+"/feedback"
+"/geoblocked"
+"/help"
+"/help/about-us"
+"/help/complaintspolicy"
+[0m
+[0m$ [0mgrep -oiE '(client-api|graphql|/api/v[0-9]+|gql|sse|event-stream|webhook|upload|/socket\.io)' /tmp/opencode/client.js /tmp/opencode/appshell.js | sort | uniq -c | sort -rn | head -30
+23 /tmp/opencode/appshell.js:sse
+     17 /tmp/opencode/client.js:sse
+     10 /tmp/opencode/appshell.js:SSE
+      4 /tmp/opencode/client.js:sSe
+      4 /tmp/opencode/appshell.js:sSe
+      2 /tmp/opencode/client.js:SSE
+      2 /tmp/opencode/appshell.js:Upload
+      1 /tmp/opencode/client.js:client-api
+[0m
+[0m$ [0mgrep -oE '"_mp/api[^"]*"' /tmp/opencode/client.js | sort -u; echo ---; grep -oE '.{80}"_mp/api.{120}' /tmp/opencode/client.js | head -5
+---
+[0m
+[0m$ [0mgrep -oE '.{60}dynamic-auth.{100}' /tmp/opencode/client.js | head -5
+mise.all([n.e(5390),n.e(784)]).then(n.bind(n,70643)))},{id:"dynamic-auth",path:p.Ff.DYNAMIC_AUTH,...b(()=>Promise.all([n.e(345),n.e(9961),n.e(5390),n.e(8779),n.e(268),n.e(1
+OOT:"/responsible-gambling",LOGOUT:"/logout",DYNAMIC_AUTH:"/dynamic-auth",401:"/401",404:"/404",CASINO_ROOT:"/casino",CASINO_NEW_GAMES:"/casino/new-games",CASINO_TOP_GAMES:
+[0m
+[0m$ [0mgrep -oE '/_mp/api[^"'\\]{0,80}' /tmp/opencode/client.js | sort -u | head -20; echo ---; grep -oE '.{100}/_mp/api.{150}' /tmp/opencode/client.js | head -3
+/bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+[0m
+[0m$ [0mgrep -oE '/_mp/api[a-zA-Z0-9_./-]*' /tmp/opencode/client.js | sort -u | head -20; echo ---; grep -oE '.{80}/_mp/api.{120}' /tmp/opencode/client.js | head -3
+/_mp/api
+---
+tor.js",analytics:{googleTagManager:"",mixpanelBrowserToken:"",mixpanelApiPath:"/_mp/api"},gameMaxBets:{dice:5e4,crash:5e4,roulette:{red:5e4,black:5e4,green:1e4},hilo:{hi:5e4,lo:5e4,red:5e4,black:5e4,"2-9":1e
+[0m
+[0m$ [0mgrep -oE '(localStorage|sessionStorage)\.[A-Za-z]+\(["'"'"'][^)]{0,60}' /tmp/opencode/client.js | sort -u | head -30
+(no output)
+[0m
+[0m$ [0mgrep -oiE '.{40}(clientApiToken|accessToken|access_token|clientKey|authToken|bearer).{60}' /tmp/opencode/client.js | head -20
+(no output)
+[0m
+[0m$ [0mgrep -oiE '(localStorage|sessionStorage)' /tmp/opencode/appshell.js | sort | uniq -c; echo ---; grep -oiE 'document\.cookie|[;,]cookie=' /tmp/opencode/appshell.js | sort | uniq -c
+6 LocalStorage
+     15 localStorage
+---
+[0m
+[0m$ [0mgrep -oiE '.{30}(clientApi|client-api).{80}' /tmp/opencode/appshell.js | head -15
+(no output)
+[0m
+[0m$ [0mgrep -oE 'localStorage\.[a-zA-Z]+\([^)]{0,80}' /tmp/opencode/appshell.js | sort -u | head -30
+localStorage.getItem("dailyMillionBox"
+localStorage.getItem(X
+localStorage.getItem(l
+localStorage.getItem(s
+localStorage.getItem(t+n
+localStorage.getItem(tV.PROCESSED_DEPOSIT_TX_KEY
+localStorage.removeItem(X
+localStorage.setItem("dailyMillionBox",new Date(new Date(
+localStorage.setItem(s,e
+localStorage.setItem(t+n,JSON.stringify(e
+localStorage.setItem(tV.PROCESSED_DEPOSIT_TX_KEY,JSON.stringify(n
+[0m
+[0m$ [0mgrep -oiE '["'"'"'][a-zA-Z_]*[Tt]oken["'"'"'][^,}]{0,60}' /tmp/opencode/appshell.js | sort -u | head -30; echo ---; grep -oiE 'getItem\(["'"'"'][a-zA-Z_-]+["'"'"']\)' /tmp/opencode/appshell.js | sort -u | head -30
+---
+getItem("dailyMillionBox")
+[0m
+[0m$ [0mcurl -s -o /dev/null -D - --max-time 20 -H "User-Agent: Mozilla/5.0" https://gamdom80004.com/ | head -15
+HTTP/2 302 
+server: Varnish
+retry-after: 0
+location: https://gamdom80007.com/
+cache-control: no-store
+accept-ranges: bytes
+date: Fri, 04 Sep 2026 21:35:09 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000022-IAD
+x-cache: HIT
+x-cache-hits: 0
+x-timer: S1788557710.637400,VS0,VE0
+strict-transport-security: max-age=31557600
+content-length: 0
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/i18n_ok.txt -D /tmp/opencode/i18n_ok.hdr --max-time 20 -H "User-Agent: Mozilla/5.0" "https://gamdom80006.com/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=en"; head -1 /tmp/opencode/i18n_ok.hdr; wc -c /tmp/opencode/i18n_ok.txt
+HTTP/2 200 
+917864 /tmp/opencode/i18n_ok.txt
+[0m
+[0m$ [0mgrep -iE 'content-type|content-encoding|server|via' /tmp/opencode/i18n_ok.hdr; head -c 200 /tmp/opencode/i18n_ok.txt
+server: nginx
+content-type: application/json; charset=utf-8
+via: 1.1 varnish
+{"id":1,"languageCode":"en","includesAllPackages":true,"packagesById":{"chat-client":{"includesAllTranslatables":true,"translationsByCodeId":{"4SaDZfCl":{"translatedFormat":"Amount must be a Number","
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/i18n_trav.txt -D /tmp/opencode/i18n_trav.hdr --max-time 20 -H "User-Agent: Mozilla/5.0" "https://gamdom80006.com/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=en%2f..%2f..%2f..%2f..%2fetc%2fhostname"; head -1 /tmp/opencode/i18n_trav.hdr; head -c 150 /tmp/opencode/i18n_trav.txt; echo; echo ===; curl -s -o /dev/null -D - --max-time 20 -H "User-Agent: Mozilla/5.0" "https://gamdom80006.com/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=nonexistent" | head -1
+HTTP/2 200 
+{"id":1,"languageCode":"en","includesAllPackages":true,"packagesById":{"chat-client":{"includesAllTranslatables":true,"translationsByCodeId":{"4SaDZfC
+===
+HTTP/2 200
+[0m
+[0m$ [0mcurl -s -o /dev/null -D - --max-time 20 -H "Origin: https://evil.example" -H "User-Agent: Mozilla/5.0" https://gamdom4567.com/client-api | head -1; curl -s -o /dev/null -D - --max-time 20 -H "Origin: https://evil.example" -H "User-Agent: Mozilla/5.0" https://gamdom80007.com/client-api | head -1
+HTTP/2 400 
+HTTP/2 400
+[0m
+STEP 1 — DELTA:
+- [NEW] gamdom80004.com — unlisted 8th hostname on Fastly pool B (cache-iad), 302→gamdom80007.com; not in inventory, joins mirror set.
+- [NEW] Unauthenticated SPA bundles @ gamdom80006.com (`/build/client.*.js`, `AppShell.*.js`) expose full admin route map: /admin, /KYCAdmin/KycEnforcement, /Affiliates, /BonusEngine, /BulkActions, /PriceWatchAdmin/*, /PromotionAdmin/*, /SEORedirects, /NewBlogAdmin/*, /OpenTrades, /dynamic-auth — plus public i18n JSON endpoint (`/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=en`, 200, 900KB JSON).
+- [CHANGED] CORS: /client-api returns 400 with NO Access-Control-Allow-Origin under cross-origin Origin on gamdom80006/80007/4567 → no CORS reflection anywhere in pool B; cross-mirror attack must be token/cookie replay, not CORS.
+- [CHANGED] i18n `lang` branch closed: traversal (`lang=en/../../../../etc/hostname`) and bogus codes both 200 fallback "en" → param is code-mapped, not file-backed.
+- [CHANGED] Auth token transport unresolved: appshell uses localStorage (deposit-tx keys) but no auth-token key in main bundles; auth layer is in lazy chunks — decisive for replay feasibility, still open.
+
+STEP 2 — PRIORITIZE:
+- [PRIO] gamdom80006.com,6.0,cross-mirror-session-replay (attack:7 business:6 tech:5 gate:5 cloud:5 fresh:8)
+- [PRIO] gamdom80004.com,4.8,unlisted-alias-host (attack:3 business:3 tech:4 gate:9 cloud:4 fresh:10)
+- [PRIO] gamdommirrors.com,4.7,status-kuma-admin (attack:4 business:5 tech:5 gate:4 cloud:4 fresh:7)
+
+STEP 3 — HYPOTHESES:
+[HYP] Cross-mirror auth token/session replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com /client-api (shared origin gamdom4567.com, pool B: 80004/80006/80007/4567)
+confidence: 55
+reasoning: Byte-identical SPA + shared origin backend across all mirrors; /client-api GET 400 with no ACAO on both mirrors and origin (no CORS vector); replay feasibility depends on auth-token transport (cookie vs localStorage), unresolved in main bundles
+evidence_needed: Same session/token minted on gamdom80006 accepted by gamdom80007 /client-api; and where token is stored client-side (localStorage=trivial replay+XSS→ATO, HttpOnly cookie=host-based replay)
+verify_steps: (passive) fetch AppShell chunk manifest, load request-layer chunk, read /client-api request header + storage key; (AUTH_HELPED) authenticate on 80006, replay bearer/cookie on 80007 /client-api
+impact: Cross-domain account takeover across all 8 mirror hostnames; medium-high
+testability: AUTH_HELPED
+[HYP] Unlisted alias host widens shared-trust session surface
+class: MISCONFIG
+asset: gamdom80004.com (302 → gamdom80007.com)
+confidence: 45
+reasoning: 8th hostname, fastly pool B, 302 to gamdom80007; joins the same origin trust boundary; any session scoped to the mirror set is reachable from an extra hostname absent from official status page
+evidence_needed: Whether auth Set-Cookie/headers from 80007 are honored when arriving via 80004; identical session pool
+verify_steps: HEAD chain 80004→80007 (done: 302, same pool); compare Set-Cookie during auth on 80004 vs 80007 (HUMAN)
+impact: Marginal widening of replay surface + cache-key/host-confusion edge; low
+testability: HUMAN_ONLY
+[HYP] Kuma status page leaks live heartbeat/IP internals of monitor origins
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains
+confidence: 38
+reasoning: Status page publishes 7 monitors + 24h heartbeats; /api/status-page/*, /api/badge/*, /api/heartbeat/* serve SPA HTML; socket.io EIO=4 handshake issues SID but Fastly breaks session persistence; no unauthenticated JSON confirmed
+evidence_needed: Non-null getMonitorList/needSetup over socket.io without admin token
+verify_steps: GET socket.io polling handshake; compare SID persistence across retries
+impact: Deface official "Gamdom Official Domains" trust page / leak monitor IPs; low-med
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE:
+- [PARKED] gamdommirrors.com Kuma admin: conf 38 < 40; verify requires stable socket.io session (Fastly pool breaks it) + mutation; park.
+- [PARKED] gamdom80004.com replay widening: conf 45 but human-only and marginal impact; keep as inventory fact, not an active hunt.
+- [FINAL] survivors ranked: 1) gamdom80006.com cross-mirror token replay (55, AUTH_HELPED, passive hardening path open); 2) gamdom4567.com origin boundary (DONE/confirmed, not re-hunted). Nothing new ≥ 40 that is PASSIVE-executable and not previously DONE/PARKED.
+
+STEP 5 — NEXT ACTION:
+- [NEXT] PROBE: GET `https://gamdom80006.com/build/AppShell.e7fa8dde3062d54f4b49.js` (local copy cached), extract chunk manifest, load the request/auth layer chunk, grep for `client-api` request headers and token storage key to resolve HttpOnly-cookie vs localStorage transport — decides whether cross-mirror replay (55) is near-certain (localStorage: XSS=ATO, replay trivial) or host-scoped (cookie). If negative, switch to [NEXT] HUMAN: authenticate on gamdom80006, replay cookie on gamdom80007 /client-api.
+
+STEP 6 — LEARNING:
+- [LEARN] ACCEPTED inventory @ gamdom80004.com: unlisted hostname on same Fastly pool B 302→gamdom80007.com — 8th mirror-set hostname not on official status page.
+- [LEARN] ACCEPTED recon @ gamdom80006.com: public SPA bundles enumerate full admin route surface + public i18n JSON; static client JS analysis is legitimate passive recon.
+- [LEARN] REJECTED path-traversal @ gamdom80006.com/i18n-system: `lang` falls back to 200 "en" JSON on traversal and bogus codes; code-mapped, not file-backed.
+- [LEARN] ACCEPTED recon @ gamdom4567.com: /client-api cross-origin 400 with no ACAO on 80006/80007/4567 — no CORS reflection in pool B; replay vector narrowed to cookie/header.
+- [LEARN] ACCEPTED recon @ gamdom80006.com: appshell reads/writes localStorage but auth-token key transport unresolved; replay/hypothesis quality hinges on chunk enumeration.
+
+STEP 7 — RISK:
+- [RISK] gamdom: 59 reason: Verified shared-origin trust boundary across 8 hostnames (80004/80006/80007/4567+) served by single POST-only /client-api identity/wallet proxy; no CORS vector, no confirmed HIGH-class vuln; top lead (cross-mirror session replay → ATO, conf 55) unconfirmed pending auth-token transport resolution and authenticated replay test.

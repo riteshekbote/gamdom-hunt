@@ -1,1 +1,28 @@
-## 2026-09-04 19:07:55 UTC [target] (model bigpickle)
+## 2026-09-04 21:36:53 UTC [target] (model bigpickle)
+[HYP] Cross-mirror auth token/session replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com /client-api (shared origin gamdom4567.com, pool B: 80004/80006/80007/4567)
+confidence: 55
+reasoning: Byte-identical SPA + shared origin backend across all mirrors; /client-api GET 400 with no ACAO on both mirrors and origin (no CORS vector); replay feasibility depends on auth-token transport (cookie vs localStorage), unresolved in main bundles
+evidence_needed: Same session/token minted on gamdom80006 accepted by gamdom80007 /client-api; and where token is stored client-side (localStorage=trivial replay+XSS→ATO, HttpOnly cookie=host-based replay)
+verify_steps: (passive) fetch AppShell chunk manifest, load request-layer chunk, read /client-api request header + storage key; (AUTH_HELPED) authenticate on 80006, replay bearer/cookie on 80007 /client-api
+impact: Cross-domain account takeover across all 8 mirror hostnames; medium-high
+testability: AUTH_HELPED
+[HYP] Unlisted alias host widens shared-trust session surface
+class: MISCONFIG
+asset: gamdom80004.com (302 → gamdom80007.com)
+confidence: 45
+reasoning: 8th hostname, fastly pool B, 302 to gamdom80007; joins the same origin trust boundary; any session scoped to the mirror set is reachable from an extra hostname absent from official status page
+evidence_needed: Whether auth Set-Cookie/headers from 80007 are honored when arriving via 80004; identical session pool
+verify_steps: HEAD chain 80004→80007 (done: 302, same pool); compare Set-Cookie during auth on 80004 vs 80007 (HUMAN)
+impact: Marginal widening of replay surface + cache-key/host-confusion edge; low
+testability: HUMAN_ONLY
+[HYP] Kuma status page leaks live heartbeat/IP internals of monitor origins
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains
+confidence: 38
+reasoning: Status page publishes 7 monitors + 24h heartbeats; /api/status-page/*, /api/badge/*, /api/heartbeat/* serve SPA HTML; socket.io EIO=4 handshake issues SID but Fastly breaks session persistence; no unauthenticated JSON confirmed
+evidence_needed: Non-null getMonitorList/needSetup over socket.io without admin token
+verify_steps: GET socket.io polling handshake; compare SID persistence across retries
+impact: Deface official "Gamdom Official Domains" trust page / leak monitor IPs; low-med
+testability: HUMAN_ONLY
