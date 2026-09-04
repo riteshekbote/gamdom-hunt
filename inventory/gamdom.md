@@ -72,3 +72,8 @@ www.gamdom.com
 ## 2026-09-04 02:53:41 UTC
 
 ## 2026-09-04 07:47:47 UTC
+
+## 2026-09-04 12:45:23 UTC
+- NEW Origin trust boundary confirmed: gamdom4567.com is the verified shared backend for all 8000x mirrors (byte-identical /client-api headers, Fastly 421 on Host-header injection proves cert binding, heade
+- CHANGED Hypothesis "gamdom4567.com is shadow origin with shared /client-api trust boundary" confidence raised from 50 → 70 (bigpickle) / 70 (nemotron3); evidence_needed now "None — origin trust boundary confi
+- CHANGED Next actionable probe shifted: nemotron3 still queues Host-header probe on gamdom4567.com; bigpickle marks it DONE and queues socket.io handshake on gamdommirrors.com instead
