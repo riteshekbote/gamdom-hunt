@@ -1,9 +1,9 @@
-## 2026-09-03 23:50:09 UTC [target] (model nemotron3)
-[PRIO] gamdom80006.com /client-api,8.5,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
-[PRIO] gamdom80007.com /client-api,8.5,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
-[PRIO] gamdom4567.com /client-api,8.2,attack_surface=10 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
-[PRIO] gamdommirrors.com /socket.io/,6.2,attack_surface=7 business_value=5 tech_exposure=7 gate_ease=8 cloud_surface=4 freshness=7
-[PRIO] gamdommirrors.com /api/status-page/gamdom-domains,6.8,attack_surface=7 business_value=6 tech_exposure=6 gate_ease=10 cloud_surface=5 freshness=8
+## 2026-09-04 02:53:30 UTC [target] (model nemotron3)
+[PRIO] gamdom80006.com /client-api,8.7,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdom80007.com /client-api,8.7,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdom4567.com /client-api,8.45,attack_surface=10 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=9
+[PRIO] gamdommirrors.com /api/status-page/gamdom-domains,6.95,attack_surface=7 business_value=6 tech_exposure=6 gate_ease=10 cloud_surface=5 freshness=8
+[PRIO] gamdommirrors.com /socket.io/,6.35,attack_surface=7 business_value=5 tech_exposure=7 gate_ease=8 cloud_surface=4 freshness=7
 [HYP] Mirror-domain session sharing via /client-api enables cross-domain ATO
 class: AUTH
 asset: gamdom80006.com /client-api (and gamdom.eu, gamdom.io, gamdom.vip, gamdom.win, gamdom80007.com, gamdom4567.com)
@@ -13,6 +13,15 @@ evidence_needed: Auth cookie/session issued on one mirror honored by /client-api
 verify_steps: PASSIVE: DNS A/AAAA comparison of all 7 mirrors vs canonical (done — two pools confirmed). AUTH_HELPED: Authenticate on one mirror, test if session cookie valid on /client-api of another mirror (requires authorized tester). No live POST without valid session.
 impact: Cross-domain account takeover across all mirrors; phishing persistence via lookalike domains (medium-high)
 testability: AUTH_HELPED
+[HYP] gamdom4567.com is shadow origin with shared /client-api trust boundary across all 7 mirrors
+class: OTHER
+asset: gamdom4567.com /client-api
+confidence: 50
+reasoning: gamdom80006 and gamdom80007 both CNAME to gamdom4567.com which resolves to Fastly edge (151.101.x.72); gamdom4567 root returns 404 while clones return 200; identical POST-only /client-api behavior implies shared upstream wallet/identity origin
+evidence_needed: Host-header on gamdom4567 returning same app as clones; or identical etag/Vary headers between 4567 and 8000x on /client-api
+verify_steps: GET https://gamdom4567.com/client-api with Host: gamdom80007.com and compare headers/body to https://gamdom80007.com/client-api (read-only, single Fastly edge)
+impact: Establishes single trust boundary across all mirrors, making any session/CSRF from any mirror valid for all; medium-high
+testability: PASSIVE
 [HYP] Uptime Kuma socket.io admin/mutation events exposed without auth
 class: MISCONFIG
 asset: gamdommirrors.com /socket.io/
@@ -22,19 +31,11 @@ evidence_needed: Unauthenticated socket.io events accepting mutation payloads (e
 verify_steps: PASSIVE: Socket.io handshake probe (GET /socket.io/?EIO=4&transport=polling) to capture sid/handshake data (done). Enumerate event names via client JS bundle analysis. No POST/mutation against third-party SaaS (REJECTED class risk).
 impact: Deface official "Gamdom Official Domains" trust page; brand/SEO/trust impact; users routed to malicious mirrors (low-med)
 testability: PASSIVE
-[HYP] /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment
-class: OTHER
-asset: gamdom.com /client-api (and all 6 mirrors)
-confidence: 48
-reasoning: /client-api is POST-only catch-all proxy (400 on GET/OPTIONS for /v1, /v2, /health, /graphql, /openapi.json). Minified bundle shows api factory (o.kT with base "/client-api") calling methods by action name. If proxy forwards subpath/payload to upstream identity/wallet service, SSRF-on-proxy or mass-assignment-by-copy risks emerge.
-evidence_needed: POST with crafted body returning upstream internal error/stack/truthy status differing by injected subpath; or bundle resolving action->endpoint table
-verify_steps: PASSIVE: status-code differential on GET/OPTIONS variants (done — all 400). Bundle analysis for action routing map (requires authorized access). No live POST without authorized session (REJECTED auth-bypass). Await authorized tester with valid session to probe action routing.
-impact: If wallet/deposit/withdrawal/auth endpoint reachable via /client-api without correct authorization -> fund theft or ATO (critical) — unproven
-testability: AUTH_HELPED
 [PARKED] Uptime Kuma socket.io admin/mutation events exposed without auth: confidence 38 < 40 threshold; mutation against monitoring infra = REJECTED class risk per scope (no clear path to Gamdom-owned asset compromise)
 [PARKED] /client-api catch-all proxy SSRF/mass-assignment: confidence 48 but verify_steps requires AUTH_HELPED live POST with valid session; currently blocked by REJECTED auth-bypass learning; no passive-only verification path to confirm upstream routing behavior
 [FINAL] Mirror-domain session sharing via /client-api enables cross-domain ATO (confidence 55, AUTH_HELPED testability, medium-high impact)
-[NEXT] PROBE: GET (read-only) `https://gamdommirrors.com/socket.io/?EIO=4&transport=polling&sid=_EDMwKXb0he9pQH_AVOG` to capture socket.io polling response and enumerate available event namespaces — passive, <=1 rps, no auth, no mutation
+[FINAL] gamdom4567.com is shadow origin with shared /client-api trust boundary across all 7 mirrors (confidence 50, PASSIVE testability, medium-high impact)
+[NEXT] PROBE: GET (read-only) `https://gamdom4567.com/client-api` with `Host: gamdom80007.com` and compare response headers/body to `https://gamdom80007.com/client-api` to confirm gamdom4567 is the exact origin (shared trust boundary, no mutation, no auth tokens, <=1 rps)
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
