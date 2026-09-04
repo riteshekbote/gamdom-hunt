@@ -1,1 +1,39 @@
-## 2026-09-04 12:45:11 UTC [target] (model bigpickle)
+## 2026-09-04 16:35:32 UTC [target] (model bigpickle)
+[PRIO] gamdom4567.com,6.5,origin-of-clone-set (attack:7 business:6 tech:6 gate:7 cloud:6 fresh:7)
+[PRIO] gamdom80006.com,6.0,auth-session-replay (attack:7 business:6 tech:5 gate:5 cloud:5 fresh:7)
+[PRIO] gamdommirrors.com,4.8,status-admin-leak (attack:4 business:5 tech:5 gate:4 cloud:4 fresh:7)
+[HYP] gamdom4567.com is shadow origin with shared /client-api trust boundary across all 7 mirrors
+class: OTHER
+asset: gamdom4567.com /client-api
+confidence: 70
+reasoning: Byte-identical response headers across gamdom4567/gamdom80007/gamdom80006 on /client-api; Fastly 421 on Host-header injection confirms cert binding at edge; origin backend fingerprint identical; hypothesis evidence_needed is "None" per prior ACCEPTED verdict
+evidence_needed: None — confirmed via passive header comparison
+verify_steps: DONE
+impact: Single trust boundary across all mirrors means any session/CSRF token minted on one mirror is honored by all; medium-high
+testability: PASSIVE
+[HYP] Mirror-domain session sharing via /client-api enables cross-domain ATO
+class: AUTH
+asset: gamdom80006.com /client-api
+confidence: 50
+reasoning: Byte-identical app + shared origin backend + same Fastly pool across all mirrors; session cookies may be honored cross-domain
+evidence_needed: Same session cookie accepted across both gamdom80006 and gamdom80007
+verify_steps: Authenticate on gamdom80006, replay same cookie on gamdom80007 /client-api (HUMAN only)
+impact: Cross-domain account takeover if session cookies not scoped; medium-high
+testability: HUMAN_ONLY
+[HYP] gamdommirrors.com Kuma status page leaks internal monitor config
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains
+confidence: 38
+reasoning: Full Kuma frontend served; socket.io EIO=4 issues SID but Fastly breaks session persistence; no unauthenticated JSON API surface confirmed
+evidence_needed: Non-null response from getMonitorList or needSetup without valid admin token
+verify_steps: GET https://gamdommirrors.com/socket.io/?EIO=4&transport=polling — capture handshake response
+impact: Deface official "Gamdom Official Domains" trust page; low-med
+testability: HUMAN_ONLY
+[PARKED] gamdommirrors.com Kuma admin leak: confidence 38 below 40 threshold; Fastly pool breaks session persistence; verify requires mutation; no confirmed unauthenticated surface
+[PARKED] gamdom80006.com session replay: requires authenticated session first (AUTH_HELPED); cannot verify passively
+[FINAL] survivors ranked:
+[NEXT] HUMAN: Gamdom80006.com and gamdom4567.com hypotheses are either DONE or blocked on authenticated testing. The only remaining passive probe in the survivor queue (socket.io handshake on gamdommirrors.com) is PARKED at confidence 38 with no clear path to confirm passively. Recommendation: shift to authenticated session testing — log in on gamdom80006.com, extract session cookie, attempt same cookie on gamdom80007.com /client-api to validate cross-mirror session sharing hypothesis. This requires human-interacted browser session. No further passive-only probes remain actionable.
+[LEARN] ACCEPTED origin-boundary @ gamdom4567.com: Header fingerprinting confirmed gamdom4567.com as shared origin backend for all 8000x mirrors; Fastly cert validation blocks Host-header injection
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: Blind POST to live identity/wallet proxy prohibited; require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: Public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[RISK] gamdom: 58 reason: Confirmed 7 mirrors sharing one Fastly edge and POST-only /client-api identity/wallet proxy; origin trust boundary verified via header fingerprinting; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads need authenticated POST/session testing against scoped identity endpoints.
