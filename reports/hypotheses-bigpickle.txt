@@ -1,28 +1,42 @@
-## 2026-09-04 21:36:53 UTC [target] (model bigpickle)
-[HYP] Cross-mirror auth token/session replay via shared /client-api origin yields ATO
+## 2026-09-04 23:18:59 UTC [target] (model bigpickle)
+[CHANGED] Cross-mirror session replay hypothesis (gamdom80006) stayed at confidence 55; must now be shifted toward client-side token-storage analysis (localStorage vs HttpOnly cookie) to resolve purely passively — transport question unresolved in main bundles.
+[CHANGED] gamdom80004.com 302-chain confirmed to gamdom80007.com; joins Pool B trust boundary as an 8th reachable hostname absent from the official status page (new surface).
+[CHANGED] socket.io handshake probe on gamdommirrors.com remains the lone passive survivor — queued by both agents, still confidence 38 (PARKED), no unauthenticated JSON surface confirmed.
+[NEW] socket.io handshake probe executed (passive): `GET /socket.io/?EIO=4&transport=polling` on gamdommirrors.com → HTTP 200, `{"sid":"...","upgrades":["websocket"],"pingInterval":25000,...}`, behind Fastly/Varnish (`x-cache: MISS`, `via: 1.1 varnish`) — SID issued but no follow-up surface tested (PARKED admin probe unchanged).
+[NEW] Token transport RESOLVED passively from gamdom80006.com `client.41b06529227c4b8b6a1d.js` (597 KB, server's own bundle): request layer uses `credentials:"same-origin"`, zero `Authorization`/`Bearer` strings, zero localStorage token keys (`IS_LOGGED_IN`/`fehash` cookies are UI flags only) → auth is **server-set cookie**, not client bearer token.
+[CHANGED] Cross-mirror ATO hypothesis narrowed: cookie-host-agnostic-acceptance on the shared backend is the only replay vector (no localStorage replay branch); document.cookie writes are feature-config junk only.
+[HYP] Cross-mirror session replay: cookie auth is hostname-agnostic at the shared origin
 class: AUTH
-asset: gamdom80006.com /client-api (shared origin gamdom4567.com, pool B: 80004/80006/80007/4567)
+asset: gamdom4567.com /client-api (covers gamdom80004/80006/80007)
 confidence: 55
-reasoning: Byte-identical SPA + shared origin backend across all mirrors; /client-api GET 400 with no ACAO on both mirrors and origin (no CORS vector); replay feasibility depends on auth-token transport (cookie vs localStorage), unresolved in main bundles
-evidence_needed: Same session/token minted on gamdom80006 accepted by gamdom80007 /client-api; and where token is stored client-side (localStorage=trivial replay+XSS→ATO, HttpOnly cookie=host-based replay)
-verify_steps: (passive) fetch AppShell chunk manifest, load request-layer chunk, read /client-api request header + storage key; (AUTH_HELPED) authenticate on 80006, replay bearer/cookie on 80007 /client-api
-impact: Cross-domain account takeover across all 8 mirror hostnames; medium-high
+reasoning: JS bundle proves server-set cookie transport (`credentials:"same-origin"`, no Authorization/bearer, no localStorage token); all 4 Pool-B hostnames hit one verified origin backend; cookie validation at backend is plausibly keyed solely on the signed cookie, not the Host header
+evidence_needed: session cookie minted on gamdom80006.com accepted by gamdom4567.com or gamdom80007.com /client-api; or backend error varies with Host while cookie constant (indicating host-blind validation)
+verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact cookie to gamdom80007.com/client-api and compare response class; passive fallback: diff POST /client-api error verbosity across hosts with identical invalid cookie (HUMAN decision gate)
+impact: cross-domain account takeover over wallet/deposit flows across all mirrors; medium-high
 testability: AUTH_HELPED
-[HYP] Unlisted alias host widens shared-trust session surface
+[HYP] Unlisted alias-gamdom80004.com widens the same-origin cookie trust surface to an 8th hidden host
 class: MISCONFIG
 asset: gamdom80004.com (302 → gamdom80007.com)
 confidence: 45
-reasoning: 8th hostname, fastly pool B, 302 to gamdom80007; joins the same origin trust boundary; any session scoped to the mirror set is reachable from an extra hostname absent from official status page
-evidence_needed: Whether auth Set-Cookie/headers from 80007 are honored when arriving via 80004; identical session pool
-verify_steps: HEAD chain 80004→80007 (done: 302, same pool); compare Set-Cookie during auth on 80004 vs 80007 (HUMAN)
-impact: Marginal widening of replay surface + cache-key/host-confusion edge; low
+reasoning: 8th reachable hostname in Pool B, redirects to gamdom80007.com, absent from the official "Gamdom Official Domains" status page; shares the validated origin backend, so a host-agnostic cookie is reachable from a host no defender audits
+evidence_needed: auth Set-Cookie/validation behavior on 80004 identical to 80007 (shared session pool)
+verify_steps: HEAD chain 80004→80007 (done: 302, same pool); AUTH_HELPED cross-check cookie acceptance on 80004
+impact: marginal widening of replay surface + unmonitored host as landing point; low
 testability: HUMAN_ONLY
-[HYP] Kuma status page leaks live heartbeat/IP internals of monitor origins
+[HYP] Kuma public status page leaks monitor target internals beyond already-accepted recon
 class: MISCONFIG
-asset: gamdommirrors.com /api/status-page/gamdom-domains
+asset: gamdommirrors.com /socket.io + /api/status-page/gamdom-domains
 confidence: 38
-reasoning: Status page publishes 7 monitors + 24h heartbeats; /api/status-page/*, /api/badge/*, /api/heartbeat/* serve SPA HTML; socket.io EIO=4 handshake issues SID but Fastly breaks session persistence; no unauthenticated JSON confirmed
-evidence_needed: Non-null getMonitorList/needSetup over socket.io without admin token
-verify_steps: GET socket.io polling handshake; compare SID persistence across retries
-impact: Deface official "Gamdom Official Domains" trust page / leak monitor IPs; low-med
+reasoning: handshake issues SID with websocket upgrade; public status page events (statusPageHeartbeatList) are tokenless by design and already accepted as recon; any admin RPC needs POST — prohibited
+evidence_needed: non-null getMonitorList/needSetup without admin token
+verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
+impact: deface official trust page / leak monitor IPs; low-med
 testability: HUMAN_ONLY
+[PARKED] gamdommirrors.com Kuma admin leak: confidence 38 < 40 and verification requires POSTing socket.io RPC (prohibited class); no unauth JSON surface; handshake alone adds nothing.
+[PARKED] gamdom80004 alias-host: realistic impact marginal; HUMAN_ONLY proof of the shared pool already vector-verified via 302 + same origin.
+[PARKED] XSS-in-bundle lead: 20 dangerouslySetInnerHTML / 1 message listener are polyfill/library sinks, no input module chain — no valid XSS hypothesis.
+[FINAL] survivors ranked: [55] cross-mirror cookie replay (AUTH_HELPED, vector transport now evidence-grounded) > [45] gamdom80004 hidden host (PARKED, low impact). Neither is conclusive passively.
+[NEXT] PROBE: AUTH_HELPED human gate — this session's passive work is exhausted. Exact passive read-only confirmation left: compare `Diffie`... none. Recommend the authenticated cookie-replay test on gamdom80006→gamdom80007 /client-api. For the next autonomous cycle the only clean passive probe remaining is byte-diff of `POST /client-api` error bodies across gamdom4567/80007 with an identical invalid cookie to detect host-blind validation — but that is POST and thus gated. Emit: [NEXT] HUMAN: authenticate on gamdom80006.com, replay session cookie against gamdom80007.com/client-api; confirm cross-host acceptance to validate shared-trust cookie replay.
+[LEARN] ACCEPTED recon @ gamdom80006.com/build/client.<hash>.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence.
+[LEARN] ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict.
+[RISK] gamdom: 58 — confirmed 7-8 mirror hostnames on one Fastly pool verified to share a single origin backend for a cookie-auth identity/wallet proxy; the only remaining ATO class is host-agnostic cookie acceptance (needs authenticated session to confirm). No confirmed HIGH; top lead gated on HUMAN authenticated testing.
