@@ -253,3 +253,4 @@ testability: HUMAN_ONLY
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: Blind POST to live identity/wallet proxy prohibited; require valid session + authorized scope before POST probing
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: Public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 [RISK] gamdom: 58 reason: Confirmed 7 mirrors sharing one Fastly edge and POST-only /client-api identity/wallet proxy; origin trust boundary verified via header fingerprinting; strong cross-domain trust-boundary surface but no confirmed HIGH-class vuln — top leads need authenticated POST/session testing against scoped identity endpoints.
+## 2026-09-04 19:07:55 UTC [target] (model bigpickle)
