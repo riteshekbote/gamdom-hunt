@@ -4440,3 +4440,528 @@ I've completed the cycle. Here is the structured analyst output.
 
 **STEP 7 — RISK**
 - [RISK] gamdom: 50 — flagship/subdomain breadth scan found no confirmed HIGH: `dashboard` is 403-locked, `click` points at a live third-party provider (not dangling), `help` is Intercom SaaS. The only open high-value class remains the brand-wide origin-trust-pool cookie replay ([50], HUMAN-gated authenticated session). Two low-confidence leads parked; no new positive exploit surface this cycle.
+===== ANALYST bigpickle 2026-09-05 16:21:43 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la art/ 2>/dev/null; echo "---"; cat art/lead_bigpickle.txt 2>/dev/null | head -60; echo "---"; cat art/lead_nemotron3.txt 2>/dev/null | head -60; echo "---"; cat scope.yml 2>/dev/null | head -80
+---
+---
+---
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+[0m$ [0mls -laR . 2>/dev/null | head -80
+.:
+total 164
+drwxr-xr-x 12 runner runner  4096 Sep  5 16:08 .
+drwxr-xr-x  3 runner runner  4096 Sep  5 16:08 ..
+drwxr-xr-x  7 runner runner  4096 Sep  5 16:08 .git
+drwxr-xr-x  3 runner runner  4096 Sep  5 16:08 .github
+-rw-r--r--  1 runner runner  1691 Sep  5 16:08 README.md
+-rw-r--r--  1 runner runner  3453 Sep  5 16:08 analyst-out.txt
+-rw-r--r--  1 runner runner 37596 Sep  5 16:08 analyst-prompt.txt
+-rw-r--r--  1 runner runner 33815 Sep  5 16:08 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 leads
+-rw-r--r--  1 runner runner   580 Sep  5 16:08 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 reports
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 reposcan-raw
+-rw-r--r--  1 runner runner  3194 Sep  5 16:08 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 scripts
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  5 16:08 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  5 16:08 triage
+
+./.git:
+total 64
+drwxr-xr-x  7 runner runner 4096 Sep  5 16:08 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 16:08 ..
+-rw-r--r--  1 runner runner  132 Sep  5 16:08 FETCH_HEAD
+-rw-r--r--  1 runner runner   21 Sep  5 16:08 HEAD
+-rw-r--r--  1 runner runner  869 Sep  5 16:08 config
+-rw-r--r--  1 runner runner   83 Sep  5 16:08 config.worktree
+-rwxr-xr-x  1 runner runner   73 Sep  5 16:08 description
+drwxr-xr-x  2 runner runner 4096 Sep  5 16:08 hooks
+-rw-r--r--  1 runner runner 5800 Sep  5 16:08 index
+drwxr-xr-x  2 runner runner 4096 Sep  5 16:08 info
+drwxr-xr-x  3 runner runner 4096 Sep  5 16:08 logs
+drwxr-xr-x 64 runner runner 4096 Sep  5 16:08 objects
+-rw-r--r--  1 runner runner   40 Sep  5 16:08 opencode
+drwxr-xr-x  5 runner runner 4096 Sep  5 16:08 refs
+-rw-r--r--  1 runner runner   41 Sep  5 16:08 shallow
+
+./.git/hooks:
+total 72
+drwxr-xr-x 2 runner runner 4096 Sep  5 16:08 .
+drwxr-xr-x 7 runner runner 4096 Sep  5 16:08 ..
+-rwxr-xr-x 1 runner runner  478 Sep  5 16:08 applypatch-msg.sample
+-rwxr-xr-x 1 runner runner 1972 Sep  5 16:08 commit-msg.sample
+-rwxr-xr-x 1 runner runner 4611 Sep  5 16:08 fsmonitor-watchman.sample
+-rwxr-xr-x 1 runner runner  189 Sep  5 16:08 post-update.sample
+-rwxr-xr-x 1 runner runner  424 Sep  5 16:08 pre-applypatch.sample
+-rwxr-xr-x 1 runner runner 1649 Sep  5 16:08 pre-commit.sample
+-rwxr-xr-x 1 runner runner  416 Sep  5 16:08 pre-merge-commit.sample
+-rwxr-xr-x 1 runner runner 1374 Sep  5 16:08 pre-push.sample
+-rwxr-xr-x 1 runner runner 4898 Sep  5 16:08 pre-rebase.sample
+-rwxr-xr-x 1 runner runner  544 Sep  5 16:08 pre-receive.sample
+-rwxr-xr-x 1 runner runner 1492 Sep  5 16:08 prepare-commit-msg.sample
+-rwxr-xr-x 1 runner runner 2783 Sep  5 16:08 push-to-checkout.sample
+-rwxr-xr-x 1 runner runner 2308 Sep  5 16:08 sendemail-validate.sample
+-rwxr-xr-x 1 runner runner 3650 Sep  5 16:08 update.sample
+
+./.git/info:
+total 12
+drwxr-xr-x 2 runner runner 4096 Sep  5 16:08 .
+drwxr-xr-x 7 runner runner 4096 Sep  5 16:08 ..
+-rwxr-xr-x 1 runner runner  240 Sep  5 16:08 exclude
+
+./.git/logs:
+total 16
+drwxr-xr-x 3 runner runner 4096 Sep  5 16:08 .
+drwxr-xr-x 7 runner runner 4096 Sep  5 16:08 ..
+-rw-r--r-- 1 runner runner  218 Sep  5 16:08 HEAD
+drwxr-xr-x 4 runner runner 4096 Sep  5 16:08 refs
+
+./.git/logs/refs:
+total 16
+drwxr-xr-x 4 runner runner 4096 Sep  5 16:08 .
+[0m
+[0m$ [0mcat inventory/gamdom.md 2>/dev/null; echo "==="; cat leads/ 2>/dev/null; ls leads/ 2>/dev/null
+# Gamdom inventory (discovery seed 2026-09-02)
+# NOTE: hosts below are discovery candidates from passive DNS/CT; confirm in-scope vs program scope before active testing.
+82195821-ba02-4276-96f2-8e0d05d74bdf.ggamdom.com
+account.gamdom.com
+admin.gamdom.com
+api.gamdom.com
+app.gamdom.com
+auth.gamdom.com
+azure.gamdom.com
+billing.gamdom.com
+careers.gamdom.com
+click.gamdom.com
+dashboard.gamdom.com
+dev.gamdom.com
+gamdom.com
+gcp.gamdom.com
+go.gamdom.com
+help.gamdom.com
+img.gamdom.com
+inteligance.gamdom.com
+login.gamdom.com
+m.gamdom.com
+mail.gamdom.com
+my.gamdom.com
+portal.gamdom.com
+secure.gamdom.com
+sso.gamdom.com
+staging.gamdom.com
+support.gamdom.com
+t.gamdom.com
+test.gamdom.com
+u003ewww.gamdom.com
+unsubscribe.gamdom.com
+web.gamdom.com
+www.gamdom.com
+
+## PASSIVE RECON 2026-09-02 (read-only, non-intrusive)
+
+> Recon observations only. These are NOT confirmed vulnerabilities; ownership/in-scope of each host must be confirmed against the program scope before any active testing. Hosts resolve + serve HTTP — investigation requires scoped authorization.
+
+**Probed:** 33 hosts | **Live HTTP:** 0
+
+| Host | Status | Server/Tech |
+|---|---|---|
+
+## 2026-09-02 21:57:15 UTC
+
+## 2026-09-02 23:52:37 UTC
+
+## 2026-09-03 02:53:37 UTC
+
+## 2026-09-03 07:46:26 UTC
+
+## 2026-09-03 12:35:37 UTC
+
+## 2026-09-03 17:00:20 UTC
+
+## 2026-09-03 19:41:38 UTC
+- NEW gamdom80007.com (7th mirror): same Fastly origin, byte-identical app + POST-only /client-api (verified 200 root / 400 GET /client-api / 400 POST /client-api).
+- NEW gamdom4567.com identified as the real CNAME origin behind both gamdom8000x mirrors (root 404, /client-api 400) — exposes the true upstream behind the clone aliases.
+- CHANGED gamdommirrors.com is Uptime **Kuma** (self-hosted, behind Fastly/Varnish), NOT UptimeRobot; status page slug `gamdom-domains` publishes 7 monitors + 24h heartbeats; incidents REST route in Kuma is han
+
+## 2026-09-03 21:58:07 UTC
+- NEW gamdommirrors.com is confirmed self-hosted Uptime Kuma (not UptimeRobot) publishing 7 monitors + 24h heartbeats for all Gamdom domains; `/api/badge/*` and `/socket.io/` endpoints exist but return SPA 
+- NEW Two distinct Fastly origin pools confirmed: Pool A (151.101.x.52) for gamdom.com/eu/io/vip/win; Pool B (151.101.x.72) for gamdom80006.com/gamdom80007.com/gamdom4567.com — both serve byte-identical app
+- NEW gamdom4567.com is the CNAME origin root behind 8000x mirrors (root 404, `/client-api` 400), exposing true upstream
+- CHANGED api.gamdom.com and auth.gamdom.com return 000 (connection failed) — not publicly reachable on standard ports
+- CHANGED Uptime Kuma API routes (`/api/status-page/*`, `/api/monitor`, `/api/heartbeat/*`, `/api/badge/*`, `/api/doc`, `/api/push/*`) all serve SPA HTML; no unauthenticated JSON API surface confirmed
+
+## 2026-09-03 23:50:18 UTC
+
+## 2026-09-04 02:53:41 UTC
+
+## 2026-09-04 07:47:47 UTC
+
+## 2026-09-04 12:45:23 UTC
+- NEW Origin trust boundary confirmed: gamdom4567.com is the verified shared backend for all 8000x mirrors (byte-identical /client-api headers, Fastly 421 on Host-header injection proves cert binding, heade
+- CHANGED Hypothesis "gamdom4567.com is shadow origin with shared /client-api trust boundary" confidence raised from 50 → 70 (bigpickle) / 70 (nemotron3); evidence_needed now "None — origin trust boundary confi
+- CHANGED Next actionable probe shifted: nemotron3 still queues Host-header probe on gamdom4567.com; bigpickle marks it DONE and queues socket.io handshake on gamdommirrors.com instead
+
+## 2026-09-04 16:44:47 UTC
+- NEW Origin trust boundary **confirmed**: gamdom4567.com is the verified shared backend for all 8000x mirrors (byte-identical /client-api headers across gamdom4567.com/gamdom80006.com/gamdom80007.com; Fast
+- CHANGED Next actionable probe shifted: nemotron3 queues socket.io handshake on gamdommirrors.com; bigpickle marks Host-header probe DONE and also queues socket.io handshake
+- CHANGED Risk score raised: nemotron3 62→65, bigpickle 55→58 — confirmed 7 mirrors sharing single POST-only /client-api with verified shared origin backend
+
+## 2026-09-04 19:16:10 UTC
+
+## 2026-09-04 21:37:03 UTC
+
+## 2026-09-04 23:19:40 UTC
+- CHANGED Cross-mirror session replay hypothesis (gamdom80006) stayed at confidence 55; must now be shifted toward client-side token-storage analysis (localStorage vs HttpOnly cookie) to resolve purely passivel
+- CHANGED gamdom80004.com 302-chain confirmed to gamdom80007.com; joins Pool B trust boundary as an 8th reachable hostname absent from the official status page (new surface).
+- CHANGED socket.io handshake probe on gamdommirrors.com remains the lone passive survivor — queued by both agents, still confidence 38 (PARKED), no unauthenticated JSON surface confirmed.
+- NEW socket.io handshake probe executed (passive): `GET /socket.io/?EIO=4&transport=polling` on gamdommirrors.com → HTTP 200, `{"sid":"...","upgrades":["websocket"],"pingInterval":25000,...}`, behind Fastl
+- NEW Token transport RESOLVED passively from gamdom80006.com `client.41b06529227c4b8b6a1d.js` (597 KB, server's own bundle): request layer uses `credentials:"same-origin"`, zero `Authorization`/`Bearer` st
+- CHANGED Cross-mirror ATO hypothesis narrowed: cookie-host-agnostic-acceptance on the shared backend is the only replay vector (no localStorage replay branch); document.cookie writes are feature-config junk on
+- NEW gamdom80004.com discovered (302 → gamdom0007.com, Fastly Pool B) — 8th alias widening shared trust boundary
+- NEW gamdommirrors.com socket.io handshake confirmed (sid issued, upgrades: websocket) — but Fastly pool breaks session persistence
+- CHANGED gamdom4567.com shadow-origin hypothesis CONFIRMED (confidence 70 → DONE) — byte-identical /client-api headers across gamdom4567/gamdom80006/gamdom80007; Fastly 421 on Host-header injection proves cert
+- CHANGED Cross-mirror session sharing hypothesis now strengthened by verified shared origin (gamdom4567.com = backend for 8000x) — evidence_needed reduced to single cookie replay test
+- CHANGED nemotron3 risk score 62→65, bigpickle 55→58 — confirmed 7 mirrors + origin boundary verified
+
+## 2026-09-05 01:09:54 UTC
+- NEW gamdom80004.com discovered (302 → gamdom80007.com, Fastly Pool B) — 8th alias widening shared trust boundary
+- NEW Token transport RESOLVED passively from gamdom80006.com `client.41b06529227c4b8b6a1d.js`: request layer uses `credentials:"same-origin"`, zero `Authorization`/`Bearer` headers, no localStorage token —
+- NEW socket.io handshake on gamdommirrors.com executed (passive): `GET /socket.io/?EIO=4&transport=polling` → HTTP 200, `{"sid":"...","upgrades":["websocket"],"pingInterval":25000,...}`, behind Fastly Pool
+- CHANGED gamdom4567.com shadow-origin hypothesis CONFIRMED (confidence 70 → DONE) — byte-identical /client-api headers across gamdom4567/gamdom80006/gamdom80007; Fastly 421 on Host-header injection proves cert
+- CHANGED Cross-mirror session sharing hypothesis strengthened by verified shared origin (gamdom4567.com = backend for 8000x) — evidence_needed reduced to single cookie replay test
+- CHANGED Cross-mirror ATO hypothesis narrowed: cookie-host-agnostic-acceptance on shared backend is the only replay vector (no localStorage replay branch)
+
+## 2026-09-05 05:52:38 UTC
+- NEW gamdom80004.com discovered (302 → gamdom80007.com, Fastly Pool B) — 8th alias widening shared trust boundary
+- NEW Token transport RESOLVED passively from gamdom80006.com `client.41b06529227c4b8b6a1d.js`: request layer uses `credentials:"same-origin"`, zero `Authorization`/`Bearer` headers, no localStorage token —
+- NEW socket.io handshake on gamdommirrors.com executed (passive): `GET /socket.io/?EIO=4&transport=polling` → HTTP 200, `{"sid":"...","upgrades":["websocket"],"pingInterval":25000,...}`, behind Fastly Pool
+- CHANGED gamdom4567.com shadow-origin hypothesis CONFIRMED (confidence 70 → DONE) — byte-identical /client-api headers across gamdom4567/gamdom80006/gamdom80007; Fastly 421 on Host-header injection proves cert
+- CHANGED Cross-mirror session sharing hypothesis strengthened by verified shared origin (gamdom4567.com = backend for 8000x) — evidence_needed reduced to single cookie replay test
+- CHANGED Cross-mirror ATO hypothesis narrowed: cookie-host-agnostic-acceptance on shared backend is the only replay vector (no localStorage replay branch)
+- CHANGED gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+
+## 2026-09-05 10:01:28 UTC
+- NEW gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend spans entire brand, not just mirrors
+- NEW gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory implying 8th API-serving mirror
+- NEW gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay blocked
+- CHANGED gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+
+## 2026-09-05 13:24:15 UTC
+- NEW BREADTH-SCAN flagship/subdomain surface (previously under-probed): dashboard.gamdom.com resolves on flagship Fastly Pool A but is 403-locked at edge everywhere (/ /login /api /graphql /health /static 
+- NEW click.gamdom.com → CNAME eu-proxy-1.symplifymail.com → eu-iv-1.symplifymail.com (192.165.55.11, third-party SymplifyMail email provider) serving stock nginx default page (200, X-Robots noindex, Last-M
+- NEW help.gamdom.com → Intercom-hosted help center (x-intercom-version, /en/ 302, Intercom CSP) — standard third-party helpdesk SaaS, benign.
+- NEW gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend spans entire brand, not just mirrors
+- NEW gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory implying 8th API-serving mirror
+- NEW gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay blocked
+- CHANGED gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+[0m
+[0m$ [0mcat knowledge/ 2>/dev/null; ls knowledge/ 2>/dev/null
+index.md
+[0m
+[0m$ [0mcat leads/lead-bigpickle.md 2>/dev/null | tail -80
+reasoning: handshake issues SID with websocket upgrade; public status-page heartbeats already accepted recon; any admin RPC needs POST
+evidence_needed: non-null getMonitorList/needSetup without admin token
+verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
+impact: deface official trust page / leak monitor IPs; low-med
+testability: HUMAN_ONLY
+[NEXT] HUMAN: authenticate on gamdom80006.com, replay exact session cookie header against gamdom80007.com/client-api (and gamdom4567.com/client-api); confirm cross-host acceptance to validate shared-trust cookie replay — then report, since all passive paths for the ATO class are now exhausted.
+[LEARN] ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay.
+[RISK] gamdom: 58 — 7-8 mirror hostnames on one Fastly pool share one verified origin backend for a cookie-auth identity/wallet proxy; sole remaining ATO class is host-agnostic cookie acceptance, which requires an authenticated session to confirm (HUMAN gated). No confirmed HIGH; no new positive surface this cycle.
+## 2026-09-05 05:51:53 UTC [target] (model bigpickle)
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at one backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api (covers io/eu/vip/win + 80006/80007/4567)
+confidence: 50
+reasoning: all 8 probed hosts return byte-identical 400 signature on GET (proven this cycle); JS bundle proves transport is server-set same-origin cookie; CORS absent (proven) closes client-side replay, leaving protocol-level cookie acceptance as the only open question
+evidence_needed: session cookie minted on any one host accepted by /client-api on another (response class differs from invalid-cookie 400/401 baseline)
+verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact Cookie header to gamdom.com and gamdom80007.com/client-api, diff response; passive fallback is gated-POST byte-diff of error verbosity with identical invalid cookie
+impact: single cookie theft or single mirror compromise grants account access across the entire Gamdom fleet incl. flagship; medium-high (amplification of any XSS/leak anywhere in the fleet)
+testability: AUTH_HELPED
+[HYP] gamdom80004.com alias widens trust surface
+class: MISCONFIG
+asset: gamdom80004.com (302→gamdom80007.com)
+confidence: 20
+reasoning: PROVEN this cycle it is redirect-only for both / and /client-api — cannot set or serve session cookies, only forwards browsers; residual risk only if A-record remapped to a live backend before the official status page is updated
+evidence_needed: 80004 serving 400 signature or Set-Cookie directly (currently false)
+verify_steps: GET /client-api on 80004 periodically; GET gamdommirrors.com status page for an 8th monitor
+impact: none today; latent unmonitored landing host; low
+testability: PASSIVE
+[HYP] Kuma admin leak via status-page internals
+class: MISCONFIG
+asset: gamdommirrors.com /socket.io + /api/status-page/gamdom-domains
+confidence: 35
+reasoning: REST publicGroupList now empty; heartbeats/monitor config only reachable via socket.io RPC which is POST-only
+evidence_needed: tokenless getMonitorList/needSetup via socket
+verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
+impact: deface official trust page/leak monitor IPs; low-med
+testability: HUMAN_ONLY
+[PARKED] gamdom80004 hidden-host: confidence 20; disproven as API-serving host this cycle (302-only).
+[PARKED] Kuma admin leak: confidence 35<40; verification requires prohibited POST RPC; REST view now empty.
+[PARKED] Prior [55] cross-mirror replay as standalone: CORS absence (no ACAO, preflight 400) removes the attacker-page vector; reframed as fleet-wide origin trust pool requiring an existing cookie.
+[FINAL] survivors ranked: [50] brand-wide origin trust pool cookie replay (AUTH_HELPED, now spans gamdom.com) — sole survivor; both lower leads park.
+[NEXT] HUMAN: authenticate on gamdom80006.com, replay the exact session Cookie header to gamdom.com/client-api AND gamdom80007.com/client-api; log the response vs an invalid-cookie baseline to prove host-blind validation across the fleet — then report; absent a session, all remaining passive probes for the AUTH class are exhausted.
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis.
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror.
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector.
+[RISK] gamdom: 52 — one verified backend serves POST-only cookie-auth /client-api for all 8 brand hosts incl. flagship gamdom.com, so any single stolen/leaked session cookie is fleet-wide; however no standalone reachable flaw: client-side replay is CORS-blocked, 80004 is redirect-only, and host-blind cookie acceptance remains unverified and HUMAN-gated. No confirmed HIGH.
+## 2026-09-05 09:56:15 UTC [target] (model bigpickle)
+## 2026-09-05 13:18:35 UTC [target] (model bigpickle)
+[NEW] BREADTH-SCAN flagship/subdomain surface (previously under-probed): dashboard.gamdom.com resolves on flagship Fastly Pool A but is 403-locked at edge everywhere (/ /login /api /graphql /health /static → all 403, Varnish Error 54113 origin-restrict) — genuine scoped admin hostname, access-controlled, no bypass.
+[NEW] click.gamdom.com → CNAME eu-proxy-1.symplifymail.com → eu-iv-1.symplifymail.com (192.165.55.11, third-party SymplifyMail email provider) serving stock nginx default page (200, X-Robots noindex, Last-Modified 2025-04) — in-scope subdomain pointed at external provider; currently serves content so NOT dangling, but subdomain-takeover WATCHLIST.
+[NEW] help.gamdom.com → Intercom-hosted help center (x-intercom-version, /en/ 302, Intercom CSP) — standard third-party helpdesk SaaS, benign.
+[PRIO] dashboard.gamdom.com,5.3,flagship-admin-host (attack:4 business:6 tech:6 gate:3 cloud:6 fresh:9)
+[PRIO] click.gamdom.com,4.9,3rd-party-subdomain-takeover (attack:5 business:5 tech:4 gate:4 cloud:6 fresh:8)
+[HYP] click.gamdom.com third-party subdomain is a takeover/dangling-CNAME candidate
+class: OTHER
+asset: click.gamdom.com (CNAME eu-proxy-1.symplifymail.com)
+confidence: 25
+reasoning: in-scope brand subdomain CNAMEs to external SymplifyMail email provider IP 192.165.55.11; provider currently serves stock nginx default page (200) so reference is NOT dangling today; takeover only if provider hostname/account lapses
+evidence_needed: provider hostname returning NXDOMAIN/404 ownerless content, or CNAME repoint to attacker-controlled; confirm whether symplifymail host is brand-owned vs shared
+verify_steps: periodic PASV: GET click.gamdom.com/ + re-resolve CNAME chain; check symplifymail host ownership/DNS
+impact: full control of *.gamdom.com subdomain if the third-party reference lapses (phishing, OAuth credential harvesting under trusted host); medium if it transitions
+testability: PASSIVE
+[HYP] dashboard.gamdom.com edge 403 is a misconfigured admin host exposing denied-but-routable admin DNS
+class: MISCONFIG
+asset: dashboard.gamdom.com
+confidence: 30
+reasoning: genuine scoped hostname on flagship Fastly pool (151.101.x.52) but origin/edge denies all paths with Varnish Error 54113; no bypass found via common paths; indicates an admin/dashboard vhost exists upstream but is ACL'd
+evidence_needed: any path/verb/Host returning non-403 (bypass) on the dashboard vhost; or backend internal endpoints
+verify_steps: PASSIVE/HEAD only — enumerate paths + alternate Host header to edge, look for non-403; no mutation
+impact: if ACL bypass found → admin portal/unauthorized access; currently locked, low
+testability: PASSIVE
+[PARKED] click.gamdom.com takeover: confidence 25<40; provider currently serves the host (not dangling), takeover conditional on future lapse.
+[PARKED] dashboard.gamdom.com 403: confidence 30<40; fully ACL'd, no bypass found, locked-down admin host is inventory knowledge only.
+[FINAL] survivors ranked: no new survivor above 40. Brand-wide origin-trust-pool cookie replay stays the [50] sole survivor (AUTH_HELPED, HUMAN-gated from prior cycles). This cycle's two finds (click third-party subdomain, dashboard 403) both park below threshold; no confirmed HIGH.
+[NEXT] PROBE: re-check `click.gamdom.com` CNAME chain + root page periodically for a defensive monitor, and re-enumerate `dashboard.gamdom.com` paths/Host variants (read-only) for a 403 bypass — but the single highest-value un-executed action remains the AUTH_HELPED cookie-replay test: authenticate on gamdom80006.com, replay Cookie to gamdom.com & gamdom80007.com /client-api. Absent a session, all AUTH-class passive probes stay exhausted.
+[LEARN] ACCEPTED recon @ click.gamdom.com: passive DNS + GET resolved in-scope subdomain to third-party SymplifyMail email provider (eu-iv-1.symplifymail.com 192.165.55.11) serving stock nginx default page — not currently dangling; subdomain-takeover watchlist item, not an active finding.
+[LEARN] ACCEPTED recon @ dashboard.gamdom.com: passive GET/HEAD shows genuine scoped admin hostname on flagship Fastly Pool A, fully 403-locked at edge (Varnish Error 54113) across all probed paths; access-controlled admin vhost exists but no bypass — inventory knowledge only.
+[LEARN] ACCEPTED recon @ help.gamdom.com: passive GET shows Intercom-hosted help center (x-intercom-version, /en/ 302) — standard third-party helpdesk SaaS, benign surface.
+[RISK] gamdom: 50 — breadth scan of flagship/subdomain surface found no confirmed HIGH: dashboard.gamdom.com is fully 403-locked, click.gamdom.com points at a live third-party provider (not dangling), help is Intercom SaaS. The only open high-value class remains the brand-wide origin-trust-pool cookie replay ([50], HUMAN-gated authenticated session). Two low-confidence leads parked. No confirmed HIGH; no new positive exploit surface.
+[HYP] click.gamdom.com third-party subdomain takeover/dangling CNAME
+[HYP] dashboard.gamdom.com edge 403 is a misconfigured-but-routable admin vhost
+[0m
+[0m$ [0mcat leads/lead-nemotron3.md 2>/dev/null | tail -80
+impact: If wallet/deposit/withdrawal/auth endpoint reachable via /client-api without correct authorization -> fund theft or ATO (critical) — unproven
+testability: AUTH_HELPED
+[PARKED] /client-api catch-all proxy SSRF/mass-assignment: confidence 48 but verify_steps requires AUTH_HELPED live POST with valid session; currently blocked by REJECTED auth-bypass learning; no passive-only verification path to confirm upstream routing behavior
+[PARKED] gamdom80007.com session replay: requires authenticated session first (AUTH_HELPED), cannot verify passively
+[PARKED] gamdommirrors.com socket.io admin/mutation events exposed without auth: confidence 38 < 40 threshold; mutation against monitoring infra = REJECTED class risk per scope (no clear path to Gamdom-owned asset compromise)
+[FINAL] 1. Cross-mirror auth cookie replay via shared /client-api origin yields ATO (confidence 55, AUTH_HELPED testability, medium-high impact)
+[FINAL] 2. Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (confidence 50, AUTH_HELPED testability, high impact)
+[FINAL] 3. /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment (confidence 48, AUTH_HELPED testability, critical-if-proven impact)
+[NEXT] PROBE: GET (read-only) `https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js` — already fetched; now passively compare `Set-Cookie` headers on `POST /client-api` (400) vs `GET /` (200) across gamdom80006.com, gamdom80007.com, gamdom4567.com to extract cookie Domain/Path/SameSite attributes without authentication (<=1 rps, no mutation)
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+[LEARN] ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root
+[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors
+[LEARN] ACCEPTED origin-boundary @ gamdom4567.com: Host-header injection blocked by Fastly TLS cert validation (421), but header fingerprinting confirms gamdom4567.com is the origin backend serving /client-api for all 8000x mirrors
+[LEARN] ACCEPTED recon @ gamdom80006.com/build/client.41b06529227c4b8b6a1d.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence
+[LEARN] ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict
+[LEARN] ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector
+[RISK] gamdom: 65 reason: Confirmed 7 mirror domains + 1 unlisted alias (gamdom80004.com) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary now verified (gamdom4567.com = backend for 8000x + gamdom80004); brand-wide trust pool extended to flagship gamdom.com via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+## 2026-09-05 13:24:05 UTC [target] (model nemotron3)
+[NEW] gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend spans entire brand, not just mirrors
+[NEW] gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory implying 8th API-serving mirror
+[NEW] gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay blocked
+[CHANGED] gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+[PRIO] gamdom4567.com/client-api,9.3,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=7 cloud_surface=8 freshness=10
+[PRIO] gamdom80006.com/client-api,8.9,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=10
+[PRIO] gamdom80007.com/client-api,8.9,attack_surface=10 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=10
+[PRIO] gamdom.com/client-api,8.6,attack_surface=9 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
+[PRIO] gamdom80004.com/client-api,8.2,attack_surface=9 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=7 freshness=8
+[PRIO] gamdommirrors.com/api/status-page/gamdom-domains,6.5,attack_surface=7 business_value=6 tech_exposure=6 gate_ease=10 cloud_surface=5 freshness=8
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com/client-api (shared origin gamdom4567.com, Pool B: 80004/80006/80007/4567)
+confidence: 55
+reasoning: Byte-identical SPA + shared origin backend across all mirrors; /client-api GET 400 with no ACAO on both mirrors and origin (no CORS vector); auth transport proven as server-set same-origin cookie via bundle analysis; replay feasibility depends on whether cookie is host-agnostic at shared backend
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80007; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80007/client-api
+impact: Cross-domain account takeover across all 8 mirror hostnames; medium-high
+testability: AUTH_HELPED
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api (Pool A) and gamdom4567.com/client-api (Pool B)
+confidence: 50
+reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain joins replay surface
+evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api
+verify_steps: (passive) compare Set-Cookie headers on auth endpoints across gamdom.com (Pool A) and gamdom80006.com (Pool B); (AUTH_HELPED) replay flagship session cookie against Pool B /client-api
+impact: Cross-pool ATO across flagship + all 7 mirrors + alias; high
+testability: AUTH_HELPED
+[HYP] /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api (and all 7 mirrors + gamdom.com)
+confidence: 48
+reasoning: /client-api is POST-only catch-all proxy (400 on GET/OPTIONS for /v1, /v2, /health, /graphql, /openapi.json). Minified bundle shows api factory (o.kT with base "/client-api") calling methods by action name. If proxy forwards subpath/payload to upstream identity/wallet service, SSRF-on-proxy or mass-assignment-by-copy risks emerge.
+evidence_needed: POST with crafted body returning upstream internal error/stack/truthy status differing by injected subpath; or bundle resolving action->endpoint table
+verify_steps: PASSIVE: status-code differential on GET/OPTIONS variants (done — all 400). Bundle analysis for action routing map (requires authorized access). No live POST without authorized session (REJECTED auth-bypass). Await authorized tester with valid session to probe action routing.
+impact: If wallet/deposit/withdrawal/auth endpoint reachable via /client-api without correct authorization -> fund theft or ATO (critical) — unproven
+testability: AUTH_HELPED
+[PARKED] /client-api catch-all proxy SSRF/mass-assignment: confidence 48 but verify_steps requires AUTH_HELPED live POST with valid session; currently blocked by REJECTED auth-bypass learning; no passive-only verification path to confirm upstream routing behavior
+[PARKED] gamdom80007.com session replay: requires authenticated session first (AUTH_HELPED), cannot verify passively
+[PARKED] gamdommirrors.com socket.io admin/mutation events exposed without auth: confidence 38 < 40 threshold; mutation against monitoring infra = REJECTED class risk per scope (no clear path to Gamdom-owned asset compromise)
+[FINAL] 1. Cross-mirror auth cookie replay via shared /client-api origin yields ATO (confidence 55, AUTH_HELPED testability, medium-high impact)
+[FINAL] 2. Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (confidence 50, AUTH_HELPED testability, high impact)
+[FINAL] 3. /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment (confidence 48, AUTH_HELPED testability, critical-if-proven impact)
+[NEXT] PROBE: GET (read-only) `https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js` — already fetched; now passively compare `Set-Cookie` headers on `POST /client-api` (400) vs `GET /` (200) across gamdom80006.com, gamdom80007.com, gamdom4567.com to extract cookie Domain/Path/SameSite attributes without authentication (<=1 rps, no mutation)
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+[LEARN] ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root
+[LEARN] ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors
+[LEARN] ACCEPTED origin-boundary @ gamdom4567.com: Host-header injection blocked by Fastly TLS cert validation (421), but header fingerprinting confirms gamdom4567.com is the origin backend serving /client-api for all 8000x mirrors
+[LEARN] ACCEPTED recon @ gamdom80006.com/build/client.41b06529227c4b8b6a1d.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence
+[LEARN] ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict
+[LEARN] ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector
+[RISK] gamdom: 65 reason: Confirmed 7 mirror domains + 1 unlisted alias (gamdom80004.com) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary now verified (gamdom4567.com = backend for 8000x + gamdom80004); brand-wide trust pool extended to flagship gamdom.com via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+[0m
+## STEP 1 — DELTA
+
+NO_DELTA — no new data since last cycle. Current inventory, leads, and hypotheses unchanged from the 13:24 UTC cycle.
+
+## STEP 2 — PRIORITIZE
+
+Existing assets unchanged; scores stable:
+- [PRIO] gamdom4567.com/client-api, 9.3
+- [PRIO] gamdom80006.com/client-api, 8.9
+- [PRIO] gamdom.com/client-api, 8.6
+
+No new asset surfaced this cycle.
+
+## STEP 3 — HYPOTHESES
+
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com/client-api (shared origin gamdom4567.com, Pool B: 80004/80006/80007/4567)
+confidence: 50
+reasoning: byte-identical SPA + shared origin backend across all mirrors; auth transport proven as server-set same-origin cookie via bundle analysis; CORS absent on /client-api (no ACAO) closes attacker-page vector; host-blind cookie acceptance remains the sole unverified link in the chain
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from login/register pages across gamdom80006.com, gamdom80007.com, and gamdom.com — determines if cookie scope is per-host, per-subdomain, or backend-wide; or session replay confirmation
+verify_steps: PASSIVE: GET https://gamdom80006.com/ and https://gamdom80007.com/ and https://gamdom.com/ logging full Set-Cookie headers (if any) — compare Domain attribute; also check /login and /register paths for session-setting behavior (1 req each)
+impact: single cookie theft grants account access across entire Gamdom fleet incl. flagship; medium-high
+testability: PASSIVE
+
+[HYP] /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api (and all 7 mirrors + gamdom.com)
+confidence: 45
+reasoning: /client-api is POST-only catch-all proxy returning identical 400 on GET/OPTIONS; bundle shows api factory calling methods by action name; if proxy forwards subpath/payload to upstream identity/wallet service, mass-assignment or SSRF-on-proxy risks emerge; but verification requires POST with authorized session (REJECTED for blind probing)
+evidence_needed: POST with crafted body returning upstream internal error/status differing by injected subpath; or bundle resolving action->endpoint table via authorized session
+verify_steps: PASSIVE: enumerate GET/OPTIONS on /client-api subpaths (already done); AUTH_HELPED: POST with session to test action routing
+impact: fund theft or ATO if wallet/deposit endpoints reachable; critical — but unproven
+testability: AUTH_HELPED
+
+[HYP] Set-Cookie attribute extraction reveals cookie scope across fleet
+class: AUTH
+asset: gamdom80006.com and gamdom.com (root + /login pages)
+confidence: 42
+reasoning: prior cycles proved auth is server-set same-origin cookie but never extracted actual Set-Cookie headers from any response (only GET / returning 200 SPA). If login/register pages set session cookies with Domain=.gamdom.com attribute, fleet-wide replay is proven passively. If Domain=per-host, scope is narrower.
+evidence_needed: full Set-Cookie header from GET https://gamdom80006.com/ or /login or /register across Pool A and Pool B hosts
+verify_steps: PASSIVE: HEAD+GET https://gamdom80006.com/login and https://gamdom.com/login (1 req each) — log Set-Cookie headers; compare Domain attribute
+impact: determines scope of session cookie (per-host vs subdomain-wide) — either confirms or kills the fleet-replay hypothesis without authentication
+testability: PASSIVE
+
+## STEP 4 — SELF-CRITIQUE
+
+[PARKED] /client-api SSRF/mass-assignment: confidence 45 but verify_steps requires AUTH_HELPED live POST; no passive-only verification path exists — REJECTED auth-bypass learning blocks this. Parked.
+
+[PARKED] Cross-mirror cookie replay: confidence 50, but ACTUAL testability is PASSIVE now that I've reframed the HYP toward cookie attribute extraction. Keep but reframe the evidence_needed to Set-Cookie headers.
+
+[FINAL] survivors ranked:
+1. [42] Set-Cookie attribute extraction (PASSIVE) — determines if fleet-wide cookie scope exists; 1 req per host
+2. [50] Cross-mirror auth cookie replay (AUTH_HELPED) — high impact but blocked without session
+3. [45] /client-api proxy SSRF/mass-assignment (AUTH_HELPED) — critical if proven but blocked
+
+## STEP 5 — NEXT ACTION
+
+[NEXT] PROBE: `curl -sS -D- -o /dev/null https://gamdom80006.com/login https://gamdom.com/login https://gamdom80007.com/login https://gamdom.com/register` (<=4 sequential GET requests, 1 rps, read-only) — extract Set-Cookie headers with Domain/Path/SameSite attributes to determine cookie scope across Pool A vs Pool B; also try GET https://gamdom.com/ and https://gamdom80006.com/ with full header dump to catch any session cookies set on initial page load
+
+## STEP 6 — LEARNING
+
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans entire brand
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api — redirect alias only, not API-serving
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no ACAO — browser cross-origin credentialed replay blocked
+
+## STEP 7 — RISK
+
+[RISK] gamdom: 50 — sole surviving hypothesis (brand-wide origin trust pool cookie replay, [50]) remains HUMAN-gated; all passive AUTH-class probes exhausted without a session; dashboard.gamdom.com 403-locked; click.gamdom.com third-party subdomain not dangling; CORS blocks client-side replay. No confirmed HIGH. Passive cookie-scope extraction is the last read-only probe available.

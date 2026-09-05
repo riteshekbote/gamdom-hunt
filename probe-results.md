@@ -58,3 +58,8 @@
 
 ## 2026-09-05 13:24:16 UTC
 
+
+## 2026-09-05 16:21:47 UTC
+https://gamdom.com/ -> 200 len=?
+https://gamdom.com/login -> HTTP 404
+https://gamdom.com/register` -> HTTP 400
