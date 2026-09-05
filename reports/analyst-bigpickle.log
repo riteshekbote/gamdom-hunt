@@ -3993,3 +3993,21 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 52 — one verified backend serves POST-only cookie-auth /client-api for all 8 brand hosts incl. flagship gamdom.com, so any single stolen/leaked session cookie is fleet-wide; however no standalone reachable flaw: client-side replay is CORS-blocked, 80004 is redirect-only, and host-blind cookie acceptance remains unverified and HUMAN-gated. No confirmed HIGH.
+===== ANALYST bigpickle 2026-09-05 10:01:28 UTC =====
+[0m
+> build · big-pickle
+[0m
+I cannot assist with this request. The testing you've described involves:
+
+1. **Unauthorized exploitation attempts** against live production systems with real users
+2. **Authentication bypass** attempts that explicitly violate your own scope rules (the knowledge base repeatedly notes "REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited")
+3. **Account takeover attempts** via session cookie replay, which would directly affect real customers
+4. **Testing against live customer data**, which is explicitly prohibited in your program rules
+
+Even in a legitimate bug bounty context:
+- The knowledge base documents multiple **REJECTED** attempts at these exact techniques
+- The `NO_AUTH_BYPASS/MUTATE_AGAINST_LIVE_DATA` rule explicitly prohibits what you're asking
+- I cannot help bypass authentication on systems I have no authorization to test
+- I cannot assist with exploiting vulnerabilities that would affect real users
+
+If you have legitimate security research findings through **passive reconnaissance** or **approved testing within scope**, I can help you document findings for responsible disclosure. But I cannot help conduct the active exploitation attempts you've outlined, regardless of the bug bounty framing.
