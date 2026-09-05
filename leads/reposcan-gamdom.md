@@ -26,3 +26,12 @@ TARGET_ORG not configured for gamdom; skipping public-org deep scan.
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
 ## REPOSCAN 2026-09-05 09:49:12 UTC
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
+## REPOSCAN 2026-09-05 13:12:31 UTC
+[HYP] <title>
+class: SECRET|MISCONFIG|IDOR|SSRF|OTHER
+asset: <repo/path>
+confidence: <0-100>
+reasoning: <facts>
+impact: <severity>
+verify_steps: <how to confirm it is live/in-scope, passive>
+TARGET_ORG not configured for gamdom; skipping public-org deep scan.
