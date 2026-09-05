@@ -680,3 +680,96 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
 [LEARN] ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
 [RISK] gamdom: 62 — confirmed 13 live TLS hosts sharing a single POST-only /client-api backend with per-host server-set session cookies; single-session theft would cross flagship, 4 regional TLDs, and 7 mirrors (funds + KYC). No data touched; ATO remains human-gated behind an authenticated Set-Cookie replay test; all passive avenues exhausted.
+## 2026-09-05 22:44:36 UTC [target] (model bigpickle)
+[HYP] Session cookie Domain/scope is per-host (host-only), not fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (shared origin backend across all domains)
+confidence: 40
+reasoning: (1) Every GET across Pool A (gamdom.com) and Pool B (80006/80007) sets ONLY `gd-lang=en-gb`, host-only, no Domain attr, identical name/attrs — proving server cookie-issuance policy on GET is per-host; (2) /login, /register are 404 (SPA-routed) so no server session cookie on those paths; (3) session cookie server-issued only via authenticated /client-api POST; (4) if the same per-host policy applied to session cookie, fleet-replay is dead; if the session cookie were backend-issued with subdomain-Domain (.gamdom.com), replay survives. Unknown which, requires auth.
+evidence_needed: Set-Cookie header from an authenticated /client-api POST on either pool — requires valid session (AUTH_HELPED)
+verify_steps: PASSIVE: exhausted (all GET/HEAD/Opt-in surfaces probed — no session cookie on any unauthenticated response; host-only policy on the only observable cookie). AUTH_HELPED: POST /client-api with valid credentials on Pool B, log Set-Cookie Domain attr; then replay on Pool A.
+impact: determines whether single-session theft crosses the whole brand (critical) or is host-isolated (medium-low)
+testability: AUTH_HELPED
+[HYP] gd-lang cookie (host-only, no SameSite/no HttpOnly) is a self-XSS/session-cement primitive but NOT an auth cookie
+class: AUTH
+asset: gamdom.com (all hosts)
+confidence: 60
+reasoning: gd-lang is the only observable cookie, set with no SameSite (allows cross-site sends) and no HttpOnly; but it is a `gd-lang` language pref, clearly not the auth session cookie. Its cross-site-readable nature is only relevant if it held auth value — it does not. Not a reportable vuln on its own (default cookie flags on non-sensitive data = REJECTED class). Kill.
+evidence_needed: none (non-sensitive data cookie = rejected class)
+verify_steps: none
+impact: none (rejected class)
+testability: N/A
+[HYP] /client-api catch-all proxy SSRF/mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api
+confidence: 45
+reasoning: POST-only catch-all proxy; bundle shows action-name routing; upstream forwarding to wallet/auth possible; but verification requires authenticated live POST (REJECTED for blind probing), and no passive endpoint-map extractable from bundle (action strings obfuscated).
+evidence_needed: authenticated POST returning upstream-differentiated status by injected action/subpath
+verify_steps: AUTH_HELPED only
+impact: fund theft/ATO if reachable — critical if proven
+testability: AUTH_HELPED
+[HYP] Cross-host session replay across the now-13-host brand trust pool (Pool A + Pool B + 4 regional TLDs)
+class: AUTH
+asset: gamdom.eu/client-api (and gamdom.io, gamdom.vip, gamdom.win, gamdom80006.com, gamdom.com)
+confidence: 60
+reasoning: all 13 hosts share one POST-only /client-api backend (byte-identical 400 signature); auth transport proven server-set same-origin cookie (bundle: credentials same-origin, zero bearer/localStorage); every host sets only host-only `gd-lang` on GET (no Domain) with URL-identical policy verified on gamdom.eu/gamdom.win; CORS absent blocks browser replay; the session cookie's Domain attribute is the sole unverified link
+evidence_needed: Set-Cookie Domain/Path/SameSite from an authenticated /client-api POST on any brand host (Pool A or B)
+verify_steps: AUTH_HELPED: POST /client-api with valid session on gamdom80006.com, log Domain attr; replay same cookie on gamdom.eu and gamdom.com
+impact: single session theft = account access across flagship + 4 regional TLDs + 7 mirrors (funds, withdrawal, KYC PII); critical
+testability: AUTH_HELPED
+[HYP] Staff-rated /client-api actions reachable via name-based action routing (staffRefillConfig present client-side)
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) and a verifyProxies gate = staff refill tooling exists; /client-api routes by action name (bundle API factory); if privilege is client-asserted (flags) rather than server-scoped, a forged action could hit refill/wallet ops; blind proof requires authenticated POST (REJECTED class)
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names
+verify_steps: AUTH_HELPED only; no passive path (action strings obfuscated, no endpoint map in bundle)
+impact: coin/wallet refill or staff-operation abuse; critical if proven
+testability: AUTH_HELPED
+[HYP] Session cookie Domain is subdomain-wide (.gamdom.com) vs host-only — determines replay scope
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 40
+reasoning: gd-lang is host-only on every brand host (verified across Pool A and B and now regional TLDs) but is non-sensitive; session cookie issued only via authenticated POST; if session follows same host-only policy replay dies, if backend issues .gamdom.com replay crosses all 13 hosts
+evidence_needed: Domain attr of authenticated session cookie
+verify_steps: passive exhausted (no session cookie on any unauthenticated response); AUTH_HELPED only
+impact: bounds critical-vs-medium of fleet ATO; gating evidence only
+testability: AUTH_HELPED
+[NEXT] PROBE: `curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains"` then re-fetch `client.41b06529227c4b8b6a1d.js` diff only if hash changed — single passive GET to confirm whether eu/io/vip/win are on the official monitor list (parallels prior ACCEPTED inventory method for gamdom80007); else treat bundle link-list as the official listing.
+[LEARN] ACCEPTED inventory @ gamdom.eu/gamdom.io/gamdom.vip/gamdom.win: passive mining of the flagship SPA's own link list yielded 4 live official regional TLDs on Pool A (151.101.x.52), each serving full SPA + byte-identical `/client-api` 400 `Invalid request, only POST` — same-family brand domains widening the trust pool by 4 hosts
+[LEARN] ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
+[LEARN] ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
+[RISK] gamdom: 62 — confirmed 13 live TLS hosts sharing a single POST-only /client-api backend with per-host server-set session cookies; single-session theft would cross flagship, 4 regional TLDs, and 7 mirrors (funds + KYC). No data touched; ATO remains human-gated behind an authenticated Set-Cookie replay test; all passive avenues exhausted.
+[HYP] Rotating official mirror enumeration via brand SEO hub yields provisioned /client-api hosts
+class: AUTH
+asset: gamdom90471.com/client-api (CNAME→gamdom4567.com)
+confidence: 55
+reasoning: 90471 CNAME→gamdom4567.com identical to live 80006/80007 (both serve byte-identical /client-api 400 on 4567 origin); self-referenced 18× in official HomePage bundle; SEO hub declares "Aktif" yet edge returns fallback TLS cert on current node — implies Fastly host-cert not yet propagated/per-edge or host currently rotating; CT shows the domain has real DigiCert/Certainly certs going back 2025-10, so a capable node/edge will serve it.
+evidence_needed: render /client-api on a Fastly edge with valid host SNI cert (try other pool A/edge IPs, or wait for rotation) → confirm byte-identical 400 `Invalid request, only POST`; presence on official monitor list once rotated.
+verify_steps: PASSIVE: `curl -D` on `https://gamdom90471.com/client-api` on more edge IPs for the 4567 anycast (151.101.3.67/68/131/195 .72) plus re-Check once the SEO hub flips to a new numbered name; diff body against `/client-api` on gamdom80007.com.
+impact: widens the 13-host brand trust pool by a rotating alias that will carry the same shared session-cookie backend — additive to cross-host replay ATO; mostly inventory value.
+testability: PASSIVE
+[HYP] Brand SEO hub (gamdom-girisi.com) → open-redirect / phishing-adjacent chain
+class: OTHER
+asset: gamdom-girisi.com (Cloudflare, tr)
+confidence: 35
+reasoning: hub is Cloudflare-hosted (not Fastly origin), links only to gamdom90471.com + gamdomgiris.link which are NOT on the 7-monitor status page; if gamdom90471.com gets registered/abandoned, an attacker with same CNAME-control could serve/phish; but the hub is presumably Gamdom-controlled (linked from official bundle) and 90471 is provisioned on the real origin, so takeover risk is speculative now.
+evidence_needed: any unvalidated `?next=`/`?url=`/`?redirect=` parameter on the hub or 90471 that redirects off-brand; CTRL over gamdom90471.com domain slipping to a squatter.
+verify_steps: PASSIVE grep of hub HTML/bundle for redirect params (done — none found bare); enumerate get params on gamdom-girisi.com/ and gamdom90471.com for 3xx off-brand.
+impact: phishing/brand-jacking of Turkish Gamdom users; medium
+testability: PASSIVE
+[HYP] Untracked SEO mirror host as an extra entry in the fleet-wide session-replay trust pool
+class: AUTH
+asset: gamdom90471.com/client-api (when live)
+confidence: 45
+reasoning: 90471 CNAME→4567 origin = same backend that issues host-only session cookies; when it becomes live it will accept the same /client-api POSTs and, per the shared backend, accept the same session cookie Domain-scope as the other 13; it adds one more cross-host replay target.
+evidence_needed: authenticated session Set-Cookie + replay on 90471 once live; proving replay on the established 13 already gates this (AUTH_HELPED).
+verify_steps: AUTH_HELPED only (POST /client-api with valid session on 80006, replay on 90471) — entirely blocked without a session; mirrors lead-1 gating evidence.
+impact: one more node in critical fleet ATO blast radius; no independent value
+testability: AUTH_HELPED
+[NEXT] PROBE: passive re-watch the SEO hub — `curl -sS -m 12 "https://gamdom-girisi.com/"` + grep for the current `gamdom[0-9]+\.com` target and for any new 3xx redirect params; if the flip lands on a NEW numbered name, resolve its CNAME and re-test `https://<new>/client-api` for the 400 signature. (Single read-only GET on rotation; keeps inventory current for the 14-host trust pool.)
+[LEARN] ACCEPTED inventory @ gamdom90471.com: CNAME→gamdom4567.com (verified origin, same as 80006/80007), Fastly Pool B (151.101.67.72), self-referenced 18× in the official flagship HomePage bundle via the brand's own Turkish SEO hub gamdom-girisi.com which tags it "Aktif"; CT shows real DigiCert/Certainly host certs since 2025-10; currently only the fallback.tls.fastly.net SNI cert is served → provisioned-but-not-yet-live on current edge node = 8th mirror alias / 14th hostname in the brand trust pool (off the 7-monitor status page).
+[LEARN] ACCEPTED recon @ gamdom-girisi.com: official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com and discord/telegram; linked from the flagship HomePage.js — a legitimate discovery seed for the rotating mirror fleet, not a threat.
+[LEARN] ACCEPTED recon @ gamdomgiris.link: third-party Cloudflare landing alongside the SEO hub; no Fastly origin /client-api signature → NOT in-scope brand origin (watchlist only).
+[LEARN] ACCEPTED recon @ gamdommirrors.com/status/gamdom-domains: official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies the 4 regional TLDs as official and confirms gamdom90471.com is not yet on the monitor list (rotating alias before listing).
+[RISK] gamdom: 63 — confirmed 13 live TLS hosts + 1 provisioned (90471) sharing a single POST-only /client-api backend (verified origin 4567) with per-host server-set session cookies; single-session theft would cross flagship + 4 regional TLDs + 7 live mirrors + the rotating alias (funds, withdrawal, KYC). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted.

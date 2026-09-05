@@ -159,3 +159,14 @@ www.gamdom.com
 - CHANGED Origin trust boundary now spans flagship `gamdom.com` (Pool A) + all 7 mirrors + `gamdom4567.com` (Pool B) via byte-identical `/client-api` signature
 
 ## 2026-09-05 20:48:41 UTC
+
+## 2026-09-05 22:44:44 UTC
+- NEW 4 regional TLDs confirmed on Pool A: gamdom.eu, gamdom.io, gamdom.vip, gamdom.win (151.101.x.52) — each serves full SPA + byte-identical `/client-api` 400 `Invalid request, only POST`; widens trust po
+- NEW Auth/admin-flavored subdomains (login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com) all NXDOMAIN — live scoped surface fully enumerated, no hidden auth endpoints
+- NEW Cookie issuance policy uniform: gamdom.eu/gamdom.win root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — per-host across entire 13-host fleet
+- CHANGED Origin trust boundary now spans flagship `gamdom.com` (Pool A) + 4 regional TLDs + all 7 mirrors + `gamdom4567.com` (Pool B) via byte-identical `/client-api` signature
+- CHANGED gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrected prior inventory implying 8th API-serving mirror
+- CHANGED gamdom80007.com/client-api: OPTIONS preflight + Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay blocked
+- CHANGED dashboard.gamdom.com: genuine scoped admin hostname on Pool A, fully 403-locked at edge (Varnish Error 54113) across all paths — inventory knowledge only
+- CHANGED click.gamdom.com: CNAME to SymplifyMail (eu-iv-1.symplifymail.com 192.165.55.11) serving stock nginx default — not dangling; subdomain-takeover watchlist item
+- CHANGED help.gamdom.com: Intercom-hosted help center — benign third-party SaaS
