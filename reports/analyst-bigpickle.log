@@ -3842,3 +3842,154 @@ testability: HUMAN_ONLY
 
 ## STEP 7 — RISK
 [RISK] gamdom: 58 — 7-8 mirror hostnames on one Fastly pool share one verified origin backend for a cookie-auth identity/wallet proxy; sole remaining ATO class is host-agnostic cookie acceptance, which requires an authenticated session to confirm (HUMAN gated). No confirmed HIGH; no new positive surface this cycle.
+===== ANALYST bigpickle 2026-09-05 05:52:38 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mgetent hosts gamdom80004.com gamdom80007.com gamdom4567.com gamdommirrors.com 2>/dev/null; echo "---"; curl -s -o /dev/null -w "80004 root: %{http_code} -> %{redirect_url}\n" -I https://gamdom80004.com/; sleep 1; curl -s -o /dev/null -w "80004 /client-api: %{http_code}\n" https://gamdom80004.com/client-api
+151.101.67.72   gamdom4567.com gamdom80004.com
+151.101.195.72  gamdom4567.com gamdom80004.com
+151.101.3.72    gamdom4567.com gamdom80004.com
+151.101.131.72  gamdom4567.com gamdom80004.com
+151.101.67.72   gamdom4567.com gamdom80007.com
+151.101.3.72    gamdom4567.com gamdom80007.com
+151.101.131.72  gamdom4567.com gamdom80007.com
+151.101.195.72  gamdom4567.com gamdom80007.com
+151.101.67.72   gamdom4567.com
+151.101.195.72  gamdom4567.com
+151.101.3.72    gamdom4567.com
+151.101.131.72  gamdom4567.com
+151.101.67.52   gamdommirrors.com
+151.101.131.52  gamdommirrors.com
+151.101.195.52  gamdommirrors.com
+151.101.3.52    gamdommirrors.com
+---
+80004 root: 302 -> https://gamdom80007.com/
+80004 /client-api: 302
+[0m
+[0m$ [0mcurl -s -D - -o /dev/null -X OPTIONS https://gamdom80007.com/client-api -H "Origin: https://evilhunter.example" -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: content-type" ; echo "==="; sleep 1; curl -s -D - -o /dev/null https://gamdom80007.com/client-api -H "Origin: https://evilhunter.example" | tail -20
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 05:49:57 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-kdfw8210051-DFW, cache-dfw-kdfw8210051-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788587397.323408,VS0,VE471
+strict-transport-security: max-age=31557600
+content-length: 26
+
+===
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 05:49:59 GMT
+via: 1.1 varnish
+x-served-by: cache-chi-kigq8000175-CHI, cache-chi-kmdw8640037-CHI
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788587399.853306,VS0,VE420
+strict-transport-security: max-age=31557600
+content-length: 26
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "kuma status-page: %{http_code}\n" https://gamdommirrors.com/api/status-page/gamdom-domains; sleep 1; curl -s https://gamdommirrors.com/api/status-page/gamdom-domains | head -c 2000
+kuma status-page: 200
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right: 0 !important;\n}\n\n#app .title-flex > span:not(.logo-wrapper) {\n  display: none;\n}\n\n.overall-status {\n  display: none;\n}\n\n#app .group-title {\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 24px;\n  margin-bottom: 0;\n}\n\n#app .monitor-list {\n  border: none !important;\n  border-radius: 0 !important;\n  box-shadow: none;\n  padding: 0;\n}\n\n#app .monitor-list .item {\n  background-color: #131A22;\n  border: none;\n  border-radius: 0;\n  padding: 12px 16px;\n}\n\n#app .monitor-list .item:not(:last-child) {\n  margin-bottom: 2px;\n}\n\n#app .monitor-list .beat {\n  margin: 0 1.875px !important;\n}\n\n#app .monitor-list .item:last-child {\n  border-radius: 0 0 16px 16px;\n}\n\n#app .monitor-list .item:first-child {\n  border-radius: 16px 16px 0 0;\n}\n\n#app .monitor-list .row {\n  align-items: center;\n  margin: 0;\n}\n\n#app .monitor-list .extra-info {\n  display: none;\n}\n\n#app .monitor-list .info {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n#app .monitor-list .badge {\n  height: 23px;\n  width: 53px;\n  border-radius: 10px !important;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #06090E;\n  font-size: 12px;\n  line-height: 12px;\n  font-weight: 700;\n  letter-spacing: 1px;\n}\n\n#app .monitor-list .item-name {\n  color: #fff;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: 700;\n  text-decor
+[0m
+[0m$ [0mcurl -s https://gamdommirrors.com/api/status-page/gamdom-domains | python3 -c "import sys,json; d=json.load(sys.stdin); c=d.get('config',{}); print('publicGroupList:', [g.get('name') for g in c.get('publicGroupList',[])]); [print('monitor:', m.get('name'), '| active:', m.get('active'), '| type:', m.get('type'), '| url:', m.get('url')) for g in c.get('publicGroupList',[]) for m in g.get('monitorList',[])]"
+publicGroupList: []
+[0m
+[0m$ [0mcurl -s -D - -o /dev/null https://gamdom80004.com/client-api | grep -iE "^(HTTP|location)"; sleep 1; curl -s https://gamdom80007.com/client-api; echo; sleep 1; curl -s https://gamdom4567.com/client-api; echo
+HTTP/2 302 
+location: https://gamdom80007.com/client-api
+Invalid request, only POST
+Invalid request, only POST
+[0m
+[0m$ [0mcurl -s -D - https://gamdom.com/client-api 2>&1 | head -20; echo "=== io ==="; sleep 1; curl -s -D - https://gamdom.io/client-api 2>&1 | head -20
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 05:50:49 GMT
+via: 1.1 varnish
+x-served-by: cache-chi-klot8100043-CHI, cache-chi-kmdw8640069-CHI
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+content-length: 26
+
+Invalid request, only POST=== io ===
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 05:50:50 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-ktki8620037-DFW, cache-dfw-kdfw8210097-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+strict-transport-security: max-age=31557600
+content-length: 26
+
+Invalid request, only POST
+[0m
+[0m$ [0mcurl -s https://gamdom.eu/client-api; echo; sleep 1; curl -s https://gamdom.vip/client-api; echo; sleep 1; curl -s https://gamdom.win/client-api; echo
+Invalid request, only POST
+Invalid request, only POST
+Invalid request, only POST
+[0m
+STEP 1 — DELTA
+- NEW gamdom.com|io|eu|vip|win /client-api: GET returns byte-identical 400 `Invalid request, only POST` (ctx-verified content-length 26) — origin signature is NOT mirror-only; the shared backend pool spans the entire brand, incl. the flagship domain.
+- NEW gamdom80004.com/client-api: 302 → `gamdom80007.com/client-api` — pure redirect alias, never serves the API itself; prior "8th hidden API mirror" inventory framing is wrong.
+- NEW /client-api on 80007: OPTIONS preflight and Origin-header GET both → 400 with zero `Access-Control-Allow-*` → browsers block cross-origin credentialed reads and JSON-POST preflight; attacker-page cross-mirror replay path is closed.
+- CHANGED gamdommirrors.com/api/status-page/gamdom-domains now returns `publicGroupList: []` via REST (monitor list not exposed in current config; heartbeats socket-only).
+
+STEP 2 — PRIORITIZE
+- [PRIO] gamdom.com/client-api,7.5,origin-trust-pool-now-spans-flagship
+- [PRIO] gamdom4567.com/client-api,6.4,shared-origin-root
+- [PRIO] gamdom80006.com/client-api,6.1,same-pool-least-effort-auth-surface
+
+STEP 3 — HYPOTHESES
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at one backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api (covers io/eu/vip/win + 80006/80007/4567)
+confidence: 50
+reasoning: all 8 probed hosts return byte-identical 400 signature on GET (proven this cycle); JS bundle proves transport is server-set same-origin cookie; CORS absent (proven) closes client-side replay, leaving protocol-level cookie acceptance as the only open question
+evidence_needed: session cookie minted on any one host accepted by /client-api on another (response class differs from invalid-cookie 400/401 baseline)
+verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact Cookie header to gamdom.com and gamdom80007.com/client-api, diff response; passive fallback is gated-POST byte-diff of error verbosity with identical invalid cookie
+impact: single cookie theft or single mirror compromise grants account access across the entire Gamdom fleet incl. flagship; medium-high (amplification of any XSS/leak anywhere in the fleet)
+testability: AUTH_HELPED
+[HYP] gamdom80004.com alias widens trust surface
+class: MISCONFIG
+asset: gamdom80004.com (302→gamdom80007.com)
+confidence: 20
+reasoning: PROVEN this cycle it is redirect-only for both / and /client-api — cannot set or serve session cookies, only forwards browsers; residual risk only if A-record remapped to a live backend before the official status page is updated
+evidence_needed: 80004 serving 400 signature or Set-Cookie directly (currently false)
+verify_steps: GET /client-api on 80004 periodically; GET gamdommirrors.com status page for an 8th monitor
+impact: none today; latent unmonitored landing host; low
+testability: PASSIVE
+[HYP] Kuma admin leak via status-page internals
+class: MISCONFIG
+asset: gamdommirrors.com /socket.io + /api/status-page/gamdom-domains
+confidence: 35
+reasoning: REST publicGroupList now empty; heartbeats/monitor config only reachable via socket.io RPC which is POST-only
+evidence_needed: tokenless getMonitorList/needSetup via socket
+verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
+impact: deface official trust page/leak monitor IPs; low-med
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] gamdom80004 hidden-host: confidence 20; disproven as API-serving host this cycle (302-only).
+[PARKED] Kuma admin leak: confidence 35<40; verification requires prohibited POST RPC; REST view now empty.
+[PARKED] Prior [55] cross-mirror replay as standalone: CORS absence (no ACAO, preflight 400) removes the attacker-page vector; reframed as fleet-wide origin trust pool requiring an existing cookie.
+[FINAL] survivors ranked: [50] brand-wide origin trust pool cookie replay (AUTH_HELPED, now spans gamdom.com) — sole survivor; both lower leads park.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: authenticate on gamdom80006.com, replay the exact session Cookie header to gamdom.com/client-api AND gamdom80007.com/client-api; log the response vs an invalid-cookie baseline to prove host-blind validation across the fleet — then report; absent a session, all remaining passive probes for the AUTH class are exhausted.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis.
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror.
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector.
+
+STEP 7 — RISK
+[RISK] gamdom: 52 — one verified backend serves POST-only cookie-auth /client-api for all 8 brand hosts incl. flagship gamdom.com, so any single stolen/leaked session cookie is fleet-wide; however no standalone reachable flaw: client-side replay is CORS-blocked, 80004 is redirect-only, and host-blind cookie acceptance remains unverified and HUMAN-gated. No confirmed HIGH.

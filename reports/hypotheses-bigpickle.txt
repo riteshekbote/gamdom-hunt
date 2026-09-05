@@ -1,31 +1,37 @@
-## 2026-09-05 01:05:48 UTC [target] (model bigpickle)
-[HYP] Cross-mirror session replay: server-set same-origin cookie is validated host-blind at the shared 4567 origin
+## 2026-09-05 05:51:53 UTC [target] (model bigpickle)
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at one backend behind every Gamdom domain including flagship
 class: AUTH
-asset: gamdom4567.com /client-api (covers gamdom80004/80006/80007)
-confidence: 55
-reasoning: JS bundle (client.41b06529227c4b8b6a1d.js) proves `credentials:"same-origin"`, no Authorization/bearer/localStorage token → transport is server-set HttpOnly cookie; 4 Pool-B hostnames hit one verified byte-identical origin backend; HTTPS-only surface confirmed (port-80 301); leftover vector is backend session-store keyed on cookie value only, Host-agnostic
-evidence_needed: session cookie minted on gamdom80006.com accepted by gamdom80007.com or gamdom4567.com /client-api (cross-host response class differs from invalid-cookie baseline)
-verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact cookie header to gamdom80007.com/client-api, compare response; passive fallback (gated-POST) byte-diff error verbosity across hosts with identical invalid cookie
-impact: cross-domain ATO over wallet/deposit flows across all mirrors; medium-high
+asset: gamdom.com/client-api (covers io/eu/vip/win + 80006/80007/4567)
+confidence: 50
+reasoning: all 8 probed hosts return byte-identical 400 signature on GET (proven this cycle); JS bundle proves transport is server-set same-origin cookie; CORS absent (proven) closes client-side replay, leaving protocol-level cookie acceptance as the only open question
+evidence_needed: session cookie minted on any one host accepted by /client-api on another (response class differs from invalid-cookie 400/401 baseline)
+verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact Cookie header to gamdom.com and gamdom80007.com/client-api, diff response; passive fallback is gated-POST byte-diff of error verbosity with identical invalid cookie
+impact: single cookie theft or single mirror compromise grants account access across the entire Gamdom fleet incl. flagship; medium-high (amplification of any XSS/leak anywhere in the fleet)
 testability: AUTH_HELPED
-[HYP] Unlisted alias host gamdom80004.com widens same-origin cookie-trust surface to an unmonitored 8th hostname
+[HYP] gamdom80004.com alias widens trust surface
 class: MISCONFIG
-asset: gamdom80004.com (302→gamdom80007.com, Pool B)
-confidence: 45
-reasoning: 8th reachable hostname sharing verified origin backend, absent from official "Gamdom Official Domains" status page; browser/privacy-tier DNS sees an extra trusted mirror endpoint no defender audits
-evidence_needed: Set-Cookie/validation behavior on 80004 identical to 80007 (shared session pool)
-verify_steps: HEAD chain 80004→80007 (done, re-confirmed 302); AUTH_HELPED cross-check cookie acceptance on 80004
-impact: marginal widening of replay surface + unmonitored landing host; low
-testability: HUMAN_ONLY
-[HYP] Kuma status page leaks monitor internals beyond already-accepted recon
+asset: gamdom80004.com (302→gamdom80007.com)
+confidence: 20
+reasoning: PROVEN this cycle it is redirect-only for both / and /client-api — cannot set or serve session cookies, only forwards browsers; residual risk only if A-record remapped to a live backend before the official status page is updated
+evidence_needed: 80004 serving 400 signature or Set-Cookie directly (currently false)
+verify_steps: GET /client-api on 80004 periodically; GET gamdommirrors.com status page for an 8th monitor
+impact: none today; latent unmonitored landing host; low
+testability: PASSIVE
+[HYP] Kuma admin leak via status-page internals
 class: MISCONFIG
-asset: gamdommirrors.com /api/status-page/gamdom-domains + /socket.io
-confidence: 38
-reasoning: handshake issues SID with websocket upgrade; public status-page heartbeats already accepted recon; any admin RPC needs POST
-evidence_needed: non-null getMonitorList/needSetup without admin token
+asset: gamdommirrors.com /socket.io + /api/status-page/gamdom-domains
+confidence: 35
+reasoning: REST publicGroupList now empty; heartbeats/monitor config only reachable via socket.io RPC which is POST-only
+evidence_needed: tokenless getMonitorList/needSetup via socket
 verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
-impact: deface official trust page / leak monitor IPs; low-med
+impact: deface official trust page/leak monitor IPs; low-med
 testability: HUMAN_ONLY
-[NEXT] HUMAN: authenticate on gamdom80006.com, replay exact session cookie header against gamdom80007.com/client-api (and gamdom4567.com/client-api); confirm cross-host acceptance to validate shared-trust cookie replay — then report, since all passive paths for the ATO class are now exhausted.
-[LEARN] ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay.
-[RISK] gamdom: 58 — 7-8 mirror hostnames on one Fastly pool share one verified origin backend for a cookie-auth identity/wallet proxy; sole remaining ATO class is host-agnostic cookie acceptance, which requires an authenticated session to confirm (HUMAN gated). No confirmed HIGH; no new positive surface this cycle.
+[PARKED] gamdom80004 hidden-host: confidence 20; disproven as API-serving host this cycle (302-only).
+[PARKED] Kuma admin leak: confidence 35<40; verification requires prohibited POST RPC; REST view now empty.
+[PARKED] Prior [55] cross-mirror replay as standalone: CORS absence (no ACAO, preflight 400) removes the attacker-page vector; reframed as fleet-wide origin trust pool requiring an existing cookie.
+[FINAL] survivors ranked: [50] brand-wide origin trust pool cookie replay (AUTH_HELPED, now spans gamdom.com) — sole survivor; both lower leads park.
+[NEXT] HUMAN: authenticate on gamdom80006.com, replay the exact session Cookie header to gamdom.com/client-api AND gamdom80007.com/client-api; log the response vs an invalid-cookie baseline to prove host-blind validation across the fleet — then report; absent a session, all remaining passive probes for the AUTH class are exhausted.
+[LEARN] ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis.
+[LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror.
+[LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector.
+[RISK] gamdom: 52 — one verified backend serves POST-only cookie-auth /client-api for all 8 brand hosts incl. flagship gamdom.com, so any single stolen/leaked session cookie is fleet-wide; however no standalone reachable flaw: client-side replay is CORS-blocked, 80004 is redirect-only, and host-blind cookie acceptance remains unverified and HUMAN-gated. No confirmed HIGH.
