@@ -1,1 +1,34 @@
-## 2026-09-05 09:56:15 UTC [target] (model bigpickle)
+## 2026-09-05 13:18:35 UTC [target] (model bigpickle)
+[NEW] BREADTH-SCAN flagship/subdomain surface (previously under-probed): dashboard.gamdom.com resolves on flagship Fastly Pool A but is 403-locked at edge everywhere (/ /login /api /graphql /health /static → all 403, Varnish Error 54113 origin-restrict) — genuine scoped admin hostname, access-controlled, no bypass.
+[NEW] click.gamdom.com → CNAME eu-proxy-1.symplifymail.com → eu-iv-1.symplifymail.com (192.165.55.11, third-party SymplifyMail email provider) serving stock nginx default page (200, X-Robots noindex, Last-Modified 2025-04) — in-scope subdomain pointed at external provider; currently serves content so NOT dangling, but subdomain-takeover WATCHLIST.
+[NEW] help.gamdom.com → Intercom-hosted help center (x-intercom-version, /en/ 302, Intercom CSP) — standard third-party helpdesk SaaS, benign.
+[PRIO] dashboard.gamdom.com,5.3,flagship-admin-host (attack:4 business:6 tech:6 gate:3 cloud:6 fresh:9)
+[PRIO] click.gamdom.com,4.9,3rd-party-subdomain-takeover (attack:5 business:5 tech:4 gate:4 cloud:6 fresh:8)
+[HYP] click.gamdom.com third-party subdomain is a takeover/dangling-CNAME candidate
+class: OTHER
+asset: click.gamdom.com (CNAME eu-proxy-1.symplifymail.com)
+confidence: 25
+reasoning: in-scope brand subdomain CNAMEs to external SymplifyMail email provider IP 192.165.55.11; provider currently serves stock nginx default page (200) so reference is NOT dangling today; takeover only if provider hostname/account lapses
+evidence_needed: provider hostname returning NXDOMAIN/404 ownerless content, or CNAME repoint to attacker-controlled; confirm whether symplifymail host is brand-owned vs shared
+verify_steps: periodic PASV: GET click.gamdom.com/ + re-resolve CNAME chain; check symplifymail host ownership/DNS
+impact: full control of *.gamdom.com subdomain if the third-party reference lapses (phishing, OAuth credential harvesting under trusted host); medium if it transitions
+testability: PASSIVE
+[HYP] dashboard.gamdom.com edge 403 is a misconfigured admin host exposing denied-but-routable admin DNS
+class: MISCONFIG
+asset: dashboard.gamdom.com
+confidence: 30
+reasoning: genuine scoped hostname on flagship Fastly pool (151.101.x.52) but origin/edge denies all paths with Varnish Error 54113; no bypass found via common paths; indicates an admin/dashboard vhost exists upstream but is ACL'd
+evidence_needed: any path/verb/Host returning non-403 (bypass) on the dashboard vhost; or backend internal endpoints
+verify_steps: PASSIVE/HEAD only — enumerate paths + alternate Host header to edge, look for non-403; no mutation
+impact: if ACL bypass found → admin portal/unauthorized access; currently locked, low
+testability: PASSIVE
+[PARKED] click.gamdom.com takeover: confidence 25<40; provider currently serves the host (not dangling), takeover conditional on future lapse.
+[PARKED] dashboard.gamdom.com 403: confidence 30<40; fully ACL'd, no bypass found, locked-down admin host is inventory knowledge only.
+[FINAL] survivors ranked: no new survivor above 40. Brand-wide origin-trust-pool cookie replay stays the [50] sole survivor (AUTH_HELPED, HUMAN-gated from prior cycles). This cycle's two finds (click third-party subdomain, dashboard 403) both park below threshold; no confirmed HIGH.
+[NEXT] PROBE: re-check `click.gamdom.com` CNAME chain + root page periodically for a defensive monitor, and re-enumerate `dashboard.gamdom.com` paths/Host variants (read-only) for a 403 bypass — but the single highest-value un-executed action remains the AUTH_HELPED cookie-replay test: authenticate on gamdom80006.com, replay Cookie to gamdom.com & gamdom80007.com /client-api. Absent a session, all AUTH-class passive probes stay exhausted.
+[LEARN] ACCEPTED recon @ click.gamdom.com: passive DNS + GET resolved in-scope subdomain to third-party SymplifyMail email provider (eu-iv-1.symplifymail.com 192.165.55.11) serving stock nginx default page — not currently dangling; subdomain-takeover watchlist item, not an active finding.
+[LEARN] ACCEPTED recon @ dashboard.gamdom.com: passive GET/HEAD shows genuine scoped admin hostname on flagship Fastly Pool A, fully 403-locked at edge (Varnish Error 54113) across all probed paths; access-controlled admin vhost exists but no bypass — inventory knowledge only.
+[LEARN] ACCEPTED recon @ help.gamdom.com: passive GET shows Intercom-hosted help center (x-intercom-version, /en/ 302) — standard third-party helpdesk SaaS, benign surface.
+[RISK] gamdom: 50 — breadth scan of flagship/subdomain surface found no confirmed HIGH: dashboard.gamdom.com is fully 403-locked, click.gamdom.com points at a live third-party provider (not dangling), help is Intercom SaaS. The only open high-value class remains the brand-wide origin-trust-pool cookie replay ([50], HUMAN-gated authenticated session). Two low-confidence leads parked. No confirmed HIGH; no new positive exploit surface.
+[HYP] click.gamdom.com third-party subdomain takeover/dangling CNAME
+[HYP] dashboard.gamdom.com edge 403 is a misconfigured-but-routable admin vhost
