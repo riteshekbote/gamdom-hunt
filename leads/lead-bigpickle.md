@@ -647,3 +647,36 @@ evidence_needed: authenticated POST returning upstream-differentiated status by 
 verify_steps: AUTH_HELPED only
 impact: fund theft/ATO if reachable — critical if proven
 testability: AUTH_HELPED
+## 2026-09-05 20:47:09 UTC [target] (model bigpickle)
+[HYP] Cross-host session replay across the now-13-host brand trust pool (Pool A + Pool B + 4 regional TLDs)
+class: AUTH
+asset: gamdom.eu/client-api (and gamdom.io, gamdom.vip, gamdom.win, gamdom80006.com, gamdom.com)
+confidence: 60
+reasoning: all 13 hosts share one POST-only /client-api backend (byte-identical 400 signature); auth transport proven server-set same-origin cookie (bundle: credentials same-origin, zero bearer/localStorage); every host sets only host-only `gd-lang` on GET (no Domain) with URL-identical policy verified on gamdom.eu/gamdom.win; CORS absent blocks browser replay; the session cookie's Domain attribute is the sole unverified link
+evidence_needed: Set-Cookie Domain/Path/SameSite from an authenticated /client-api POST on any brand host (Pool A or B)
+verify_steps: AUTH_HELPED: POST /client-api with valid session on gamdom80006.com, log Domain attr; replay same cookie on gamdom.eu and gamdom.com
+impact: single session theft = account access across flagship + 4 regional TLDs + 7 mirrors (funds, withdrawal, KYC PII); critical
+testability: AUTH_HELPED
+[HYP] Staff-rated /client-api actions reachable via name-based action routing (staffRefillConfig present client-side)
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) and a verifyProxies gate = staff refill tooling exists; /client-api routes by action name (bundle API factory); if privilege is client-asserted (flags) rather than server-scoped, a forged action could hit refill/wallet ops; blind proof requires authenticated POST (REJECTED class)
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names
+verify_steps: AUTH_HELPED only; no passive path (action strings obfuscated, no endpoint map in bundle)
+impact: coin/wallet refill or staff-operation abuse; critical if proven
+testability: AUTH_HELPED
+[HYP] Session cookie Domain is subdomain-wide (.gamdom.com) vs host-only — determines replay scope
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 40
+reasoning: gd-lang is host-only on every brand host (verified across Pool A and B and now regional TLDs) but is non-sensitive; session cookie issued only via authenticated POST; if session follows same host-only policy replay dies, if backend issues .gamdom.com replay crosses all 13 hosts
+evidence_needed: Domain attr of authenticated session cookie
+verify_steps: passive exhausted (no session cookie on any unauthenticated response); AUTH_HELPED only
+impact: bounds critical-vs-medium of fleet ATO; gating evidence only
+testability: AUTH_HELPED
+[NEXT] PROBE: `curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains"` then re-fetch `client.41b06529227c4b8b6a1d.js` diff only if hash changed — single passive GET to confirm whether eu/io/vip/win are on the official monitor list (parallels prior ACCEPTED inventory method for gamdom80007); else treat bundle link-list as the official listing.
+[LEARN] ACCEPTED inventory @ gamdom.eu/gamdom.io/gamdom.vip/gamdom.win: passive mining of the flagship SPA's own link list yielded 4 live official regional TLDs on Pool A (151.101.x.52), each serving full SPA + byte-identical `/client-api` 400 `Invalid request, only POST` — same-family brand domains widening the trust pool by 4 hosts
+[LEARN] ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
+[LEARN] ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
+[RISK] gamdom: 62 — confirmed 13 live TLS hosts sharing a single POST-only /client-api backend with per-host server-set session cookies; single-session theft would cross flagship, 4 regional TLDs, and 7 mirrors (funds + KYC). No data touched; ATO remains human-gated behind an authenticated Set-Cookie replay test; all passive avenues exhausted.

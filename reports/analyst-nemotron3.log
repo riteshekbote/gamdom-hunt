@@ -3050,3 +3050,69 @@ testability: AUTH_HELPED
 
 ### STEP 7 — RISK
 [RISK] gamdom: 65 reason: Confirmed 7 mirror domains + 1 unlisted alias (gamdom80004.com) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary now verified (gamdom4567.com = backend for 8000x + gamdom80004); brand-wide trust pool extended to flagship gamdom.com via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-05 20:48:41 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/
+total 172
+drwxr-xr-x 12 runner runner  4096 Sep  5 20:42 .
+drwxr-xr-x  3 runner runner  4096 Sep  5 20:42 ..
+drwxr-xr-x  7 runner runner  4096 Sep  5 20:42 .git
+drwxr-xr-x  3 runner runner  4096 Sep  5 20:42 .github
+-rw-r--r--  1 runner runner  1691 Sep  5 20:42 README.md
+-rw-r--r--  1 runner runner    43 Sep  5 20:42 analyst-out.txt
+-rw-r--r--  1 runner runner 43911 Sep  5 20:42 analyst-prompt.txt
+-rw-r--r--  1 runner runner 40130 Sep  5 20:42 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 leads
+-rw-r--r--  1 runner runner   748 Sep  5 20:42 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 reports
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 reposcan-raw
+-rw-r--r--  1 runner runner  3194 Sep  5 20:42 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 scripts
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  5 20:42 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  5 20:42 triage
+[0m
+[0m→ [0mRead state_nemotron3.json
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead probe-results.md
+[0m✱ [0mGlob "/home/runner/work/gamdom-hunt/gamdom-hunt/knowledge/*"[90m 0 matches[0m
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/leads/
+total 240
+drwxr-xr-x  2 runner runner   4096 Sep  5 20:42 .
+drwxr-xr-x 12 runner runner   4096 Sep  5 20:42 ..
+-rw-r--r--  1 runner runner  82502 Sep  5 20:42 lead-bigpickle.md
+-rw-r--r--  1 runner runner    867 Sep  5 20:42 lead-laguna.md
+-rw-r--r--  1 runner runner    850 Sep  5 20:42 lead-ling3.md
+-rw-r--r--  1 runner runner    884 Sep  5 20:42 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  5 20:42 lead-mimo.md
+-rw-r--r--  1 runner runner 129249 Sep  5 20:42 lead-nemotron3.md
+-rw-r--r--  1 runner runner   2081 Sep  5 20:42 reposcan-gamdom.md
+[0m
+[0m→ [0mRead leads/lead-nemotron3.md
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=339][0m
+[0m
+[0m← [0mWrite analyst-output.md
+Wrote file successfully.
+[0m
+Now I have full context. Let me generate the 8-step analysis output.
+[0m→ [0mRead analyst-output.md
+Done. Generated the 8-step analysis at `analyst-output.md` with:
+
+- **STEP 1 DELTA**: 7 NEW + 1 CHANGED from latest 2026-09-05 18:29:58 recon (brand-wide trust pool confirmed, cross-origin replay blocked, HTTPS-only mirrors, new admin/subdomain findings)
+- **STEP 2 PRIORITIZE**: Top asset `gamdom4567.com/client-api` at 9.3 (origin backend for all mirrors + flagship trust pool)
+- **STEP 3 HYPOTHESES**: 3 hypotheses (cross-mirror cookie replay ATO @55%, brand-wide trust pool @50%, /client-api proxy SSRF/mass-assignment @48%)
+- **STEP 4 SELF-CRITIQUE**: 3 PARKED (SSRF needs AUTH_HELPED, socket.io <40 confidence, gamdom80004.com marginal), 3 FINAL ranked
+- **STEP 5 NEXT**: Passive cookie attribute extraction via `Set-Cookie` header comparison across Pool B origins (no auth, ≤1 rps)
+- **STEP 6 LEARNING**: 15 ACCEPTED/REJECTED entries from latest cycle
+- **STEP 7 RISK**: 65/100 — confirmed shared origin boundary, top hypothesis has passive + AUTH_HELPED paths, no HIGH vuln yet

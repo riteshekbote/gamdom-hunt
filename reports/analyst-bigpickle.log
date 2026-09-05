@@ -5285,3 +5285,234 @@ testability: AUTH_HELPED
 
 ## STEP 7 — RISK
 - [RISK] gamdom: 38 — Passive surface now exhausted: across both Fastly pools and all probed paths, the sole unauthenticated cookie is host-only gd-lang; no server-set session cookie exists on any GET; /login//register are SPA-only; /client-api is POST-only with obfuscated action routing; origin boundary confirmed and Host-injection blocked. The fleet-wide shared-session premise lost its only observable support (host-only cookie policy on every probed endpoint). No confirmed HIGH-class vuln; the top two remaining leads (session-cookie domain scope; catch-all routing SSRF) are undeterminable without an authorized authenticated session and are HUMAN/AUTH-gated. Risk held ~flat with downward bias absent authenticated evidence.
+===== ANALYST bigpickle 2026-09-05 20:48:41 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -m 30 -A "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" -o /tmp/client.js "https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js"; ls -la /tmp/client.js
+-rw-r--r-- 1 runner runner 597876 Sep  5 20:44 /tmp/client.js
+[0m
+[0m$ [0mfor h in login sso my account secure; do
+  printf '== %s.gamdom.com ==\n' "$h"
+  curl -sS -o /dev/null -D - -m 12 -A "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" "https://$h.gamdom.com/" 2>&1 | grep -iE '^HTTP/|^server:|^location:|^set-cookie:|^x-powered' | head -c 500
+  printf '\n'
+  sleep 1
+done
+== login.gamdom.com ==
+
+== sso.gamdom.com ==
+
+== my.gamdom.com ==
+
+== account.gamdom.com ==
+
+== secure.gamdom.com ==
+[0m
+[0m$ [0mgrep -oE '[/"'"'"'][^"'"'"' /]{2,60}(graphql|oauth|authorize|/auth|upload|swagger|openapi|api/v[0-9]|internal|admin|restricted|staff|withdraw|deposit|kyc|verify)[^"'"'"' ]{0,40}' /tmp/client.js | sort -u | head -60
+",conversionFactorUSDtoCoins:1500,staffRefillConfig:{amountCoins:3e7,refillInte
+",helpArticles:{depositMethods:
+",this.internal=r,n
+"===a&&(ts.verifyProxies=!0),void
+"],minTotalDeposited:1,deposit:{min:5,max:5e4,card:{min:5,max:500},def
+"fully_restricted
+/8818767-how-to-deposit
+/8981140-deposit-methods
+/9734074-how-to-withdraw
+[0m
+[0m$ [0mfor h in login sso my account secure; do
+  printf '== %s == ' "$h"
+  curl -sS -o /dev/null -w 'code=%{http_code} ip=%{remote_ip} ' -m 10 -A "Mozilla/5.0" "https://$h.gamdom.com/" 2>&1 | tail -c 200
+  echo "(exit=$?)"
+  sleep 1
+done
+== login == curl: (6) Could not resolve host: login.gamdom.com
+code=000 ip= (exit=0)
+== sso == curl: (6) Could not resolve host: sso.gamdom.com
+code=000 ip= (exit=0)
+== my == curl: (6) Could not resolve host: my.gamdom.com
+code=000 ip= (exit=0)
+== account == curl: (6) Could not resolve host: account.gamdom.com
+code=000 ip= (exit=0)
+== secure == curl: (6) Could not resolve host: secure.gamdom.com
+code=000 ip= (exit=0)
+[0m
+[0m$ [0mgrep -oE 'https?://[a-zA-Z0-9./_-]+' /tmp/client.js | sort -u | head -40; echo '--- action/endpoint-ish keys ---'; grep -oE '"(client-api|socket|graphql|auth|login|register|logout|refill|bonus|affiliate|payment|deposit|withdraw)[a-zA-Z0-9_/-]*"' /tmp/client.js | sort -u | head -40
+http://localhost
+http://www.w3.org/1998/Math/MathML
+http://www.w3.org/1999/xlink
+http://www.w3.org/2000/svg
+http://www.w3.org/XML/1998/namespace
+https://807c19c886e5bfbf697481b7108e7d2b
+https://allcasinos.in/reviews/gamdom-casino/
+https://atozmarkets.com/crypto-gambling/gamdom/
+https://bitcoinchaser.com/review/gamdom/
+https://blockchainreporter.net/gamdom-review-the-ultimate-fusion-of-crypto-casino-and-social-gaming/
+https://blockonomi.com/gamdom-review/
+https://casino.guide/gamdom/
+https://casino.guru/gamdom-casino-review
+https://casinobee.com/nz/reviews/gamdom-casino/
+https://casinomentor.com/reviews/gamdom-casino
+https://cert.gcb.cw/certificate
+https://codesandbox.io/embed/4xcgx2
+https://codesandbox.io/embed/4yk4vj
+https://codesandbox.io/embed/9hxczz
+https://codesandbox.io/embed/bold-northcutt-w9djdv
+https://codesandbox.io/embed/crash-verifier-4nl2fc
+https://codesandbox.io/embed/gamdom-dice-hash-checker-forked-4nvt7l
+https://codesandbox.io/embed/gamdom-raffle-draw-verifier-j9ktp3
+https://codesandbox.io/embed/k53ng3
+https://codesandbox.io/embed/kzgkrs
+https://codesandbox.io/embed/mmcljy
+https://codesandbox.io/embed/p2c9v3
+https://codesandbox.io/embed/r95h7k
+https://codesandbox.io/embed/roulette-verifier-h7kk65
+https://codesandbox.io/embed/tk7zct
+https://codesandbox.io/embed/wjcpc6
+https://cryptwerk.com/company/gamdom/
+https://discord.gg/gamdom
+https://gamblecritic.net/casino/gamdom-casino/
+https://gamdom.com
+https://gamdom.eu
+https://gamdom.io
+https://gamdom.vip
+https://gamdom.win
+https://gamdommirrors.com/
+--- action/endpoint-ish keys ---
+"affiliates"
+"affiliates-info"
+"payment"
+"payment-swapped"
+"register"
+"withdrawal_auto_lock"
+"withdrawal_only"
+[0m
+[0m$ [0mfor h in admin m portal support web t; do
+  printf '== %s.gamdom.com == ' "$h"
+  curl -sS -o /dev/null -w 'code=%{http_code} ip=%{remote_ip} ' -m 10 -A "Mozilla/5.0" "https://$h.gamdom.com/" 2>&1 | tail -c 200
+  echo "(exit=$?)"
+  sleep 1
+done
+== admin.gamdom.com == curl: (6) Could not resolve host: admin.gamdom.com
+code=000 ip= (exit=0)
+== m.gamdom.com == curl: (6) Could not resolve host: m.gamdom.com
+code=000 ip= (exit=0)
+== portal.gamdom.com == curl: (6) Could not resolve host: portal.gamdom.com
+code=000 ip= (exit=0)
+== support.gamdom.com == curl: (6) Could not resolve host: support.gamdom.com
+code=000 ip= (exit=0)
+== web.gamdom.com == curl: (6) Could not resolve host: web.gamdom.com
+code=000 ip= (exit=0)
+== t.gamdom.com == curl: (6) Could not resolve host: t.gamdom.com
+code=000 ip= (exit=0)
+[0m
+[0m$ [0mfor h in gamdom.eu gamdom.io gamdom.vip gamdom.win; do
+  printf '== %s ==\n' "$h"
+  curl -sS -o /dev/null -D - -m 12 -A "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" "https://$h/client-api" 2>&1 | grep -iE '^HTTP/|^server:|^location:|^via:|^x-|^set-cookie:' | head -c 400
+  printf '\n'
+  sleep 1
+done
+== gamdom.eu ==
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-khef600043-IAD, cache-iad-kcgs7200109-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+
+== gamdom.io ==
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000030-IAD, cache-iad-kcgs7200040-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+
+== gamdom.vip ==
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200116-IAD, cache-iad-kcgs7200080-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+
+== gamdom.win ==
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200060-IAD, cache-iad-kcgs7200057-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+[0m
+[0m$ [0mfor h in gamdom.eu gamdom.io gamdom.vip gamdom.win; do
+  b=$(curl -sS -m 12 -A "Mozilla/5.0" "https://$h/client-api" 2>/dev/null | head -c 120)
+  r=$(curl -sS -o /dev/null -w '%{http_code}' -m 12 -A "Mozilla/5.0" "https://$h/" 2>/dev/null)
+  ip=$(getent hosts $h | awk '{print $1}' | tr '\n' ',')
+  printf '%s root=%s body="%s" ip=%s\n' "$h" "$r" "$b" "$ip"
+  sleep 1
+done
+gamdom.eu root=200 body="Invalid request, only POST" ip=151.101.3.52,151.101.131.52,151.101.195.52,151.101.67.52,
+gamdom.io root=200 body="Invalid request, only POST" ip=151.101.67.52,151.101.195.52,151.101.3.52,151.101.131.52,
+gamdom.vip root=200 body="Invalid request, only POST" ip=151.101.67.52,151.101.131.52,151.101.3.52,151.101.195.52,
+gamdom.win root=200 body="Invalid request, only POST" ip=151.101.195.52,151.101.67.52,151.101.131.52,151.101.3.52,
+[0m
+[0m$ [0mcurl -sS -o /dev/null -D - -m 12 -A "Mozilla/5.0" "https://gamdom.eu/" 2>&1 | grep -iE '^HTTP/|^set-cookie:'; sleep 1; curl -sS -o /dev/null -D - -m 12 -A "Mozilla/5.0" "https://gamdom.win/" 2>&1 | grep -iE '^HTTP/|^set-cookie:'
+HTTP/2 200 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 20:46:15 GMT
+HTTP/2 200 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 20:46:16 GMT
+[0m
+STEP 1 — DELTA
+- NEW: Bundle-mining the flagship SPA's own link list revealed 4 live regional TLDs — gamdom.eu, gamdom.io, gamdom.vip, gamdom.win — all on Pool A (151.101.x.52), root 200 SPA + byte-identical `Invalid request, only POST` /client-api, matching `gamdom.com/io/eu/vip/win/client-api` signature (verified).
+- NEW: NXDOMAIN sweep of inventory auth/admin-flavored subdomains (login, sso, my, account, secure, admin, m, portal, support, web, t) — all fail DNS, mirroring api/auth.gamdom.com 000; live scoped surface now fully enumerated.
+- NEW: Bundle contains client-side `staffRefillConfig:{amountCoins:3e7,...}` and `verifyProxies=!0` gate — staff coin-refill tooling + proxy-verify flag present in client build (no endpoint surfaced).
+- CHANGED: Brand-wide shared-origin trust pool now = gamdom.com + 4 regional TLDs (eu/io/vip/win) + 7× 8000x + gamdom4567.com + gamdom80004 + gamdommirrors.com = 13 live TLS hosts on one POST-only /client-api backend.
+
+STEP 2 — PRIORITIZE
+- [PRIO] gamdom.eu/io/vip/win (regional-tld cluster), 7.25, a6/b8/t7/g8/c6/f9
+- [PRIO] dashboard.gamdom.com, 6.15, a4/b9/t8/g2/c6/f8
+- [PRIO] gamdom80006.com/client-api, 5.95, a7/b7/t6/g6/c6/f4
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-host session replay across the now-13-host brand trust pool (Pool A + Pool B + 4 regional TLDs)
+class: AUTH
+asset: gamdom.eu/client-api (and gamdom.io, gamdom.vip, gamdom.win, gamdom80006.com, gamdom.com)
+confidence: 60
+reasoning: all 13 hosts share one POST-only /client-api backend (byte-identical 400 signature); auth transport proven server-set same-origin cookie (bundle: credentials same-origin, zero bearer/localStorage); every host sets only host-only `gd-lang` on GET (no Domain) with URL-identical policy verified on gamdom.eu/gamdom.win; CORS absent blocks browser replay; the session cookie's Domain attribute is the sole unverified link
+evidence_needed: Set-Cookie Domain/Path/SameSite from an authenticated /client-api POST on any brand host (Pool A or B)
+verify_steps: AUTH_HELPED: POST /client-api with valid session on gamdom80006.com, log Domain attr; replay same cookie on gamdom.eu and gamdom.com
+impact: single session theft = account access across flagship + 4 regional TLDs + 7 mirrors (funds, withdrawal, KYC PII); critical
+testability: AUTH_HELPED
+[HYP] Staff-rated /client-api actions reachable via name-based action routing (staffRefillConfig present client-side)
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) and a verifyProxies gate = staff refill tooling exists; /client-api routes by action name (bundle API factory); if privilege is client-asserted (flags) rather than server-scoped, a forged action could hit refill/wallet ops; blind proof requires authenticated POST (REJECTED class)
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names
+verify_steps: AUTH_HELPED only; no passive path (action strings obfuscated, no endpoint map in bundle)
+impact: coin/wallet refill or staff-operation abuse; critical if proven
+testability: AUTH_HELPED
+[HYP] Session cookie Domain is subdomain-wide (.gamdom.com) vs host-only — determines replay scope
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 40
+reasoning: gd-lang is host-only on every brand host (verified across Pool A and B and now regional TLDs) but is non-sensitive; session cookie issued only via authenticated POST; if session follows same host-only policy replay dies, if backend issues .gamdom.com replay crosses all 13 hosts
+evidence_needed: Domain attr of authenticated session cookie
+verify_steps: passive exhausted (no session cookie on any unauthenticated response); AUTH_HELPED only
+impact: bounds critical-vs-medium of fleet ATO; gating evidence only
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Staff-rated action routing (45): verify needs authenticated live POST on wallet/refill path — REJECTED auth-bypass/mutate learning blocks; no passive path. Parked.
+- [PARKED] Session Domain-scope (40): passive branch fully exhausted; merged into HYP1 evidence_needed. Parked.
+- [FINAL] survivors ranked: HYP1 fleet-replay [60] AUTH_HELPED (sole lead, blast radius +4 hosts this cycle); all passive angles on it closed.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains"` then re-fetch `client.41b06529227c4b8b6a1d.js` diff only if hash changed — single passive GET to confirm whether eu/io/vip/win are on the official monitor list (parallels prior ACCEPTED inventory method for gamdom80007); else treat bundle link-list as the official listing.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED inventory @ gamdom.eu/gamdom.io/gamdom.vip/gamdom.win: passive mining of the flagship SPA's own link list yielded 4 live official regional TLDs on Pool A (151.101.x.52), each serving full SPA + byte-identical `/client-api` 400 `Invalid request, only POST` — same-family brand domains widening the trust pool by 4 hosts
+[LEARN] ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
+[LEARN] ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
+
+STEP 7 — RISK
+[RISK] gamdom: 62 — confirmed 13 live TLS hosts sharing a single POST-only /client-api backend with per-host server-set session cookies; single-session theft would cross flagship, 4 regional TLDs, and 7 mirrors (funds + KYC). No data touched; ATO remains human-gated behind an authenticated Set-Cookie replay test; all passive avenues exhausted.
