@@ -4965,3 +4965,323 @@ testability: PASSIVE
 ## STEP 7 — RISK
 
 [RISK] gamdom: 50 — sole surviving hypothesis (brand-wide origin trust pool cookie replay, [50]) remains HUMAN-gated; all passive AUTH-class probes exhausted without a session; dashboard.gamdom.com 403-locked; click.gamdom.com third-party subdomain not dangling; CORS blocks client-side replay. No confirmed HIGH. Passive cookie-scope extraction is the last read-only probe available.
+===== ANALYST bigpickle 2026-09-05 18:29:58 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m# [0mTodos
+[•] STEP 1: DELTA — compare current leads/inventory vs prior cycle
+[ ] STEP 2: PRIORITIZE — score assets 0-10, emit PRIO lines
+[ ] STEP 3: HYPOTHESES — top 3 assets, max 1 HYP each, strict schema
+[ ] STEP 4: SELF-CRITIQUE — drop/confidence<40, PARKED, FINAL ranked
+[ ] STEP 5: NEXT ACTION — one concrete read-only probe
+[ ] STEP 6: LEARNING — REJECTED/ACCEPTED class entries
+[ ] STEP 7: RISK — program risk score
+[ ] Execute Set-Cookie scope extraction across Pool A + Pool B
+[0m
+Let me execute the Set-Cookie extraction probe first (the planned NEXT), then run the 8 steps with the results.
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom80006.com/" 2>&1 | head -40
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-26c53ec2-5d42-4477-94a1-7a0aa9747af1' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:22:57 GMT
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:22:57 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-ktki8620068-DFW, cache-dfw-kdfw8210139-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788632577.969029,VS0,VE821
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom80007.com/" 2>&1 | head -40
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-0a4d8291-bf0f-4db7-b3bd-060b858dcd75' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:22:57 GMT
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:22:58 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-kdfw8210078-DFW, cache-dfw-kdfw8210121-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788632577.354701,VS0,VE771
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom.com/" 2>&1 | head -40
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-88c0b1ba-5671-4f5c-b566-777d13425f01' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:22:57 GMT
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:22:58 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-kdal2120132-DFW, cache-dfw-kdfw8210124-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom80006.com/login" 2>&1 | head -40
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:23:12 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-2b2ce7c7-a9d3-4758-be7e-e2d9c9aead25' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:23:12 GMT
+via: 1.1 varnish
+x-served-by: cache-chi-kmdw8640099-CHI, cache-chi-kmdw8640058-CHI
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788632592.400635,VS0,VE499
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom.com/login" 2>&1 | head -40
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:23:13 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-aa4a2265-b7c9-4638-9ee5-7cd3161c8481' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:23:13 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-kdal2120069-DFW, cache-dfw-kdfw8210035-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+Got root headers. Now extracting from login/register paths:
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom80007.com/register" 2>&1 | head -40
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:23:13 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-636012c5-d11c-49cf-b18c-10d8fcb2164c' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:23:13 GMT
+via: 1.1 varnish
+x-served-by: cache-chi-kigq8000065-CHI, cache-chi-kmdw8640068-CHI
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788632593.187108,VS0,VE640
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom.com/register" 2>&1 | head -40
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 05 Sep 2027 18:23:13 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-1b76bdec-7cba-409f-9198-5d75e77b6772' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:23:13 GMT
+via: 1.1 varnish
+x-served-by: cache-chi-kigq8000094-CHI, cache-chi-kmdw8640033-CHI
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+Interesting finding: `/login` and `/register` are 404 on all hosts — the SPA routes them client-side, no distinct session-setting server endpoints. The only Set-Cookie is `gd-lang=en-gb` with `Domain` attribute **absent** (host-only cookie, `Path=/`), identical across Pool A (gamdom.com) and Pool B (mirrors).
+
+This is an important negative result. The `gd-lang` cookie is host-only (no Domain attribute), so it's scoped per-host, not fleet-wide. The session cookie would only be set on a successful auth POST (which is gated behind AUTH_HELPED). `/login` and `/register` returning 404 confirms no server-side session cookie is set on those paths — the session cookie is set only via `/client-api` POST during actual auth.
+
+Let me also check the `/client-api` path itself for Set-Cookie on a GET (which returns 400), and test a couple more paths like the app root with query params, plus check if there's an `/auth` or similar path. Actually the key finding is clear enough. Let me check one more thing — whether there's a distinct `/client-api` subpath that sets cookies, and the app's actual auth flow path.
+
+Let me check the client bundle reference — the earlier recon found `/client-api` is POST-only. Let me look for the actual login POST path in the bundle, and whether `/client-api` GET sets cookies.
+[0m$ [0mcurl -sS -D- -o /dev/null -m 10 "https://gamdom80006.com/client-api" 2>&1 | head -30
+HTTP/2 400 
+server: nginx
+accept-ranges: bytes
+date: Sat, 05 Sep 2026 18:23:17 GMT
+via: 1.1 varnish
+x-served-by: cache-dfw-kdal2120075-DFW, cache-dfw-kdfw8210139-DFW
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788632597.028064,VS0,VE599
+strict-transport-security: max-age=31557600
+content-length: 26
+[0m
+[0m$ [0mcurl -sS -m 30 -o /tmp/gd_client.js "https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js" 2>&1; ls -la /tmp/gd_client.js; grep -oE '"/client-api[^"`]*"|/client-api/[A-Za-z0-9_/-]+' /tmp/gd_client.js | sort -u | head -40
+-rw-r--r-- 1 runner runner 597876 Sep  5 18:23 /tmp/gd_client.js
+"/client-api"
+[0m
+[0m$ [0mgrep -oE '(login|register|logout|session|account|profile|user|auth|wallet|deposit|withdraw|bet|balance|verify|refresh|token|me)(\.[A-Za-z_$][A-Za-z0-9_$]*)?\s*[=(]\s*\([^)]*\)' /tmp/gd_client.js | sort -u | head -60
+(no output)
+[0m
+The bundle only references the base `/client-api` string — the action routing is via POST body. Let me extract the api factory call patterns to understand what endpoints/actions exist, and grep for auth-related action names. This is passive analysis of the app's own bundle.
+[0m$ [0mgrep -oE '"[A-Za-z][A-Za-z0-9_/.-]{2,50}"' /tmp/gd_client.js | grep -iE 'auth|login|session|account|wallet|user|me|profile|verif|refresh|token|logout' | sort -u | head -80
+"Arguments"
+"AuthFormResetPassword"
+"AuthFormSignInContent"
+"AuthFormSignUp"
+"AuthModal"
+"BlogCasinoHelmet"
+"BlogCryptoHelmet"
+"BlogEsportsHelmet"
+"BlogGuidesHelmet"
+"BlogNewsHelmet"
+"BlogPageHelmet"
+"BlogSportsHelmet"
+"CMS_GAME_CATEGORIES"
+"CMS_HOME_CAROUSEL"
+"CMS_HOME_PROVIDERS"
+"CMS_WALLET_PAYMENTS"
+"CMS_WELCOME_BANNER"
+"CasinoChrome"
+"ContextMenu"
+"CrashGameDetail"
+"DetermineComponentFrameRoot"
+"DynamicAuthButtonsLazy-v4"
+"DynamicAuthPage"
+"EMAIL_VERIFIED_FOR_WITHDRAWALS"
+"ETH_USER_RESCAN"
+"Fragment"
+"FrameworkContext"
+"GAMES_LEADERBOARD"
+"GamdomClientMessage"
+"Game"
+"GameMobile"
+"GamesQuickSearchV4Lazy"
+"HOME_PAGE_REVAMP"
+"HTMLElement"
+"HiloGameDetail"
+"Home"
+"HomePage"
+"KENO_BANNER_GAME"
+"KOTH_MOCK_USERS_V4"
+"LOGIN_SUCCESS"
+"LiveGames"
+"LogoutModal"
+"MEGAPAYZ_DEPOSIT"
+"MEGAPAYZ_WITHDRAWAL"
+"Memo"
+"Meta"
+"MuteUserModal"
+"NEW_USER"
+"NotificationMessageV4"
+"POCKET_DICE_BANNER_GAME"
+"ProfileLayout"
+"ProfilePage"
+"Profiler"
+"PromotionsArchiveHelmet"
+"PromotionsCasinoHelmet"
+"PromotionsPageHelmet"
+"PromotionsSportsbookHelmet"
+"ProvidersGames"
+"RouletteGameDetail"
+"SlotsTournament"
+"Symbol.metadata"
+"TRANSFORMERS_WICKED_BANNER_GAME"
+"TableGames"
+"ThemeProviderV4__StyledOverlayProvider"
+"TipUserModal"
+"ToastMessageV4"
+"TopBannerFacebookDynamicLoginButton"
+"TopBannerHome"
+"TopBannerHomeNew"
+"Transformer-"
+"USERS_PAY_WD_FEES"
+"Uninstrumented"
+"UserAndGameSearchLoggedInWelcome"
+"UserDetailsModal"
+"UserProfilePage"
+"VERIFF_LEVEL_2_USER_SELF_VERIFICATION"
+"VerificationsPage"
+"VerifyTwoFactorModal"
+"Vietnamese"
+"WHEN_TIMEOUT"
+[0m
+[0m# [0mTodos
+[✓] STEP 1: DELTA — compare current leads/inventory vs prior cycle
+[✓] STEP 2: PRIORITIZE — score assets 0-10, emit PRIO lines
+[✓] STEP 3: HYPOTHESES — top 3 assets, max 1 HYP each, strict schema
+[✓] STEP 4: SELF-CRITIQUE — drop/confidence<40, PARKED, FINAL ranked
+[✓] STEP 5: NEXT ACTION — one concrete read-only probe
+[✓] STEP 6: LEARNING — REJECTED/ACCEPTED class entries
+[✓] STEP 7: RISK — program risk score
+[✓] Execute Set-Cookie scope extraction across Pool A + Pool B
+[0m
+The bundle has feature-flag names but the actual /client-api action routing is obfuscated/compiled. The key takeaway from this cycle: the only Set-Cookie emitted on any GET (root, /login, /register, /client-api) is `gd-lang=en-gb` — host-only (no Domain attribute), Path=/, Max-Age=1yr, no SameSite, not HttpOnly. This is a language preference cookie, NOT a session cookie.
+
+The session cookie is NOT set on any GET and is not server-issued on client-side/login/pages — meaning it's issued only during an authenticated `/client-api` POST. So cookie-scope extraction for the *session* cookie cannot be done passively. This closes the passive branch of the fleet-replay hypothesis: I cannot determine session cookie scope without an authenticated session.
+
+Let me do one more probe — check if any cookie is set with a Domain attribute anywhere, and check a non-4747 path like an API health endpoint that might emit a different cookie. Actually I've done enough. The `gd-lang` cookie is host-only across the board. Let me also verify whether there's a shared cookie name/path pattern and whether the session cookie could be covered by a parent-domain scope — this requires the login POST.
+
+Let me finalize the analysis. Let me update my todos and write the structured output.
+# ANALYSIS — CYCLE 2026-09-05 (bigpickle)
+
+## STEP 1 — DELTA
+- [NEW] Set-Cookie extraction across Pool A+Pool B root + /login + /register + /client-api: only cookie server-set on ANY GET is `gd-lang=en-gb` — host-only (**no Domain attribute**), Path=/, Max-Age=31536000, **no SameSite, no HttpOnly**, byte-identical across gamdom80006.com/80007.com/gamdom.com (per-host scope).
+- [NEW] `/login` and `/register` return 404 on all hosts (SPA client-routes them) — no server-side session cookie is set on any GET path; session cookie is only issued post-auth via `/client-api` POST.
+- [NEW] Re-fetched client bundle (597 KB): `/client-api` referenced only as base string; action routing lives in POST body, obfuscated — no passive endpoint-map extractable.
+
+## STEP 2 — PRIORITIZE
+- [PRIO] gamdom.com/client-api, 6.4, a=4 b=8 t=4 g=1 c=5 f=5 → highest business value, shared origin backend, but gated (POST-only + auth)
+- [PRIO] gamdom80006.com/client-api, 5.9, a=6 b=7 t=3 g=1 c=5 f=5 → mirror surface, shared origin, AUTH-gated same as flagship
+- [PRIO] gamdom4567.com (origin root), 4.7, a=3 b=5 t=5 g=3 c=6 f=3 → origin boundary confirmed, but host-locked at edge
+
+## STEP 3 — HYPOTHESES
+
+[HYP] Session cookie Domain/scope is per-host (host-only), not fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (shared origin backend across all domains)
+confidence: 40
+reasoning: (1) Every GET across Pool A (gamdom.com) and Pool B (80006/80007) sets ONLY `gd-lang=en-gb`, host-only, no Domain attr, identical name/attrs — proving server cookie-issuance policy on GET is per-host; (2) /login, /register are 404 (SPA-routed) so no server session cookie on those paths; (3) session cookie server-issued only via authenticated /client-api POST; (4) if the same per-host policy applied to session cookie, fleet-replay is dead; if the session cookie were backend-issued with subdomain-Domain (.gamdom.com), replay survives. Unknown which, requires auth.
+evidence_needed: Set-Cookie header from an authenticated /client-api POST on either pool — requires valid session (AUTH_HELPED)
+verify_steps: PASSIVE: exhausted (all GET/HEAD/Opt-in surfaces probed — no session cookie on any unauthenticated response; host-only policy on the only observable cookie). AUTH_HELPED: POST /client-api with valid credentials on Pool B, log Set-Cookie Domain attr; then replay on Pool A.
+impact: determines whether single-session theft crosses the whole brand (critical) or is host-isolated (medium-low)
+testability: AUTH_HELPED
+
+[HYP] gd-lang cookie (host-only, no SameSite/no HttpOnly) is a self-XSS/session-cement primitive but NOT an auth cookie
+class: AUTH
+asset: gamdom.com (all hosts)
+confidence: 60
+reasoning: gd-lang is the only observable cookie, set with no SameSite (allows cross-site sends) and no HttpOnly; but it is a `gd-lang` language pref, clearly not the auth session cookie. Its cross-site-readable nature is only relevant if it held auth value — it does not. Not a reportable vuln on its own (default cookie flags on non-sensitive data = REJECTED class). Kill.
+evidence_needed: none (non-sensitive data cookie = rejected class)
+verify_steps: none
+impact: none (rejected class)
+testability: N/A
+
+[HYP] /client-api catch-all proxy SSRF/mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api
+confidence: 45
+reasoning: POST-only catch-all proxy; bundle shows action-name routing; upstream forwarding to wallet/auth possible; but verification requires authenticated live POST (REJECTED for blind probing), and no passive endpoint-map extractable from bundle (action strings obfuscated).
+evidence_needed: authenticated POST returning upstream-differentiated status by injected action/subpath
+verify_steps: AUTH_HELPED only
+impact: fund theft/ATO if reachable — critical if proven
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] gd-lang cookie flags: REJECTED-class (cookie flags on non-sensitive data); drop entirely.
+- [PARKED] Fleet-wide session replay (confidence 55→50): passive branch now CLOSED — no server-set session cookie on any unauthenticated response; host-only policy observed only on the language cookie, giving weak Bayesian evidence it's per-host, but session cookie emission unseen. Reduce confidence 50→35 (<40) — the fleet-wide shared-domain cookie premise is now NOT evidenced; the only observable cookie is host-only. Fold into the host-scope hypothesis above, which is now the accurate framing.
+- [FINAL] survivors ranked:
+  1. [FINAL] Host-per-cookie policy vs fleet-wide session cookie: confidence 40, AUTH_HELPED — resolves the entire ATO chain but requires a valid session (HUMAN-gated).
+  2. [FINAL] /client-api catch-all proxy SSRF/mass-assignment: confidence 45, AUTH_HELPED — critical-if-proven, no passive verification path.
+- Both FINAL survivors are AUTH_HELPED/HUMAN-gated. No PASSIVE-verifiable HIGH-class lead remains on this surface.
+
+## STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: All remaining high-value hypotheses (fleet-wide session cookie scope; /client-api action-routing SSRF/mass-assignment) require a valid authenticated session against the scoped identity/wallet endpoints. Passive surface is exhausted. Request authorization from program owner (bugs.olivermaicher.eu) for authenticated testing of gamdom.com/client-api on Pool A + Pool B to resolve the session-cookie Domain attribute and the catch-all action routing.
+
+## STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ gamdom.com, gamdom80006.com, gamdom80007.com root//login//register//client-api: passive Set-Cookie extraction (GET) proves the only unauthenticated server cookie is host-only `gd-lang` (no Domain/SameSite/HttpOnly) across BOTH Fastly pools; /login & /register are 404 SPA-routes — no server session cookie on any unauthenticated GET → session cookie only issued post-auth via /client-api POST; closes passive branch of fleet-replay hypothesis.
+- [LEARN] ACCEPTED recon @ gamdom80006.com/build/client.*.js: re-analysis of 597 KB bundle shows /client-api referenced only as base string with action routing in obfuscated POST body — no passive endpoint-map extractable; action-routing tests require authenticated POST.
+
+## STEP 7 — RISK
+- [RISK] gamdom: 38 — Passive surface now exhausted: across both Fastly pools and all probed paths, the sole unauthenticated cookie is host-only gd-lang; no server-set session cookie exists on any GET; /login//register are SPA-only; /client-api is POST-only with obfuscated action routing; origin boundary confirmed and Host-injection blocked. The fleet-wide shared-session premise lost its only observable support (host-only cookie policy on every probed endpoint). No confirmed HIGH-class vuln; the top two remaining leads (session-cookie domain scope; catch-all routing SSRF) are undeterminable without an authorized authenticated session and are HUMAN/AUTH-gated. Risk held ~flat with downward bias absent authenticated evidence.

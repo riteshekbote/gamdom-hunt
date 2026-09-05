@@ -619,3 +619,31 @@ testability: PASSIVE
 [LEARN] ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api — redirect alias only, not API-serving
 [LEARN] ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no ACAO — browser cross-origin credentialed replay blocked
 [RISK] gamdom: 50 — sole surviving hypothesis (brand-wide origin trust pool cookie replay, [50]) remains HUMAN-gated; all passive AUTH-class probes exhausted without a session; dashboard.gamdom.com 403-locked; click.gamdom.com third-party subdomain not dangling; CORS blocks client-side replay. No confirmed HIGH. Passive cookie-scope extraction is the last read-only probe available.
+## 2026-09-05 18:23:33 UTC [target] (model bigpickle)
+[HYP] Session cookie Domain/scope is per-host (host-only), not fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (shared origin backend across all domains)
+confidence: 40
+reasoning: (1) Every GET across Pool A (gamdom.com) and Pool B (80006/80007) sets ONLY `gd-lang=en-gb`, host-only, no Domain attr, identical name/attrs — proving server cookie-issuance policy on GET is per-host; (2) /login, /register are 404 (SPA-routed) so no server session cookie on those paths; (3) session cookie server-issued only via authenticated /client-api POST; (4) if the same per-host policy applied to session cookie, fleet-replay is dead; if the session cookie were backend-issued with subdomain-Domain (.gamdom.com), replay survives. Unknown which, requires auth.
+evidence_needed: Set-Cookie header from an authenticated /client-api POST on either pool — requires valid session (AUTH_HELPED)
+verify_steps: PASSIVE: exhausted (all GET/HEAD/Opt-in surfaces probed — no session cookie on any unauthenticated response; host-only policy on the only observable cookie). AUTH_HELPED: POST /client-api with valid credentials on Pool B, log Set-Cookie Domain attr; then replay on Pool A.
+impact: determines whether single-session theft crosses the whole brand (critical) or is host-isolated (medium-low)
+testability: AUTH_HELPED
+[HYP] gd-lang cookie (host-only, no SameSite/no HttpOnly) is a self-XSS/session-cement primitive but NOT an auth cookie
+class: AUTH
+asset: gamdom.com (all hosts)
+confidence: 60
+reasoning: gd-lang is the only observable cookie, set with no SameSite (allows cross-site sends) and no HttpOnly; but it is a `gd-lang` language pref, clearly not the auth session cookie. Its cross-site-readable nature is only relevant if it held auth value — it does not. Not a reportable vuln on its own (default cookie flags on non-sensitive data = REJECTED class). Kill.
+evidence_needed: none (non-sensitive data cookie = rejected class)
+verify_steps: none
+impact: none (rejected class)
+testability: N/A
+[HYP] /client-api catch-all proxy SSRF/mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api
+confidence: 45
+reasoning: POST-only catch-all proxy; bundle shows action-name routing; upstream forwarding to wallet/auth possible; but verification requires authenticated live POST (REJECTED for blind probing), and no passive endpoint-map extractable from bundle (action strings obfuscated).
+evidence_needed: authenticated POST returning upstream-differentiated status by injected action/subpath
+verify_steps: AUTH_HELPED only
+impact: fund theft/ATO if reachable — critical if proven
+testability: AUTH_HELPED

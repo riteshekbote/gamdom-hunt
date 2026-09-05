@@ -147,3 +147,13 @@ www.gamdom.com
 - NEW click.gamdom.com: CNAME eu-proxy-1.symplifymail.com → eu-iv-1.symplifymail.com (192.165.55.11, third-party SymplifyMail) serving stock nginx default page — not dangling; subdomain-takeover watchlist i
 - NEW help.gamdom.com: Intercom-hosted help center (x-intercom-version, /en/ 302, Intercom CSP) — standard third-party SaaS, benign
 - CHANGED gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+
+## 2026-09-05 18:29:58 UTC
+- NEW Brand-wide origin trust pool confirmed: `gamdom.com/io/eu/vip/win/client-api` GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend spans entire brand
+- NEW `gamdom80004.com/client-api`: 302 → `gamdom80007.com/client-api` (redirect alias only); corrects prior inventory implying 8th API-serving mirror
+- NEW `gamdom80007.com/client-api`: OPTIONS preflight and Origin-header GET → 400 with no `Access-Control-Allow-*` headers; browser cross-origin credentialed replay blocked
+- NEW `dashboard.gamdom.com`: resolves on flagship Fastly Pool A, 403-locked at edge (Varnish Error 54113) across all paths — genuine scoped admin hostname, no bypass
+- NEW `click.gamdom.com`: CNAME `eu-proxy-1.symplifymail.com` → `eu-iv-1.symplifymail.com` (192.165.55.11) serving stock nginx default page — not dangling; subdomain-takeover watchlist item
+- NEW `help.gamdom.com`: Intercom-hosted help center (`x-intercom-version`, `/en/` 302) — standard third-party SaaS, benign
+- NEW `gamdom80007.com` port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle
+- CHANGED Origin trust boundary now spans flagship `gamdom.com` (Pool A) + all 7 mirrors + `gamdom4567.com` (Pool B) via byte-identical `/client-api` signature
