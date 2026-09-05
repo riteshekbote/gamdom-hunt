@@ -324,3 +324,34 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED recon @ gamdom80006.com/build/client.<hash>.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence.
 [LEARN] ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict.
 [RISK] gamdom: 58 — confirmed 7-8 mirror hostnames on one Fastly pool verified to share a single origin backend for a cookie-auth identity/wallet proxy; the only remaining ATO class is host-agnostic cookie acceptance (needs authenticated session to confirm). No confirmed HIGH; top lead gated on HUMAN authenticated testing.
+## 2026-09-05 01:05:48 UTC [target] (model bigpickle)
+[HYP] Cross-mirror session replay: server-set same-origin cookie is validated host-blind at the shared 4567 origin
+class: AUTH
+asset: gamdom4567.com /client-api (covers gamdom80004/80006/80007)
+confidence: 55
+reasoning: JS bundle (client.41b06529227c4b8b6a1d.js) proves `credentials:"same-origin"`, no Authorization/bearer/localStorage token → transport is server-set HttpOnly cookie; 4 Pool-B hostnames hit one verified byte-identical origin backend; HTTPS-only surface confirmed (port-80 301); leftover vector is backend session-store keyed on cookie value only, Host-agnostic
+evidence_needed: session cookie minted on gamdom80006.com accepted by gamdom80007.com or gamdom4567.com /client-api (cross-host response class differs from invalid-cookie baseline)
+verify_steps: AUTH_HELPED — authenticate on gamdom80006.com, replay exact cookie header to gamdom80007.com/client-api, compare response; passive fallback (gated-POST) byte-diff error verbosity across hosts with identical invalid cookie
+impact: cross-domain ATO over wallet/deposit flows across all mirrors; medium-high
+testability: AUTH_HELPED
+[HYP] Unlisted alias host gamdom80004.com widens same-origin cookie-trust surface to an unmonitored 8th hostname
+class: MISCONFIG
+asset: gamdom80004.com (302→gamdom80007.com, Pool B)
+confidence: 45
+reasoning: 8th reachable hostname sharing verified origin backend, absent from official "Gamdom Official Domains" status page; browser/privacy-tier DNS sees an extra trusted mirror endpoint no defender audits
+evidence_needed: Set-Cookie/validation behavior on 80004 identical to 80007 (shared session pool)
+verify_steps: HEAD chain 80004→80007 (done, re-confirmed 302); AUTH_HELPED cross-check cookie acceptance on 80004
+impact: marginal widening of replay surface + unmonitored landing host; low
+testability: HUMAN_ONLY
+[HYP] Kuma status page leaks monitor internals beyond already-accepted recon
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains + /socket.io
+confidence: 38
+reasoning: handshake issues SID with websocket upgrade; public status-page heartbeats already accepted recon; any admin RPC needs POST
+evidence_needed: non-null getMonitorList/needSetup without admin token
+verify_steps: only via POST socket.io RPC — not permitted (no-auth-bypass/mutate-against-live-data)
+impact: deface official trust page / leak monitor IPs; low-med
+testability: HUMAN_ONLY
+[NEXT] HUMAN: authenticate on gamdom80006.com, replay exact session cookie header against gamdom80007.com/client-api (and gamdom4567.com/client-api); confirm cross-host acceptance to validate shared-trust cookie replay — then report, since all passive paths for the ATO class are now exhausted.
+[LEARN] ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay.
+[RISK] gamdom: 58 — 7-8 mirror hostnames on one Fastly pool share one verified origin backend for a cookie-auth identity/wallet proxy; sole remaining ATO class is host-agnostic cookie acceptance, which requires an authenticated session to confirm (HUMAN gated). No confirmed HIGH; no new positive surface this cycle.
