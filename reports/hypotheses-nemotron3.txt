@@ -1,5 +1,5 @@
-## 2026-09-06 04:49:51 UTC [target] (model nemotron3)
-[NEW] gamdom90471.com confirmed as 8th mirror alias / 14th hostname in brand trust pool (CNAME→gamdom4567.com, Fastly Pool B, self-referenced 18× in flagship HomePage.js via gamdom-girisi.com SEO hub, DigiCert certs since 2025-10, fallback.tls.fastly.net SNI cert only → provisioned-but-not-yet-live on current edge node)
+## 2026-09-06 09:14:42 UTC [target] (model nemotron3)
+[NEW] gamdom90471.com confirmed as 8th mirror alias / 14th hostname in brand trust pool (CNAME→gamdom4567.com, Fastly Pool B, self-referenced 18× in flagship HomePage.js via gamdom-girisi.com SEO hub, DigiCert certs since 2025-10, fallback.tls.fastly.net SNI cert only → provisioned-but-not-yet-live)
 [NEW] gamdom-girisi.com identified as official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com + discord/telegram; linked from flagship HomePage.js — legitimate discovery seed for rotating mirror fleet
 [NEW] gamdomgiris.link confirmed as third-party Cloudflare landing (no Fastly origin /client-api signature) — NOT in-scope brand origin (watchlist only)
 [NEW] 4 regional TLDs (gamdom.eu/io/vip/win) confirmed on Pool A (151.101.x.52) — each serves full SPA + byte-identical `/client-api` 400 `Invalid request, only POST`; widens trust pool to 13 live hosts + 1 provisioned alias
