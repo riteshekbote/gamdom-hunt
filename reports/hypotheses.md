@@ -386,3 +386,7 @@
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
 - LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-06 16:18:18 UTC
+- [62] gamdom.com/client-api: Cross-host session replay across the now-17-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via byte-identical /health ETag + /client-api (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: rotation/cert-propagation watch (single read-only pass): `curl -sSk --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:151.101.67.72 https://$host/c

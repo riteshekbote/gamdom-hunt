@@ -898,3 +898,33 @@ testability: AUTH_HELPED
 [LEARN] REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure.
 [LEARN] REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure.
 [RISK] gamdom: 63 — unchanged. 16 hostnames (14 live + 2 provisioned) confirmed sharing one POST-only /client-api identity/wallet proxy (verified origin gamdom4567.com) with per-host server-set session cookies; fleet now includes gamdom80003.com (9th live mirror, byte-identical /health ETag) and gamdom90472.com (provisioned alias); single-session theft crosses flagship + 4 regional TLDs + 9 mirrors + 2 rotating aliases (funds, withdrawal, KYC PII). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted; fleet topology +2 hostnames this cycle.
+## 2026-09-06 15:59:52 UTC [target] (model bigpickle)
+[HYP] Cross-host session replay across the now-17-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via byte-identical /health ETag + /client-api
+class: AUTH
+asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007.com (Pool B) + gamdom4567.com + gamdom.eu/io/vip/win (Pool A) = 15 live hostnames + 2 provisioned (90472/90473)
+confidence: 62
+reasoning: /health 200 body `ok` + identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + server nginx re-confirmed on gamdom80003.com Pool B this cycle, identical to com/eu/80006/80007/4567; /client-api 400 (26B) byte-identical across all pools; bundle proves auth transport = server-set same-origin cookie (zero bearer/localStorage); each host sets only host-only gd-lang; no ACAO on OPTIONS/Origin preflight closes browser cross-origin replay; only unverified link = Domain/Path/SameSite of the authenticated session cookie.
+evidence_needed: Set-Cookie attributes from an authenticated /client-api POST on one brand host, then reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie (Domain/Path/SameSite) via authenticated POST on gamdom80006.com, replay verbatim on gamdom.eu + gamdom.com + gamdom80003.com, compare session acceptance.
+impact: single session theft → account control across flagship + 4 regional TLDs + 9 mirrors + 2 provisioned aliases (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+[HYP] Rotating mirror aliases (90471 + 90472 + 90473) transition from provisioned → live and join the shared backend
+class: AUTH
+asset: gamdom90471.com + gamdom90472.com + gamdom90473.com/client-api (CNAME→gamdom4567.com)
+confidence: 60
+reasoning: All three CNAME→verified origin 4567 (same as live 80003/80006/80007); gamdom90471.com self-referenced 18× in official HomePage.js, SEO hub tags "Aktif"; this cycle all three upgraded from HTTP 000 → Fastly 421 (edge now routes host, TLS cert not yet in host config) — a concrete provisioning milestone distinct from last cycle; status-page JSON still shows no monitor for any.
+evidence_needed: any edge serving a valid host SNI cert for 90471/90472/90473 → /client-api renders byte-identical 400 (26B); monitor appears on status-page JSON.
+verify_steps: PASSIVE — `curl --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:{151.101.3,67,131,195}.72 https://$host/client-api` each cycle (expect 421 until cert propagates); byte-diff against gamdom80007.com/client-api; watch status-page JSON for new monitor entries.
+impact: 3 more nodes in fleet ATO blast radius; inventory value.
+testability: PASSIVE
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; /health ETag confirms Starlette origin on both pools; catch-all 400s every GET subpath so action map formally unenumerable; privilege model untestable without authenticated POST.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+[NEXT] PROBE: rotation/cert-propagation watch (single read-only pass): `curl -sSk --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:151.101.67.72 https://$host/client-api` (expect 421; if 400 `Invalid request, only POST` → byte-diff vs gamdom80007.com/client-api to confirm live mirror), plus `dig +short gamdom9047{4,5}.com` + `gamdom800{04,08}.com` for the next numbered alias, and `curl -sS -m 12 https://gamdom-girisi.com/` grep `gamdom[0-9]+\.com` + `curl -sSk -m 12 https://gamdommirrors.com/status/gamdom-domains` grep for a new monitor. ≤6 lookups, ≤1rps.
+[RISK] gamdom: 63 — 17 hostnames (15 live + 2 provisioned-but-edge-routed) confirmed sharing one POST-only `/client-api` identity/wallet proxy (verified origin gamdom4567.com) with per-host server-set session cookies; single-session theft crosses flagship + 4 regional TLDs + 9 mirrors + 3 rotating aliases (funds, withdrawal, KYC PII). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted; this cycle: +1 hostname (90473) and +2 aliases upgraded 000→421 toward live (90471/90472), but 3 candidates rejected out-of-scope on DNS. No confirmed HIGH vulnerability.

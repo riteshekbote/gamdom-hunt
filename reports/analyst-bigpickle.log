@@ -7399,3 +7399,275 @@ No hypotheses below 40 — none parked.
 ```
 [RISK] gamdom: 63 — unchanged. 16 hostnames (14 live + 2 provisioned) confirmed sharing one POST-only /client-api identity/wallet proxy (verified origin gamdom4567.com) with per-host server-set session cookies; fleet now includes gamdom80003.com (9th live mirror, byte-identical /health ETag) and gamdom90472.com (provisioned alias); single-session theft crosses flagship + 4 regional TLDs + 9 mirrors + 2 rotating aliases (funds, withdrawal, KYC PII). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted; fleet topology +2 hostnames this cycle.
 ```
+===== ANALYST bigpickle 2026-09-06 16:18:18 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls /home/runner/work/gamdom-hunt/gamdom-hunt/
+README.md
+analyst-out.txt
+analyst-prompt.txt
+ctx.txt
+inventory
+knowledge
+leads
+probe-results.md
+recon-notes
+reports
+reposcan-raw
+scope.yml
+scripts
+state_bigpickle.json
+state_laguna.json
+state_ling3.json
+state_longcat.json
+state_mimo.json
+state_nemotron3.json
+triage
+[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead leads
+[0m→ [0mRead knowledge
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead state_bigpickle.json
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=438][0m
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=805][0m
+[0m
+[0m$ [0mdig +short gamdom80009.com 2>/dev/null; echo "---"; dig +short gamdom80010.com 2>/dev/null; echo "---"; dig +short gamdom80011.com 2>/dev/null; echo "---"; dig +short gamdom90473.com 2>/dev/null; echo "---"; dig +short gamdom90474.com 2>/dev/null
+162.255.119.42
+---
+162.255.119.173
+---
+162.255.119.234
+---
+gamdom4567.com.
+151.101.195.72
+151.101.67.72
+151.101.131.72
+151.101.3.72
+---
+192.64.119.2
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90471.com:443:151.101.3.72 https://gamdom90471.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90471.com:443:151.101.67.72 https://gamdom90471.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90471.com:443:151.101.131.72 https://gamdom90471.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90471.com:443:151.101.195.72 https://gamdom90471.com/client-api 2>/dev/null; echo ""
+421
+421
+421
+421
+[0m
+Now I have the full picture. Let me execute the planned passive probes and produce the analysis.
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90472.com:443:151.101.3.72 https://gamdom90472.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90472.com:443:151.101.67.72 https://gamdom90472.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90472.com:443:151.101.131.72 https://gamdom90472.com/client-api 2>/dev/null; echo ""; curl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom90472.com:443:151.101.195.72 https://gamdom90472.com/client-api 2>/dev/null; echo ""
+421
+421
+421
+421
+[0m
+[0m$ [0mcurl -sSk -D- -o /dev/null --resolve gamdom90473.com:443:151.101.67.72 https://gamdom90473.com/client-api 2>/dev/null | head -30
+HTTP/2 421 
+content-type: text/plain; charset=utf-8
+x-served-by: cache-hhr-khhr2060025
+content-length: 291
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90471.com:443:151.101.67.72 https://gamdom90471.com/client-api 2>/dev/null; echo ""
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90472.com:443:151.101.67.72 https://gamdom90472.com/client-api 2>/dev/null; echo ""
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+[0m
+New discovery: gamdom90473.com CNAME→gamdom4567.com (Pool B). 90471/90472 now return 421 instead of 000. Let me gather more evidence.
+[0m$ [0mcurl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | grep -oP '"gamdom[^"]*"' | sort -u | head -30
+(no output)
+[0m
+[0m$ [0mcurl -sSk -D- --resolve gamdom90473.com:443:151.101.67.72 https://gamdom90473.com/client-api 2>/dev/null | head -40
+HTTP/2 421 
+content-type: text/plain; charset=utf-8
+x-served-by: cache-hhr-khhr2060053
+content-length: 291
+
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+[0m
+[0m$ [0mcurl -sS -m 12 "https://gamdom-girisi.com/" 2>/dev/null | grep -oP 'gamdom[0-9]+\.com' | sort -u
+gamdom90471.com
+[0m
+[0m$ [0mcurl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps([m.get('name','?') for m in d.get('publicGroupList',d.get('data',{}).get('publicGroupList',[]))], indent=2))" 2>/dev/null || echo "parse failed"
+parse failed
+[0m
+[0m$ [0mcurl -sSk -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | grep -oP '"name"\s*:\s*"[^"]*"' | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sSk -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | grep -oiP 'gamdom[0-9a-z.]+' | sort -u | head -30
+Gamdom.com
+Gamdom.eu
+Gamdom.io
+Gamdom.vip
+Gamdom.win
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+gamdom80006.com
+gamdom80007.com
+gamdomcasino
+[0m
+[0m$ [0m# Check gamdom90473 cert fingerprint against gamdom4567 (known origin)
+curl -sSk --resolve gamdom90473.com:443:151.101.67.72 https://gamdom90473.com/ -o /dev/null -w "%{ssl_verify_result}\n" 2>/dev/null
+# Also get the cert SANs from 4567 directly
+echo "---4567 cert---"
+echo | openssl s_client -connect gamdom4567.com:443 -servername gamdom4567.com 2>/dev/null | openssl x509 -noout -text 2>/dev/null | grep -A5 "Subject Alternative Name"
+20
+---4567 cert---
+            X509v3 Subject Alternative Name: 
+                DNS:*.gamdom4567.com, DNS:gamdom4567.com
+            X509v3 Certificate Policies: 
+                Policy: 2.23.140.1.2.1
+            X509v3 CRL Distribution Points: 
+                Full Name:
+[0m
+[0m$ [0mcurl -sSk -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | grep -i "90473\|90471\|90472\|80003\|80009\|80010\|80011" | head -20
+(no output)
+[0m
+[0m$ [0m# Check if 80003 is on the status page
+curl -sSk -m 12 "https://gamdommirrors.com/status/gamdom-domains" 2>/dev/null | grep -i "80003" | head -10
+(no output)
+[0m
+[0m$ [0m# Verify gamdom80003.com is still live + identical /health ETag
+curl -sSk --resolve gamdom80003.com:443:151.101.67.72 https://gamdom80003.com/health 2>/dev/null; echo ""
+ok
+[0m
+[0m$ [0mcurl -sSk -D- --resolve gamdom80003.com:443:151.101.67.72 https://gamdom80003.com/health 2>/dev/null | head -15
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+content-type: text/html; charset=utf-8
+accept-ranges: bytes
+date: Sun, 06 Sep 2026 15:59:03 GMT
+via: 1.1 varnish
+age: 0
+x-served-by: cache-hhr-khhr2060054-HHR, cache-hhr-khhr2060025-HHR
+x-cache: MISS, HIT
+x-cache-hits: 0, 1
+x-timer: S1788710344.795327,VS0,VE7
+vary: Accept-Encoding
+strict-transport-security: max-age=31557600
+content-length: 2
+[0m
+Confirmed the /health 200 + identical weak-ETag `W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"` on gamdom80003.com Pool B this cycle. The status page still shows only the 7 official monitors (gamdomcasino group + com/eu/io/vip/win/80006/80007).
+
+Key new discovery this cycle: **gamdom90473.com** CNAME→gamdom4567.com (Pool B, 151.101.x.72), which makes it the 17th hostname in the brand trust pool. The other candidates (80009/80010/80011) resolve to non-Fastly IPs (162.255.119.x), and gamdom90474.com resolves to 192.64.119.2 (not Fastly) — out of scope.
+
+90471/90472 now return Fastly 421 (SAN mismatch → fallback.tls.fastly.net cert) rather than 000 — they remain provisioned-not-live (cert not yet propagated to host config) but now reach the Fastly edge with host routing in place, a transitional step toward going live. Same for 90473 (421).
+
+Let me do one more passive check on the SEO hub for the current flip target, and confirm the full DNS spread.
+[0m$ [0m# Full DNS verification of all numbered candidates
+for d in gamdom80009.com gamdom80010.com gamdom80011.com gamdom90471.com gamdom90472.com gamdom90473.com gamdom90474.com; do
+  echo -n "$d -> "; dig +short "$d" | tr '\n' ' '; echo ""
+done
+gamdom80009.com -> 162.255.119.42 
+gamdom80010.com -> 162.255.119.173 
+gamdom80011.com -> 162.255.119.234 
+gamdom90471.com -> gamdom4567.com. 151.101.3.72 151.101.195.72 151.101.131.72 151.101.67.72 
+gamdom90472.com -> gamdom4567.com. 151.101.195.72 151.101.3.72 151.101.131.72 151.101.67.72 
+gamdom90473.com -> gamdom4567.com. 151.101.131.72 151.101.195.72 151.101.3.72 151.101.67.72 
+gamdom90474.com -> 192.64.119.2
+[0m
+I have all evidence I need. 90471/90472/90473 are all CNAME→gamdom4567.com on Pool B; 80009/80010/80011 and 90474 resolve to non-Fastly IPs (out of scope). Let me update the inventory file and produce the analysis.
+[0m← [0mEdit inventory/gamdom.md
+Index: /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
+===================================================================
+--- /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
++++ /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/gamdom.md
+@@ -194,8 +194,16 @@
+ - NEW gamdommirrors.com/status/gamdom-domains official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies 4 regional TLDs as official and confirms gamdom904
+ - CHANGED Origin trust boundary now spans flagship gamdom.com (Pool A) + 4 regional TLDs + all 7 mirrors + gamdom4567.com (Pool B) + gamdom90471.com (Pool B alias) + gamdom80004.com (redirect alias) = 14-host f
+ - CHANGED Risk score increased from 65 → 68: confirmed 14-host fleet sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification 
+ 
++## 2026-09-06 15:59:00 UTC
++- NEW gamdom90473.com confirmed as 17th hostname in brand trust pool: CNAME→gamdom4567.com (verified origin), Fastly Pool B (151.101.x.72 all 4 edges), currently returns Fastly 421 (SAN mismatch → fallback.tls.fastly.net) on host SNI → provisioned-not-yet-live, same transitional state as 90471/90472 this cycle.
++- CHANGED gamdom90471.com / gamdom90472.com status: both now return HTTP 421 (Fastly SAN-mismatch, host routed at edge but cert not propagated in host config) instead of prior HTTP 000 — transitional provisioning step toward live (was fully unreachable, now edge-routed but cert-gated).
++- REJECTED out-of-scope @ gamdom80009.com / gamdom80010.com / gamdom80011.com: all resolve to 162.255.119.x (non-Fastly) — not in-scope brand infrastructure.
++- REJECTED out-of-scope @ gamdom90474.com: resolves to 192.64.119.2 (non-Fastly) — not in-scope brand infrastructure.
++- CONFIRMED gamdom80003.com/health 200 `ok` + identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + server nginx on Pool B edge this cycle (re-verified).
++- CONFIRMED gamdommirrors.com/status/gamdom-domains still lists exactly 7 official monitors (com/eu/io/vip/win/80006/80007) — 90471/90472/90473 all still off the monitor list (rotating aliases before listing).
++
+ ## 2026-09-06 13:03:53 UTC
+ - NEW gamdom90471.com confirmed as 8th mirror alias / 14th hostname in brand trust pool (CNAME→gamdom4567.com, Fastly Pool B, self-referenced 18× in flagship HomePage.js via gamdom-girisi.com SEO hub, DigiC
+ - NEW gamdom-girisi.com identified as official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com + discord/telegram; linked from flagship HomePage.js — legitimate discovery se
+ - NEW gamdomgiris.link confirmed as third-party Cloudflare landing (no Fastly origin /client-api signature) — NOT in-scope brand origin (watchlist only)
+
+[0m
+Now let me produce the structured analysis output.
+
+## ═══════════════════════════════════════════════════
+## GAMDOM DEEP-HUNT ANALYSIS — 2026-09-06 15:59 UTC
+## ═══════════════════════════════════════════════════
+
+**STEP 1 — DELTA**
+- [NEW] gamdom90473.com: 17th hostname in brand trust pool (CNAME→gamdom4567.com, Pool B 151.101.x.72, currently 421 SAN-mismatch → provisioned-not-live).
+- [CHANGED] gamdom90471.com + gamdom90472.com transitioned from HTTP 000 → HTTP 421 (Fastly edge now routes the host but TLS cert not yet in host config) — a concrete provisioning step toward going live.
+- [CHANGED] gamdom80003.com/health re-verified live this cycle: 200 `ok` + identical weak-ETag `W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"` + server nginx on Pool B → 9th live mirror confirmed (not transient).
+- [REJECTED] gamdom80009/80010/80011.com resolve to 162.255.119.x (non-Fastly); gamdom90474.com → 192.64.119.2 (non-Fastly) — out of scope.
+- [CHANGED] gamdom-girisi.com SEO hub still flips only to gamdom90471.com (unchanged target); status page still lists exactly 7 monitors.
+
+**STEP 2 — PRIORITIZE**
+- [PRIO] gamdom.com/client-api (Pool A+B),9.8,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=1 cloud_surface=7 freshness=9
+- [PRIO] gamdom80003.com/client-api (Pool B, live),9.5,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=1 cloud_surface=7 freshness=10
+- [PRIO] gamdom90473.com/client-api (Pool B, provisioned),6.3,attack_surface=8 business_value=10 tech_exposure=9 gate_ease=1 cloud_surface=7 freshness=10
+
+**STEP 3 — HYPOTHESES**
+
+[HYP] Cross-host session replay across the now-17-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via byte-identical /health ETag + /client-api
+class: AUTH
+asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007.com (Pool B) + gamdom4567.com + gamdom.eu/io/vip/win (Pool A) = 15 live hostnames + 2 provisioned (90472/90473)
+confidence: 62
+reasoning: /health 200 body `ok` + identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + server nginx re-confirmed on gamdom80003.com Pool B this cycle, identical to com/eu/80006/80007/4567; /client-api 400 (26B) byte-identical across all pools; bundle proves auth transport = server-set same-origin cookie (zero bearer/localStorage); each host sets only host-only gd-lang; no ACAO on OPTIONS/Origin preflight closes browser cross-origin replay; only unverified link = Domain/Path/SameSite of the authenticated session cookie.
+evidence_needed: Set-Cookie attributes from an authenticated /client-api POST on one brand host, then reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie (Domain/Path/SameSite) via authenticated POST on gamdom80006.com, replay verbatim on gamdom.eu + gamdom.com + gamdom80003.com, compare session acceptance.
+impact: single session theft → account control across flagship + 4 regional TLDs + 9 mirrors + 2 provisioned aliases (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+
+[HYP] Rotating mirror aliases (90471 + 90472 + 90473) transition from provisioned → live and join the shared backend
+class: AUTH
+asset: gamdom90471.com + gamdom90472.com + gamdom90473.com/client-api (CNAME→gamdom4567.com)
+confidence: 60
+reasoning: All three CNAME→verified origin 4567 (same as live 80003/80006/80007); gamdom90471.com self-referenced 18× in official HomePage.js, SEO hub tags "Aktif"; this cycle all three upgraded from HTTP 000 → Fastly 421 (edge now routes host, TLS cert not yet in host config) — a concrete provisioning milestone distinct from last cycle; status-page JSON still shows no monitor for any.
+evidence_needed: any edge serving a valid host SNI cert for 90471/90472/90473 → /client-api renders byte-identical 400 (26B); monitor appears on status-page JSON.
+verify_steps: PASSIVE — `curl --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:{151.101.3,67,131,195}.72 https://$host/client-api` each cycle (expect 421 until cert propagates); byte-diff against gamdom80007.com/client-api; watch status-page JSON for new monitor entries.
+impact: 3 more nodes in fleet ATO blast radius; inventory value.
+testability: PASSIVE
+
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; /health ETag confirms Starlette origin on both pools; catch-all 400s every GET subpath so action map formally unenumerable; privilege model untestable without authenticated POST.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+
+**STEP 4 — SELF-CRITIQUE**
+- [PARKED] Client-asserted privilege [45]: AUTH_HELPED only, REJECTED-class blind POST, no passive path — parked pending an authenticated session (unchanged from prior cycles).
+- [FINAL] survivors ranked:
+  1. [62] Cross-host session replay across 17-host pool (AUTH_HELPED, sole survivor).
+  2. [60] Rotating aliases 90471/90472/90473 transition toward live (PASSIVE, this cycle's new 000→421 upgrade is the sole net-new signal).
+
+**STEP 5 — NEXT ACTION**
+[NEXT] PROBE: rotation/cert-propagation watch (single read-only pass): `curl -sSk --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:151.101.67.72 https://$host/client-api` (expect 421; if 400 `Invalid request, only POST` → byte-diff vs gamdom80007.com/client-api to confirm live mirror), plus `dig +short gamdom9047{4,5}.com` + `gamdom800{04,08}.com` for the next numbered alias, and `curl -sS -m 12 https://gamdom-girisi.com/` grep `gamdom[0-9]+\.com` + `curl -sSk -m 12 https://gamdommirrors.com/status/gamdom-domains` grep for a new monitor. ≤6 lookups, ≤1rps.
+
+**STEP 6 — LEARNING**
+- [LEARN] ACCEPTED inventory @ gamdom90473.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (151.101.x.72 all 4 edges), currently 421 SAN-mismatch → provisioned-not-yet-live = 17th hostname in brand trust pool; off the 7-monitor status page.
+- [LEARN] ACCEPTED recon @ gamdom90471.com/gamdom90472.com: status upgraded 000 → 421 (Fastly edge now routes the host; TLS cert not yet in host config) — evidence of active provisioning, distinct from prior cycles.
+- [LEARN] REJECTED out-of-scope @ gamdom80009.com/80010/80011.com: resolve to 162.255.119.x (non-Fastly) — not in-scope brand infrastructure.
+- [LEARN] REJECTED out-of-scope @ gamdom90474.com: resolves to 192.64.119.2 (non-Fastly) — not in-scope brand infrastructure.
+
+**STEP 7 — RISK**
+[RISK] gamdom: 63 — 17 hostnames (15 live + 2 provisioned-but-edge-routed) confirmed sharing one POST-only `/client-api` identity/wallet proxy (verified origin gamdom4567.com) with per-host server-set session cookies; single-session theft crosses flagship + 4 regional TLDs + 9 mirrors + 3 rotating aliases (funds, withdrawal, KYC PII). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted; this cycle: +1 hostname (90473) and +2 aliases upgraded 000→421 toward live (90471/90472), but 3 candidates rejected out-of-scope on DNS. No confirmed HIGH vulnerability.
