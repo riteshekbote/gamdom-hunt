@@ -6735,3 +6735,118 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] gamdom: 64 — shared origin now proven fleet-wide by two independent byte-identical routes (/client-api 400 + /health ok incl. origin 4567) across 13 live hosts + provisioned 90471; single-session theft would cross flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC). No data touched; ATO still human-gated behind one authenticated Set-Cookie replay test; passive surface fully enumerated and unchanged.
+===== ANALYST bigpickle 2026-09-06 04:50:01 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0msleep 1; curl -sS -m 12 "https://gamdom-girisi.com/" | grep -oE 'gamdom[0-9]+\.com' | sort -u; echo "---redirect-params---"; grep -oE '(href|src|action)="[^"]*(\?|&)(url|next|redirect|return|r)=[^"]*"' -i <(curl -sS -m 12 "https://gamdom-girisi.com/") | head
+gamdom90471.com
+---redirect-params---
+[0m
+[0m$ [0msleep 1; curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains" | grep -oE 'gamdom[a-z0-9]*\.(com|io|eu|vip|win)' | sort -u
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+gamdom80006.com
+gamdom80007.com
+[0m
+[0m$ [0msleep 1; curl -sS -m 10 -o /dev/null -D - "https://gamdom90471.com/" 2>&1 | grep -iE '^(HTTP|server|x-served|set-cookie|x-cache)' ; echo "== health =="; curl -sS -m 10 "https://gamdom90471.com/health" -w " [%{http_code}]\n" 2>&1 | head -c 200
+== health ==
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the se
+[0m
+[0m$ [0mfor ip in 151.101.3.67 151.101.131.67 151.101.195.67 151.101.67.72; do echo "== $ip =="; curl -sS -m 8 --resolve gamdom90471.com:443:$ip "https://gamdom90471.com/client-api" -w " [%{http_code}]\n" 2>&1 | head -c 200; echo; sleep 1; done
+== 151.101.3.67 ==
+curl: (35) Recv failure: Connection reset by peer
+ [000]
+
+== 151.101.131.67 ==
+curl: (35) Recv failure: Connection reset by peer
+ [000]
+
+== 151.101.195.67 ==
+curl: (35) Recv failure: Connection reset by peer
+ [000]
+
+== 151.101.67.72 ==
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the se
+[0m
+[0m$ [0msleep 1; for t in "openapi.json" "docs" "swagger.json" "redoc"; do printf "%-16s" "/$t"; curl -sS -m 8 -o /tmp/gh_q.txt -w "[%{http_code}] %{size_download}B" "https://gamdom4567.com/$t"; echo " $(head -c 60 /tmp/gh_q.txt)"; sleep 1; done; printf "%-16s" "/client-api/docs"; curl -sS -m 8 -o /tmp/gh_r.txt -w "[%{http_code}] %{size_download}B" "https://gamdom80007.com/client-api/docs"; echo " $(head -c 60 /tmp/gh_r.txt)"; sleep 1; printf "%-29s" "/client-api/openapi.json"; curl -sS -m 8 -o /tmp/gh_s.txt -w "[%{http_code}] %{size_download}B" "https://gamdom80007.com/client-api/openapi.json"; echo " $(head -c 60 /tmp/gh_s.txt)"
+/openapi.json   [404] 9B Not Found
+/docs           [404] 9B Not Found
+/swagger.json   [404] 9B Not Found
+/redoc          [404] 9B Not Found
+/client-api/docs[400] 26B Invalid request, only POST
+/client-api/openapi.json     [400] 26B Invalid request, only POST
+[0m
+[0m$ [0mfor p in "client-api/docs" "client-api/openapi.json" "client-api/api" "client-api/v1" "client-api/health" "client-api/debug" "client-api/swagger.json"; do printf "%-28s" "/$p"; curl -sS -m 8 -o /tmp/gh_p.txt -w "[%{http_code}] %{size_download}B" "https://gamdom.com/$p"; echo " $(head -c 80 /tmp/gh_p.txt)"; sleep 1; done
+/client-api/docs            [400] 26B Invalid request, only POST
+/client-api/openapi.json    [400] 26B Invalid request, only POST
+/client-api/api             [400] 26B Invalid request, only POST
+/client-api/v1              [400] 26B Invalid request, only POST
+/client-api/health          [400] 26B Invalid request, only POST
+/client-api/debug           [400] 26B Invalid request, only POST
+/client-api/swagger.json    [400] 26B Invalid request, only POST
+[0m
+**STEP 1 — DELTA**
+- [NEW] gamdom.com/client-api path-space scan: every GET subpath (`/docs /openapi.json /api /v1 /health /debug /swagger.json`) returns byte-identical 400 `Invalid request, only POST` (26B); origin `gamdom4567.com` `/openapi.json /docs /swagger.json /redoc` → 404 — no Starlette/FastAPI schema surface anywhere in the fleet; action-name routing is not endpoint-enumerable.
+- [CHANGED] `gamdom90471.com` re-probed on 4 Fastly edges: 151.101.{3,131,195}.67 → connection reset, 151.101.67.72 → only fallback.tls.fastly.net SNI (SSL 60); SEO hub still targets 90471, status page still 7 monitors, no redirect params on hub → **still provisioned-not-live, no rotation**.
+
+**STEP 2 — PRIORITIZE**
+- [PRIO] gamdom.com/client-api fleet, 6.15 (a7 b10 t6 g4 c1 f3) — sole critical surface, 14-host shared origin
+- [PRIO] gamdom90471.com/client-api, 4.55 (a3 b7 t3 g4 c1 f9) — rotation watch, inventory only
+- [PRIO] gamdom-girisi.com, 3.90 (a2 b5 t2 g7 c0 f8) — below floor, no redirect params
+
+**STEP 3 — HYPOTHESES**
+[HYP] Cross-host session replay across the 14-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide (/health 200 byte-identical)
+class: AUTH
+asset: gamdom.com/client-api (Pool A + Pool B + 4567 + provisioned 90471)
+confidence: 60
+reasoning: /client-api GET/OPTIONS 400 (26B) byte-identical across all pools; bundle proves auth transport = server-set same-origin cookie, zero bearer/localStorage; each host sets only host-only `gd-lang`; no ACAO closes browser cross-origin replay; only unverified link = Domain/Path/SameSite of the authenticated session cookie.
+evidence_needed: Set-Cookie attributes from an authenticated /client-api exchange on one brand host, then reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie (Domain/Path/SameSite) from an authenticated POST on gamdom80006.com, replay verbatim on gamdom.eu + gamdom.com, compare session acceptance.
+impact: single session theft → account control across flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+
+[HYP] Rotating mirror alias (90471) joins the shared backend once the host cert propagates
+class: AUTH
+asset: gamdom90471.com/client-api (CNAME→gamdom4567.com)
+confidence: 55
+reasoning: CNAME→verified origin 4567 (same as live 80006/80007); self-referenced 18× in official HomePage bundle; SEO hub tags "Aktif"; real DigiCert/Certainly certs in CT since 2025-10; yet this cycle all Pool B edges still serve only fallback.tls.fastly.net → provisioned-not-live, off the 7-monitor status page.
+evidence_needed: /client-api renders byte-identical 400 on an edge serving a valid 90471 host SNI cert; domain appears on gamdommirrors.com monitor list.
+verify_steps: PASSIVE — `curl --resolve gamdom90471.com:443:151.101.67.72 https://gamdom90471.com/client-api` each cycle; diff vs gamdom80007.com/client-api; re-watch gamdom-girisi.com + status page for a new numbered name.
+impact: one more node in the fleet ATO blast radius; inventory value.
+testability: PASSIVE
+
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 40
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; but this cycle's path-scan shows the catch-all 400s every GET subpath and origin 4567 exposes no /docs|/openapi.json → action map formally unenumerable; privilege model untestable without authenticated POST.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains (endpoint map closed).
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+
+**STEP 4 — SELF-CRITIQUE**
+- [PARKED] Client-asserted privilege routing: path-space scan proves no schema/docs/endpoint map anywhere; validation requires authenticated POST probing of staff actions (REJECTED class without explicit authorized scope) and bundle action names are obfuscated — no passive branch left, confidence 40 at floor.
+- [PARKED] gamdom-girisi.com open-redirect: head/tail grep of current HTML found no `?url/next/redirect/return` params, confidence 35 < 40 floor; brand-jacking watchlist only.
+- [FINAL] ranked survivors: (1) Cross-host session replay [60, AUTH_HELPED]; (2) 90471 rotation/trust-pool widening [55, PASSIVE].
+
+**STEP 5 — NEXT ACTION**
+[NEXT] PROBE: rotation watch (single read-only pass): `curl -sS -m 12 "https://gamdom-girisi.com/"` and grep `gamdom[0-9]+\.com`; `curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains"` and grep monitor hostnames; `curl -sS -m 8 --resolve gamdom90471.com:443:151.101.67.72 "https://gamdom90471.com/client-api"` — diff numbered target vs 90471 and body vs gamdom80007.com/client-api.
+
+**STEP 6 — LEARNING**
+- [LEARN] ACCEPTED recon @ gamdom.com/client-api path-space: Starlette catch-all returns byte-identical 400 `Invalid request, only POST` (26B) on all GET subpaths (/docs /openapi.json /api /v1 /health /debug /swagger.json); gamdom4567.com root /openapi.json /docs /swagger.json /redoc → 404 — no schema/docs surface fleet-wide, action-name map unenumerable.
+- [LEARN] ACCEPTED recon @ gamdom90471.com: re-probe of all probed Fastly edge IPs — 151.101.{3,131,195}.67 connection reset, 151.101.67.72 fallback.tls.fastly.net SNI only → 90471 still provisioned-not-live; consistent with rotation pending, no new alias.
+- [LEARN] ACCEPTED recon @ gamdom-girisi.com + gamdommirrors.com/status/gamdom-domains: rotation watch — hub still targets gamdom90471.com, no redirect-bearing params in HTML, status page still exactly 7 monitors (com/eu/io/vip/win/80006/80007) → no rotation, no new numbered mirror.
+
+**STEP 7 — RISK**
+[RISK] gamdom: 63 — unchanged: confirmed 13 live TLS hosts + 1 provisioned (90471) sharing a single POST-only `/client-api` backend (verified origin 4567) with per-host server-set session cookies; single-session theft crosses flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; fleet schema-leak angle formally closed this cycle; all passive avenues exhausted.
