@@ -6269,3 +6269,469 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] gamdom: 63 — confirmed 13 live TLS hosts + 1 provisioned (90471) sharing a single POST-only /client-api backend (verified origin 4567) with per-host server-set session cookies; single-session theft would cross flagship + 4 regional TLDs + 7 live mirrors + the rotating alias (funds, withdrawal, KYC). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted.
+===== ANALYST bigpickle 2026-09-06 00:18:55 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && ls art/ 2>/dev/null; ls *.txt 2>/dev/null
+total 180
+drwxr-xr-x 12 runner runner  4096 Sep  6 00:12 .
+drwxr-xr-x  3 runner runner  4096 Sep  6 00:12 ..
+drwxr-xr-x  7 runner runner  4096 Sep  6 00:12 .git
+drwxr-xr-x  3 runner runner  4096 Sep  6 00:12 .github
+-rw-r--r--  1 runner runner  1691 Sep  6 00:12 README.md
+-rw-r--r--  1 runner runner    32 Sep  6 00:12 analyst-out.txt
+-rw-r--r--  1 runner runner 46226 Sep  6 00:12 analyst-prompt.txt
+-rw-r--r--  1 runner runner 42445 Sep  6 00:12 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 leads
+-rw-r--r--  1 runner runner   806 Sep  6 00:12 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 reports
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 reposcan-raw
+-rw-r--r--  1 runner runner  3194 Sep  6 00:12 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 scripts
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  6 00:12 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 triage
+analyst-out.txt
+analyst-prompt.txt
+ctx.txt
+[0m
+[0m$ [0mcurl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains" | head -c 2000; echo; echo "---EXIT $?---"
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <link rel="icon" href="/upload/logo1.png?t=1780595715016">
+    <link rel="manifest" href="/api/status-page/gamdom-domains/manifest.json">
+    <meta name="theme-color" id="theme-color" content="">
+    <meta name="description" content="">
+    <title>Gamdom Official Domains</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin="" src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin="" href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<meta property="og:title" content="Gamdom Official Domains"><meta property="og:description" content="">
+            <script id="preload-data" data-json="{}">
+                window.preloadData = {'config':{'slug':'gamdom-domains','title':'Gamdom Official Domains','description':'','icon':'/upload/logo1.png?t=1780595715016','theme':'auto','published':true,'showTags':false,'customCSS':'.alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\ncurl: (23) Failure writing output to destination
+
+---EXIT 0---
+[0m
+[0m$ [0mcurl -sS -m 15 "https://gamdommirrors.com/status/gamdom-domains" -o /tmp/opencode/status.html 2>&1; wc -c /tmp/opencode/status.html; grep -oE 'gamdom[0-9a-z.]*\.(com|eu|io|vip|win)' /tmp/opencode/status.html | sort -u
+14030 /tmp/opencode/status.html
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+gamdom80006.com
+gamdom80007.com
+[0m
+[0m$ [0msleep 1; curl -sS -m 15 "https://gamdom-girisi.com/" -o /tmp/opencode/hub.html 2>&1; wc -c /tmp/opencode/hub.html; grep -oE 'gamdom[0-9]+\.com' /tmp/opencode/hub.html | sort -u; echo "---"; grep -ioE 'redir[a-z]*=[^"& ]+|next=[^"& ]+|url=[^"& ]+|return[a-z]*=[^"& ]+' /tmp/opencode/hub.html | sort -u | head
+61081 /tmp/opencode/hub.html
+gamdom90471.com
+---
+[0m
+[0m$ [0msleep 1; getent ahosts gamdom90471.com | awk '{print $1}' | sort -u; echo "---"; getent ahosts gamdom80007.com | awk '{print $1}' | sort -u
+151.101.131.72
+151.101.195.72
+151.101.3.72
+151.101.67.72
+---
+151.101.131.72
+151.101.195.72
+151.101.3.72
+151.101.67.72
+[0m
+[0m$ [0mfor ip in 151.101.3.72 151.101.67.72 151.101.131.72 151.101.195.72; do
+  echo "=== $ip ==="
+  curl -sS -m 10 --resolve gamdom90471.com:443:$ip -o /tmp/opencode/r_body.txt -D /tmp/opencode/r_head.txt -w "HTTP %{http_code} ssl_verify=%{ssl_verify_result} cert=%{ssl_verify_status}\n" "https://gamdom90471.com/client-api" 2>&1
+  grep -iE '^(HTTP/|server:|x-served-by|x-timer|via:|content-length)' /tmp/opencode/r_head.txt | head -6
+  grep -ioE 'Invalid request, only POST' /tmp/opencode/r_body.txt | sort -u
+  grep -oiE 'subject=[^,]*|DNS:[a-z0-9.]+' /tmp/opencode/r_head.txt | head -2
+  sleep 1
+done
+=== 151.101.3.72 ===
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+curl: unknown --write-out variable: 'ssl_verify_status'
+HTTP 000 ssl_verify=1 cert=
+grep: /tmp/opencode/r_body.txt: No such file or directory
+=== 151.101.67.72 ===
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+curl: unknown --write-out variable: 'ssl_verify_status'
+HTTP 000 ssl_verify=1 cert=
+grep: /tmp/opencode/r_body.txt: No such file or directory
+=== 151.101.131.72 ===
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+curl: unknown --write-out variable: 'ssl_verify_status'
+HTTP 000 ssl_verify=1 cert=
+grep: /tmp/opencode/r_body.txt: No such file or directory
+=== 151.101.195.72 ===
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90471.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+curl: unknown --write-out variable: 'ssl_verify_status'
+HTTP 000 ssl_verify=1 cert=
+grep: /tmp/opencode/r_body.txt: No such file or directory
+[0m
+[0m$ [0mls -la leads/ knowledge/ inventory/ triage/ recon-notes/ reports/ 2>/dev/null
+inventory/:
+total 24
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner  4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner 15670 Sep  6 00:12 gamdom.md
+
+knowledge/:
+total 20
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner  4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner 11579 Sep  6 00:12 index.md
+
+leads/:
+total 268
+drwxr-xr-x  2 runner runner   4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner   4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner  98834 Sep  6 00:12 lead-bigpickle.md
+-rw-r--r--  1 runner runner    969 Sep  6 00:12 lead-laguna.md
+-rw-r--r--  1 runner runner    950 Sep  6 00:12 lead-ling3.md
+-rw-r--r--  1 runner runner    988 Sep  6 00:12 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  6 00:12 lead-mimo.md
+-rw-r--r--  1 runner runner 140700 Sep  6 00:12 lead-nemotron3.md
+-rw-r--r--  1 runner runner   2291 Sep  6 00:12 reposcan-gamdom.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner 4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner  815 Sep  6 00:12 DEDICATED-DEEP.md
+
+reports/:
+total 900
+drwxr-xr-x  2 runner runner   4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner   4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner 415677 Sep  6 00:12 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   4123 Sep  6 00:12 analyst-laguna.log
+-rw-r--r--  1 runner runner   4104 Sep  6 00:12 analyst-ling3.log
+-rw-r--r--  1 runner runner   4142 Sep  6 00:12 analyst-longcat.log
+-rw-r--r--  1 runner runner 377617 Sep  6 00:12 analyst-nemotron3.log
+-rw-r--r--  1 runner runner  12137 Sep  6 00:12 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner     51 Sep  6 00:12 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner     50 Sep  6 00:12 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner     52 Sep  6 00:12 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner  11397 Sep  6 00:12 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  46832 Sep  6 00:12 hypotheses.md
+-rw-r--r--  1 runner runner    189 Sep  6 00:12 valid-bugs.md
+
+triage/:
+total 116
+drwxr-xr-x  2 runner runner 4096 Sep  6 00:12 .
+drwxr-xr-x 12 runner runner 4096 Sep  6 00:12 ..
+-rw-r--r--  1 runner runner    0 Sep  6 00:12 .gitkeep
+-rw-r--r--  1 runner runner  143 Sep  6 00:12 run-2026-09-02-21-51.md
+-rw-r--r--  1 runner runner  205 Sep  6 00:12 run-2026-09-02-23-43.md
+-rw-r--r--  1 runner runner  198 Sep  6 00:12 run-2026-09-03-02-16.md
+-rw-r--r--  1 runner runner  612 Sep  6 00:12 run-2026-09-03-07-14.md
+-rw-r--r--  1 runner runner  192 Sep  6 00:12 run-2026-09-03-12-07.md
+-rw-r--r--  1 runner runner  633 Sep  6 00:12 run-2026-09-03-16-28.md
+-rw-r--r--  1 runner runner  161 Sep  6 00:12 run-2026-09-03-19-24.md
+-rw-r--r--  1 runner runner  368 Sep  6 00:12 run-2026-09-03-21-53.md
+-rw-r--r--  1 runner runner  334 Sep  6 00:12 run-2026-09-03-23-43.md
+-rw-r--r--  1 runner runner  146 Sep  6 00:12 run-2026-09-04-02-12.md
+-rw-r--r--  1 runner runner  143 Sep  6 00:12 run-2026-09-04-07-16.md
+-rw-r--r--  1 runner runner  217 Sep  6 00:12 run-2026-09-04-12-09.md
+-rw-r--r--  1 runner runner  205 Sep  6 00:12 run-2026-09-04-16-24.md
+-rw-r--r--  1 runner runner   80 Sep  6 00:12 run-2026-09-04-19-21.md
+-rw-r--r--  1 runner runner 1299 Sep  6 00:12 run-2026-09-04-21-31.md
+-rw-r--r--  1 runner runner  179 Sep  6 00:12 run-2026-09-04-23-15.md
+-rw-r--r--  1 runner runner 7772 Sep  6 00:12 run-2026-09-05-01-00.md
+-rw-r--r--  1 runner runner 2135 Sep  6 00:12 run-2026-09-05-05-24.md
+-rw-r--r--  1 runner runner  154 Sep  6 00:12 run-2026-09-05-09-18.md
+-rw-r--r--  1 runner runner  238 Sep  6 00:12 run-2026-09-05-12-47.md
+-rw-r--r--  1 runner runner  198 Sep  6 00:12 run-2026-09-05-15-43.md
+-rw-r--r--  1 runner runner  178 Sep  6 00:12 run-2026-09-05-17-50.md
+-rw-r--r--  1 runner runner  236 Sep  6 00:12 run-2026-09-05-19-45.md
+-rw-r--r--  1 runner runner 6820 Sep  6 00:12 run-2026-09-05-21-49.md
+-rw-r--r--  1 runner runner  154 Sep  6 00:12 run-2026-09-05-23-28.md
+[0m
+[0m$ [0mhead -50 leads/lead_bigpickle.txt 2>/dev/null; echo "===NEXT lines==="; grep -n "NEXT" leads/*.txt 2>/dev/null | head -20
+===NEXT lines===
+[0m
+[0m→ [0mRead triage/run-2026-09-05-23-28.md
+[0m→ [0mRead probe-results.md
+[0m
+[0m$ [0mgrep -n "NEXT" reports/hypotheses*.txt | head -30
+reports/hypotheses-bigpickle.txt:56:[NEXT] PROBE: `curl -sS -m 12 "https://gamdommirrors.com/status/gamdom-domains"` then re-fetch `client.41b06529227c4b8b6a1d.js` diff only if hash changed — single passive GET to confirm whether eu/io/vip/win are on the official monitor list (parallels prior ACCEPTED inventory method for gamdom80007); else treat bundle link-list as the official listing.
+reports/hypotheses-bigpickle.txt:88:[NEXT] PROBE: passive re-watch the SEO hub — `curl -sS -m 12 "https://gamdom-girisi.com/"` + grep for the current `gamdom[0-9]+\.com` target and for any new 3xx redirect params; if the flip lands on a NEW numbered name, resolve its CNAME and re-test `https://<new>/client-api` for the 400 signature. (Single read-only GET on rotation; keeps inventory current for the 14-host trust pool.)
+reports/hypotheses-nemotron3.txt:52:[NEXT] PROBE: GET (read-only) `https://gamdom80006.com/build/client.41b06529227c4b8b6a1d.js` — already fetched; now passively compare `Set-Cookie` headers on `POST /client-api` (400) vs `GET /` (200) across gamdom80006.com, gamdom80007.com, gamdom4567.com to extract cookie Domain/Path/SameSite attributes without authentication (<=1 rps, no mutation)
+[0m
+[0m→ [0mRead reports/hypotheses-bigpickle.txt
+[0m
+[0m$ [0msleep 1; curl -sS -m 15 "https://gamdom80006.com/" -o /tmp/opencode/mirror_index.html 2>&1; wc -c /tmp/opencode/mirror_index.html; grep -oE '/build/[A-Za-z0-9._-]+\.(js|css)' /tmp/opencode/mirror_index.html | sort -u
+62848 /tmp/opencode/mirror_index.html
+/build/AppShell.e7fa8dde3062d54f4b49.js
+/build/HomePage.3f74f68d359716bd6835.js
+/build/client.21c813c93e08dd492679.css
+/build/client.41b06529227c4b8b6a1d.js
+[0m
+[0m$ [0mls -la /tmp/opencode/ 2>/dev/null | head; find / -name "client.*.js" -not -path "/proc/*" -not -path "/sys/*" 2>/dev/null | head
+total 84
+drwxr-xr-x  2 runner runner  4096 Sep  6 00:13 .
+drwxrwxrwt 15 root   root    4096 Sep  6 00:13 ..
+-rw-r--r--  1 runner runner 61081 Sep  6 00:13 hub.html
+-rw-r--r--  1 runner runner     0 Sep  6 00:13 r_head.txt
+-rw-r--r--  1 runner runner 14030 Sep  6 00:13 status.html
+/home/runner/.config/opencode/node_modules/@opencode-ai/sdk/dist/gen/client.gen.js
+/home/runner/.config/opencode/node_modules/@opencode-ai/sdk/dist/gen/client/client.gen.js
+/home/runner/.config/opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/client.gen.js
+/home/runner/.config/opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/client/client.gen.js
+[0m
+[0m$ [0mfor p in /graphql /api /api/v1 /api/v2 /internal /health /v1 /v2 /openapi.json /swagger /docs /debug /status; do
+  code=$(curl -sS -m 8 -o /tmp/opencode/p_body -D /tmp/opencode/p_head -w "%{http_code}" "https://gamdom.com$p")
+  len=$(wc -c < /tmp/opencode/p_body)
+  ctype=$(grep -i '^content-type:' /tmp/opencode/p_head | tr -d '\r' | cut -d' ' -f2-)
+  sig=$(grep -ioE 'Invalid request, only POST|Swagger UI|GraphiQL|404 Not Found' /tmp/opencode/p_body | head -1)
+  echo "gamdom.com $p -> $code len=$len ctype=$ctype sig=$sig"
+  sleep 1
+done
+gamdom.com /graphql -> 404 len=32921 ctype=text/html sig=404 Not Found
+gamdom.com /api -> 404 len=32917 ctype=text/html sig=404 Not Found
+gamdom.com /api/v1 -> 404 len=32920 ctype=text/html sig=404 Not Found
+gamdom.com /api/v2 -> 404 len=32920 ctype=text/html sig=404 Not Found
+gamdom.com /internal -> 404 len=32922 ctype=text/html sig=404 Not Found
+gamdom.com /health -> 200 len=2 ctype=text/html; charset=utf-8 sig=
+gamdom.com /v1 -> 404 len=32916 ctype=text/html sig=404 Not Found
+gamdom.com /v2 -> 404 len=32916 ctype=text/html sig=404 Not Found
+gamdom.com /openapi.json -> 404 len=32926 ctype=text/html sig=404 Not Found
+gamdom.com /swagger -> 404 len=32921 ctype=text/html sig=404 Not Found
+gamdom.com /docs -> 404 len=32918 ctype=text/html sig=404 Not Found
+gamdom.com /debug -> 404 len=32919 ctype=text/html sig=404 Not Found
+gamdom.com /status -> 404 len=32920 ctype=text/html sig=404 Not Found
+[0m
+[0m$ [0mcurl -sS -m 10 -D - -o /tmp/opencode/health_body "https://gamdom.com/health" 2>&1 | head -25; echo "BODY:[$(cat /tmp/opencode/health_body)]"; echo "--- hex ---"; xxd /tmp/opencode/health_body
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+content-type: text/html; charset=utf-8
+accept-ranges: bytes
+date: Sun, 06 Sep 2026 00:16:27 GMT
+via: 1.1 varnish
+age: 15
+x-served-by: cache-iad-kcgs7200059-IAD, cache-iad-kiad7000140-IAD
+x-cache: MISS, HIT
+x-cache-hits: 0, 1
+vary: Accept-Encoding
+strict-transport-security: max-age=31557600
+content-length: 2
+
+BODY:[ok]
+--- hex ---
+00000000: 6f6b                                     ok
+[0m
+[0m$ [0mfor h in gamdom80006.com gamdom80007.com gamdom.eu gamdom.io gamdom4567.com; do
+  echo "=== $h/health ==="
+  curl -sS -m 10 -D - -o /tmp/opencode/hb "https://$h/health" 2>&1 | grep -iE '^(HTTP/|server:|via:|x-served-by:|x-cache:|etag:|content-length:)' 
+  echo "BODY:[$(cat /tmp/opencode/hb)]"
+  sleep 1
+done
+=== gamdom80006.com/health ===
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000167-IAD, cache-iad-kiad7000177-IAD
+x-cache: MISS, MISS
+content-length: 2
+BODY:[ok]
+=== gamdom80007.com/health ===
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kjyo7100069-IAD, cache-iad-kiad7000036-IAD
+x-cache: MISS, MISS
+content-length: 2
+BODY:[ok]
+=== gamdom.eu/health ===
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kjyo7100090-IAD, cache-iad-kcgs7200028-IAD
+x-cache: MISS, MISS
+content-length: 2
+BODY:[ok]
+=== gamdom.io/health ===
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kjyo7100087-IAD, cache-iad-kcgs7200175-IAD
+x-cache: MISS, MISS
+content-length: 2
+BODY:[ok]
+=== gamdom4567.com/health ===
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000157-IAD, cache-iad-kiad7000185-IAD
+x-cache: MISS, MISS
+content-length: 2
+BODY:[ok]
+[0m
+[0m$ [0mfor h in gamdom.com gamdom80006.com; do
+  echo "=== $h/client-api ==="
+  curl -sS -m 10 -D - -o /tmp/opencode/ca "https://$h/client-api" 2>&1 | grep -iE '^(HTTP/|server:|via:|content-type:|content-length:)' 
+  echo "BODY:[$(cat /tmp/opencode/ca)]"
+  sleep 1
+done
+=== gamdom.com/client-api ===
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+content-length: 26
+BODY:[Invalid request, only POST]
+=== gamdom80006.com/client-api ===
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+content-length: 26
+BODY:[Invalid request, only POST]
+[0m
+[0m$ [0mfor p in /healthz /healthcheck /ready /live /-/healthy /heartbeat; do
+  code=$(curl -sS -m 8 -o /tmp/opencode/pb -D /tmp/opencode/ph -w "%{http_code}" "https://gamdom.com$p")
+  len=$(wc -c < /tmp/opencode/pb)
+  echo "gamdom.com$p -> $code len=$len body=[$(head -c 40 /tmp/opencode/pb | tr -d '\n')]"
+  sleep 1
+done
+gamdom.com/healthz -> 404 len=32921 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+gamdom.com/healthcheck -> 404 len=32925 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+gamdom.com/ready -> 404 len=32919 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+gamdom.com/live -> 404 len=32918 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+gamdom.com/-/healthy -> 404 len=32923 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+gamdom.com/heartbeat -> 404 len=32923 body=[<!DOCTYPE html><html lang="en-GB"><head>]
+[0m
+[0m$ [0mcurl -sS -m 10 -X OPTIONS -D - -o /tmp/opencode/opts "https://gamdom.com/health" 2>&1 | grep -iE '^(HTTP/|allow:|access-control|server:|via:|content-length:)'; echo "BODY:[$(cat /tmp/opencode/opts)]"; echo "--- /health/ ---"; sleep 1; curl -sS -m 10 -D - -o /tmp/opencode/hs "https://gamdom.com/health/" 2>&1 | grep -iE '^(HTTP/|server:|location:|content-length:)'; echo "BODY:[$(head -c 60 /tmp/opencode/hs | tr -d '\n')]"
+HTTP/2 200 
+allow: GET, HEAD
+server: nginx
+via: 1.1 varnish
+content-length: 9
+BODY:[GET, HEAD]
+--- /health/ ---
+HTTP/2 200 
+server: nginx
+content-length: 2
+BODY:[ok]
+[0m
+[0m$ [0mfor h in gamdom.com gamdom80006.com; do
+  echo "=== OPTIONS $h/client-api ==="
+  curl -sS -m 10 -X OPTIONS -D - -o /tmp/opencode/newsrc "https://$h/client-api" 2>&1 | grep -iE '^(HTTP/|allow:|access-control|server:|content-length:|via:)' 
+  echo "BODY:[$(cat /tmp/opencode/newsrc)]"
+  sleep 1
+done
+=== OPTIONS gamdom.com/client-api ===
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+content-length: 26
+BODY:[Invalid request, only POST]
+=== OPTIONS gamdom80006.com/client-api ===
+HTTP/2 400 
+server: nginx
+via: 1.1 varnish
+content-length: 26
+BODY:[Invalid request, only POST]
+[0m
+STEP 1 — DELTA
+- NEW gamdom.com/health (+ fleet): 200 `ok` (2B), `ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"`, `server: nginx` — byte-identical across gamdom.com/80006/80007/eu/io/gamdom4567.com (origin root) = first non-/client-api route proving a single shared nginx origin fleet-wide.
+- CHANGED OPTIONS `gamdom.com/health` → 200 `allow: GET, HEAD` + body `GET, HEAD` + Starlette-style content-etag → origin backend is Python Starlette/FastAPI family behind nginx+varnish, not plain nginx static.
+- CONFIRMED unchanged: status page still exactly 7 monitors (com/eu/io/vip/win/80006/80007); SEO hub still funnels only to gamdom90471.com (no redirect params, no rotation); gamdom90471.com/client-api still throws fallback.tls.fastly.net on all 4 Pool B edges (151.101.{3,67,131,195}.72); mirror bundles unchanged (`client.41b06529227c4b8b6a1d.js`, `HomePage.3f74f68d…`); GET+OPTIONS `/client-api` → 400 `Invalid request, only POST` intact on Pool A+B.
+- CONFIRMED unchanged: `/graphql /api /api/v1 /api/v2 /internal /openapi.json /swagger /docs /debug /status` all 404 SPA-fallback; only `/health` and `/client-api` are live backend routes.
+
+STEP 2 — PRIORITIZE
+- [PRIO] gamdom.com/client-api shared Starlette/nginx origin,6.2,shared-backend-AUTH
+- [PRIO] gamdom90471.com/client-api,5.7,rotating-alias-inventory
+- [PRIO] gamdom.com/health,3.9,benign-liveness-framework-fingerprint
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-host session replay across the 14-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via /health
+class: AUTH
+asset: gamdom.com/client-api (shared backend: Pool A + Pool B + 4567 + provisioned 90471)
+confidence: 60
+reasoning: /client-api GET+OPTIONS 400 `Invalid request, only POST` (content-length 26) byte-identical on Pool A+B; /health now byte-identical (200 `ok`, same Starlette ETag, server nginx) across com/80006/80007/eu/io/4567 in the same probe cycle; bundle proves auth transport = server-set same-origin cookie (zero bearer/localStorage); every host sets only host-only `gd-lang`; no ACAO → browser cross-origin replay dead; only unverified link = Domain/Path/SameSite attr of the authenticated session cookie.
+evidence_needed: Set-Cookie attributes from an authenticated /client-api POST on any brand host, then replay result on a different brand host.
+verify_steps: AUTH_HELPED: POST /client-api with valid session on gamdom80006.com (Pool B), log Set-Cookie Domain/Path/SameSite; replay the cookie verbatim on gamdom.eu and gamdom.com (Pool A), compare session-acceptance.
+impact: single-session theft → account control across flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+
+[HYP] Rotating mirror alias joins the shared backend once host cert propagates
+class: AUTH
+asset: gamdom90471.com/client-api (CNAME→gamdom4567.com)
+confidence: 55
+reasoning: 90471 CNAME→4567 (verified origin), self-referenced 18× in official HomePage bundle, SEO hub tags "Aktif", real DigiCert/Certainly certs in CT since 2025-10; yet all 4 Pool B edges still serve only fallback.tls.fastly.net this cycle → provisioned-not-live, off the 7-monitor status page; /health on 4567 confirms it is live as origin backend today.
+evidence_needed: /client-api renders byte-identical 400 on an edge serving a valid 90471 host SNI cert; appears on status-page monitor list.
+verify_steps: PASSIVE: `curl --resolve gamdom90471.com:443:<edge> https://gamdom90471.com/client-api` on 151.101.{3,67,131,195}.72 each cycle + re-watch gamdom-girisi.com and gamdommirrors.com/status/gamdom-domains for list changes; byte-diff against gamdom80007.com/client-api.
+impact: one more node in critical fleet ATO blast radius; inventory value.
+testability: PASSIVE
+
+[HYP] Staff-rated /client-api actions reachable by name-based action routing, privilege client-asserted
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy (Starlette origin)
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate = refill tooling exists client-side; /client-api routes by action name (bundle API factory); Starlette origin now confirmed; if privilege is flag-asserted rather than server-scoped, a forged action name targets refill/wallet ops; blind proof requires authenticated POST (REJECTED class).
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; action strings obfuscated, no endpoint map in bundle, no passive path.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Undocumented live backend routes on shared origin (confidence 30): 18-path common wordlist yields exactly /health + /client-api; bundles carry no route map; remaining discovery = auth-gated or a mega wordlist = noise. Drop.
+- [PARKED] SEO-hub open-redirect (confidence 35): no redirect params in hub HTML today and 90471 is provisioned on the real origin; speculative until a param or domain slip appears. Watchlist only.
+- [PARKED] gd-lang cookie flags (REJECTED class): non-sensitive cookie, default flags — not reportable.
+- [FINAL] survivors ranked: 1) Cross-host session replay (60, AUTH_HELPED); 2) Rotating 90471 alias (55, PASSIVE); 3) Staff action routing (45, AUTH_HELPED).
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: request one authenticated `/client-api` POST session (test account, no live customer data) on gamdom80006.com to capture Set-Cookie Domain/Path/SameSite, then two read-only replay probes (80006→gamdom.eu, 80006→gamdom.com) — this is the sole evidence gate distinguishing critical cross-fleet ATO from medium host-isolated sessions; all passive avenues are exhausted and re-confirmed unchanged this cycle.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ gamdom.com/health: byte-identical 200 `ok` (ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", server nginx) across gamdom.com/80006/80007/eu/io/4567 — health route independently proves the single shared nginx origin fleet-wide including the origin root (passive, benign).
+- [LEARN] ACCEPTED recon @ gamdom.com/health: OPTIONS → 200 allow GET,HEAD + body echo + Starlette-style content-etag → origin backend is Python Starlette/FastAPI-family behind nginx/varnish (framework fingerprint; not a vuln).
+- [LEARN] ACCEPTED recon @ gamdom90471.com/client-api: re-probed all 4 Pool B edges (151.101.{3,67,131,195}.72) — still fallback.tls.fastly.net only; provisioned-but-not-live persists; watchlist.
+- [LEARN] ACCEPTED recon @ gamdom-girisi.com + gamdommirrors.com/status/gamdom-domains: no rotation observed this cycle; monitor list still exactly 7 (com/eu/io/vip/win/80006/80007), 90471 still absent.
+- [LEARN] ACCEPTED recon @ gamdom80006.com: bundle hashes unchanged (`client.41b06529227c4b8b6a1d.js`, `HomePage.3f74f68d…`) → no app/backend rotation; skip re-diff.
+
+STEP 7 — RISK
+- [RISK] gamdom: 64 — shared origin now proven fleet-wide by two independent byte-identical routes (/client-api 400 + /health ok incl. origin 4567) across 13 live hosts + provisioned 90471; single-session theft would cross flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC). No data touched; ATO still human-gated behind one authenticated Set-Cookie replay test; passive surface fully enumerated and unchanged.

@@ -170,3 +170,5 @@ www.gamdom.com
 - CHANGED dashboard.gamdom.com: genuine scoped admin hostname on Pool A, fully 403-locked at edge (Varnish Error 54113) across all paths — inventory knowledge only
 - CHANGED click.gamdom.com: CNAME to SymplifyMail (eu-iv-1.symplifymail.com 192.165.55.11) serving stock nginx default — not dangling; subdomain-takeover watchlist item
 - CHANGED help.gamdom.com: Intercom-hosted help center — benign third-party SaaS
+
+## 2026-09-06 00:18:55 UTC

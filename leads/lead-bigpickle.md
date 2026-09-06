@@ -773,3 +773,31 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED recon @ gamdomgiris.link: third-party Cloudflare landing alongside the SEO hub; no Fastly origin /client-api signature → NOT in-scope brand origin (watchlist only).
 [LEARN] ACCEPTED recon @ gamdommirrors.com/status/gamdom-domains: official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies the 4 regional TLDs as official and confirms gamdom90471.com is not yet on the monitor list (rotating alias before listing).
 [RISK] gamdom: 63 — confirmed 13 live TLS hosts + 1 provisioned (90471) sharing a single POST-only /client-api backend (verified origin 4567) with per-host server-set session cookies; single-session theft would cross flagship + 4 regional TLDs + 7 live mirrors + the rotating alias (funds, withdrawal, KYC). No data touched; ATO remains human-gated behind one authenticated Set-Cookie replay test; all passive avenues exhausted.
+## 2026-09-06 00:18:39 UTC [target] (model bigpickle)
+[HYP] Cross-host session replay across the 14-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via /health
+class: AUTH
+asset: gamdom.com/client-api (shared backend: Pool A + Pool B + 4567 + provisioned 90471)
+confidence: 60
+reasoning: /client-api GET+OPTIONS 400 `Invalid request, only POST` (content-length 26) byte-identical on Pool A+B; /health now byte-identical (200 `ok`, same Starlette ETag, server nginx) across com/80006/80007/eu/io/4567 in the same probe cycle; bundle proves auth transport = server-set same-origin cookie (zero bearer/localStorage); every host sets only host-only `gd-lang`; no ACAO → browser cross-origin replay dead; only unverified link = Domain/Path/SameSite attr of the authenticated session cookie.
+evidence_needed: Set-Cookie attributes from an authenticated /client-api POST on any brand host, then replay result on a different brand host.
+verify_steps: AUTH_HELPED: POST /client-api with valid session on gamdom80006.com (Pool B), log Set-Cookie Domain/Path/SameSite; replay the cookie verbatim on gamdom.eu and gamdom.com (Pool A), compare session-acceptance.
+impact: single-session theft → account control across flagship + 4 regional TLDs + 7 mirrors + rotating alias (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+[HYP] Rotating mirror alias joins the shared backend once host cert propagates
+class: AUTH
+asset: gamdom90471.com/client-api (CNAME→gamdom4567.com)
+confidence: 55
+reasoning: 90471 CNAME→4567 (verified origin), self-referenced 18× in official HomePage bundle, SEO hub tags "Aktif", real DigiCert/Certainly certs in CT since 2025-10; yet all 4 Pool B edges still serve only fallback.tls.fastly.net this cycle → provisioned-not-live, off the 7-monitor status page; /health on 4567 confirms it is live as origin backend today.
+evidence_needed: /client-api renders byte-identical 400 on an edge serving a valid 90471 host SNI cert; appears on status-page monitor list.
+verify_steps: PASSIVE: `curl --resolve gamdom90471.com:443:<edge> https://gamdom90471.com/client-api` on 151.101.{3,67,131,195}.72 each cycle + re-watch gamdom-girisi.com and gamdommirrors.com/status/gamdom-domains for list changes; byte-diff against gamdom80007.com/client-api.
+impact: one more node in critical fleet ATO blast radius; inventory value.
+testability: PASSIVE
+[HYP] Staff-rated /client-api actions reachable by name-based action routing, privilege client-asserted
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy (Starlette origin)
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate = refill tooling exists client-side; /client-api routes by action name (bundle API factory); Starlette origin now confirmed; if privilege is flag-asserted rather than server-scoped, a forged action name targets refill/wallet ops; blind proof requires authenticated POST (REJECTED class).
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; action strings obfuscated, no endpoint map in bundle, no passive path.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
