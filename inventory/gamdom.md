@@ -207,3 +207,11 @@ www.gamdom.com
 - CHANGED Risk score increased from 65 → 68: confirmed 14-host fleet sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification 
 
 ## 2026-09-06 16:18:18 UTC
+
+## 2026-09-06 18:29:05 UTC
+- NEW gamdom80003.com confirmed as 9th live mirror: CNAME→gamdom4567.com, Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", /client-api 400 (26B) byte-iden
+- NEW gamdom90472.com confirmed as 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, off 7-monitor status page
+- NEW gamdom80005.com resolves to 8.8.8.8 (Google DNS IP, not Fastly) — REJECTED out-of-scope
+- NEW gamdom80008.com resolves to 192.64.119.33 (not Fastly) — REJECTED out-of-scope
+- CHANGED Brand trust pool expanded from 14 → 17 hosts (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect + gamdom90472.com provisioned
+- CHANGED Origin trust boundary now spans 17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api signature and shared weak-ETag on

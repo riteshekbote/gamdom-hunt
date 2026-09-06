@@ -390,3 +390,16 @@
 ## RANKED HYPOTHESES 2026-09-06 16:18:18 UTC
 - [62] gamdom.com/client-api: Cross-host session replay across the now-17-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via byte-identical /health ETag + /client-api (from art/lead_bigpickle.txt)
 - NEXT(hypotheses-bigpickle.txt): PROBE: rotation/cert-propagation watch (single read-only pass): `curl -sSk --resolve {gamdom90471,gamdom90472,gamdom90473}.com:443:151.101.67.72 https://$host/c
+
+## RANKED HYPOTHESES 2026-09-06 18:29:05 UTC
+- [62] gamdom.com/client-api: Cross-host session replay across 18-host brand trust pool — single shared nginx/Starlette origin proven fleet-wide via byte-identical /health ETag + /client-api (from art/lead_bigpickle.txt)
+- [57] gamdom.com/client-api: Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: passive cert-propagation + new-alias watch (read-only, ≤1rps):
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET (read-only) `https://gamdom80006.com/client-api` with `Origin: https://gamdom80007.com` and `Cookie: <captured-session>` — compare 400 response heade
+- LEARN: ACCEPTED inventory @ gamdom80003.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8
+- LEARN: ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool;
+- LEARN: REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure
+- LEARN: REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing

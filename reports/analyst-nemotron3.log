@@ -3979,3 +3979,81 @@ drwxr-xr-x 12 runner runner   4096 Sep  6 15:58 ..
 [0m→ [0mRead leads/lead-nemotron3.md[90m [limit=200, offset=200][0m
 [0m→ [0mRead leads/lead-nemotron3.md[90m [limit=200, offset=900][0m
 [0m→ [0mRead leads/lead-nemotron3.md[90m [limit=50, offset=1100][0m
+===== ANALYST nemotron3 2026-09-06 18:29:05 UTC =====
+STEP 1 — DELTA
+[NEW] gamdom80003.com confirmed as 9th live mirror: CNAME→gamdom4567.com, Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", /client-api 400 (26B) byte-identical — 15th hostname in brand trust pool, off 7-monitor status page
+[NEW] gamdom90472.com confirmed as 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, off 7-monitor status page
+[NEW] gamdom80005.com resolves to 8.8.8.8 (Google DNS IP, not Fastly) — REJECTED out-of-scope
+[NEW] gamdom80008.com resolves to 192.64.119.33 (not Fastly) — REJECTED out-of-scope
+[CHANGED] Brand trust pool expanded from 14 → 17 hosts (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect + gamdom90472.com provisioned)
+[CHANGED] Origin trust boundary now spans 17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api signature and shared weak-ETag on /health
+
+STEP 2 — PRIORITIZE
+[PRIO] gamdom4567.com/client-api,9.3,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=7 cloud_surface=8 freshness=10
+[PRIO] gamdom80006.com/client-api,9.1,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
+[PRIO] gamdom80007.com/client-api,9.1,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
+[PRIO] gamdom80003.com/client-api,9.0,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
+[PRIO] gamdom90471.com/client-api,8.7,attack_surface=9 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=9
+[PRIO] gamdom.com/client-api,8.6,attack_surface=9 business_value=10 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
+[PRIO] gamdom.eu/client-api,8.4,attack_surface=9 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
+[PRIO] gamdom.io/client-api,8.4,attack_surface=9 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
+[PRIO] gamdom.vip/client-api,8.4,attack_surface=9 business_value=9 tech_exposure=8 gate_ease[0m
+[0m← [0mWrite analyst-out.txt
+Wrote file successfully.
+[0m
+Now I have a complete picture. Let me produce the structured 8-step analysis.
+[0m→ [0mRead analyst-out.txt
+Done. The 8-step analysis has been written to `analyst-out.txt` with:
+
+- **STEP 1 DELTA**: 4 new findings (gamdom80003.com 9th live mirror, gamdom90472.com 16th hostname, 2 rejected out-of-scope) + 2 changes (17-host fleet, origin boundary spans Pool A+B)
+- **STEP 2 PRIORITIZE**: 13 assets scored, top is gamdom4567.com/client-api (9.3)
+- **STEP 3 HYPOTHESES**: 3 hypotheses — cross-mirror cookie replay (62%), brand-wide trust pool (57%), /client-api SSRF/mass-assignment (50%)
+- **STEP 4 SELF-CRITIQUE**: 1 PARKED (SSRF needs AUTH_HELPED), 2 FINAL survivors
+- **STEP 5 NEXT**: Single read-only probe with captured session cookie to detect backend session recognition
+- **STEP 6 LEARNING**: 7 ACCEPTED/REJECTED entries matching knowledge base
+- **STEP 7 RISK**: 70 (up from 68) — 17-host fleet confirmed, AUTH class leads gated on authorized testing
+dentials:"same-origin", zero Authorization/Bearer, no localStorage token); replay feasibility depends on whether cookie is host-agnostic at shared backend
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80007 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80007/client-api and 90471/client-api
+impact: Cross-domain account takeover across all 17 mirror hostnames; medium-high
+testability: AUTH_HELPED
+
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api (Pool A) and gamdom4567.com/client-api (Pool B)
+confidence: 57
+reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire 17-host brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain + 4 regional TLDs join replay surface
+evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api
+verify_steps: (passive) compare Set-Cookie headers on auth endpoints across gamdom.com (Pool A) and gamdom80006.com (Pool B); (AUTH_HELPED) replay flagship session cookie against Pool B /client-api
+impact: Cross-pool ATO across flagship + 4 regional TLDs + all 9 mirrors + 3 aliases; high
+testability: AUTH_HELPED
+
+[HYP] /client-api catch-all proxy forwards attacker-controlled action/payload to upstream wallet/auth — SSRF or mass-assignment
+class: OTHER
+asset: gamdom4567.com/client-api (and all 17 hosts)
+confidence: 50
+reasoning: /client-api is POST-only catch-all proxy (400 on GET/OPTIONS for /v1, /v2, /health, /graphql, /openapi.json). Minified bundle shows api factory (o.kT with base "/client-api") calling methods by action name. If proxy forwards subpath/payload to upstream identity/wallet service, SSRF-on-proxy or mass-assignment-by-copy risks emerge.
+evidence_needed: POST with crafted body returning upstream internal error/stack/truthy status differing by injected subpath; or bundle resolving action->endpoint table
+verify_steps: PASSIVE: status-code differential on GET/OPTIONS variants (done — all 400). Bundle analysis for action routing map (requires authorized access). No live POST without authorized session (REJECTED auth-bypass). Await authorized tester with valid session to probe action routing.
+impact: If wallet/deposit/withdrawal/auth endpoint reachable via /client-api without correct authorization -> fund theft or ATO (critical) — unproven
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] /client-api catch-all proxy SSRF/mass-assignment: confidence 50 but verify_steps requires AUTH_HELPED live POST with valid session; currently blocked by REJECTED auth-bypass learning; no passive-only verification path to confirm upstream routing behavior
+[FINAL] 1. Cross-mirror auth cookie replay via shared /client-api origin yields ATO (confidence 62, AUTH_HELPED testability, medium-high impact)
+[FINAL] 2. Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (confidence 57, AUTH_HELPED testability, high impact)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET (read-only) `https://gamdom80006.com/client-api` with `Origin: https://gamdom80007.com` and `Cookie: <captured-session>` — compare 400 response headers/body to baseline (no cookie) to detect any differential signaling session recognition at shared backend without mutation (<=1 rps, no body, read-only)
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED inventory @ gamdom80003.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical — confirmed 9th live mirror, 15th hostname in brand trust pool; off the 7-monitor status page
+[LEARN] ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool; off the 7-monitor status page
+[LEARN] REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure
+[LEARN] REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+STEP 7 — RISK
+[RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
