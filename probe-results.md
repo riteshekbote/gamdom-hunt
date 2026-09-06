@@ -90,3 +90,7 @@ https://gamdom.com/register` -> HTTP 400
 
 ## 2026-09-06 18:29:05 UTC
 
+
+## 2026-09-06 20:35:43 UTC
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://staging.teamgamdom.com/` -> HTTP 400

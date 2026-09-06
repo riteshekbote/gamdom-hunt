@@ -65,3 +65,8 @@
 - 2026-09-06 ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool; off the 7-monitor status page.
 - 2026-09-06 REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure.
 - 2026-09-06 REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure.
+- 2026-09-06 ACCEPTED inventory @ teamgamdom.com: 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert same CA as mirror fleet) hosting staging.teamgamdom.com (live "Maintenance - Gamdom.com" 503 page) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secret" fixture-wide 401) — new origin realm distinct from gamdom4567 Starlette pool.
+- 2026-09-06 ACCEPTED recon @ gamdom90488.com: public numbered alias CNAME→shreeram-dynamic-test.teamgamdom.com pins a brand mirror onto the internal Basic-auth-gated nginx test backend; alias edge SNI not yet live.
+- 2026-09-06 ACCEPTED inventory @ gamdom90480.com/gamdom90482.com: both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias.
+- 2026-09-06 ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only.
+- 2026-09-06 REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure.
