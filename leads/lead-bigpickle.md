@@ -1027,3 +1027,40 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only.
 [LEARN] REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure.
 [RISK] gamdom: 65 — fleet now 21 hostnames across 2 TLD realms (gamdom4567 Starlette trust pool + teamgamdom.com nginx/Go realm); NEW this cycle: whole brand TLD teamgamdom.com (staging live + Basic-auth internal test behind public 90488 alias) and 2 fresh provisioned aliases (90480, 90482). No data touched; no confirmed HIGH; top in-scope chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay test; teamgamdom Basic-auth gate verified fixture-wide (closed control) — flagged as the single untested control, watch for gate/cert flip.
+## 2026-09-06 22:23:26 UTC [target] (model bigpickle)
+[NEXT] PROBE: alias-deployment watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200/401 = alias cert live = internal host reachable via public brand name), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api -o /dev/null -w "%{http_code}"` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/` (gate watch), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (pool guard).
+[LEARN] ACCEPTED recon @ api/admin/auth/app/dev/test/sso/login/mail/cdn/core/support.teamgamdom.com: Fastly Pool A → Go `404 page not found` (19B) + `x-dbg-vcl2: bong_ke` — DNS-wildcard artifacts, only staging + shreeram real vhosts; teamgamdom breadth closed.
+[LEARN] ACCEPTED recon @ teamgamdom.com wildcard: Fastly VCL/backend `bong_ke` fingerprint; third origin realm (Go) distinct from Starlette pool + nginx Basic.
+[LEARN] ACCEPTED watch @ gamdom90480/90482/90488 + 9047x: all still 421/TLS-NOMATCH — no alias went live.
+[LEARN] ACCEPTED watch @ staging.teamgamdom.com: 503 across all probed paths — maintenance gate fixture-wide.
+[LEARN] ACCEPTED watch @ gamdommirrors.com status page: still exactly 7 monitors.
+[RISK] gamdom: 65 — teamgamdom wildcard surface proven dead; all watched controls stable (no gate/cert flip); top chain (cookie replay, 62) AUTH_HELPED; single live passive thread = 90488/international-host MISCONFIG watch for cert propagation.
+[HYP] Cross-host session replay across gamdom4567 trust pool — single shared nginx/Starlette origin fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007 (Pool B) + gamdom4567.com + gamdom.eu/io/vip/win + provisioned aliases
+confidence: 62
+reasoning: /health ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical across all pools; bundle proves auth = server-set same-origin cookie, no bearer/localStorage; no ACAO blocks browser cross-origin replay; this cycle 9047x + 90480/90482/90488 re-verified 421 provisioned (pool growing, none live yet).
+evidence_needed: Set-Cookie attributes from one authenticated /client-api POST, then verbatim reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie via authenticated POST on gamdom80006.com; replay on gamdom.eu + gamdom.com + gamdom80003.com; compare session acceptance.
+impact: session theft → account control across flagship + 4 regional TLDs + mirrors + 6 aliases (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+[HYP] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com (Pool A)
+confidence: 55
+reasoning: gamdom90488.com CNAME = shreeram-dynamic-test.teamgamdom.com (first-party Certainly cert, Route53, nginx Basic realm="secret" fixture-wide on every probed path); DNS pins the public numbered alias onto the internal engineering test backend ("shreeram-dynamic-test"); alias SNI re-verified not live this cycle (TLS-NOMATCH at Pool A edge → 421 with -k) = provisioning-in-progress; sibling staging.teamgamdom.com is a separate Go/nginx vhost serving 503 maintenance everywhere.
+evidence_needed: any shreeram-dynamic-test/90488 path served WITHOUT the Basic gate (200/302 vs 401), or alias host cert going live, or S3 listing opening.
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/` (baseline 401; change = gate flip); `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api -o /dev/null -w "%{http_code}"` (421→400/401 = alias live); `curl -sS https://gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com/` (403 = closed); first header-check https://gamdom90488.com/ without -k (200 vs TLS-NOMATCH = cert deployed).
+impact: gate-strip/path-scope error → internal test env via public brand alias; alias live → users auth to internal host trusting the brand DNS; medium.
+testability: PASSIVE
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; Starlette origin both pools; catch-all 400s every GET subpath → action map unenumerable; privilege model untestable without authenticated POST.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+[NEXT] PROBE: passive deployment-watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200/401 = alias cert deployed = internal host reachable via public brand name), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/` (401 gate; change = flip), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (200 = pool stable).
+[RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types (Starlette gamdom4567 pool, Go `bong_ke` wildcard, nginx Basic shreeram). New this cycle: teamgamdom wildcard subdomain surface proven dead (Go 404 everywhere, no routes); no gate/cert flip on any watched control; staging confirmed locked across all paths. No data touched; top in-scope chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; MISCONFIG watch on 90488→internal-host (55) is the only live passive thread — priority is SNI/cert propagation.

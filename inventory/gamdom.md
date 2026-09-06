@@ -223,3 +223,17 @@ www.gamdom.com
 - NEW gamdom80008.com resolves to 192.64.119.33 (not Fastly) — REJECTED out-of-scope
 - CHANGED Brand trust pool expanded from 14 → 17 hosts (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provi
 - CHANGED Origin trust boundary now spans 17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api signature and shared weak-ETag on
+
+## 2026-09-06 22:23:37 UTC
+- NEW gamdom80003.com confirmed as 9th live mirror: CNAME→gamdom4567.com, Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", /client-api 400 (26B) byte-iden
+- NEW gamdom90472.com confirmed as 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, off 7-monitor status page
+- NEW gamdom80005.com resolves to 8.8.8.8 (Google DNS IP, not Fastly) — REJECTED out-of-scope
+- NEW gamdom80008.com resolves to 192.64.119.33 (not Fastly) — REJECTED out-of-scope
+- NEW teamgamdom.com confirmed as 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert same CA) hosting staging.teamgamdom.com (503 Maintenance) + shreeram-dynamic-test.teamgamdom.com (nginx Basic
+- NEW gamdom90488.com public numbered alias CNAME→shreeram-dynamic-test.teamgamdom.com pins brand mirror onto internal Basic-auth-gated nginx test backend; alias edge SNI not yet live
+- NEW gamdom90480.com/gamdom90482.com both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias
+- NEW gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only
+- NEW 10x gamdom9047x.com (90474/90476/90477/90478/90479/90481/90483/90484/90485/90486) resolve to 192.64.119.x/162.255.119.x (non-Fastly) — REJECTED out-of-scope
+- CHANGED Brand trust pool expanded from 14 → 17 hosts (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provi
+- CHANGED Origin trust boundary now spans 17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api signature and shared weak-ETag on
+- CHANGED New distinct origin realm discovered: teamgamdom.com (Pool A) with Basic-auth-gated test backend shreeram-dynamic-test.teamgamdom.com — separate from gamdom4567.com Starlette pool
