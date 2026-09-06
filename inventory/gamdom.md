@@ -194,3 +194,14 @@ www.gamdom.com
 - NEW gamdommirrors.com/status/gamdom-domains official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies 4 regional TLDs as official and confirms gamdom904
 - CHANGED Origin trust boundary now spans flagship gamdom.com (Pool A) + 4 regional TLDs + all 7 mirrors + gamdom4567.com (Pool B) + gamdom90471.com (Pool B alias) + gamdom80004.com (redirect alias) = 14-host f
 - CHANGED Risk score increased from 65 → 68: confirmed 14-host fleet sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification 
+
+## 2026-09-06 13:03:53 UTC
+- NEW gamdom90471.com confirmed as 8th mirror alias / 14th hostname in brand trust pool (CNAME→gamdom4567.com, Fastly Pool B, self-referenced 18× in flagship HomePage.js via gamdom-girisi.com SEO hub, DigiC
+- NEW gamdom-girisi.com identified as official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com + discord/telegram; linked from flagship HomePage.js — legitimate discovery se
+- NEW gamdomgiris.link confirmed as third-party Cloudflare landing (no Fastly origin /client-api signature) — NOT in-scope brand origin (watchlist only)
+- NEW 4 regional TLDs (gamdom.eu/io/vip/win) confirmed on Pool A (151.101.x.52) — each serves full SPA + byte-identical `/client-api` 400 `Invalid request, only POST`; widens trust pool to 13 live hosts + 1
+- NEW Auth/admin-flavored subdomains (login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com) all NXDOMAIN — live scoped surface fully enumerated, no hidden auth endpoints
+- NEW Cookie issuance policy uniform: gamdom.eu/gamdom.win root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — per-host across entire 13-host fleet
+- NEW gamdommirrors.com/status/gamdom-domains official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies 4 regional TLDs as official and confirms gamdom904
+- CHANGED Origin trust boundary now spans flagship gamdom.com (Pool A) + 4 regional TLDs + all 7 mirrors + gamdom4567.com (Pool B) + gamdom90471.com (Pool B alias) + gamdom80004.com (redirect alias) = 14-host f
+- CHANGED Risk score increased from 65 → 68: confirmed 14-host fleet sharing single POST-only `/client-api` identity/wallet proxy; top hypothesis (cross-domain ATO via session sharing) has passive verification 
