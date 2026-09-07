@@ -93,3 +93,7 @@
 - 2026-09-07 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surface.
 - 2026-09-07 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only.
 - 2026-09-07 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-07 ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed, gate holds 401 fixture-wide. Provisioning-in-progress continues for another cycle.
+- 2026-09-07 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; no new alias advertised, provisioned fleet (90480/90482/90488/90473/90475) still unpublished.
+- 2026-09-07 ACCEPTED watch @ Starlette pool: /client-api 400 + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-07 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors.
