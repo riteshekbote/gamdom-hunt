@@ -256,3 +256,5 @@ www.gamdom.com
 - NEW gamdom90472.com confirmed 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live
 - CHANGED Brand trust pool expanded 14→17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api + shared weak-ETag
 - CHANGED gamdommirrors.com status page still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — 90471/90472/80003/80004/90480/90482/90488 off monitor list
+
+## 2026-09-07 09:58:15 UTC

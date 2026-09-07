@@ -1,11 +1,4 @@
-## 2026-09-07 04:54:59 UTC [target] (model nemotron3)
-[NEW] teamgamdom.com confirmed as 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert) hosting staging.teamgamdom.com (503 Maintenance) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secret" fixture-wide 401) — distinct origin realm from gamdom4567.com Starlette pool
-[NEW] gamdom90488.com public alias CNAME→shreeram-dynamic-test.teamgamdom.com pins brand mirror onto internal Basic-auth-gated nginx test backend; alias edge SNI not yet live (TLS-NOMATCH)
-[NEW] gamdom90480.com/gamdom90482.com both CNAME→gamdom4567.com, Pool B, /client-api 421 — 5th/6th provisioned 9047x-family aliases
-[NEW] gamdom80003.com confirmed 9th live mirror: CNAME→gamdom4567.com, Fastly Pool B (4 edges), /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", /client-api 400 26B byte-identical
-[NEW] gamdom90472.com confirmed 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live
-[CHANGED] Brand trust pool expanded 14→17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api + shared weak-ETag
-[CHANGED] gamdommirrors.com status page still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — 90471/90472/80003/80004/90480/90482/90488 off monitor list
+## 2026-09-07 09:58:04 UTC [target] (model nemotron3)
 [PRIO] gamdom80006.com/client-api,9.1,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
 [PRIO] gamdom80007.com/client-api,9.1,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
 [PRIO] gamdom80003.com/client-api,9.0,attack_surface=10 business_value=10 tech_exposure=9 gate_ease=6 cloud_surface=8 freshness=10
@@ -16,13 +9,9 @@
 [PRIO] gamdom.vip/client-api,8.4,attack_surface=9 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
 [PRIO] gamdom.win/client-api,8.4,attack_surface=9 business_value=9 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
 [PRIO] shreeram-dynamic-test.teamgamdom.com,7.2,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=7 freshness=8
-[PRIO] gamdom90488.com,7.0,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=7 freshness=8
-[PRIO] dashboard.gamdom.com,7.0,attack_surface=8 business_value=8 tech_exposure=7 gate_ease=4 cloud_surface=8 freshness=8
-[PRIO] gamdom90480.com/client-api,6.8,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=5 cloud_surface=8 freshness=8
-[PRIO] gamdom90482.com/client-api,6.8,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=5 cloud_surface=8 freshness=8
 [HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
 class: AUTH
-asset: gamdom80006.com/client-api (and all Pool B mirrors + gamdom4567.com)
+asset: gamdom80006.com/client-api
 confidence: 62
 reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others
 evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
@@ -31,7 +20,7 @@ impact: Cross-domain account takeover across all 17 mirror hostnames; medium-hig
 testability: AUTH_HELPED
 [HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship
 class: AUTH
-asset: gamdom.com/client-api (Pool A) and gamdom4567.com/client-api (Pool B)
+asset: gamdom.com/client-api
 confidence: 57
 reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire 17-host brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain + 4 regional TLDs join replay surface
 evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api
@@ -47,7 +36,7 @@ evidence_needed: Weak/default credentials for Basic auth realm="secret"; or auth
 verify_steps: (passive) enumerate paths on shreeram-dynamic-test.teamgamdom.com with common admin/staging paths (/api, /admin, /health, /metrics, /actuator, /debug); (AUTH_HELPED) test common weak credentials (admin:admin, admin:secret, gamdom:gamdom, test:test) against Basic auth
 impact: Access to internal staging/test backend potentially exposing debug endpoints, config, or non-prod wallet/auth logic; medium
 testability: AUTH_HELPED
-[PARKED] teamgamdom.com Basic-auth test backend exposes internal staging endpoints via shreeram-dynamic-test subdomain: confidence 48 but verify_steps requires AUTH_HELPED credential testing; Basic auth on internal test fixture is low business value unless it guards sensitive non-prod wallet endpoints; no evidence of actual sensitive exposure yet
+[PARKED] teamgamdom.com Basic-auth test backend exposes internal staging endpoints via shreeram-dynamic-test subdomain: confidence 48 but verify_steps requires AUTH_HELPED credential testing; Basic auth on internal test fixture is low business value unless it guards sensitive non-prod wallet endpoints; no evidence of actual sensitive exposure yet; debug paths /.git/config /env /server-status /status /_metrics /actuator all return identical 401 (172B) — no gate gap or debug leak confirmed
 [FINAL] 1. Cross-mirror auth cookie replay via shared /client-api origin yields ATO (confidence 62, AUTH_HELPED testability, medium-high impact)
 [FINAL] 2. Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (confidence 57, AUTH_HELPED testability, high impact)
 [NEXT] PROBE: GET (read-only) `https://gamdom80006.com/client-api` with `Origin: https://gamdom80007.com` and `Cookie: <captured-session>` — compare 400 response headers/body to baseline (no cookie) to detect any differential signaling session recognition at shared backend without mutation (<=1 rps, no body, read-only)
@@ -63,4 +52,6 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED inventory @ gamdom90480.com/gamdom90482.com: both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias
 [LEARN] ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only
 [LEARN] REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure
+[LEARN] ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate fixture-wide — /.git/config /env /server-status /status /_metrics /actuator all 401 (172B) identical; no gate gap or debug leak on internal test backend; watch reduced to cert-propagation-only
+[LEARN] ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× gamdom90471.com only, no new alias advertised; provisioned fleet (90480/90482/90488/90473/90475) still unpublished → provisioning-in-progress confirmed for another cycle
 [RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
