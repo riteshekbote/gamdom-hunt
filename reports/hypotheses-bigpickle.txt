@@ -1,12 +1,9 @@
-## 2026-09-07 15:32:00 UTC [target] (model bigpickle)
-[PRIO] gamdom4567.com trust pool, 7.65, AUTH+business_value
-[PRIO] gamdom90488.com alias, 6.05, MISCONFIG+gate_ease
-[PRIO] dashboard.gamdom.com, 4.55, AUTH+admin_surface
+## 2026-09-07 19:24:55 UTC [target] (model bigpickle)
 [HYP] Cross-host session replay across gamdom4567 trust pool — single shared nginx/Starlette origin fleet-wide
 class: AUTH
 asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007 (Pool B) + gamdom4567.com + 4 regional TLDs
 confidence: 62
-reasoning: /health weak-ETag + /client-api 400 (26B) byte-identical across both pools; bundle proves auth = server-set same-origin cookie (no bearer/localStorage); no ACAO blocks browser cross-origin replay; fleet stable this cycle.
+reasoning: /health weak-ETag + /client-api 400 (md5 7e3a161d) byte-identical across both pools this cycle; bundle proves auth = server-set same-origin cookie (no bearer/localStorage); no ACAO blocks browser cross-origin replay; no new passive evidence.
 evidence_needed: Set-Cookie attributes from one authenticated /client-api POST, then verbatim reuse on a different brand host.
 verify_steps: AUTH_HELPED — capture Set-Cookie via authenticated POST on gamdom80006.com; replay on gamdom.eu + gamdom.com + gamdom80003.com; compare session acceptance.
 impact: session theft → account/wallet control across flagship + regional TLDs + mirrors (funds, withdrawal, KYC PII); critical.
@@ -15,9 +12,9 @@ testability: AUTH_HELPED
 class: MISCONFIG
 asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
 confidence: 52
-reasoning: CNAME confirmed, gate holds fixture-wide 401 across 7 paths, alias still TLS-NOMATCH (cert not deployed), SEO hub still 17× 90471 only — provisioned-but-not-live unchanged.
-evidence_needed: alias host cert going live (200 vs TLS-NOMATCH), or any shreeram path 200/302 vs 401.
-verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200 = cert live); `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live).
+reasoning: CNAME confirmed; gate holds 401 fixture-wide; alias still 421/000 (cert not deployed); SEO hub still 17× 90471 only — provisioned-but-not-live unchanged for 3rd cycle.
+evidence_needed: alias host cert going live (200 vs 421/000), or any shreeram path 200/302 vs 401.
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api`.
 impact: alias live → users auth to internal host trusting brand DNS; gate-scope error → internal test env via public brand name; medium.
 testability: PASSIVE
 [HYP] Client-asserted privilege in /client-api action-name routing
@@ -29,12 +26,3 @@ evidence_needed: authenticated POST returning upstream-differentiated status for
 verify_steps: AUTH_HELPED only; no passive path remains.
 impact: coin/wallet refill or staff-op abuse; critical if proven.
 testability: AUTH_HELPED
-[PARKED] socket.io/admin surface @ gamdommirrors.com: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC — parked; consistent.
-[PARKED] subdomain takeover @ click.gamdom.com: resolved to SymplifyMail stock nginx, not dangling — watchlist only, no verify path.
-[FINAL] survivors ranked:
-[NEXT] PROBE: passive deployment-watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200/401 = alias cert deployed), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/env` (401 baseline; change = gate flip), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (200 ETag-identical = pool stable), and re-grep gamdom-girisi.com for any new numbered alias.
-[LEARN] ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed, gate holds 401 fixture-wide. Provisioning-in-progress continues for another cycle.
-[LEARN] ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; no new alias advertised, provisioned fleet (90480/90482/90488/90473/90475) still unpublished.
-[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable.
-[LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors.
-[RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable this cycle: no alias cert deployed (90488 still TLS-NOMATCH/421), Starlette pool healthy with unchanged shared weak-ETag, teamgamdom Basic gate solid, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.
