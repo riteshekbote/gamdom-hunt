@@ -1,4 +1,7 @@
-## 2026-09-07 19:24:55 UTC [target] (model bigpickle)
+## 2026-09-07 22:17:21 UTC [target] (model bigpickle)
+[PRIO] gamdom90488.com,6.1,gate_ease+freshness (highest-movement vector; CNAME pinned to internal Basic gate; only cert deployment away from live test)
+[PRIO] gamdom.com/client-api,5.8,business_value+gate_ease (identity/wallet proxy, 400-catchall, staff action names unenumerable passively)
+[PRIO] gamdom90472/90473/90475,5.4,attack_surface+freshness (provisioned-not-live family; any one flipping live expands trust pool)
 [HYP] Cross-host session replay across gamdom4567 trust pool — single shared nginx/Starlette origin fleet-wide
 class: AUTH
 asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007 (Pool B) + gamdom4567.com + 4 regional TLDs
@@ -11,8 +14,8 @@ testability: AUTH_HELPED
 [HYP] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com
 class: MISCONFIG
 asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
-confidence: 52
-reasoning: CNAME confirmed; gate holds 401 fixture-wide; alias still 421/000 (cert not deployed); SEO hub still 17× 90471 only — provisioned-but-not-live unchanged for 3rd cycle.
+confidence: 53
+reasoning: CNAME confirmed; gate holds 401 fixture-wide; alias still 000/421 (cert not deployed 4th cycle); SEO hub still 17× 90471 only — provisioned-but-not-live unchanged.
 evidence_needed: alias host cert going live (200 vs 421/000), or any shreeram path 200/302 vs 401.
 verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api`.
 impact: alias live → users auth to internal host trusting brand DNS; gate-scope error → internal test env via public brand name; medium.
@@ -26,3 +29,12 @@ evidence_needed: authenticated POST returning upstream-differentiated status for
 verify_steps: AUTH_HELPED only; no passive path remains.
 impact: coin/wallet refill or staff-op abuse; critical if proven.
 testability: AUTH_HELPED
+[PARKED] socket.io/admin surface @ gamdommirrors.com: GET-only EIO=4 SID handshake, no POST-RPC admin surface; consistent.
+[PARKED] subdomain takeover @ click.gamdom.com: SymplifyMail stock nginx, not dangling; watchlist only.
+[FINAL] survivors ranked: (1) cross-host cookie replay [62], (2) 90488 live-alias misconfig [53], (3) staff action-name privilege [45].
+[NEXT] PROBE: passive deployment-watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (000→200/401 = alias cert deployed), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/env` (401 baseline; change = gate flip), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (200 ETag-identical = pool stable), and re-grep gamdom-girisi.com for any new numbered alias.
+[LEARN] ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed (000/421), gate holds 401 fixture-wide; provisioning-in-progress 4th cycle.
+[LEARN] ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; provisioned fleet (90472/90473/90475/90480/90482/90488) still unpublished.
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
+[LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
+[RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable 4th cycle: no alias cert deployed (90488 still 000/421, 90472/90473/90475 TLS-NOMATCH), Starlette pool healthy with unchanged shared weak-ETag, teamgamdom Basic gate solid, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.

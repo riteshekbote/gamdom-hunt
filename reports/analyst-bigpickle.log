@@ -9391,3 +9391,139 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 - [RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable: no alias cert deployed (90488/90473/90475/80002/80009 still dead-TLS), Starlette pool healthy with unchanged shared weak-ETag + md5 7e3a161d, teamgamdom Basic gate holds, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.
+===== ANALYST bigpickle 2026-09-07 22:19:29 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90488.com/ 2>&1; echo ""
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90488.com/client-api 2>&1; echo ""
+421
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90488.com:443:151.101.67.72 -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90488.com/client-api 2>&1; echo ""
+421
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://shreeram-dynamic-test.teamgamdom.com/env 2>&1; echo ""
+401
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom80003.com/health 2>&1; echo ""
+200
+[0m
+[0m$ [0mcurl -sS --max-time 10 https://gamdom80003.com/health 2>&1 | head -c 200
+ok
+[0m
+[0m$ [0mcurl -sS --max-time 10 https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -o 'gamdom[a-z0-9.]*' | sort -u | head -30
+gamdom
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+gamdom80006.com
+gamdom80007.com
+gamdomcasino
+[0m
+[0m$ [0mcurl -sS --max-time 10 https://gamdom-girisi.com/ 2>&1 | grep -oP 'gamdom90[0-9]+\.com' | sort -u
+gamdom90471.com
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90472.com/ 2>&1; echo ""
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90473.com/ 2>&1; echo ""
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90473.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" --max-time 10 https://gamdom90475.com/ 2>&1; echo ""
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90475.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sSI --max-time 10 https://gamdom80003.com/health 2>&1 | grep -iE "etag|content-type|server|via"
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+content-type: text/html; charset=utf-8
+via: 1.1 varnish
+[0m
+[0m$ [0mcurl -sS --max-time 10 https://gamdom80007.com/client-api 2>&1 | md5sum; curl -sS --max-time 10 https://gamdom.eu/client-api 2>&1 | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+NO_DELTA — full passive watch cycle: all provisioned aliases still not live, Starlette pool byte-identical, gates hold.
+
+STEP 1 — DELTA
+NO_DELTA. All watch probes unchanged this cycle: gamdom90488.com root 000 / /client-api 421 (cert still not deployed), 90472/90473/90475 all 000 (TLS-NOMATCH), shreeram gate 401 fixture-wide, gamdom80003.com/health 200 with identical weak-ETag `W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"`, `/client-api` 400 md5 `7e3a161d` byte-identical Pool A+Pool B, status page still exactly 7 monitors, SEO hub still 17× gamdom90471.com only.
+
+STEP 2 — PRIORITIZE
+[PRIO] gamdom90488.com,6.1,gate_ease+freshness (highest-movement vector; CNAME pinned to internal Basic gate; only cert deployment away from live test)
+[PRIO] gamdom.com/client-api,5.8,business_value+gate_ease (identity/wallet proxy, 400-catchall, staff action names unenumerable passively)
+[PRIO] gamdom90472/90473/90475,5.4,attack_surface+freshness (provisioned-not-live family; any one flipping live expands trust pool)
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-host session replay across gamdom4567 trust pool — single shared nginx/Starlette origin fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007 (Pool B) + gamdom4567.com + 4 regional TLDs
+confidence: 62
+reasoning: /health weak-ETag + /client-api 400 (md5 7e3a161d) byte-identical across both pools this cycle; bundle proves auth = server-set same-origin cookie (no bearer/localStorage); no ACAO blocks browser cross-origin replay; no new passive evidence.
+evidence_needed: Set-Cookie attributes from one authenticated /client-api POST, then verbatim reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie via authenticated POST on gamdom80006.com; replay on gamdom.eu + gamdom.com + gamdom80003.com; compare session acceptance.
+impact: session theft → account/wallet control across flagship + regional TLDs + mirrors (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+
+[HYP] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
+confidence: 53
+reasoning: CNAME confirmed; gate holds 401 fixture-wide; alias still 000/421 (cert not deployed 4th cycle); SEO hub still 17× 90471 only — provisioned-but-not-live unchanged.
+evidence_needed: alias host cert going live (200 vs 421/000), or any shreeram path 200/302 vs 401.
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api`.
+impact: alias live → users auth to internal host trusting brand DNS; gate-scope error → internal test env via public brand name; medium.
+testability: PASSIVE
+
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; catch-all 400s every GET subpath → action map unenumerable; privilege model untestable without authenticated POST. No new passive evidence.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] socket.io/admin surface @ gamdommirrors.com: GET-only EIO=4 SID handshake, no POST-RPC admin surface; consistent.
+[PARKED] subdomain takeover @ click.gamdom.com: SymplifyMail stock nginx, not dangling; watchlist only.
+[FINAL] survivors ranked: (1) cross-host cookie replay [62], (2) 90488 live-alias misconfig [53], (3) staff action-name privilege [45].
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive deployment-watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (000→200/401 = alias cert deployed), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/env` (401 baseline; change = gate flip), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (200 ETag-identical = pool stable), and re-grep gamdom-girisi.com for any new numbered alias.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed (000/421), gate holds 401 fixture-wide; provisioning-in-progress 4th cycle.
+[LEARN] ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; provisioned fleet (90472/90473/90475/90480/90482/90488) still unpublished.
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
+[LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
+
+STEP 7 — RISK
+[RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable 4th cycle: no alias cert deployed (90488 still 000/421, 90472/90473/90475 TLS-NOMATCH), Starlette pool healthy with unchanged shared weak-ETag, teamgamdom Basic gate solid, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.
