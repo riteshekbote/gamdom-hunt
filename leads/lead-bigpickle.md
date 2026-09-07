@@ -1064,3 +1064,32 @@ impact: coin/wallet refill or staff-op abuse; critical if proven.
 testability: AUTH_HELPED
 [NEXT] PROBE: passive deployment-watch (read-only ≤1rps): `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200/401 = alias cert deployed = internal host reachable via public brand name), `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live), `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/` (401 gate; change = flip), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom80003.com/health` (200 = pool stable).
 [RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types (Starlette gamdom4567 pool, Go `bong_ke` wildcard, nginx Basic shreeram). New this cycle: teamgamdom wildcard subdomain surface proven dead (Go 404 everywhere, no routes); no gate/cert flip on any watched control; staging confirmed locked across all paths. No data touched; top in-scope chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; MISCONFIG watch on 90488→internal-host (55) is the only live passive thread — priority is SNI/cert propagation.
+## 2026-09-07 00:06:11 UTC [target] (model bigpickle)
+[HYP] Cross-host session replay across gamdom4567 trust pool — single shared nginx/Starlette origin fleet-wide
+class: AUTH
+asset: gamdom.com/client-api (Pool A) + gamdom80003/80006/80007 (Pool B) + gamdom4567.com + 4 regional TLDs + 9047x/9048x provisioned aliases
+confidence: 62
+reasoning: /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical across both pools; bundle proves auth = server-set same-origin cookie (no bearer/localStorage); no ACAO blocks browser cross-origin replay; this cycle re-verified 90473/90475 join the provisioning pool at 421 (pool growing, none live).
+evidence_needed: Set-Cookie attributes from one authenticated /client-api POST, then verbatim reuse on a different brand host.
+verify_steps: AUTH_HELPED — capture Set-Cookie via authenticated POST on gamdom80006.com; replay on gamdom.eu + gamdom.com + gamdom80003.com; compare session acceptance.
+impact: session theft → account/wallet control across flagship + regional TLDs + mirrors + aliases (funds, withdrawal, KYC PII); critical.
+testability: AUTH_HELPED
+[HYP] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com (Pool A)
+confidence: 55
+reasoning: gamdom90488.com CNAME = shreeram-dynamic-test.teamgamdom.com (first-party Certainly cert, Route53; nginx Basic realm="secret" fixture-wide on every probed path); alias edge SNI re-verified still not live this cycle (cert check 000, --resolve /client-api 421) = provisioning-in-progress; no 9047x alias went live this cycle either (90473/90475 also 421).
+evidence_needed: any shreeram-dynamic-test/90488 path served WITHOUT the Basic gate (200/302 vs 401), or alias host cert going live (200 vs TLS-NOMATCH), or S3 listing opening.
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/` (401 baseline; change = gate flip); `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = alias live); `curl -sS -o /dev/null -w "%{http_code}" https://gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com/` (403 = closed).
+impact: gate-strip/path-scope error → internal test env via public brand alias; alias live → users auth to internal host trusting brand DNS; medium.
+testability: PASSIVE
+[HYP] Client-asserted privilege in /client-api action-name routing
+class: AUTH
+asset: gamdom.com/client-api catch-all proxy
+confidence: 45
+reasoning: bundle hardcodes staffRefillConfig (30M coins/interval) + verifyProxies gate; /client-api routes by action name; Starlette origin both pools; catch-all 400s every GET subpath → action map unenumerable; privilege model untestable without authenticated POST.
+evidence_needed: authenticated POST returning upstream-differentiated status for staff action names.
+verify_steps: AUTH_HELPED only; no passive path remains.
+impact: coin/wallet refill or staff-op abuse; critical if proven.
+testability: AUTH_HELPED
+[RISK] gamdom: 65 — fleet still 3 realms (gamdom4567 Starlette pool incl. +2 new provisioned aliases 90473/90475; teamgamdom Go/nginx realm; S3 closed). No gate/cert/S3 flip on any watched control and no alias went live; all new aliases remain 421-provisioned (no new exploitable surface). Top in-scope chain (cross-host cookie replay, 62) unchanged and human-gated; single live passive thread remains the 90488→internal-host SNI/gate watch (55). No data touched.

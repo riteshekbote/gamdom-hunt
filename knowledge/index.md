@@ -75,3 +75,15 @@
 - 2026-09-06 ACCEPTED watch @ gamdom90480/90482/90488 + 9047x: all still 421/TLS-NOMATCH — no alias went live.
 - 2026-09-06 ACCEPTED watch @ staging.teamgamdom.com: 503 across all probed paths — maintenance gate fixture-wide.
 - 2026-09-06 ACCEPTED watch @ gamdommirrors.com status page: still exactly 7 monitors.
+- 2026-09-07 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-07 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-07 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-07 ACCEPTED inventory @ gamdom80003.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical — confirmed 9th live mirror, 15th hostname in brand trust pool; off the 7-monitor status page
+- 2026-09-07 ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool; off the 7-monitor status page
+- 2026-09-07 REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure
+- 2026-09-07 REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure
+- 2026-09-07 ACCEPTED inventory @ teamgamdom.com: 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert same CA as mirror fleet) hosting staging.teamgamdom.com (live "Maintenance - Gamdom.com" 503 page) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secret" fixture-wide 401) — new origin realm distinct from gamdom4567 Starlette pool
+- 2026-09-07 ACCEPTED recon @ gamdom90488.com: public numbered alias CNAME→shreeram-dynamic-test.teamgamdom.com pins a brand mirror onto the internal Basic-auth-gated nginx test backend; alias edge SNI not yet live
+- 2026-09-07 ACCEPTED inventory @ gamdom90480.com/gamdom90482.com: both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias
+- 2026-09-07 ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only
+- 2026-09-07 REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure

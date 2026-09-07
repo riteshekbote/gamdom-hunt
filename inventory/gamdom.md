@@ -237,3 +237,13 @@ www.gamdom.com
 - CHANGED Brand trust pool expanded from 14 → 17 hosts (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provi
 - CHANGED Origin trust boundary now spans 17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api signature and shared weak-ETag on
 - CHANGED New distinct origin realm discovered: teamgamdom.com (Pool A) with Basic-auth-gated test backend shreeram-dynamic-test.teamgamdom.com — separate from gamdom4567.com Starlette pool
+
+## 2026-09-07 00:08:08 UTC
+- NEW gamdom80003.com confirmed 9th live mirror: CNAME→gamdom4567.com, Fastly Pool B (4 edges), /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", /client-api 400 26B byte-identical
+- NEW gamdom90472.com confirmed 16th hostname: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live
+- NEW teamgamdom.com confirmed 2nd in-scope brand TLD: Route53, Fastly Pool A, Certainly cert; hosts staging.teamgamdom.com (503 Maintenance) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secre
+- NEW gamdom90488.com public alias CNAME→shreeram-dynamic-test.teamgamdom.com pins brand mirror onto internal Basic-auth test backend; alias edge SNI not live (TLS-NOMATCH)
+- NEW gamdom90480.com/gamdom90482.com both CNAME→gamdom4567.com, Pool B, /client-api 421 — 5th/6th provisioned 9047x-family aliases
+- CHANGED Brand trust pool expanded 14→17 hosts across Pool A (gamdom.com/eu/io/vip/win) and Pool B (80003/80004/80006/80007/90471/90472/4567) via byte-identical /client-api + shared weak-ETag
+- CHANGED New distinct origin realm discovered: teamgamdom.com (Pool A) with Basic-auth-gated test backend shreeram-dynamic-test.teamgamdom.com — separate from gamdom4567.com Starlette pool
+- CHANGED gamdommirrors.com status page still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — 90471/90472/80003/80004/90480/90482/90488 off monitor list
