@@ -100,3 +100,6 @@ https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 
 ## 2026-09-07 00:08:09 UTC
 https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-07 04:55:10 UTC
+https://shreeram-dynamic-test.teamgamdom.com/env` -> HTTP 400
