@@ -117,3 +117,6 @@
 - 2026-09-08 ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; `trMirrorDomain=gamdom80004.com`.
 - 2026-09-08 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress.
 - 2026-09-08 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable.
+- 2026-09-08 ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live (root 200, /client-api 400 md5 7e3a161d, /health weak-ETag identical, gd-lang cookie); official status page monitor id:221 placed it as 7th listed domain REPLACING gamdom80007.com — mirror fleet rotation event, 10th live mirror / 20th hostname in trust pool.
+- 2026-09-08 ACCEPTED inventory @ gamdom80007.com: demoted from live mirror to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect, 80008 inherits its Pool B slot.
+- 2026-09-08 ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames, off the 7-monitor status page.

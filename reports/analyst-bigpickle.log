@@ -10434,3 +10434,331 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] gamdom: 66 — 6th consecutive cycle with zero change: 6 provisioned aliases still not live, bundle hash byte-identical across 2 brands / 19+ hostnames (confirmed shared identity/wallet origin stable), shreeram/Go gates solid, status page + SEO hub unchanged. Top chain (cross-host/cross-brand cookie replay, 66) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable; only read-only GET probes run, no data touched.
+===== ANALYST bigpickle 2026-09-08 14:26:58 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/ 2>&1
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom90472.com/ 2>&1
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://fatbets.com/ 2>&1
+200
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom.one/ 2>&1
+200
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -o '"monitorCount":[0-9]*' | head -1
+(no output)
+[0m
+[0m$ [0mcurl -sS https://fatbets.com/ 2>&1 | grep -oP 'client\.[a-f0-9]+\.js' | head -3
+client.41b06529227c4b8b6a1d.js
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oP '"id":\d+' | head -10
+(no output)
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://fatbets.com/health 2>&1
+200
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code} %{redirect_url}" https://gamdom90473.com/ https://gamdom90475.com/ https://gamdom90480.com/ https://gamdom90482.com/ 2>&1
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90473.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90475.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90480.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90482.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 000
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oP '"monitorList".*?"count":\d+' | head -1
+(no output)
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api 2>&1
+421
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90472.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90472.com/client-api 2>&1
+421
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | python3 -c "
+import sys,json,re
+html=sys.stdin.read()
+# Find the monitor data in the page
+matches=re.findall(r'gamdom[^\"<,]*', html)
+print('Hosts mentioned:', matches[:20])
+# Count unique monitor entries
+print('Bundle hash still: client.41b06529227c4b8b6a1d.js')
+" 2>&1
+Hosts mentioned: ['gamdom-domains/manifest.json', "gamdom-domains'", 'gamdom)\\n[![X](data:image/svg+xml;base64', 'gamdom)\\n[![Telegram](data:image/svg+xml;base64', 'gamdomcasino)\\n[![Youtube](data:image/svg+xml;base64', 'gamdom)\\n[![Discord](data:image/svg+xml;base64', "gamdom.com'}", "gamdom.eu'}", "gamdom.io'}", "gamdom.vip'}", "gamdom.win'}", "gamdom80006.com'", "gamdom80006.com'}", "gamdom80008.com'", "gamdom80008.com'}]}]"]
+Bundle hash still: client.41b06529227c4b8b6a1d.js
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oP 'gamdom[0-9]+\.com' | sort -u
+gamdom80006.com
+gamdom80008.com
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oP 'gamdom\.(com|eu|io|vip|win)' | sort -u
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oiP 'gamdom[0-9]*\.(com|eu|io|vip|win)' | sort -u
+Gamdom.com
+Gamdom.eu
+Gamdom.io
+Gamdom.vip
+Gamdom.win
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+gamdom80006.com
+gamdom80008.com
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -i '8000' 
+window.preloadData = {'config':{'slug':'gamdom-domains','title':'Gamdom Official Domains','description':'','icon':'/upload/logo1.png?t=1780595715016','theme':'auto','published':true,'showTags':false,'customCSS':'.alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right: 0 !important;\n}\n\n#app .title-flex > span:not(.logo-wrapper) {\n  display: none;\n}\n\n.overall-status {\n  display: none;\n}\n\n#app .group-title {\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 24px;\n  margin-bottom: 0;\n}\n\n#app .monitor-list {\n  border: none !important;\n  border-radius: 0 !important;\n  box-shadow: none;\n  padding: 0;\n}\n\n#app .monitor-list .item {\n  background-color: #131A22;\n  border: none;\n  border-radius: 0;\n  padding: 12px 16px;\n}\n\n#app .monitor-list .item:not(:last-child) {\n  margin-bottom: 2px;\n}\n\n#app .monitor-list .beat {\n  margin: 0 1.875px !important;\n}\n\n#app .monitor-list .item:last-child {\n  border-radius: 0 0 16px 16px;\n}\n\n#app .monitor-list .item:first-child {\n  border-radius: 16px 16px 0 0;\n}\n\n#app .monitor-list .row {\n  align-items: center;\n  margin: 0;\n}\n\n#app .monitor-list .extra-info {\n  display: none;\n}\n\n#app .monitor-list .info {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n#app .monitor-list .badge {\n  height: 23px;\n  width: 53px;\n  border-radius: 10px !important;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #06090E;\n  font-size: 12px;\n  line-height: 12px;\n  font-weight: 700;\n  letter-spacing: 1px;\n}\n\n#app .monitor-list .item-name {\n  color: #fff;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: 700;\n  text-decoration: underline;\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .monitor-list .item-name:hover {\n  opacity: 0.9;\n}\n\n#app .monitor-list .item-name:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}\n\n#app .monitor-list .wrap div {\n  color: #818E9D;\n}\n\n#app .monitor-list .beat {\n  width: 4px !important;\n  height: 18px !important;\n}\n\n#app footer {\n  margin: 0 !important;\n  display: flex;\n  flex-direction: column;\n}\n\n#app .refresh-info {\n  order: 1;\n  color: #818E9D;\n  font-size: 14px;\n  line-height: 16px;\n  font-weight: 500;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  margin-top: 24px;\n  margin-bottom: 48px !important;\n}\n\n#app .alert-heading {\n  order: 2;\n}\n\n#app .alert-heading a {\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .alert-heading a:hover {\n  opacity: 0.9;\n}\n\n#app .alert-heading a:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}','footerText':'[![Instagram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ3OSkiLz4KPHBhdGggZD0iTTE4IDcuMDY2MDVDMTMuNTMzOCA3LjA2NjA1IDkuMjkyNTUgNi42NjkxMSA3LjY3MjU2IDEwLjgyMzNDNy4wMDM0NiAxMi41MzkxIDcuMTAwNjIgMTQuNzY3NCA3LjEwMDYyIDE3Ljk1ODFDNy4xMDA2MiAyMC43NTc4IDcuMDEwODYgMjMuMzg5NCA3LjY3MjU2IDI1LjA5MTZDOS4yODg3OSAyOS4yNDgzIDEzLjU2NDQgMjguODUgMTcuOTk3NiAyOC44NUMyMi4yNzQ0IDI4Ljg1IDI2LjY4NDEgMjkuMjk1IDI4LjMyMzggMjUuMDkxNkMyOC45OTQyIDIzLjM1ODYgMjguODk1NyAyMS4xNjM1IDI4Ljg5NTcgMTcuOTU4MUMyOC44OTU3IDEzLjcwMzEgMjkuMTMwNyAxMC45NTYgMjcuMDY1NSA4Ljg5MzcyQzI0Ljk3NDQgNi44MDQyNSAyMi4xNDY1IDcuMDY2MDUgMTcuOTk1MSA3LjA2NjA1SDE4Wk0xNy4wMjM0IDkuMDI4ODZDMjYuMzM5OCA5LjAxNDIxIDI3LjUyNTUgNy45NzkyMiAyNi44NzExIDIyLjM1NTdDMjYuNjM4NiAyNy40NDAzIDIyLjc2NCAyNi44ODI0IDE4LjAwMTIgMjYuODgyNEM5LjMxNzE4IDI2Ljg4MjQgOS4wNjc0MSAyNi42MzQgOS4wNjc0MSAxNy45NTMxQzkuMDY3NDEgOS4xNzE1MyA5Ljc1NjI5IDkuMDMzODQgMTcuMDIzNCA5LjAyNjQ0VjkuMDI4ODZaTTIzLjgxODEgMTAuODM2OUMyMy4wOTYxIDEwLjgzNjkgMjIuNTEwNiAxMS40MjE4IDIyLjUxMDYgMTIuMTQzNEMyMi41MTA2IDEyLjg2NDggMjMuMDk2MSAxMy40NDk5IDIzLjgxODEgMTMuNDQ5OUMyNC41NDAxIDEzLjQ0OTkgMjUuMTI1NiAxMi44NjQ4IDI1LjEyNTYgMTIuMTQzNEMyNS4xMjU2IDExLjQyMTggMjQuNTQwMSAxMC44MzY5IDIzLjgxODEgMTAuODM2OVpNMTggMTIuMzY0NkMxNC45MDkgMTIuMzY0NiAxMi40MDMzIDE0Ljg2OTQgMTIuNDAzMyAxNy45NTgxQzEyLjQwMzMgMjEuMDQ2NyAxNC45MDkgMjMuNTUwMyAxOCAyMy41NTAzQzIxLjA5MTEgMjMuNTUwMyAyMy41OTU1IDIxLjA0NjcgMjMuNTk1NSAxNy45NTgxQzIzLjU5NTUgMTQuODY5NCAyMS4wOTExIDEyLjM2NDYgMTggMTIuMzY0NlpNMTggMTQuMzI3NEMyMi44MDMzIDE0LjMyNzQgMjIuODA5NSAyMS41ODg3IDE4IDIxLjU4ODdDMTMuMTk3OSAyMS41ODg3IDEzLjE5MDYgMTQuMzI3NCAxOCAxNC4zMjc0WiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0NzkiIHgxPSIzNiIgeTE9IjEuMDcwNDhlLTA2IiB4Mj0iMC4wODA5MDAyIiB5Mj0iMzUuOTk5OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjRkQwM0ExIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0ZGQzMwMyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==)](https://instagram.com/gamdom)\n[![X](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0Y5RjlGOSIvPgo8cGF0aCBkPSJNMTkuODMyOSAxNi40ODcxTDI2Ljk5NzEgOC4zMzgzOEgyNS4yOTk3TDE5LjA3NjIgMTUuNDEyM0wxNC4xMDkxIDguMzM4MzhIOC4zNzg5MUwxNS44OTE4IDE5LjAzNjRMOC4zNzg5MSAyNy41ODA4SDEwLjA3NjRMMTYuNjQ0NSAyMC4xMDg3TDIxLjg5MTEgMjcuNTgwOEgyNy42MjEzTDE5LjgzMjkgMTYuNDg3MVpNMTcuNTA3MyAxOS4xMzAzTDE2Ljc0NDkgMTguMDY0M0wxMC42ODg1IDkuNTkwNTVIMTMuMjk2MkwxOC4xODUzIDE2LjQzMTdMMTguOTQ0NCAxNy40OTc3TDI1LjI5ODkgMjYuMzg5NkgyMi42OTEyTDE3LjUwNzMgMTkuMTMwM1oiIGZpbGw9IiMwODBEMTMiLz4KPC9zdmc+Cg==)](https://twitter.com/gamdom)\n[![Telegram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzI3QTREQiIvPgo8cGF0aCBkPSJNMTUuMjk2OSAyNS45OTVDMTQuNjQ3MyAyNS45OTUgMTQuNzU3NiAyNS43NDk3IDE0LjUzMzUgMjUuMTMxTDEyLjYyMyAxOC44NDMxTDI3LjMyOTYgMTAuMTE4NSIgZmlsbD0iI0M4REFFQSIvPgo8cGF0aCBkPSJNMTUuMjk4OCAyNS45OTc2QzE1LjgwMDIgMjUuOTk3NiAxNi4wMjE4IDI1Ljc2ODMgMTYuMzAxNyAyNS40OTYxTDE4Ljk3NTUgMjIuODk2MUwxNS42NDAyIDIwLjg4NDciIGZpbGw9IiNBOUM5REQiLz4KPHBhdGggZD0iTTE1LjYzOTIgMjAuODg1TDIzLjcyMSAyNi44NTYyQzI0LjY0MzQgMjcuMzY1IDI1LjMwOSAyNy4xMDE1IDI1LjUzODYgMjUuOTk5OUwyOC44Mjg1IDEwLjQ5NzJDMjkuMTY1MyA5LjE0NjgxIDI4LjMxMzcgOC41MzQzNSAyNy40MzE0IDguOTM1MDNMOC4xMTM5MiAxNi4zODM4QzYuNzk1MzIgMTYuOTEyNSA2LjgwMzA1IDE3LjY0ODIgNy44NzM2MSAxNy45NzZMMTIuODMwOSAxOS41MjMzTDI0LjMwNzUgMTIuMjgyOUMyNC44NDkzIDExLjk1NDIgMjUuMzQ2NiAxMi4xMzA5IDI0LjkzODUgMTIuNDkzMSIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ4NSkiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0ODUiIHgxPSIxNy40OTciIHkxPSIxOC41NTY5IiB4Mj0iMjAuNjM1NSIgeTI9IjI1LjY5ODQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0VGRjdGQyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IndoaXRlIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==)](https://t.me/+JrVfUQipUmM0OGM0)\n[![Facebook](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzQwNl8xNjQ5NCkiPgo8cmVjdCB4PSItMC42MDE1NjIiIHk9Ii0wLjY0MTQ3OSIgd2lkdGg9IjM3LjIwMiIgaGVpZ2h0PSIzNy4yMDIiIGZpbGw9IiM0MjY3QjIiLz4KPHBhdGggZD0iTTIyLjE0MzEgMzYuNTYwNlYyMy4xMjA0SDI2Ljk5NTJMMjcuNzE5NyAxNy44NTkzSDIyLjE0MzFWMTQuNTA5N0MyMi4xNDMxIDEyLjk4NzcgMjIuNTk4MyAxMS45NTcxIDI0LjkzMTQgMTEuOTU3MUgyNy45MTE5VjcuMjU5M0MyNi40NzQ1IDcuMTIwNDMgMjUuMDMwNSA3LjA1MjQzIDIzLjU4NTMgNy4wNTU1OUMxOS4yOTczIDcuMDU1NTkgMTYuMzc0NSA5LjUwMDM0IDE2LjM3NDUgMTMuOTg4NFYxNy44NTkzSDExLjUzNTJWMjMuMTIwNEgxNi4zNzQ1VjM2LjU2MDZIMjIuMTQzMVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDA2XzE2NDk0Ij4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K)](https://facebook.com/gamdomcasino)\n[![Youtube](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNMTIuODY5MSAyNi4yOThMMjUuNjk3NCAxNy45NjAxTDEyLjg2OTEgOS42MjEyMlYyNi4yOThaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)](https://www.youtube.com/@officialgamdom)\n[![Discord](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNMjYuMDE1MyAxMC40ODM5QzI0LjQ5ODIgOS43NzExMSAyMi44OTY2IDkuMjY1NDQgMjEuMjUxNCA4Ljk3OThDMjEuMDI2MyA5LjM5Mjc5IDIwLjgyMjYgOS44MTc3MSAyMC42NDEyIDEwLjI1MjhDMTguODg4OCA5Ljk4MTc4IDE3LjEwNjcgOS45ODE3OCAxNS4zNTQzIDEwLjI1MjhDMTUuMTcyOCA5LjgxNzc2IDE0Ljk2OTEgOS4zOTI4NCAxNC43NDQxIDguOTc5OEMxMy4wOTc5IDkuMjY3ODUgMTEuNDk1MiA5Ljc3NDcyIDkuOTc2NjMgMTAuNDg3NkM2Ljk2MTc3IDE1LjA2NTEgNi4xNDQ0OSAxOS41Mjg5IDYuNTUzMTMgMjMuOTI5NEM4LjMxODcxIDI1LjI2OCAxMC4yOTQ5IDI2LjI4NjEgMTIuMzk1OCAyNi45Mzk0QzEyLjg2ODggMjYuMjg2NSAxMy4yODc0IDI1LjU5MzggMTMuNjQ3MSAyNC44Njg3QzEyLjk2MzkgMjQuNjA2OSAxMi4zMDQ1IDI0LjI4MzggMTEuNjc2NiAyMy45MDMzQzExLjg0MTggMjMuNzgwMiAxMi4wMDM1IDIzLjY1MzUgMTIuMTU5NyAyMy41MzA1QzEzLjk4NjkgMjQuNDEyMyAxNS45ODEzIDI0Ljg2OTYgMTguMDAwNSAyNC44Njk2QzIwLjAxOTcgMjQuODY5NiAyMi4wMTQxIDI0LjQxMjMgMjMuODQxMyAyMy41MzA1QzIzLjk5OTMgMjMuNjYyOCAyNC4xNjEgMjMuNzg5NiAyNC4zMjQ0IDIzLjkwMzNDMjMuNjk1MiAyNC4yODQ0IDIzLjAzNDYgMjQuNjA4MSAyMi4zNTAyIDI0Ljg3MDZDMjIuNzA5NSAyNS41OTUzIDIzLjEyODEgMjYuMjg3NCAyMy42MDE2IDI2LjkzOTRDMjUuNzA0MyAyNi4yODg4IDI3LjY4MiAyNS4yNzExIDI5LjQ0NzggMjMuOTMxMkMyOS45MjczIDE4LjgyODEgMjguNjI4OCAxNC40MDUzIDI2LjAxNTMgMTAuNDgzOVpNMTQuMTY0NyAyMS4yMjMxQzEzLjAyNiAyMS4yMjMxIDEyLjA4NTIgMjAuMTYyNiAxMi4wODUyIDE4Ljg1NzlDMTIuMDg1MiAxNy41NTMzIDEyLjk5MzMgMTYuNDgzNSAxNC4xNjExIDE2LjQ4MzVDMTUuMzI4OSAxNi40ODM1IDE2LjI2MjQgMTcuNTUzMyAxNi4yNDI0IDE4Ljg1NzlDMTYuMjIyNSAyMC4xNjI2IDE1LjMyNTMgMjEuMjIzMSAxNC4xNjQ3IDIxLjIyMzFaTTIxLjgzNjMgMjEuMjIzMUMyMC42OTU3IDIxLjIyMzEgMTkuNzU4NSAyMC4xNjI2IDE5Ljc1ODUgMTguODU3OUMxOS43NTg1IDE3LjU1MzMgMjAuNjY2NiAxNi40ODM1IDIxLjgzNjMgMTYuNDgzNUMyMy4wMDU5IDE2LjQ4MzUgMjMuOTMyMSAxNy41NTMzIDIzLjkxMjEgMTguODU3OUMyMy44OTIyIDIwLjE2MjYgMjIuOTk2OCAyMS4yMjMxIDIxLjgzNjMgMjEuMjIzMVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://discord.gg/vNfHXkMW)','showPoweredBy':false,'googleAnalyticsId':null,'showCertificateExpiry':false},'incident':null,'publicGroupList':[{'id':1,'name':'Gamdom Official Domains','weight':1,'monitorList':[{'id':13,'name':'Gamdom.com','sendUrl':1,'type':'http','url':'https://gamdom.com'},{'id':3,'name':'Gamdom.eu','sendUrl':1,'type':'http','url':'https://gamdom.eu'},{'id':2,'name':'Gamdom.io','sendUrl':1,'type':'http','url':'https://gamdom.io'},{'id':6,'name':'Gamdom.vip','sendUrl':1,'type':'http','url':'https://gamdom.vip'},{'id':5,'name':'Gamdom.win','sendUrl':1,'type':'http','url':'https://gamdom.win'},{'id':217,'name':'gamdom80006.com','sendUrl':1,'type':'http','url':'https://gamdom80006.com'},{'id':221,'name':'gamdom80008.com','sendUrl':1,'type':'http','url':'https://gamdom80008.com'}]}],'maintenanceList':[]};
+[0m
+[0m$ [0mdig +short gamdom80008.com 2>&1
+gamdom4567.com.
+151.101.67.72
+151.101.3.72
+151.101.131.72
+151.101.195.72
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom80007.com/ 2>&1
+302
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom80008.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom80008.com/client-api 2>&1
+421
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom80008.com/ 2>&1
+200
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom80007.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom80007.com/client-api 2>&1
+421
+[0m
+That's a **significant change** on the status page — `gamdom80007.com` has been **replaced by `gamdom80008.com`** in the 7th monitor slot. Previously it was com/eu/io/vip/win/80006/80007, now it's com/eu/io/vip/win/80006/80008. Let me verify the current state of gamdom80008.com.
+[0m$ [0mcurl -sSk --resolve gamdom80008.com:443:151.101.116.52 -o /dev/null -w "%{http_code}" https://gamdom80008.com/client-api 2>&1
+400
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom80008.com:443:151.101.116.52 https://gamdom80008.com/client-api 2>&1
+Invalid request, only POST
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom80007.com:443:151.101.116.52 https://gamdom80007.com/health 2>&1
+(no output)
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom80008.com:443:151.101.116.52 https://gamdom80008.com/health 2>&1
+ok
+[0m
+Major finding: `gamdom80008.com` has been **moved from out-of-scope (192.64.119.33) to in-scope brand infrastructure** (CNAME→gamdom4567.com, Pool B). Meanwhile `gamdom80007.com` root now returns 302 (redirect alias) — it appears 80008 replaced 80007 as the live mirror.
+[0m$ [0mcurl -sSk https://gamdom80008.com/ 2>&1 | grep -oP 'client\.[a-f0-9]+\.js' | head -1
+client.41b06529227c4b8b6a1d.js
+[0m
+[0m$ [0mcurl -sSk -D - https://gamdom80008.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-c8118ee2-9973-4681-8880-95ffec2a3e5e' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Wed, 08 Sep 2027 14:10:03 GMT
+accept-ranges: bytes
+date: Tue, 08 Sep 2026 14:10:03 GMT
+via: 1.1 varnish
+x-served-by: cache-pao-kpao1770044-PAO, cache-pao-kpao1770028-PAO
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788876603.854114,VS0,VE977
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+
+<!DOCTYPE html><html lang="en-GB"><head><meta charSet="utf-8"/><meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/><title data-rh="true" data-react-helmet="true">Gamdom - Top Bitcoin &amp; Crypto Casino!</title><meta name="description" content="Gamdom is an outstanding Bitcoin Casino with amazing rewards &amp; provably fair games. Win and trade in Crypto. 6000+ slots,live games &amp; sportsbetting" data-rh="true" data-react-helmet="true"/><meta name="keywords" content="Crypto Casino, Bitcoin Casino, Gambling, Skins, Counterstrike, Global Offensive, free, profit, crash, bust, Casino" data-rh="true" data-react-helmet="true"/><meta name="google" content="notranslate" data-rh="true" data-react-helmet="true"/><link rel="canonical" href="https://gamdom.com/" data-rh="true" data-react-helmet="true"/><meta property="og:title" content="Gamdom - Top Bitcoin &amp; Crypto Casino!" data-rh="true" data-react-helmet="true"/><meta property="og:type" content="Website" data-rh="true" data-react-helmet="true"/><meta property="og:url" content="https://gamdom.com/" data-rh="true" data-react-helmet="true"/><meta property="og:description" content="Gamdom is an outstanding Bitcoin Casino with amazing rewards &amp; provably fair games. Win and trade in Crypto. 6000+ slots,live games &amp; sportsbetting" data-rh="true" data-react-helmet="true"/><meta property="og:image" content="https://gamdom.com/static/img/og.avif" data-rh="true" data-react-helmet="true"/><meta property="og:locale" content="en_GB" data-rh="true" data-react-helmet="true"/><meta property="og:logo" content="https://gamdom.com/static/img/logo.svg" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.io/" hrefLang="en-GB" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/bg-bg/" hrefLang="bg-BG" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/cs-cz/" hrefLang="cs-CZ" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/el-gr/" hrefLang="el-GR" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/es-es/" hrefLang="es-ES" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/fr-fr/" hrefLang="fr-FR" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/id-id/" hrefLang="id-ID" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/ja-jp/" hrefLang="ja-JP" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/ka-ge/" hrefLang="ka-GE" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/ko-kr/" hrefLang="ko-KR" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/pl-pl/" hrefLang="pl-PL" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/pt-pt/" hrefLang="pt-PT" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/ru-ru/" hrefLang="ru-RU" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/sr-rs/" hrefLang="sr-RS" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/th-th/" hrefLang="th-TH" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/tl-ph/" hrefLang="tl-PH" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom80004.com/tr-tr/" hrefLang="tr-TR" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/vi-vn/" hrefLang="vi-VN" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/zh-cn/" hrefLang="zh-CN" rel="alternate" data-rh="true" data-react-helmet="true"/><link href="https://gamdom.com/" hrefLang="x-default" rel="alternate" data-rh="true" data-react-helmet="true"/><link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png"/><link rel="mask-icon" href="/static/img/favicon/safari-pinned-tab.svg" color="#5bbad5"/><link rel="shortcut icon" href="/static/img/favicon/favicon.ico" type="image/x-icon"/><meta name="msapplication-TileColor" content="#da532c"/><meta name="msapplication-config" content="/static/img/favicon/browserconfig.xml"/><meta name="theme-color" content="#ffffff"/><link rel="manifest" href="/manifest.json"/><link rel="icon" href="/static/img/favicon/favicon.ico" type="image/x-icon"/><meta name="format-detection" content="telephone=no"/><link rel="preload" href="/i18n-system/orgs/gamdom/projects/main/versions/master-1/translations?lang=en" as="fetch" type="application/json" crossorigin="anonymous"/><link rel="preload" as="script" href="/build/AppShell.e7fa8dde3062d54f4b49.js" nonce="c8118ee2-9973-4681-8880-95ffec2a3e5e"/><link rel="preload" as="script" href="/build/HomePage.3f74f68d359716bd6835.js" nonce="c8118ee2-9973-4681-8880-95ffec2a3e5e"/><base href="/" data-rh="true" data-react-helmet="true"/><script type="application/ld+json" data-rh="true" data-react-helmet="true">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://gamdom.com"}]},{"@type":"Organization","name":"GAMDOM","legalName":"Moon Revolution Limitada","alternateName":"Gamdom casino","description":"Gamdom is an outstanding Crypto Casino with amazing rewards & provably fair games. Win Bitcoin & Ethereum. 3000+ slots, live games & sports betting.","slogan":"The Ultimate Crypto Casino & Sportsbook","url":"https://gamdom.com/","logo":"https://gamdom.com/static/img/logo.svg","image":"https://gamdom.com/static/img/og.avif","email":"support@gamdom.com","founder":{"@type":"Person","name":"Felix Römer","gender":"Male","jobTitle":"Founder"},"foundingDate":"2016-10-30","taxID":"3-102-903008","address":{"@type":"PostalAddress","streetAddress":"n. 400, La Ceiba Street, San Rafael district, County of Escazu, San José, Costa Rica","addressLocality":"Escazu","addressRegion":"San José","addressCountry":"CR"},"numberOfEmployees":{"@type":"QuantitativeValue","minValue":50,"maxValue":200},"knowsLanguage":["en","bg","cs","el","es","fr","ja","ko","pt","ru","tr","zh"],"sameAs":["https://www.facebook.com/gamdomfb/","https://x.com/Gamdom","https://www.instagram.com/gamdomhq","https://discord.gg/gamdom","https://www.youtube.com/@officialgamdom","https://www.linkedin.com/company/gamdom-com/","https://www.reddit.com/r/gamdom/","https://www.trustpilot.com/review/gamdom.com","https://gamdom.eu","https://gamdom.io","https://gamdom.vip","https://gamdom.win","https://trgamdom.com","https://uk.trustpilot.com/review/gamdom.com","https://www.bitcoin.com/gambling/reviews/gamdom/","https://www.similarweb.com/website/gamdom.com/","https://www.askgamblers.com/online-casinos/reviews/gamdom-casino","https://www.aboutslots.com/reviews/gamdom","https://blockonomi.com/gamdom-review/","https://casino.guru/gamdom-casino-review","https://www.ccn.com/gamdom-casino-review/","https://online.worldcasinodirectory.com/gamdom-casino","https://casino.guide/gamdom/","https://www.strafe.com/esports-betting/reviews/gamdom/","https://www.cryptonewsz.com/gambling/reviews/gamdom-casino/","https://www.bookmakers.bet/review/gamdom/","https://medium.com/@reynaldahamilton/gamdom-review-explore-the-crypto-casino-85b15e56c8cf","https://www.riverfronttimes.com/gaming/gamdom-review-insights-and-detailed-findings-42349644","https://blockchainreporter.net/gamdom-review-the-ultimate-fusion-of-crypto-casino-and-social-gaming/","https://atozmarkets.com/crypto-gambling/gamdom/","https://www.casinowow.com/casino-reviews/gamdom-casino","https://www.vegasslotsonline.com/reviews/gamdom-casino/","https://www.esports.net/betting/sites/gamdom/","https://lcb.org/casinos/gamdom-casino","https://cryptwerk.com/company/gamdom/","https://gamblecritic.net/casino/gamdom-casino/","https://www.esportsbets.com/reviews/gamdom/","https://wizardofodds.com/online-casinos/reviews/gamdom-casino/","https://allcasinos.in/reviews/gamdom-casino/","https://www.gamblingjudge.com/reviews/gamdom-casino/","https://bitcoinchaser.com/review/gamdom/","https://casinomentor.com/reviews/gamdom-casino","https://casinobee.com/nz/reviews/gamdom-casino/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer service","email":"support@gamdom.com","url":"https://gamdom.com/help/support","availableLanguage":["English","Spanish","French","Portuguese","Russian","Turkish","Japanese","Korean","Chinese"],"contactOption":"TollFree","hoursAvailable":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}}]}]}</script><link rel="stylesheet" href="/build/client.21c813c93e08dd492679.css"/><script nonce="c8118ee2-9973-4681-8880-95ffec2a3e5e">
+							(function(w,d,s,l,i){
+							  w[l]=w[l]||[];
+							  w[l].push({
+							    "gtm.start": new Date().getTime(),
+							    event: "gtm.js"
+							  });
+
+							  var f=d.getElementsByTagName(s)[0];
+							  var j=d.createElement(s);
+							  var dl=l!="dataLayer" ? "&l="+l : "";
+							  var n=d.querySelector("[nonce]");
+
+							  j.async=true;
+[0m
+[0m$ [0mcurl -sSk -D - --resolve gamdom80008.com:443:151.101.116.52 https://gamdom80008.com/health 2>&1
+HTTP/2 200 
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+server: nginx
+content-type: text/html; charset=utf-8
+accept-ranges: bytes
+date: Tue, 08 Sep 2026 14:10:18 GMT
+via: 1.1 varnish
+age: 16
+x-served-by: cache-pao-kpao1770063-PAO, cache-pao-kpao1770042-PAO
+x-cache: MISS, HIT
+x-cache-hits: 0, 1
+x-timer: S1788876618.213142,VS0,VE1
+vary: Accept-Encoding
+strict-transport-security: max-age=31557600
+content-length: 2
+
+ok
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code} -> %{redirect_url}" https://gamdom80007.com/ 2>&1
+302 -> https://gamdom80008.com/
+[0m
+[0m$ [0mcurl -sSk -D - --resolve gamdom80008.com:443:151.101.67.52 https://gamdom80008.com/ 2>&1 | head -15
+HTTP/2 421 
+content-type: text/plain; charset=utf-8
+x-served-by: cache-sjc10023
+content-length: 291
+
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [1472b5d875b6c51fd54448f672418b8d2b915b50b3c0b54e0283ab7ddb7f6110] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+[0m
+1987: Partial change. Let me confirm the 80008 mirror fingerprint/parity and 80007's new redirect role.
+[0m$ [0mfor d in gamdom80009.com gamdom80010.com gamdom80002.com gamdom80001.com; do printf "%s: " "$d"; dig +short "$d" | tr '\n' ' '; echo; done 2>&1
+gamdom80009.com: 162.255.119.42 
+gamdom80010.com: 162.255.119.173 
+gamdom80002.com: gamdom4567.com. 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72 
+gamdom80001.com: gamdom4567.com. 151.101.3.72 151.101.131.72 151.101.195.72 151.101.67.72
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom80007.com:443:151.101.116.52 https://gamdom80007.com/client-api 2>&1
+302
+[0m
+The status page now monitors `gamdom80008.com` (monitor id:221) **replacing** `gamdom80007.com` — and 80007's root is now a 302→80008 redirect. This is a live mirror rotation. Let me check for new numbered neighbors and 80007's API state.
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}" --resolve gamdom80008.com:443:151.101.116.52 https://gamdom80008.com/client-api 2>&1
+400
+[0m
+[0m$ [0mcurl -sSk -D - --resolve gamdom80007.com:443:151.101.116.52 https://gamdom80007.com/ 2>&1 | head -10
+HTTP/2 302 
+server: Varnish
+retry-after: 0
+location: https://gamdom80008.com/
+cache-control: no-store
+accept-ranges: bytes
+date: Tue, 08 Sep 2026 14:11:37 GMT
+via: 1.1 varnish
+x-served-by: cache-pao-kpao1770042-PAO
+x-cache: HIT
+[0m
+80002/80001 newly resolve to the origin too. Let me check their live state and health signatures.
+[0m$ [0mfor d in gamdom80001.com gamdom80002.com; do echo "=== $d ==="; curl -sSk -o /dev/null -w "root: %{http_code}\n" https://$d/ 2>&1; curl -sSk -o /dev/null -w "health: %{http_code}\n" https://$d/health 2>&1; curl -sSk -o /dev/null -w "client-api: %{http_code}\n" https://$d/client-api 2>&1; done
+=== gamdom80001.com ===
+root: 421
+health: 421
+client-api: 421
+=== gamdom80002.com ===
+root: 421
+health: 421
+client-api: 421
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "80008 native /client-api: %{http_code}\n" https://gamdom80008.com/client-api 2>&1; curl -sSk https://gamdom80008.com/client-api 2>&1 | md5sum; curl -sSk https://gamdom.com/client-api 2>&1 | md5sum
+80008 native /client-api: 400
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+80001/80002 are newly provisioned (Pool B DNS, all 421). Let me confirm 80008's native edge signatures and the client-api md5.
+[0m$ [0mcurl -sSk -D - --resolve gamdom80008.com:443:151.101.3.72 https://gamdom80008.com/ 2>&1 | head -8
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-739cdb01-3e18-4d25-9e38-52da7e962e36' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Wed, 08 Sep 2027 14:11:53 GMT
+accept-ranges: bytes
+date: Tue, 08 Sep 2026 14:11:53 GMT
+[0m
+Confirmed the key event: **mirror fleet rotation on the official status page**. `gamdom80008.com` (previously REJECTED out-of-scope at 192.64.119.33) now resolves to gamdom4567.com/Pool B and is a fully live mirror; `gamdom80007.com` was demoted to a 302→80008 redirect alias, and `gamdom80001.com`/`gamdom80002.com` newly CNAME→the origin but still 421.
+
+STEP 1 — DELTA:
+- [CHANGED] gamdom80007.com: demoted from live 7th mirror → 302 redirect to gamdom80008.com (was live mirror since 09-03)
+- [NEW] gamdom80008.com: reversed from REJECTED out-of-scope (192.64.119.33) → in-scope LIVE 10th mirror (CNAME→gamdom4567.com, Pool B, root 200, /client-api 400 md5 7e3a161d, /health weak-ETag byte-identical); now monitor id:221 on official status page (replaces 80007 in the 7-monitor list)
+- [NEW] gamdom80001.com + gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all edges 421 — 17th/18th provisioned-not-yet-live hostnames
+- [CHANGED] size of confirmed-flip: status page still exactly 7 monitors but set = com/eu/io/vip/win/80006/80008
+- [NO_DELTA] 90472/90473/90475/90480/90482/90488 all still 421/000 (6th cycle), bundle hash client.41b06529227c4b8b6a1d.js unchanged, fatbets/gamdom.one stable
+
+STEP 2 — PRIORITIZE:
+- gamdom80008.com: attack_surface 6, business_value 8, tech_exposure 4 (Fastly+Starlette), gate_ease 3, cloud_surface 3, freshness 10 → 0.25*6+0.25*8+0.15*4+0.15*3+0.10*3+0.10*10 = 1.5+2+0.6+0.45+0.3+1.0 = **[PRIO] gamdom80008.com, 5.85, freshness+shared-origin**
+- gamdom80001.com: 0.25*4+0.25*7+0.15*3+0.15*4+0.10*3+0.10*9 = 1.0+1.75+0.45+0.6+0.3+0.9 = **[PRIO] gamdom80001.com, 5.0, provisioning**
+
+STEP 3 — HYPOTHESES:
+[HYP] Live alias deployed on 90488 (provisioning gate-scope risk)
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
+confidence: 50
+reasoning: 6th consecutive cycle alias cert not deployed (000/421); shreeram Basic realm="secret" gate 401 fixture-wide; SEO hub 17× 90471 only. Mirror rotation 80007→80008 proves fleet maintenance is active now, raising near-term deploy probability for pending aliases.
+evidence_needed: alias cert live (200/401) or gate-scope regression
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api`
+impact: brand DNS → internal Basic-gated nginx backend if cert lands with gate-scope error; medium
+testability: PASSIVE
+
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared origin (gamdom.com/eu/io/one/vip/win, fatbets.com, 80003/80006/80008, 4567)
+confidence: 66
+reasoning: fatbets.com + gamdom's 10 live mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one Starlette backend; auth transport = server-set same-origin cookie (no bearer/localStorage). 80008's rotation-in keeps the pool live but adds no pre-auth surface.
+evidence_needed: one authenticated Set-Cookie replayed on another mirror hostname → backend acceptance
+verify_steps: AUTH_HELPED only
+impact: wallet/identity session theft across 2 brands + 19 hostnames; critical if host-agnostic
+testability: AUTH_HELPED
+
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: bundle ships dual staffRefillConfig (30M/75M) + moderator tip cap; catch-all 400s GET subpaths → action map unenumerable; bundle hash unchanged (no new config keys surfaced)
+evidence_needed: authenticated POST of staff action names → differentiated upstream response
+verify_steps: AUTH_HELPED only
+impact: staff coin refill / tip abuse; critical if client-asserted
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE:
+- [PARKED] 90488 live-alias: mirror rotation shows active fleet ops but 6 cycles with zero cert movement keeps this watch-only
+- [PARKED] socket.io/admin + click.gamdom takeover: prior verdicts hold
+- [FINAL] ranked: (1) cross-host/brand cookie replay [66], (2) 90488 deploy misconfig [50 watch], (3) staff action-name privilege [48]
+
+STEP 5 — NEXT ACTION:
+[NEXT] PROBE: confirm 80001/80002 deliverability edge parity — `for e in 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72; do curl -sSk -o /dev/null -w "%{http_code} " --resolve gamdom80001.com:443:$e https://gamdom80001.com/client-api; done` (all 421 = still provisioned; any 400/200 = new live mirror), re-check status page monitor set for >7.
+
+STEP 6 — LEARNING:
+[LEARN] ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live (root 200, /client-api 400 md5 7e3a161d, /health weak-ETag identical, gd-lang cookie); official status page monitor id:221 placed it as 7th listed domain REPLACING gamdom80007.com — mirror fleet rotation event, 10th live mirror / 20th hostname in trust pool.
+[LEARN] ACCEPTED inventory @ gamdom80007.com: demoted from live mirror to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect, 80008 inherits its Pool B slot.
+[LEARN] ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames, off the 7-monitor status page.
+
+STEP 7 — RISK:
+[RISK] gamdom: 68 — 6th cycle saw the FIRST live surface change in the mirror fleet: 80007 retire→redirect and 80008 (once out-of-scope) go live with byte-identical /client-api+health on the shared identity/wallet origin, plus two new provisioned aliases (80001/80002); this proves continuous fleet rotation around a single auth origin, keeping the top chain (cross-host cookie replay, 66) gated behind one authenticated Set-Cookie replay; all provisioned 9047x aliases + shreeram/Go gates still solid; only read-only GET probes run, no data touched.

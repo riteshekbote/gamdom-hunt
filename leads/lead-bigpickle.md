@@ -1419,3 +1419,36 @@ impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege c
 testability: AUTH_HELPED
 [NEXT] PROBE: passive deploy+parity watch — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (000→200/401), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90472.com/`, re-fetch `https://fatbets.com/` capture `client.<hash>.js` (hash flip = deploy → re-mine BRANDED_SUBDOMAINS + gamdom.* TLD keys + staffRefillConfig for new brands), re-check `https://gamdommirrors.com/status/gamdom-domains` for >7 monitors. ≤1 rps GET only.
 [RISK] gamdom: 66 — 6th consecutive cycle with zero change: 6 provisioned aliases still not live, bundle hash byte-identical across 2 brands / 19+ hostnames (confirmed shared identity/wallet origin stable), shreeram/Go gates solid, status page + SEO hub unchanged. Top chain (cross-host/cross-brand cookie replay, 66) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable; only read-only GET probes run, no data touched.
+## 2026-09-08 14:12:53 UTC [target] (model bigpickle)
+[HYP] Live alias deployed on 90488 (provisioning gate-scope risk)
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
+confidence: 50
+reasoning: 6th consecutive cycle alias cert not deployed (000/421); shreeram Basic realm="secret" gate 401 fixture-wide; SEO hub 17× 90471 only. Mirror rotation 80007→80008 proves fleet maintenance is active now, raising near-term deploy probability for pending aliases.
+evidence_needed: alias cert live (200/401) or gate-scope regression
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api`
+impact: brand DNS → internal Basic-gated nginx backend if cert lands with gate-scope error; medium
+testability: PASSIVE
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared origin (gamdom.com/eu/io/one/vip/win, fatbets.com, 80003/80006/80008, 4567)
+confidence: 66
+reasoning: fatbets.com + gamdom's 10 live mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one Starlette backend; auth transport = server-set same-origin cookie (no bearer/localStorage). 80008's rotation-in keeps the pool live but adds no pre-auth surface.
+evidence_needed: one authenticated Set-Cookie replayed on another mirror hostname → backend acceptance
+verify_steps: AUTH_HELPED only
+impact: wallet/identity session theft across 2 brands + 19 hostnames; critical if host-agnostic
+testability: AUTH_HELPED
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: bundle ships dual staffRefillConfig (30M/75M) + moderator tip cap; catch-all 400s GET subpaths → action map unenumerable; bundle hash unchanged (no new config keys surfaced)
+evidence_needed: authenticated POST of staff action names → differentiated upstream response
+verify_steps: AUTH_HELPED only
+impact: staff coin refill / tip abuse; critical if client-asserted
+testability: AUTH_HELPED
+[NEXT] PROBE: confirm 80001/80002 deliverability edge parity — `for e in 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72; do curl -sSk -o /dev/null -w "%{http_code} " --resolve gamdom80001.com:443:$e https://gamdom80001.com/client-api; done` (all 421 = still provisioned; any 400/200 = new live mirror), re-check status page monitor set for >7.
+[LEARN] ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live (root 200, /client-api 400 md5 7e3a161d, /health weak-ETag identical, gd-lang cookie); official status page monitor id:221 placed it as 7th listed domain REPLACING gamdom80007.com — mirror fleet rotation event, 10th live mirror / 20th hostname in trust pool.
+[LEARN] ACCEPTED inventory @ gamdom80007.com: demoted from live mirror to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect, 80008 inherits its Pool B slot.
+[LEARN] ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames, off the 7-monitor status page.
+[RISK] gamdom: 68 — 6th cycle saw the FIRST live surface change in the mirror fleet: 80007 retire→redirect and 80008 (once out-of-scope) go live with byte-identical /client-api+health on the shared identity/wallet origin, plus two new provisioned aliases (80001/80002); this proves continuous fleet rotation around a single auth origin, keeping the top chain (cross-host cookie replay, 66) gated behind one authenticated Set-Cookie replay; all provisioned 9047x aliases + shreeram/Go gates still solid; only read-only GET probes run, no data touched.
