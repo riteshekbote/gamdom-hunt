@@ -5679,3 +5679,347 @@ testability: PASSIVE
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
 
 [RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-08 09:58:50 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/
+total 236
+drwxr-xr-x 12 runner runner  4096 Sep  8 09:46 .
+drwxr-xr-x  3 runner runner  4096 Sep  8 09:46 ..
+drwxr-xr-x  7 runner runner  4096 Sep  8 09:46 .git
+drwxr-xr-x  3 runner runner  4096 Sep  8 09:46 .github
+-rw-r--r--  1 runner runner  1691 Sep  8 09:46 README.md
+-rw-r--r--  1 runner runner    43 Sep  8 09:46 analyst-out.txt
+-rw-r--r--  1 runner runner 75646 Sep  8 09:46 analyst-prompt.txt
+-rw-r--r--  1 runner runner 71865 Sep  8 09:46 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 leads
+-rw-r--r--  1 runner runner  1855 Sep  8 09:46 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 reports
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 reposcan-raw
+-rw-r--r--  1 runner runner  3194 Sep  8 09:46 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 scripts
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  8 09:46 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  8 09:46 triage
+[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead analyst-out.txt
+[0m✱ [0mGlob "**/leads/*.txt"[90m 0 matches[0m
+[0m✱ [0mGlob "**/knowledge/*.txt"[90m 0 matches[0m
+[0m✱ [0mGlob "**/recon-notes/*"[90m 1 match[0m
+[0m✱ [0mGlob "**/triage/*"[90m 42 matches[0m
+[0m→ [0mRead recon-notes/DEDICATED-DEEP.md
+[0m→ [0mRead triage/run-2026-09-08-05-59.md
+[0m→ [0mRead triage/run-2026-09-08-01-13.md
+[0m→ [0mRead triage/run-2026-09-07-23-15.md
+[0m→ [0mRead triage/run-2026-09-07-20-56.md
+[0m
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/ctx.txt | head -200
+=== KNOWLEDGE BASE ===
+# Knowledge Base (seed)
+- 2026-09-03 REJECTED auth-bypass @ gamdom.com/client-api: blind POSt to live identity/wallet proxy is prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing.
+- 2026-09-03 ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
+- 2026-09-03 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
+- 2026-09-03 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-03 ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-03 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-03 ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root.
+- 2026-09-03 ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors.
+- 2026-09-03 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-03 ACCEPTED inventory @ gamdom80007.com: verified 7th mirror (same Fastly origin + POST-only /client-api + listed on status page) and gamdom4567.com as CNAME origin root.
+- 2026-09-03 ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page publicly publishes full monitor config + 24h heartbeats for all 7 domains.
+- 2026-09-04 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-04 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-04 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-04 ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root
+- 2026-09-04 ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors
+- 2026-09-04 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-04 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- 2026-09-04 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-04 ACCEPTED inventory @ gamdom80007.com: verified 7th mirror (same Fastly origin + POST-only /client-api + listed on status page) and gamdom4567.com as CNAME origin root
+- 2026-09-04 ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page publicly publishes full monitor config + 24h heartbeats for all 7 domains
+- 2026-09-04 ACCEPTED origin-boundary @ gamdom4567.com: Host-header injection blocked by Fastly TLS cert validation (421), but header fingerprinting confirms gamdom4567.com is the origin backend serving /client-api for all 8000x mirrors
+- 2026-09-04 ACCEPTED origin-boundary @ gamdom4567.com: Header fingerprinting confirmed gamdom4567.com as shared origin backend for all 8000x mirrors; Fastly cert validation blocks Host-header injection
+- 2026-09-04 REJECTED auth-bypass @ gamdom.com/client-api: Blind POST to live identity/wallet proxy prohibited; require valid session + authorized scope before POST probing
+- 2026-09-04 ACCEPTED inventory-leak @ gamdommirrors.com: Public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-04 ACCEPTED recon @ gamdom80006.com/build/client.<hash>.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence.
+- 2026-09-04 ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict.
+- 2026-09-05 ACCEPTED recon @ gamdom80007.com port-80: 301→HTTPS confirms HTTPS-only mirror surface; closes cleartext-cookie/downgrade angle and stones the certificate of the cookie-replay hypothesis to TLS replay.
+- 2026-09-05 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-05 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-05 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-05 ACCEPTED inventory @ gamdom80007.com: verified as 7th in-scope mirror (same Fastly origin + POST-only /client-api + listed on the official "Gamdom Official Domains" status page) and gamdom4567.com as its CNAME origin root
+- 2026-09-05 ACCEPTED recon @ gamdommirrors.com: self-hosted Uptime Kuma status page (not UptimeRobot) publicly publishes full monitor config + 24h heartbeats for all 7 Gamdom domains — legitimate passive recon resolving true operating mirrors
+- 2026-09-05 ACCEPTED origin-boundary @ gamdom4567.com: Host-header injection blocked by Fastly TLS cert validation (421), but header fingerprinting confirms gamdom4567.com is the origin backend serving /client-api for all 8000x mirrors
+- 2026-09-05 ACCEPTED recon @ gamdom80006.com/build/client.41b06529227c4b8b6a1d.js: passive fetch of the app's own request-layer bundle (597 KB) proved auth transport is server-set same-origin cookie — no bearer/localStorage token — grounding the cross-mirror replay vector in evidence
+- 2026-09-05 ACCEPTED recon @ gamdommirrors.com/socket.io: GET-only EIO=4 polling handshake issues SID with websocket upgrade; no admin surface reachable without POST RPC, consistent with prior PARKED verdict
+- 2026-09-05 ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans the entire brand, not just mirrors; raises business value of the trust-pool hypothesis.
+- 2026-09-05 ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api (redirect alias only); corrects prior inventory that implied an 8th API-serving mirror.
+- 2026-09-05 ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no Access-Control-Allow-* headers; browser cross-origin credentialed replay is blocked, closing the client-side branch of the replay vector.
+- 2026-09-05 ACCEPTED recon @ click.gamdom.com: passive DNS + GET resolved in-scope subdomain to third-party SymplifyMail email provider (eu-iv-1.symplifymail.com 192.165.55.11) serving stock nginx default page — not currently dangling; subdomain-takeover watchlist item, not an active finding.
+- 2026-09-05 ACCEPTED recon @ dashboard.gamdom.com: passive GET/HEAD shows genuine scoped admin hostname on flagship Fastly Pool A, fully 403-locked at edge (Varnish Error 54113) across all probed paths; access-controlled admin vhost exists but no bypass — inventory knowledge only.
+- 2026-09-05 ACCEPTED recon @ help.gamdom.com: passive GET shows Intercom-hosted help center (x-intercom-version, /en/ 302) — standard third-party helpdesk SaaS, benign surface.
+- 2026-09-05 ACCEPTED recon @ gamdom.com/io/eu/vip/win/client-api: GET 400 body `Invalid request, only POST` byte-identical across Pool A + Pool B — shared origin backend signature spans entire brand
+- 2026-09-05 ACCEPTED recon @ gamdom80004.com/client-api: 302 → gamdom80007.com/client-api — redirect alias only, not API-serving
+- 2026-09-05 ACCEPTED recon @ gamdom80007.com/client-api: OPTIONS preflight and Origin-header GET → 400 with no ACAO — browser cross-origin credentialed replay blocked
+- 2026-09-05 ACCEPTED inventory @ gamdom.eu/gamdom.io/gamdom.vip/gamdom.win: passive mining of the flagship SPA's own link list yielded 4 live official regional TLDs on Pool A (151.101.x.52), each serving full SPA + byte-identical `/client-api` 400 `Invalid request, only POST` — same-family brand domains widening the trust pool by 4 hosts
+- 2026-09-05 ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
+- 2026-09-05 ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
+- 2026-09-05 ACCEPTED inventory @ gamdom90471.com: CNAME→gamdom4567.com (verified origin, same as 80006/80007), Fastly Pool B (151.101.67.72), self-referenced 18× in the official flagship HomePage bundle via the brand's own Turkish SEO hub gamdom-girisi.com which tags it "Aktif"; CT shows real DigiCert/Certainly host certs since 2025-10; currently only the fallback.tls.fastly.net SNI cert is served → provisioned-but-not-yet-live on current edge node = 8th mirror alias / 14th hostname in the brand trust pool (off the 7-monitor status page).
+- 2026-09-05 ACCEPTED recon @ gamdom-girisi.com: official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com and discord/telegram; linked from the flagship HomePage.js — a legitimate discovery seed for the rotating mirror fleet, not a threat.
+- 2026-09-05 ACCEPTED recon @ gamdomgiris.link: third-party Cloudflare landing alongside the SEO hub; no Fastly origin /client-api signature → NOT in-scope brand origin (watchlist only).
+- 2026-09-05 ACCEPTED recon @ gamdommirrors.com/status/gamdom-domains: official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies the 4 regional TLDs as official and confirms gamdom90471.com is not yet on the monitor list (rotating alias before listing).
+- 2026-09-06 ACCEPTED inventory @ gamdom90471.com: CNAME→gamdom4567.com (verified origin, same as 80006/80007), Fastly Pool B (151.101.67.72), self-referenced 18× in the official flagship HomePage bundle via the brand's own Turkish SEO hub gamdom-girisi.com which tags it "Aktif"; CT shows real DigiCert/Certainly host certs since 2025-10; currently only the fallback.tls.fastly.net SNI cert is served → provisioned-but-not-yet-live on current edge node = 8th mirror alias / 14th hostname in the brand trust pool (off the 7-monitor status page)
+- 2026-09-06 ACCEPTED recon @ gamdom-girisi.com: official brand SEO/redirect hub (Cloudflare, Turkish, 61 KB) funneling to gamdom90471.com and discord/telegram; linked from the flagship HomePage.js — a legitimate discovery seed for the rotating mirror fleet, not a threat
+- 2026-09-06 ACCEPTED recon @ gamdomgiris.link: third-party Cloudflare landing alongside the SEO hub; no Fastly origin /client-api signature → NOT in-scope brand origin (watchlist only)
+- 2026-09-06 ACCEPTED inventory @ gamdom.eu/gamdom.io/gamdom.vip/gamdom.win: passive mining of the flagship SPA's own link list yielded 4 live official regional TLDs on Pool A (151.101.x.52), each serving full SPA + byte-identical `/client-api` 400 `Invalid request, only POST` — same-family brand domains widening the trust pool by 4 hosts
+- 2026-09-06 ACCEPTED recon @ login/sso/my/account/secure/admin/m/portal/support/web/t.gamdom.com: all NXDOMAIN (matches api/auth.gamdom.com 000) — the inventory's auth/admin-flavored subdomains are dead DNS; live scoped surface is now fully enumerated
+- 2026-09-06 ACCEPTED recon @ gamdom.eu/gamdom.win: root GET sets identical `gd-lang=en-gb` host-only cookie (no Domain, no SameSite/HttpOnly) — server cookie-issuance policy uniform per-host across the entire 13-host fleet
+- 2026-09-06 ACCEPTED recon @ gamdommirrors.com/status/gamdom-domains: official Uptime status page lists exactly 7 monitors = com/eu/io/vip/win/80006/80007 → independently ratifies the 4 regional TLDs as official and confirms gamdom90471.com is not yet on the monitor list (rotating alias before listing)
+- 2026-09-06 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-06 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-06 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-06 ACCEPTED inventory @ gamdom80003.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical — confirmed 9th live mirror, 15th hostname in brand trust pool; off the 7-monitor status page.
+- 2026-09-06 ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool; off the 7-monitor status page.
+- 2026-09-06 REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure.
+- 2026-09-06 REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure.
+- 2026-09-06 ACCEPTED inventory @ teamgamdom.com: 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert same CA as mirror fleet) hosting staging.teamgamdom.com (live "Maintenance - Gamdom.com" 503 page) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secret" fixture-wide 401) — new origin realm distinct from gamdom4567 Starlette pool.
+- 2026-09-06 ACCEPTED recon @ gamdom90488.com: public numbered alias CNAME→shreeram-dynamic-test.teamgamdom.com pins a brand mirror onto the internal Basic-auth-gated nginx test backend; alias edge SNI not yet live.
+- 2026-09-06 ACCEPTED inventory @ gamdom90480.com/gamdom90482.com: both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias.
+- 2026-09-06 ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only.
+- 2026-09-06 REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure.
+- 2026-09-06 ACCEPTED recon @ api/admin/auth/app/dev/test/sso/login/mail/cdn/core/support.teamgamdom.com: Fastly Pool A → Go `404 page not found` (19B) + `x-dbg-vcl2: bong_ke` — DNS-wildcard artifacts, only staging + shreeram real vhosts; teamgamdom breadth closed.
+- 2026-09-06 ACCEPTED recon @ teamgamdom.com wildcard: Fastly VCL/backend `bong_ke` fingerprint; third origin realm (Go) distinct from Starlette pool + nginx Basic.
+- 2026-09-06 ACCEPTED watch @ gamdom90480/90482/90488 + 9047x: all still 421/TLS-NOMATCH — no alias went live.
+- 2026-09-06 ACCEPTED watch @ staging.teamgamdom.com: 503 across all probed paths — maintenance gate fixture-wide.
+- 2026-09-06 ACCEPTED watch @ gamdommirrors.com status page: still exactly 7 monitors.
+- 2026-09-07 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-07 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-07 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-07 ACCEPTED inventory @ gamdom80003.com: CNAME→gamdom4567.com (verified origin), Fastly Pool B (all 4 edges), /health 200 with identical weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + /client-api 400 (26B) byte-identical — confirmed 9th live mirror, 15th hostname in brand trust pool; off the 7-monitor status page
+- 2026-09-07 ACCEPTED inventory @ gamdom90472.com: CNAME→gamdom4567.com, Fastly Pool B DNS, all edges HTTP 000 — provisioned-not-yet-live, 16th hostname in brand trust pool; off the 7-monitor status page
+- 2026-09-07 REJECTED out-of-scope @ gamdom80005.com: resolves to 8.8.8.8 (Google DNS IP, not Fastly) — not in-scope brand infrastructure
+- 2026-09-07 REJECTED out-of-scope @ gamdom80008.com: resolves to 192.64.119.33 (not Fastly) — not in-scope brand infrastructure
+- 2026-09-07 ACCEPTED inventory @ teamgamdom.com: 2nd in-scope brand TLD (Route53, Fastly Pool A, Certainly cert same CA as mirror fleet) hosting staging.teamgamdom.com (live "Maintenance - Gamdom.com" 503 page) + shreeram-dynamic-test.teamgamdom.com (nginx Basic realm="secret" fixture-wide 401) — new origin realm distinct from gamdom4567 Starlette pool
+- 2026-09-07 ACCEPTED recon @ gamdom90488.com: public numbered alias CNAME→shreeram-dynamic-test.teamgamdom.com pins a brand mirror onto the internal Basic-auth-gated nginx test backend; alias edge SNI not yet live
+- 2026-09-07 ACCEPTED inventory @ gamdom90480.com/gamdom90482.com: both CNAME→gamdom4567.com, Pool B, client-api 421 — 5th/6th provisioned 9047x-family alias
+- 2026-09-07 ACCEPTED recon @ gamdom-prod-maintenance-page.s3.eu-west-2.amazonaws.com: staging page assets public-read (200), ListObjects/root denied (403) — closed hosting, inventory only
+- 2026-09-07 REJECTED out-of-scope @ gamdom90474/90476/90477/90478/90479/90481/90483/90484/90485/90486.com: resolve to 192.64.119.x/162.255.119.x (non-Fastly) — not brand infrastructure
+- 2026-09-07 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate fixture-wide — /.git/config /env /server-status /status /_metrics /actuator all 401 (172B) identical; no gate gap or debug leak on internal test backend; watch reduced to cert-propagation-only.
+- 2026-09-07 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× gamdom90471.com only, no new alias advertised; provisioned fleet (90480/90482/90488/90473/90475) still unpublished → provisioning-in-progress confirmed for another cycle.
+- 2026-09-07 ACCEPTED watch @ 90472/90488/90473/90475 aliases: all still 421/TLS-NOMATCH — no alias went live; provisioning-in-progress continues.
+- 2026-09-07 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surface.
+- 2026-09-07 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only.
+- 2026-09-07 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-07 ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed, gate holds 401 fixture-wide. Provisioning-in-progress continues for another cycle.
+- 2026-09-07 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; no new alias advertised, provisioned fleet (90480/90482/90488/90473/90475) still unpublished.
+- 2026-09-07 ACCEPTED watch @ Starlette pool: /client-api 400 + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-07 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors.
+- 2026-09-07 ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed (000/421), gate holds 401 fixture-wide; provisioning-in-progress 4th cycle.
+- 2026-09-07 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; provisioned fleet (90472/90473/90475/90480/90482/90488) still unpublished.
+- 2026-09-07 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-07 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
+- 2026-09-08 ACCEPTED watch @ 90472/90488/90473/90475 aliases: all still 421/TLS-NOMATCH — no alias went live; provisioning-in-progress continues
+- 2026-09-08 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surface
+- 2026-09-08 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only
+- 2026-09-08 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- 2026-09-08 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-08 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-08 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-08 ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed (000/421), gate holds 401 fixture-wide; provisioning-in-progress 4th cycle.
+- 2026-09-08 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; provisioned fleet (90472/90473/90475/90480/90482/90488) still unpublished.
+- 2026-09-08 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-08 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
+- 2026-09-08 ACCEPTED inventory @ fatbets.com + gamdom.one: mined from flagship bundle (BRANDED_SUBDOMAINS + encrypted TLD keys), both live on Fastly Pool A with byte-identical app/bundle + `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only gd-lang → shared identity/wallet origin serves 2 brands / 19+ hostnames.
+- 2026-09-08 ACCEPTED recon @ fatbets.com + gamdom.one: `/auth/login` + `/graphql` → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth; replay remains backend-level.
+- 2026-09-08 ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; `trMirrorDomain=gamdom80004.com`.
+- 2026-09-08 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress.
+- 2026-09-08 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable.
+=== MY STATE ===
+{"phase": "POC", "target": "api"}=== MY LAST LEADS (tail) ===
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable  
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing  
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)  
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing  
+[RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+## 2026-09-08 05:22:09 UTC [target] (model nemotron3)
+[NEW] gamdom80003.com confirmed as 9th live mirror (Pool B): /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical; /client-api 400 byte-identical across all 9 mirrors
+[NEW] gamdom90488.com / gamdom90472.com / gamdom90480.com / gamdom90482.com all persist TLS-NOMATCH (cert not deployed); forced-resolve to edge returns 421 on /client-api
+[CHANGED] gamdommirrors.com/status/gamdom-domains API still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — provisioned fleet (90471/90472/80003/80004/90480/90482/90488) still off monitor list
+[CHANGED] gamdom-girisi.com SEO hub unchanged — only gamdom90471.com referenced (17×)
+[CHANGED] shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths tested)
+[CHANGED] Starlette pool signature stable: /client-api 400 body md5 7e3a161d + /health weak-ETag byte-identical across Pool A (gamdom.com) + Pool B (80006/80007/80003) — shared origin confirmed
+[CHANGED] teamgamdom.com Go realm (api.teamgamdom.com) returns 404 default; VCL fingerprint `bong_ke` confirmed distinct from Starlette pool
+[PRIO] gamdom80006.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
+[PRIO] gamdom.com/client-api,8.2,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=8
+[PRIO] gamdom4567.com/client-api,8.0,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] gamdom90471.com/client-api,7.3,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] gamdom80003.com/client-api,8.3,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
+[PRIO] gamdom.eu/client-api,7.8,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com/client-api
+confidence: 62
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80007 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80007/client-api and 90471/client-api
+impact: Cross-domain account takeover across all 17 mirror hostnames; medium-high
+testability: AUTH_HELPED
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 57
+reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire 17-host brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain + 4 regional TLDs join replay surface
+evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api
+verify_steps: (passive) compare Set-Cookie headers on auth endpoints across gamdom.com (Pool A) and gamdom80006.com (Pool B); (AUTH_HELPED) replay flagship session cookie against Pool B /client-api
+impact: Cross-pool ATO across flagship + 4 regional TLDs + all 9 mirrors + 3 aliases; high
+testability: AUTH_HELPED
+[HYP] Provisioned alias gamdom90480.com wired to gamdom4567.com origin — cert deployment would extend Pool B trust boundary
+class: MISCONFIG
+asset: gamdom90480.com
+confidence: 48
+reasoning: gamdom90480.com CNAME→gamdom4567.com, Fastly Pool B DNS, /client-api returns 421 on forced-resolve (TLS cert mismatch); same origin as 80003/80006/80007/90471; cert deployment would add 10th live Pool B mirror to trust pool; SEO hub unchanged (no public reference yet)
+evidence_needed: TLS cert deployment (TLS-NOMATCH → 200/400 on /client-api); Set-Cookie headers on auth flow if live
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90480.com/` (TLS-NOMATCH→200/400 = cert live); `curl -sSk --resolve gamdom90480.com:443:151.101.67.72 -I https://gamdom90480.com/client-api` (421→400 = live); compare /health weak-ETag
+impact: Extends cross-mirror replay surface to 10th Pool B host; medium
+testability: PASSIVE
+[PARKED] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com: confidence 52 but no live cert deployment after 4+ cycles; purely speculative until TLS-NOMATCH resolves; no active bypass vector
+[PARKED] Client-asserted privilege in /client-api action-name routing: confidence 45; catch-all 400s every GET subpath → action map unenumerable; privilege model untestable without authenticated POST; no passive path remains
+[FINAL] 1) Cross-mirror auth cookie replay via shared /client-api origin yields ATO (62)
+[FINAL] 2) Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (57)
+[FINAL] 3) Provisioned alias gamdom90480.com wired to gamdom4567.com origin — cert deployment would extend Pool B trust boundary (48)
+[NEXT] PROBE: passive auth flow cookie inspection — `curl -sS -I https://gamdom80006.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80007.com and gamdom.com; ≤1 rps, HEAD only
+[LEARN] ACCEPTED watch @ 90472/90488/90473/90475 aliases: all still 421/TLS-NOMATCH — no alias went live; provisioning-in-progress continues
+[LEARN] ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surface
+[LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+[RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+=== AGGREGATED HYPOTHESES (tail) ===
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-08 00:45:01 UTC
+- [62] gamdom80006.com/client-api: Cross-mirror auth cookie replay via shared /client-api origin yields ATO (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: passive auth flow cookie inspection — `curl -sS -I https://gamdom80006.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare 
+- LEARN: ACCEPTED watch @ 90472/90488/90473/90475 aliases: all still 421/TLS-NOMATCH — no alias went live; provisioning-in-progress continues
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surf
+- LEARN: ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-08 05:22:20 UTC
+- [62] gamdom80006.com/client-api: Cross-mirror auth cookie replay via shared /client-api origin yields ATO (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: passive auth flow cookie inspection — `curl -sS -I https://gamdom80006.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare 
+- NEXT(hypotheses-nemotron3.txt): PROBE: passive auth flow cookie inspection — `curl -sS -I https://gamdom80006.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare
+[0m
+Now I have a complete picture. Let me execute the 8-step analysis.
+
+---
+
+### STEP 1 — DELTA
+
+[NEW] fatbets.com + gamdom.one discovered as 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52): byte-identical app bundle + `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only `gd-lang` cookie → identity/wallet origin now serves **2 brands / 19+ hostnames**
+[NEW] flagship bundle leaks dual `staffRefillConfig` (30M/75M coins) + moderator tip cap client-side; `trMirrorDomain=gamdom80004.com` hardcoded
+[NEW] fatbets.com/gamdom.one `/auth/login` + `/graphql` → 404, only host-only `gd-lang` Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth
+[CHANGED] Provisioning cycle 5 for aliases (90472/90473/90475/90480/90482/90488): all still 421/TLS-NOMATCH — no cert deployment
+[CHANGED] gamdommirrors.com status page still exactly 7 monitors; SEO hub still 17× gamdom90471 only
+[CHANGED] Starlette pool signature stable: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+[CHANGED] shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm (api.teamgamdom.com) 404 + VCL `bong_ke`
+
+---
+
+### STEP 2 — PRIORITIZE
+
+[PRIO] fatbets.com/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
+[PRIO] gamdom.one/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
+[PRIO] gamdom80006.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
+[PRIO] gamdom.com/client-api,8.2,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=8
+[PRIO] gamdom4567.com/client-api,8.0,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] gamdom80003.com/client-api,8.3,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
+[PRIO] gamdom.eu/client-api,7.8,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
+[PRIO] gamdom90471.com/client-api,7.3,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+
+---
+
+### STEP 3 — HYPOTHESES
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 65
+reasoning: fatbets.com + gamdom.one confirmed on Pool A with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag, and host-only gd-lang cookie policy identical to Gamdom fleet; single shared backend now serves 2 brands / 19+ hostnames; auth transport is server-set same-origin cookie (no Bearer/localStorage); if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80006 accepted by fatbets.com/client-api
+verify_steps: (passive) `curl -sS -I https://fatbets.com/auth/login` (or actual login endpoint) capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80006.com; (AUTH_HELPED) authenticate on gamdom80006, replay cookie on fatbets.com/client-api and gamdom.one/client-api
+impact: Cross-brand account takeover across 2 brands / 19+ hostnames; high
+testability: AUTH_HELPED
+
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
+class: AUTH
+asset: gamdom80006.com/client-api
+confidence: 62
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80007 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80007/client-api and 90471/client-api
+impact: Cross-domain account takeover across all 17 mirror hostnames; medium-high
+testability: AUTH_HELPED
+
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 57
+reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire 17-host brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain + 4 regional TLDs join replay surface
+evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api
+verify_steps: (passive) compare Set-Cookie headers on auth endpoints across gamdom.com (Pool A) and gamdom80006.com (Pool B); (AUTH_HELPED) replay flagship session cookie against Pool B /client-api
+impact: Cross-pool ATO across flagship + 4 regional TLDs + all 9 mirrors + 3 aliases; high
+testability: AUTH_HELPED
+
+---
+
+### STEP 4 — SELF-CRITIQUE
+
+[PARKED] Provisioned alias gamdom90480.com wired to gamdom4567.com origin — cert deployment would extend Pool B trust boundary: confidence 48 < 50 threshold; purely speculative until TLS-NOMATCH resolves; no active bypass vector
+[PARKED] Client-asserted privilege in /client-api action-name routing: confidence 45; catch-all 400s every GET subpath → action map unenumerable; privilege model untestable without authenticated POST; no passive path remains
+[PARKED] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on teamgamdom.com: confidence 52 but no live cert deployment after 5 cycles; purely speculative until TLS-NOMATCH resolves; no active bypass vector
+
+[FINAL] 1) Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (65)
+[FINAL] 2) Cross-mirror auth cookie replay via shared /client-api origin yields ATO (62)
+[FINAL] 3) Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (57)
+
+---
+
+### STEP 5 — NEXT ACTION
+
+[NEXT] PROBE: passive auth flow cookie inspection — `curl -sS -I https://fatbets.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80006.com and gamdom.com; ≤1 rps, HEAD only
+
+---
+
+### STEP 6 — LEARNING
+
+[LEARN] ACCEPTED inventory @ fatbets.com + gamdom.one: mined from flagship bundle (BRANDED_SUBDOMAINS + encrypted TLD keys), both live on Fastly Pool A with byte-identical app/bundle + `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only gd-lang → shared identity/wallet origin serves 2 brands / 19+ hostnames
+[LEARN] ACCEPTED recon @ fatbets.com + gamdom.one: `/auth/login` + `/graphql` → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth; replay remains backend-level
+[LEARN] ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; `trMirrorDomain=gamdom80004.com`
+[LEARN] ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress
+[LEARN] ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+---
+
+### STEP 7 — RISK
+
+[RISK] gamdom: 75 reason: Confirmed 19-host fleet across 2 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 2 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

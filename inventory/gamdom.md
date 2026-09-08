@@ -293,3 +293,19 @@ www.gamdom.com
 - CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths tested)
 - CHANGED Starlette pool signature stable: /client-api 400 body md5 7e3a161d + /health weak-ETag byte-identical across Pool A (gamdom.com) + Pool B (80006/80007/80003) — shared origin confirmed
 - CHANGED teamgamdom.com Go realm (api.teamgamdom.com) returns 404 default; VCL fingerprint `bong_ke` confirmed distinct from Starlette pool
+
+## 2026-09-08 09:58:50 UTC
+- NEW gamdom80003.com confirmed as 9th live mirror (Pool B): /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical; /client-api 400 byte-identical across all 9 mirrors
+- NEW gamdom90488.com / gamdom90472.com / gamdom90480.com / gamdom90482.com all persist TLS-NOMATCH (cert not deployed); forced-resolve to edge returns 421 on /client-api
+- CHANGED gamdommirrors.com/status/gamdom-domains API still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — provisioned fleet (90471/90472/80003/80004/90480/90482/90488) still off monitor list
+- CHANGED gamdom-girisi.com SEO hub unchanged — only gamdom90471.com referenced (17×)
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths tested)
+- CHANGED Starlette pool signature stable: /client-api 400 body md5 7e3a161d + /health weak-ETag byte-identical across Pool A (gamdom.com) + Pool B (80006/80007/80003) — shared origin confirmed
+- CHANGED teamgamdom.com Go realm (api.teamgamdom.com) returns 404 default; VCL fingerprint `bong_ke` confirmed distinct from Starlette pool
+- NEW fatbets.com + gamdom.one discovered as 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52): byte-identical app bundle + `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only `gd-lang` cookie 
+- NEW flagship bundle leaks dual `staffRefillConfig` (30M/75M coins) + moderator tip cap client-side; `trMirrorDomain=gamdom80004.com` hardcoded
+- NEW fatbets.com/gamdom.one `/auth/login` + `/graphql` → 404, only host-only `gd-lang` Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth
+- CHANGED Provisioning cycle 5 for aliases (90472/90473/90475/90480/90482/90488): all still 421/TLS-NOMATCH — no cert deployment
+- CHANGED gamdommirrors.com status page still exactly 7 monitors; SEO hub still 17× gamdom90471 only
+- CHANGED Starlette pool signature stable: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm (api.teamgamdom.com) 404 + VCL `bong_ke`

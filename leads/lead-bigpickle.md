@@ -1389,3 +1389,33 @@ testability: PASSIVE
 [LEARN] ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress.
 [LEARN] ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable.
 [RISK] gamdom: 66 — two NEW live in-scope hostnames (fatbets.com, gamdom.one) verified this cycle prove a single identity/wallet origin now spans 2 consumer brands across 19+ hostnames, raising impact of the top chain (cross-host/brand cookie replay, 66) which remains gated behind one authenticated Set-Cookie replay; all 6 provisioned aliases still not live (5th cycle), shreeram/Go gates solid, bundle unchanged; only read-only GET probes run, no data touched.
+## 2026-09-08 09:47:28 UTC [target] (model bigpickle)
+[HYP] Live-alias deploy on 90488 (provisioning-in-progress gate-scope risk)
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com
+confidence: 50
+reasoning: 6th consecutive cycle alias cert not deployed (root TLS-fail 000, forced-resolve 421); shreeram Basic realm="secret" gate holds 401 fixture-wide; SEO hub 17× 90471 only. No change from 5th cycle.
+evidence_needed: alias cert live (200/401 vs 000/421) or shreeram gate-scope regression to 200/302.
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/`; `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api`.
+impact: brand DNS → internal Basic-gated nginx test backend if cert lands with gate-scope error; medium.
+testability: PASSIVE
+[HYP] Cross-brand cookie replay on single identity/wallet origin (fatbets.com + gamdom.one)
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 origin (gamdom.com/eu/io/one/vip/win, fatbets.com, 8000x, 4567)
+confidence: 66
+reasoning: fatbets.com + gamdom.one serve byte-identical bundle `client.41b06529227c4b8b6a1d.js`, /health 200, /client-api 400, host-only gd-lang → one Starlette backend spans 2 brands / 19+ hosts; auth transport = server-set same-origin cookie (no bearer/localStorage). Pre-auth /auth/login+/graphql → 404 host-only gd-lang only.
+evidence_needed: one authenticated Set-Cookie replayed verbatim on fatbets.com/gamdom.one/gamdom.com/emandom.eu/80006 — backend acceptance = replay proven.
+verify_steps: AUTH_HELPED only — own test accounts: POST /client-api on gamdom80006.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare responses. Passive path exhausted pre-auth; bundle hash unchanged = no new passive surface.
+impact: wallet/identity session theft across two brands + 19 hostnames (funds, withdrawal, KYC); critical if backend validates host-agnostic.
+testability: AUTH_HELPED
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: bundle ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap; /client-api proxies by action name `e.name→t+"/"+name`; catch-all 400s all GET subpaths → action map unenumerable. No new passive evidence (bundle hash unchanged).
+evidence_needed: authenticated POST of staff action names → upstream-differentiated response vs non-staff names.
+verify_steps: AUTH_HELPED only.
+impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege client-asserted.
+testability: AUTH_HELPED
+[NEXT] PROBE: passive deploy+parity watch — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (000→200/401), `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90472.com/`, re-fetch `https://fatbets.com/` capture `client.<hash>.js` (hash flip = deploy → re-mine BRANDED_SUBDOMAINS + gamdom.* TLD keys + staffRefillConfig for new brands), re-check `https://gamdommirrors.com/status/gamdom-domains` for >7 monitors. ≤1 rps GET only.
+[RISK] gamdom: 66 — 6th consecutive cycle with zero change: 6 provisioned aliases still not live, bundle hash byte-identical across 2 brands / 19+ hostnames (confirmed shared identity/wallet origin stable), shreeram/Go gates solid, status page + SEO hub unchanged. Top chain (cross-host/cross-brand cookie replay, 66) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable; only read-only GET probes run, no data touched.
