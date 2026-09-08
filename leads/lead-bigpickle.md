@@ -1482,3 +1482,34 @@ impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege c
 testability: AUTH_HELPED
 [NEXT] PROBE: deploy+parity watch on pending aliases + monitor-count confirm — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (000/421→200/401 = live), `for e in 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72; do curl -sSk -o /dev/null -w "%{http_code} " --resolve gamdom80001.com:443:$e https://gamdom80001.com/client-api; done` (any 400/200 = new live mirror), and re-`GET https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains` (monitor set >7 = another rotation).
 [RISK] gamdom: 67 — The 80007→80008 monitor-set change ratifies an ALREADY-known rotation (no new exploitable surface); all 20+ fleet hostnames sit on one Starlette identity/wallet origin with a single authenticated Set-Cookie replay separating the top chain (cross-brand ATO, 66) from proof. 6 provisioned aliases still not live, gates (shreeram/Go) hold solid, bundle hash unchanged (no deploy). Only read-only GET probes run, no data touched; risk steady as fleet control-of-origin single point remains the core exposure.
+## 2026-09-08 20:51:04 UTC [target] (model bigpickle)
+[HYP] Provisioned alias cert lands with edge/backend gate-scope regression
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com (Basic realm="secret"); fleet 90471/90472/90473/90475/90480/90482 + 80001/80002
+confidence: 52
+reasoning: 80007→80008 rotation and 80001/80002 provisioned-host additions (now 421 on all edges) prove the mirror fleet is in active maintenance; 9 provisioned aliases await cert deployment; prior rotation landed 80008 byte-identical to the shared Starlette origin — if a Pending Alias cert lands on the shreeram Basic-gated nginx backend, or on gamdom4567 origin without proper pool binding, live brand DNS would expose an internal test/auth surface.
+evidence_needed: a pending alias returns 200/400 (live) instead of 421, or a gate-scope regression on shreeram to non-401.
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (and 90471/90472/90473/90475/90480/90482/80001/80002); if live, `curl -sSk https://<alias>/client-api` and compare md5/ETag to 7e3a161d; `curl -sS https://shreeram-dynamic-test.teamgamdom.com/` for gate status.
+impact: brand DNS resolves to an internal Basic-auth-gated nginx test/CI backend or misbound origin — unauthorized internal surface exposure; medium-high if gate-scope-error.
+testability: PASSIVE
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 Starlette origin (gamdom.com/eu/io/one/vip/win, fatbets.com, gamdom.one, mirrors 80003/80006/80008/4567)
+confidence: 66
+reasoning: fatbets.com + gamdom.one + 10 live Gamdom mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one Starlette identity/wallet backend across 2+ brands / 20 hostnames; auth transport = server-set same-origin cookie (no bearer/localStorage). 80008 ratified the 7-monitor pool but added no pre-auth surface.
+evidence_needed: one authenticated Set-Cookie replayed verbatim on another mirror/brand hostname → backend acceptance = replay proven.
+verify_steps: AUTH_HELPED only — own test accounts: POST /client-api on gamdom80006.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare upstream responses.
+impact: wallet/identity session theft across 2 brands + 20 hostnames (funds, withdrawal, KYC); critical if backend host-agnostic.
+testability: AUTH_HELPED
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: bundle ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap client-side; /client-api proxies by action name; catch-all 400s GET subpaths → action map unenumerable; bundle hash unchanged (no new config keys surfaced).
+evidence_needed: authenticated POST of staff action names → differentiated upstream response vs non-staff names.
+verify_steps: AUTH_HELPED only.
+impact: staff coin/wallet refill or moderator-tip abuse; critical if client-asserted.
+testability: AUTH_HELPED
+[NEXT] PROBE: redeploy-parity watch across all 9 pending aliases — `for a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done` (421→400/200 = newly live alias; verify md5 7e3a161d or gate-scope vs shreeram).
+[LEARN] ACCEPTED watch @ 80001/80002 + 7 pending 9047x aliases: all 4 Pool B edges still 421/TLS-NOMATCH; no new alias went live; 80007 still 302→80008, 80008 live.
+[RISK] gamdom: 67 — No new surface this cycle; 80008 rotation already absorbed (7 monitors stable: ids 2,3,5,6,13,217,221), all 9 provisioned aliases still 421 (6th cycle no deploy). 20+ hostnames share one Starlette identity/wallet origin; top chain (cross-brand cookie replay, 66) still gated behind one authenticated Set-Cookie replay, and the client-asserted staffRefill line (48) remains behind the same gate. Only read-only GET probes run; no data touched. Risk steady — single control-of-origin remains the core concentration.

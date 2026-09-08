@@ -1,9 +1,9 @@
-## 2026-09-08 18:11:24 UTC [target] (model nemotron3)
-[NEW] gamdom80008.com went live: CNAME→gamdom4567.com Fastly Pool B, root 200, /client-api 400 (md5 7e3a161d), /health weak-ETag byte-identical, gd-lang cookie; status page monitor id:221 replaces gamdom80007.com as 7th listed domain — mirror fleet rotation event, 10th live mirror / 20th hostname in trust pool
-[NEW] gamdom80007.com demoted: 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect
+## 2026-09-08 20:54:26 UTC [target] (model nemotron3)
+[NEW] gamdom80008.com went live: CNAME→gamdom4567.com Fastly Pool B, root 200, /client-api 400 (md5 7e3a161d), /health weak-ETag byte-identical, gd-lang cookie; status page monitor id:221 replaces gamdom80007.com as 7th listed domain
+[NEW] gamdom80007.com demoted: 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
 [NEW] gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames
-[NEW] fatbets.com + gamdom.one: 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52) — byte-identical app bundle + /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie → single identity/wallet origin serves 2 brands / 19+ hostnames
-[NEW] flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; trMirrorDomain=gamdom80004.com hardcoded
+[NEW] fatbets.com + gamdom.one confirmed as 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52): byte-identical app bundle + /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie → single identity/wallet origin serves 2 brands / 19+ hostnames
+[NEW] flagship bundle leaks dual staffRefillConfig (30M/75M coins) + moderator tip cap client-side; trMirrorDomain=gamdom80004.com hardcoded
 [NEW] fatbets.com/gamdom.one /auth/login + /graphql → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth
 [CHANGED] Provisioning cycle 5 for 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — no cert deployment
 [CHANGED] gamdommirrors.com status page: still exactly 7 monitors; SEO hub still 17× gamdom90471 only
@@ -11,8 +11,8 @@
 [CHANGED] shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
 [PRIO] fatbets.com/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
 [PRIO] gamdom.one/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
-[PRIO] gamdom80006.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
 [PRIO] gamdom80008.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10
+[PRIO] gamdom80006.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
 [PRIO] gamdom.com/client-api,8.2,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=8
 [PRIO] gamdom4567.com/client-api,8.0,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=9
 [PRIO] gamdom80003.com/client-api,8.3,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
@@ -25,15 +25,15 @@ asset: fatbets.com/client-api
 confidence: 65
 reasoning: fatbets.com + gamdom.one confirmed on Pool A with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag, and host-only gd-lang cookie policy identical to Gamdom fleet; single shared backend now serves 2 brands / 19+ hostnames; auth transport is server-set same-origin cookie (no Bearer/localStorage); if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa
 evidence_needed: Set-Cookie Domain/Path/SameSite attributes from auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80006 accepted by fatbets.com/client-api
-verify_steps: (passive) `curl -sS -I https://fatbets.com/auth/login` (or actual login endpoint) capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80006.com; (AUTH_HELPED) authenticate on gamdom80006, replay cookie on fatbets.com/client-api and gamdom.one/client-api
+verify_steps: (passive) `curl -sS -I https://fatbets.com/auth/login` capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80006.com; (AUTH_HELPED) authenticate on gamdom80006, replay cookie on fatbets.com/client-api and gamdom.one/client-api
 impact: Cross-brand account takeover across 2 brands / 19+ hostnames; high
 testability: AUTH_HELPED
 [HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO
 class: AUTH
-asset: gamdom80006.com/client-api
+asset: gamdom80008.com/client-api
 confidence: 62
 reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others
-evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80008/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
 verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80008 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80008/client-api and 90471/client-api
 impact: Cross-domain account takeover across all 17 mirror hostnames; medium-high
 testability: AUTH_HELPED
@@ -64,4 +64,4 @@ testability: AUTH_HELPED
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
-[RISK] gamdom: 75 reason: Confirmed 19-host fleet across 2 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 2 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+[RISK] gamdom: 75 reason: Confirmed 20-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

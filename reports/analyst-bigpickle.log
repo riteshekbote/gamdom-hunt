@@ -11033,3 +11033,103 @@ testability: AUTH_HELPED
 {"phase": "POC", "target": "api"}
 [0m
 I have all the information needed. My passive probes this cycle confirmed the key delta — the status page monitor set now officially replaces 80007 with 80008 — and everything else remains stable. My structured analysis is complete and presented above.
+===== ANALYST bigpickle 2026-09-08 20:54:36 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "90488 root: %{http_code}\n" https://gamdom90488.com/ ; curl -sSk -o /dev/null -w "90488 client-api: %{http_code}\n" --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+90488 root: 000
+90488 client-api: 421
+[0m
+[0m$ [0mfor e in 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72; do curl -sSk -o /dev/null -w "80001:$e:%{http_code} " --resolve gamdom80001.com:443:$e https://gamdom80001.com/client-api; done; echo; for e in 151.101.67.72 151.101.3.72 151.101.131.72 151.101.195.72; do curl -sSk -o /dev/null -w "80002:$e:%{http_code} " --resolve gamdom80002.com:443:$e https://gamdom80002.com/client-api; done; echo
+80001:151.101.67.72:421 80001:151.101.3.72:421 80001:151.101.131.72:421 80001:151.101.195.72:421 
+80002:151.101.67.72:421 80002:151.101.3.72:421 80002:151.101.131.72:421 80002:151.101.195.72:421
+[0m
+Still parked. Now check status page monitor count + probe the provisioned 9047x family that may have rotated.
+[0m$ [0mcurl -sS https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains 2>/dev/null | tr ',' '\n' | grep -i '"name"' | head -30
+(no output)
+[0m
+[0m$ [0mfor a in 90471 90472 90473 90475 90480 90482; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api 2>/dev/null || echo -n "$a:000 "; done; echo
+90471:421 90472:421 90473:421 90475:421 90480:421 90482:421
+[0m
+[0m$ [0mcurl -sS "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); hs=d.get('heartbeatList',{}); print('monitors:',len(hs)); [print(h.get('name'), h.get('active')) for h in hs]" 2>&1 | head -40
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+AttributeError: 'str' object has no attribute 'get'
+monitors: 7
+[0m
+Status page route didn't output monitor names; let me fetch raw and check the count, plus rotate-watch 80008 vs 80007.
+[0m$ [0mcurl -sS -o /dev/null -w "80007 root: %{http_code} -> %{redirect_url}\n" https://gamdom80007.com/ ; curl -sS -o /dev/null -w "80008 root: %{http_code}\n" https://gamdom80008.com/ ; curl -sS -o /dev/null -w "80008 client-api: %{http_code}\n" https://gamdom80008.com/client-api
+80007 root: 302 -> https://gamdom80008.com/
+80008 root: 200
+80008 client-api: 400
+[0m
+Status page confirms 7 monitors still (rotation already absorbed into 80008). All provisioned aliases still 421. Let me check the monitor names to confirm the set is stable.
+[0m$ [0mcurl -sS "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); hs=d.get('heartbeatList',{}); [print(h) for h in hs]" 2>&1 | grep -o '"name":"[^"]*"' | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sS "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); hs=d['heartbeatList']; [print(type(h).__name__, h.keys() if isinstance(h,dict) else h) for h in list(hs)[:8]]" 2>&1 | head
+str 2
+str 3
+str 5
+str 6
+str 13
+str 217
+str 221
+[0m
+The heartbeatList keys are the monitor IDs (2,3,5,6,13,217,221) — matching prior set with 221 being the 80008 slot that replaced 80007. Still 7 monitors, stable after rotation. 
+
+The provisioning watch continues unchanged: all pending aliases (90471/90472/90473/90475/90480/90482/90488) still 421/TLS-NOMATCH, gates hold. No new surface. This is a watch cycle.
+
+STEP 1 — DELTA: NO_DELTA — pending alias fleet (90471/90472/90473/90475/90480/90482/90488) all still 421 across all edges; 80001/80002 all 421 on all 4 Pool B edges; 80007 still 302→80008; 80008 live; status page still 7 monitors (ids 2,3,5,6,13,217,221) — rotation already absorbed, stable.
+
+STEP 2 — PRIORITIZE: no new live asset; provisioned aliases remain the highest-value pending (gate-scope risk if cert lands). No priority change.
+
+STEP 3 — HYPOTHESES:
+
+[HYP] Provisioned alias cert lands with edge/backend gate-scope regression
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com (Basic realm="secret"); fleet 90471/90472/90473/90475/90480/90482 + 80001/80002
+confidence: 52
+reasoning: 80007→80008 rotation and 80001/80002 provisioned-host additions (now 421 on all edges) prove the mirror fleet is in active maintenance; 9 provisioned aliases await cert deployment; prior rotation landed 80008 byte-identical to the shared Starlette origin — if a Pending Alias cert lands on the shreeram Basic-gated nginx backend, or on gamdom4567 origin without proper pool binding, live brand DNS would expose an internal test/auth surface.
+evidence_needed: a pending alias returns 200/400 (live) instead of 421, or a gate-scope regression on shreeram to non-401.
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (and 90471/90472/90473/90475/90480/90482/80001/80002); if live, `curl -sSk https://<alias>/client-api` and compare md5/ETag to 7e3a161d; `curl -sS https://shreeram-dynamic-test.teamgamdom.com/` for gate status.
+impact: brand DNS resolves to an internal Basic-auth-gated nginx test/CI backend or misbound origin — unauthorized internal surface exposure; medium-high if gate-scope-error.
+testability: PASSIVE
+
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 Starlette origin (gamdom.com/eu/io/one/vip/win, fatbets.com, gamdom.one, mirrors 80003/80006/80008/4567)
+confidence: 66
+reasoning: fatbets.com + gamdom.one + 10 live Gamdom mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one Starlette identity/wallet backend across 2+ brands / 20 hostnames; auth transport = server-set same-origin cookie (no bearer/localStorage). 80008 ratified the 7-monitor pool but added no pre-auth surface.
+evidence_needed: one authenticated Set-Cookie replayed verbatim on another mirror/brand hostname → backend acceptance = replay proven.
+verify_steps: AUTH_HELPED only — own test accounts: POST /client-api on gamdom80006.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare upstream responses.
+impact: wallet/identity session theft across 2 brands + 20 hostnames (funds, withdrawal, KYC); critical if backend host-agnostic.
+testability: AUTH_HELPED
+
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: bundle ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap client-side; /client-api proxies by action name; catch-all 400s GET subpaths → action map unenumerable; bundle hash unchanged (no new config keys surfaced).
+evidence_needed: authenticated POST of staff action names → differentiated upstream response vs non-staff names.
+verify_steps: AUTH_HELPED only.
+impact: staff coin/wallet refill or moderator-tip abuse; critical if client-asserted.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE: all three survive (52/66/48). The AUTH hypotheses cannot be advanced passively (bundle+origin unchanged, no pre-auth surface). The MISCONFIG watch is the only actively-probeable line, low-but-genuine probability given fleet maintenance activity this cycle.
+
+STEP 5 — NEXT ACTION:
+[NEXT] PROBE: redeploy-parity watch across all 9 pending aliases — `for a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done` (421→400/200 = newly live alias; verify md5 7e3a161d or gate-scope vs shreeram).
+
+STEP 6 — LEARNING:
+[LEARN] ACCEPTED watch @ 80001/80002 + 7 pending 9047x aliases: all 4 Pool B edges still 421/TLS-NOMATCH; no new alias went live; 80007 still 302→80008, 80008 live.
+
+STEP 7 — RISK:
+[RISK] gamdom: 67 — No new surface this cycle; 80008 rotation already absorbed (7 monitors stable: ids 2,3,5,6,13,217,221), all 9 provisioned aliases still 421 (6th cycle no deploy). 20+ hostnames share one Starlette identity/wallet origin; top chain (cross-brand cookie replay, 66) still gated behind one authenticated Set-Cookie replay, and the client-asserted staffRefill line (48) remains behind the same gate. Only read-only GET probes run; no data touched. Risk steady — single control-of-origin remains the core concentration.
