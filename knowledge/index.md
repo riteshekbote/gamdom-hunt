@@ -108,3 +108,12 @@
 - 2026-09-08 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
 - 2026-09-08 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 - 2026-09-08 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-08 ACCEPTED watch @ gamdom90488.com + shreeram gate: both unchanged — alias cert not deployed (000/421), gate holds 401 fixture-wide; provisioning-in-progress 4th cycle.
+- 2026-09-08 ACCEPTED watch @ gamdom-girisi.com: SEO hub unchanged, still 17× 90471 only; provisioned fleet (90472/90473/90475/90480/90482/90488) still unpublished.
+- 2026-09-08 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
+- 2026-09-08 ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
+- 2026-09-08 ACCEPTED inventory @ fatbets.com + gamdom.one: mined from flagship bundle (BRANDED_SUBDOMAINS + encrypted TLD keys), both live on Fastly Pool A with byte-identical app/bundle + `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only gd-lang → shared identity/wallet origin serves 2 brands / 19+ hostnames.
+- 2026-09-08 ACCEPTED recon @ fatbets.com + gamdom.one: `/auth/login` + `/graphql` → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth; replay remains backend-level.
+- 2026-09-08 ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; `trMirrorDomain=gamdom80004.com`.
+- 2026-09-08 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress.
+- 2026-09-08 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable.
