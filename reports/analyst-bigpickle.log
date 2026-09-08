@@ -9527,3 +9527,41 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable 4th cycle: no alias cert deployed (90488 still 000/421, 90472/90473/90475 TLS-NOMATCH), Starlette pool healthy with unchanged shared weak-ETag, teamgamdom Basic gate solid, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.
+===== ANALYST bigpickle 2026-09-08 00:45:01 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "90488-root %{http_code} %{redirect_url}\n" --max-time 15 https://gamdom90488.com/ ; sleep 1.2; curl -sSk -o /dev/null -w "90488-clientapi %{http_code}\n" --max-time 15 --resolve gamdom90488.com:443:151.101.67.52 https://gamdom90488.com/client-api ; sleep 1.2; curl -sS -o /dev/null -w "shreeram-env %{http_code}\n" --max-time 15 https://shreeram-dynamic-test.teamgamdom.com/env ; sleep 1.2; curl -sS -o /dev/null -w "80003-health %{http_code}\n" --max-time 15 https://gamdom80003.com/health
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+90488-root 000 
+90488-clientapi 421
+shreeram-env 401
+80003-health 200
+[0m
+[0m$ [0mecho | openssl s_client -connect gamdom90488.com:443 -servername gamdom90488.com 2>/dev/null | openssl x509 -noout -subject -issuer -dates 2>/dev/null; sleep 1.2; echo "---400 other aliases---"; for h in gamdom90472.com gamdom90473.com gamdom90475.com gamdom90480.com gamdom90482.com; do curl -sSk -o /dev/null -w "$h %{http_code}\n" --max-time 12 https://$h/; sleep 1.1; done
+subject=CN = t.sni-820-default.ssl.fastly.net
+issuer=C = US, O = Certainly, CN = Certainly Intermediate R1
+notBefore=Aug 30 02:18:06 2026 GMT
+notAfter=Sep 29 02:18:05 2026 GMT
+---400 other aliases---
+gamdom90472.com 421
+gamdom90473.com 421
+gamdom90475.com 421
+gamdom90480.com 421
+gamdom90482.com 421
+[0m
+[0m$ [0mcurl -sS --max-time 20 -o /tmp/seohub.html -w "seohub %{http_code} %{size_download}\n" -A "Mozilla/5.0" https://gamdom-girisi.com/ ; sleep 1.2; curl -sS --max-time 20 -o /tmp/status.html -w "status %{http_code} %{size_download}\n" -A "Mozilla/5.0" https://gamdommirrors.com/status/gamdom-domains
+seohub 200 61081
+status 200 14030
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mGrep "gamdom9[0-9]+\.com" failed[90m in /tmp/seohub.html[0m
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mGrep "gamdom[0-9]{4,5}\.com|80006|80007" failed[90m in /tmp/status.html[0m
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.

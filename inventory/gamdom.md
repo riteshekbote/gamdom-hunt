@@ -264,3 +264,14 @@ www.gamdom.com
 ## 2026-09-07 19:30:30 UTC
 
 ## 2026-09-07 22:19:29 UTC
+
+## 2026-09-08 00:45:01 UTC
+- NEW gamdom90488.com TLS-NOMATCH persists (cert not deployed); forced-resolve to Pool A IP returns 421 on /client-api
+- NEW gamdom90472.com TLS-NOMATCH persists (cert not deployed); DNS resolves to Pool B but all edges HTTP 000
+- NEW gamdom90480.com / gamdom90482.com TLS-NOMATCH persists; forced-resolve to Pool B IP returns 421 on /client-api
+- NEW gamdom80003.com confirmed live (9th mirror): /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical; /client-api 400 byte-identical
+- CHANGED gamdommirrors.com/status/gamdom-domains API still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — provisioned fleet (90471/90472/80003/80004/90480/90482/90488) still off monitor list
+- CHANGED gamdom-girisi.com SEO hub unchanged — only gamdom90471.com referenced (17×)
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths tested)
+- CHANGED Starlette pool signature stable: /client-api 400 body md5 7e3a161d + /health weak-ETag byte-identical across Pool A (gamdom.com) + Pool B (80006/80007/80003) — shared origin confirmed
+- CHANGED teamgamdom.com Go realm (api.teamgamdom.com) returns 404 default; VCL fingerprint `bong_ke` confirmed distinct from Starlette pool

@@ -5397,3 +5397,168 @@ All three hypotheses have confidence ≥40, valid verify_steps, and are not REJE
 
 ## STEP 7 — RISK
 [RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-08 00:45:01 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mdate -u +"%Y-%m-%d %H:%M:%S UTC"
+2026-09-08 00:28:43 UTC
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/ 2>&1 || echo "TLS-NOMATCH"
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000TLS-NOMATCH
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}" https://gamdom90472.com/ 2>&1 || echo "TLS-NOMATCH"
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000TLS-NOMATCH
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api 2>&1
+421
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code} %{http_version}\n" https://gamdom80006.com/health 2>&1 && curl -sS -I https://gamdom80006.com/health 2>&1 | grep -i etag
+200 2
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://gamdom80006.com/client-api 2>&1 && curl -sS -o /dev/null -w "%{http_code}\n" https://gamdom.com/client-api 2>&1
+400
+400
+[0m
+[0m$ [0mcurl -sS https://gamdom80006.com/client-api && echo "---" && curl -sS https://gamdom.com/client-api
+Invalid request, only POST---
+Invalid request, only POST
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains | grep -oP '(?<=<td>)[^<]+' | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains | grep -c "gamdom"
+2
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/api/status-page/gamdom-domains 2>&1 | head -200
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right: 0 !important;\n}\n\n#app .title-flex > span:not(.logo-wrapper) {\n  display: none;\n}\n\n.overall-status {\n  display: none;\n}\n\n#app .group-title {\n  font-size: 22px;\n  font-weight: 500;\n  line-height: 24px;\n  margin-bottom: 0;\n}\n\n#app .monitor-list {\n  border: none !important;\n  border-radius: 0 !important;\n  box-shadow: none;\n  padding: 0;\n}\n\n#app .monitor-list .item {\n  background-color: #131A22;\n  border: none;\n  border-radius: 0;\n  padding: 12px 16px;\n}\n\n#app .monitor-list .item:not(:last-child) {\n  margin-bottom: 2px;\n}\n\n#app .monitor-list .beat {\n  margin: 0 1.875px !important;\n}\n\n#app .monitor-list .item:last-child {\n  border-radius: 0 0 16px 16px;\n}\n\n#app .monitor-list .item:first-child {\n  border-radius: 16px 16px 0 0;\n}\n\n#app .monitor-list .row {\n  align-items: center;\n  margin: 0;\n}\n\n#app .monitor-list .extra-info {\n  display: none;\n}\n\n#app .monitor-list .info {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n#app .monitor-list .badge {\n  height: 23px;\n  width: 53px;\n  border-radius: 10px !important;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #06090E;\n  font-size: 12px;\n  line-height: 12px;\n  font-weight: 700;\n  letter-spacing: 1px;\n}\n\n#app .monitor-list .item-name {\n  color: #fff;\n  cursor: pointer;\n  font-size: 14px;\n  font-weight: 700;\n  text-decoration: underline;\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .monitor-list .item-name:hover {\n  opacity: 0.9;\n}\n\n#app .monitor-list .item-name:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}\n\n#app .monitor-list .wrap div {\n  color: #818E9D;\n}\n\n#app .monitor-list .beat {\n  width: 4px !important;\n  height: 18px !important;\n}\n\n#app footer {\n  margin: 0 !important;\n  display: flex;\n  flex-direction: column;\n}\n\n#app .refresh-info {\n  order: 1;\n  color: #818E9D;\n  font-size: 14px;\n  line-height: 16px;\n  font-weight: 500;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  margin-top: 24px;\n  margin-bottom: 48px !important;\n}\n\n#app .alert-heading {\n  order: 2;\n}\n\n#app .alert-heading a {\n  transition: transform 0.1s ease, opacity 0.2s ease;\n  will-change: transform;\n}\n\n#app .alert-heading a:hover {\n  opacity: 0.9;\n}\n\n#app .alert-heading a:active {\n  transform: scale(0.96);\n  transition-duration: 0.1s;\n}","footerText":"[![Instagram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ3OSkiLz4KPHBhdGggZD0iTTE4IDcuMDY2MDVDMTMuNTMzOCA3LjA2NjA1IDkuMjkyNTUgNi42NjkxMSA3LjY3MjU2IDEwLjgyMzNDNy4wMDM0NiAxMi41MzkxIDcuMTAwNjIgMTQuNzY3NCA3LjEwMDYyIDE3Ljk1ODFDNy4xMDA2MiAyMC43NTc4IDcuMDEwODYgMjMuMzg5NCA3LjY3MjU2IDI1LjA5MTZDOS4yODg3OSAyOS4yNDgzIDEzLjU2NDQgMjguODUgMTcuOTk3NiAyOC44NUMyMi4yNzQ0IDI4Ljg1IDI2LjY4NDEgMjkuMjk1IDI4LjMyMzggMjUuMDkxNkMyOC45OTQyIDIzLjM1ODYgMjguODk1NyAyMS4xNjM1IDI4Ljg5NTcgMTcuOTU4MUMyOC44OTU3IDEzLjcwMzEgMjkuMTMwNyAxMC45NTYgMjcuMDY1NSA4Ljg5MzcyQzI0Ljk3NDQgNi44MDQyNSAyMi4xNDY1IDcuMDY2MDUgMTcuOTk1MSA3LjA2NjA1SDE4Wk0xNy4wMjM0IDkuMDI4ODZDMjYuMzM5OCA5LjAxNDIxIDI3LjUyNTUgNy45NzkyMiAyNi44NzExIDIyLjM1NTdDMjYuNjM4NiAyNy40NDAzIDIyLjc2NCAyNi44ODI0IDE4LjAwMTIgMjYuODgyNEM5LjMxNzE4IDI2Ljg4MjQgOS4wNjc0MSAyNi42MzQgOS4wNjc0MSAxNy45NTMxQzkuMDY3NDEgOS4xNzE1MyA5Ljc1NjI5IDkuMDMzODQgMTcuMDIzNCA5LjAyNjQ0VjkuMDI4ODZaTTIzLjgxODEgMTAuODM2OUMyMy4wOTYxIDEwLjgzNjkgMjIuNTEwNiAxMS40MjE4IDIyLjUxMDYgMTIuMTQzNEMyMi41MTA2IDEyLjg2NDggMjMuMDk2MSAxMy40NDk5IDIzLjgxODEgMTMuNDQ5OUMyNC41NDAxIDEzLjQ0OTkgMjUuMTI1NiAxMi44NjQ4IDI1LjEyNTYgMTIuMTQzNEMyNS4xMjU2IDExLjQyMTggMjQuNTQwMSAxMC44MzY5IDIzLjgxODEgMTAuODM2OVpNMTggMTIuMzY0NkMxNC45MDkgMTIuMzY0NiAxMi40MDMzIDE0Ljg2OTQgMTIuNDAzMyAxNy45NTgxQzEyLjQwMzMgMjEuMDQ2NyAxNC45MDkgMjMuNTUwMyAxOCAyMy41NTAzQzIxLjA5MTEgMjMuNTUwMyAyMy41OTU1IDIxLjA0NjcgMjMuNTk1NSAxNy45NTgxQzIzLjU5NTUgMTQuODY5NCAyMS4wOTExIDEyLjM2NDYgMTggMTIuMzY0NlpNMTggMTQuMzI3NEMyMi44MDMzIDE0LjMyNzQgMjIuODA5NSAyMS41ODg3IDE4IDIxLjU4ODdDMTMuMTk3OSAyMS41ODg3IDEzLjE5MDYgMTQuMzI3NCAxOCAxNC4zMjc0WiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0NzkiIHgxPSIzNiIgeTE9IjEuMDcwNDhlLTA2IiB4Mj0iMC4wODA5MDAyIiB5Mj0iMzUuOTk5OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjRkQwM0ExIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0ZGQzMwMyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPg==)](https://instagram.com/gamdom)\n[![X](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0Y5RjlGOSIvPgo8cGF0aCBkPSJNMTkuODMyOSAxNi40ODcxTDI2Ljk5NzEgOC4zMzgzOEgyNS4yOTk3TDE5LjA3NjIgMTUuNDEyM0wxNC4xMDkxIDguMzM4MzhIOC4zNzg5MUwxNS44OTE4IDE5LjAzNjRMOC4zNzg5MSAyNy41ODA4SDEwLjA3NjRMMTYuNjQ0NSAyMC4xMDg3TDIxLjg5MTEgMjcuNTgwOEgyNy42MjEzTDE5LjgzMjkgMTYuNDg3MVpNMTcuNTA3MyAxOS4xMzAzTDE2Ljc0NDkgMTguMDY0M0wxMC42ODg1IDkuNTkwNTVIMTMuMjk2MkwxOC4xODUzIDE2LjQzMTdMMTguOTQ0NCAxNy40OTc3TDI1LjI5ODkgMjYuMzg5NkgyMi42OTEyTDE3LjUwNzMgMTkuMTMwM1oiIGZpbGw9IiMwODBEMTMiLz4KPC9zdmc+Cg==)](https://twitter.com/gamdom)\n[![Telegram](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzI3QTREQiIvPgo8cGF0aCBkPSJNMTUuMjk2OSAyNS45OTVDMTQuNjQ3MyAyNS45OTUgMTQuNzU3NiAyNS43NDk3IDE0LjUzMzUgMjUuMTMxTDEyLjYyMyAxOC44NDMxTDI3LjMyOTYgMTAuMTE4NSIgZmlsbD0iI0M4REFFQSIvPgo8cGF0aCBkPSJNMTUuMjk4OCAyNS45OTc2QzE1LjgwMDIgMjUuOTk3NiAxNi4wMjE4IDI1Ljc2ODMgMTYuMzAxNyAyNS40OTYxTDE4Ljk3NTUgMjIuODk2MUwxNS42NDAyIDIwLjg4NDciIGZpbGw9IiNBOUM5REQiLz4KPHBhdGggZD0iTTE1LjYzOTIgMjAuODg1TDIzLjcyMSAyNi44NTYyQzI0LjY0MzQgMjcuMzY1IDI1LjMwOSAyNy4xMDE1IDI1LjUzODYgMjUuOTk5OUwyOC44Mjg1IDEwLjQ5NzJDMjkuMTY1MyA5LjE0NjgxIDI4LjMxMzcgOC41MzQzNSAyNy40MzE0IDguOTM1MDNMOC4xMTM5MiAxNi4zODM4QzYuNzk1MzIgMTYuOTEyNSA2LjgwMzA1IDE3LjY0ODIgNy44NzM2MSAxNy45NzZMMTIuODMwOSAxOS41MjMzTDI0LjMwNzUgMTIuMjgyOUMyNC44NDkzIDExLjk1NDIgMjUuMzQ2NiAxMi4xMzA5IDI0LjkzODUgMTIuNDkzMSIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzQwNl8xNjQ4NSkiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl80MDZfMTY0ODUiIHgxPSIxNy40OTciIHkxPSIxOC41NTY5IiB4Mj0iMjAuNjM1NSIgeTI9IjI1LjY5ODQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0VGRjdGQyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IndoaXRlIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==)](https://t.me/+JrVfUQipUmM0OGM0)\n[![Facebook](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzQwNl8xNjQ5NCkiPgo8cmVjdCB4PSItMC42MDE1NjIiIHk9Ii0wLjY0MTQ3OSIgd2lkdGg9IjM3LjIwMiIgaGVpZ2h0PSIzNy4yMDIiIGZpbGw9IiM0MjY3QjIiLz4KPHBhdGggZD0iTTIyLjE0MzEgMzYuNTYwNlYyMy4xMjA0SDI2Ljk5NTJMMjcuNzE5NyAxNy44NTkzSDIyLjE0MzFWMTQuNTA5N0MyMi4xNDMxIDEyLjk4NzcgMjIuNTk4MyAxMS45NTcxIDI0LjkzMTQgMTEuOTU3MUgyNy45MTE5VjcuMjU5M0MyNi40NzQ1IDcuMTIwNDMgMjUuMDMwNSA3LjA1MjQzIDIzLjU4NTMgNy4wNTU1OUMxOS4yOTczIDcuMDU1NTkgMTYuMzc0NSA5LjUwMDM0IDE2LjM3NDUgMTMuOTg4NFYxNy44NTkzSDExLjUzNTJWMjMuMTIwNEgxNi4zNzQ1VjM2LjU2MDZIMjIuMTQzMVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfNDA2XzE2NDk0Ij4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K)](https://facebook.com/gamdomcasino)\n[![Youtube](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iI0ZGMDAwMCIvPgo8cGF0aCBkPSJNMTIuODY5MSAyNi4yOThMMjUuNjk3NCAxNy45NjAxTDEyLjg2OTEgOS42MjEyMlYyNi4yOThaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)](https://www.youtube.com/@officialgamdom)\n[![Discord](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM2IiBoZWlnaHQ9IjM1LjkxOTIiIHJ4PSIxMCIgZmlsbD0iIzU4NjVGMiIvPgo8cGF0aCBkPSJNMjYuMDE1MyAxMC40ODM5QzI0LjQ5ODIgOS43NzExMSAyMi44OTY2IDkuMjY1NDQgMjEuMjUxNCA4Ljk3OThDMjEuMDI2MyA5LjM5Mjc5IDIwLjgyMjYgOS44MTc3MSAyMC42NDEyIDEwLjI1MjhDMTguODg4OCA5Ljk4MTc4IDE3LjEwNjcgOS45ODE3OCAxNS4zNTQzIDEwLjI1MjhDMTUuMTcyOCA5LjgxNzc2IDE0Ljk2OTEgOS4zOTI4NCAxNC43NDQxIDguOTc5OEMxMy4wOTc5IDkuMjY3ODUgMTEuNDk1MiA5Ljc3NDcyIDkuOTc2NjMgMTAuNDg3NkM2Ljk2MTc3IDE1LjA2NTEgNi4xNDQ0OSAxOS41Mjg5IDYuNTUzMTMgMjMuOTI5NEM4LjMxODcxIDI1LjI2OCAxMC4yOTQ5IDI2LjI4NjEgMTIuMzk1OCAyNi45Mzk0QzEyLjg2ODggMjYuMjg2NSAxMy4yODc0IDI1LjU5MzggMTMuNjQ3MSAyNC44Njg3QzEyLjk2MzkgMjQuNjA2OSAxMi4zMDQ1IDI0LjI4MzggMTEuNjc2NiAyMy45MDMzQzExLjg0MTggMjMuNzgwMiAxMi4wMDM1IDIzLjY1MzUgMTIuMTU5NyAyMy41MzA1QzEzLjk4NjkgMjQuNDEyMyAxNS45ODEzIDI0Ljg2OTYgMTguMDAwNSAyNC44Njk2QzIwLjAxOTcgMjQuODY5NiAyMi4wMTQxIDI0LjQxMjMgMjMuODQxMyAyMy41MzA1QzIzLjk5OTMgMjMuNjYyOCAyNC4xNjEgMjMuNzg5NiAyNC4zMjQ0IDIzLjkwMzNDMjMuNjk1MiAyNC4yODQ0IDIzLjAzNDYgMjQuNjA4MSAyMi4zNTAyIDI0Ljg3MDZDMjIuNzA5NSAyNS41OTUzIDIzLjEyODEgMjYuMjg3NCAyMy42MDE2IDI2LjkzOTRDMjUuNzA0MyAyNi4yODg4IDI3LjY4MiAyNS4yNzExIDI5LjQ0NzggMjMuOTMxMkMyOS45MjczIDE4LjgyODEgMjguNjI4OCAxNC40MDUzIDI2LjAxNTMgMTAuNDgzOVpNMTQuMTY0NyAyMS4yMjMxQzEzLjAyNiAyMS4yMjMxIDEyLjA4NTIgMjAuMTYyNiAxMi4wODUyIDE4Ljg1NzlDMTIuMDg1MiAxNy41NTMzIDEyLjk5MzMgMTYuNDgzNSAxNC4xNjExIDE2LjQ4MzVDMTUuMzI4OSAxNi40ODM1IDE2LjI2MjQgMTcuNTUzMyAxNi4yNDI0IDE4Ljg1NzlDMTYuMjIyNSAyMC4xNjI2IDE1LjMyNTMgMjEuMjIzMSAxNC4xNjQ3IDIxLjIyMzFaTTIxLjgzNjMgMjEuMjIzMUMyMC42OTU3IDIxLjIyMzEgMTkuNzU4NSAyMC4xNjI2IDE5Ljc1ODUgMTguODU3OUMxOS43NTg1IDE3LjU1MzMgMjAuNjY2NiAxNi40ODM1IDIxLjgzNjMgMTYuNDgzNUMyMy4wMDU5IDE2LjQ4MzUgMjMuOTMyMSAxNy41NTMzIDIzLjkxMjEgMTguODU3OUMyMy44OTIyIDIwLjE2MjYgMjIuOTk2OCAyMS4yMjMxIDIxLjgzNjMgMjEuMjIzMVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://discord.gg/vNfHXkMW)","showPoweredBy":false,"googleAnalyticsId":null,"showCertificateExpiry":false},"incident":null,"publicGroupList":[{"id":1,"name":"Gamdom Official Domains","weight":1,"monitorList":[{"id":13,"name":"Gamdom.com","sendUrl":1,"type":"http","url":"https://gamdom.com"},{"id":3,"name":"Gamdom.eu","sendUrl":1,"type":"http","url":"https://gamdom.eu"},{"id":2,"name":"Gamdom.io","sendUrl":1,"type":"http","url":"https://gamdom.io"},{"id":6,"name":"Gamdom.vip","sendUrl":1,"type":"http","url":"https://gamdom.vip"},{"id":5,"name":"Gamdom.win","sendUrl":1,"type":"http","url":"https://gamdom.win"},{"id":217,"name":"gamdom80006.com","sendUrl":1,"type":"http","url":"https://gamdom80006.com"},{"id":219,"name":"gamdom80007.com","sendUrl":1,"type":"http","url":"https://gamdom80007.com"}]}],"maintenanceList":[]}
+[0m
+[0m$ [0mcurl -sS https://gamdom-girisi.com/ | grep -oP 'gamdom\d+\.com' | sort -u
+gamdom90471.com
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://shreeram-dynamic-test.teamgamdom.com/ 2>&1 && curl -sS -o /dev/null -w "%{http_code}\n" https://shreeram-dynamic-test.teamgamdom.com/.git/config 2>&1
+401
+401
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://api.teamgamdom.com/ 2>&1
+404
+[0m
+[0m$ [0mcurl -sS https://gamdom80006.com/client-api | md5sum && curl -sS https://gamdom.com/client-api | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://gamdom80003.com/health 2>&1 && curl -sS -I https://gamdom80003.com/health 2>&1 | grep -i etag
+200
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://gamdom80003.com/client-api 2>&1
+400
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code}\n" https://gamdom90480.com/client-api 2>&1
+curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90480.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000
+[0m
+[0m$ [0mcurl -sSk --resolve gamdom90480.com:443:151.101.67.72 -o /dev/null -w "%{http_code}\n" https://gamdom90480.com/client-api 2>&1
+421
+[0m
+---
+
+### STEP 1 — DELTA
+[NEW] gamdom90488.com TLS-NOMATCH persists (cert not deployed); forced-resolve to Pool A IP returns 421 on /client-api  
+[NEW] gamdom90472.com TLS-NOMATCH persists (cert not deployed); DNS resolves to Pool B but all edges HTTP 000  
+[NEW] gamdom90480.com / gamdom90482.com TLS-NOMATCH persists; forced-resolve to Pool B IP returns 421 on /client-api  
+[NEW] gamdom80003.com confirmed live (9th mirror): /health 200 weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical; /client-api 400 byte-identical  
+[CHANGED] gamdommirrors.com/status/gamdom-domains API still exactly 7 monitors (com/eu/io/vip/win/80006/80007) — provisioned fleet (90471/90472/80003/80004/90480/90482/90488) still off monitor list  
+[CHANGED] gamdom-girisi.com SEO hub unchanged — only gamdom90471.com referenced (17×)  
+[CHANGED] shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths tested)  
+[CHANGED] Starlette pool signature stable: /client-api 400 body md5 7e3a161d + /health weak-ETag byte-identical across Pool A (gamdom.com) + Pool B (80006/80007/80003) — shared origin confirmed  
+[CHANGED] teamgamdom.com Go realm (api.teamgamdom.com) returns 404 default; VCL fingerprint `bong_ke` confirmed distinct from Starlette pool
+
+---
+
+### STEP 2 — PRIORITIZE
+[PRIO] gamdom80006.com/client-api,8.5,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9  
+[PRIO] gamdom.com/client-api,8.2,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=8  
+[PRIO] gamdom4567.com/client-api,8.0,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=9  
+[PRIO] gamdom90488.com,5.5,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=7  
+[PRIO] shreeram-dynamic-test.teamgamdom.com,4.0,attack_surface=5,business_value=4,tech_exposure=6,gate_ease=2,cloud_surface=5,freshness=6  
+[PRIO] gamdom90471.com,6.8,attack_surface=7,business_value=7,tech_exposure=7,gate_ease=5,cloud_surface=7,freshness=8  
+
+---
+
+### STEP 3 — HYPOTHESES
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO  
+class: AUTH  
+asset: gamdom80006.com/client-api  
+confidence: 62  
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others  
+evidence_needed: Same session cookie minted on gamdom80006 accepted by gamdom80007/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers  
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80006 vs gamdom80007 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80006, replay cookie on 80007/client-api and 90471/client-api  
+impact: Cross-domain account takeover across all 17 mirror hostnames; medium-high  
+testability: AUTH_HELPED  
+
+[HYP] Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship  
+class: AUTH  
+asset: gamdom.com/client-api  
+confidence: 57  
+reasoning: gamdom.com/io/eu/vip/win/client-api returns byte-identical GET 400 body as Pool B mirrors; shared origin backend signature spans entire 17-host brand; if session cookie Domain attribute is .gamdom.com or host-agnostic at backend, flagship domain + 4 regional TLDs join replay surface  
+evidence_needed: Set-Cookie Domain attribute from auth flow on gamdom.com vs mirrors; whether cookie from gamdom.com accepted by gamdom4567.com/client-api  
+verify_steps: (passive) compare Set-Cookie headers on auth endpoints across gamdom.com (Pool A) and gamdom80006.com (Pool B); (AUTH_HELPED) replay flagship session cookie against Pool B /client-api  
+impact: Cross-pool ATO across flagship + 4 regional TLDs + all 9 mirrors + 3 aliases; high  
+testability: AUTH_HELPED  
+
+[HYP] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com  
+class: MISCONFIG  
+asset: gamdom90488.com  
+confidence: 52  
+reasoning: gamdom90488.com CNAME = shreeram-dynamic-test.teamgamdom.com (first-party Certainly cert, Route53, Fastly Pool A); nginx Basic realm="secret" gate fixture-wide 401 across 7 paths (/, /.git/config, /env, /server-status, /status, /_metrics, /actuator); alias edge SNI not yet live (TLS-NOMATCH/000); SEO hub still lists only gamdom90471.com (17×); risk purely when alias cert goes live, not gate bypass  
+evidence_needed: alias host cert going live (TLS-NOMATCH → 200/401), or any shreeram path served 200/302 vs 401, or S3 listing opening  
+verify_steps: PASSIVE — `curl -sS -o /dev/null -w "%{http_code}" https://gamdom90488.com/` (TLS-NOMATCH→200 = cert live); `curl -sSk --resolve gamdom90488.com:443:151.101.67.52 -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (421→400/401 = live); spot-check shreeram paths for 401 only; S3 root 403  
+impact: alias live → users auth to internal host trusting brand DNS; gate-scope error → internal test env via public brand name; medium  
+testability: PASSIVE  
+
+---
+
+### STEP 4 — SELF-CRITIQUE
+[PARKED] Public alias gamdom90488.com wired to Basic-auth-gated internal nginx on 2nd brand TLD teamgamdom.com: confidence 52 but no live cert deployment after 4+ cycles; purely speculative until TLS-NOMATCH resolves; no active bypass vector  
+[FINAL] 1) Cross-mirror auth cookie replay via shared /client-api origin yields ATO (62)  
+[FINAL] 2) Brand-wide origin trust pool: auth cookie validated host-blind at single backend behind every Gamdom domain including flagship (57)
+
+---
+
+### STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive auth flow cookie inspection — `curl -sS -I https://gamdom80006.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80007.com and gamdom.com; ≤1 rps, HEAD only
+
+---
+
+### STEP 6 — LEARNING
+[LEARN] ACCEPTED watch @ 90472/90488/90473/90475 aliases: all still 421/TLS-NOMATCH — no alias went live; provisioning-in-progress continues  
+[LEARN] ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com + teamgamdom Go realm: gate holds 401 fixture-wide (7 paths), api.teamgamdom.com 404 default — no new surface  
+[LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors, SEO hub still 17× 90471 only  
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable  
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing  
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)  
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing  
+
+---
+
+### STEP 7 — RISK
+[RISK] gamdom: 70 reason: Confirmed 17-host fleet (flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned) sharing single POST-only `/client-api` identity/wallet proxy; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to flagship gamdom.com + 4 regional TLDs via byte-identical /client-api signature; top hypothesis (cross-domain ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

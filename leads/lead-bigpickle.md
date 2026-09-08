@@ -1273,3 +1273,4 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed stable.
 [LEARN] ACCEPTED watch @ gamdommirrors status page: still exactly 7 monitors (com/eu/io/vip/win/80006/80007).
 [RISK] gamdom: 65 — 21-host fleet across 2 TLD realms / 3 origin types fully stable 4th cycle: no alias cert deployed (90488 still 000/421, 90472/90473/90475 TLS-NOMATCH), Starlette pool healthy with unchanged shared weak-ETag, teamgamdom Basic gate solid, status page + SEO hub unchanged. Top chain (cross-host cookie replay, 62) remains human-gated behind one authenticated Set-Cookie replay; no new exploitable surface emerged; all probed hosts closed/stable. No data touched.
+## 2026-09-08 00:28:25 UTC [target] (model bigpickle)
