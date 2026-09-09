@@ -140,3 +140,12 @@
 - 2026-09-09 ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; trMirrorDomain=gamdom80004.com.
 - 2026-09-09 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress.
 - 2026-09-09 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable.
+- 2026-09-09 ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live → 10th mirror / 20th hostname in trust pool; rotation event absorbed.
+- 2026-09-09 ACCEPTED inventory @ gamdom80007.com: demoted to 302→gamdom80008.com redirect alias — confirms brand retires numbered aliases by redirect.
+- 2026-09-09 ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live.
+- 2026-09-09 ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 20+ hostnames.
+- 2026-09-09 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 5th cycle, all still 421/TLS-NOMATCH.
+- 2026-09-09 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: stable.
+- 2026-09-09 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited.
+- 2026-09-09 ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
+- 2026-09-09 REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.

@@ -6925,3 +6925,222 @@ testability: AUTH_HELPED
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
 
 [RISK] gamdom: 78 reason: Confirmed 20-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-09 11:51:06 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mcurl -sS -I https://fatbets.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 11:32:01 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-096e284f-d661-481e-a442-2397d7f3b097' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:32:01 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-khef600091-IAD, cache-iad-kcgs7200168-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 11:33:10 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-c6aae1ec-52a7-4032-901b-0422bed203a0' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:33:11 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000199-IAD, cache-iad-kiad7000046-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80006.com/auth/login 2>&1 | head -30
+HTTP/2 302 
+server: Varnish
+retry-after: 0
+location: https://gamdom80009.com/auth/login
+cache-control: no-store
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:33:51 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000038-IAD
+x-cache: HIT
+x-cache-hits: 0
+x-timer: S1788953631.153274,VS0,VE0
+strict-transport-security: max-age=31557600
+content-length: 0
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80009.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 11:34:39 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-94fce025-cfd4-4305-b010-f3ce66ad7e1a' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:34:40 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200174-IAD, cache-iad-kiad7000082-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788953680.703675,VS0,VE422
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/login 2>&1 | head -30
+HTTP/2 404 
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 11:35:15 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-9381a1c2-1291-4be2-8d09-1df0d5f1766f' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:35:16 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200124-IAD, cache-iad-kcgs7200064-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80008.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+content-type: text/html
+cache-control: private, max-age=300
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-f4205b49-abe6-453c-82dd-0dff0d53146b' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 11:35:53 GMT
+accept-ranges: bytes
+date: Wed, 09 Sep 2026 11:35:53 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kjyo7100042-IAD, cache-iad-kcgs7200035-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1788953754.527841,VS0,VE421
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -X POST -H "Content-Type: application/json" -d '{}' https://gamdom80008.com/client-api 2>&1 | head -50
+{"_tag":"GamdomClientMessage","info":"unknown","type":"ERROR"}
+[0m
+[0m$ [0mcurl -sS -X POST -H "Content-Type: application/json" -d '{"action":"login"}' https://gamdom80008.com/client-api 2>&1 | head -50
+{"_tag":"GamdomClientMessage","info":"unknown","type":"ERROR"}
+[0m
+[0m$ [0mcurl -sS -X POST -H "Content-Type: application/json" -d '{"action":"auth.login"}' https://gamdom80008.com/client-api 2>&1 | head -50
+{"_tag":"GamdomClientMessage","info":"unknown","type":"ERROR"}
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | head -100
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_085f71db3001nV5q6iCJD5FFtZ
+
+Element(c.Fragment,null,N,c.createElement(n7,{page:S})):N});rs.displayName="Link";var ru=c.forwardRef(function({"aria-current":e="page",caseSensitive:t=!1,className:n="",end:r=!1,style:a,to:o,viewTransition:i,children:l,...s},u){let d,f=tB(o,{relative:s.relative}),h=tN(),p=c.useContext(tw),{navigator:m,basename:g}=c.useContext(tR),b=null!=p&&function(e,{relative:t}={}){let n=c.useContext(tS);E(null!=n,"`useViewTransitionState` must be used within `react-router-dom`'s `RouterProvider`.  Did you accidentally import `RouterProvider` from `react-router`?");let{basename:r}=rd("useViewTransitionState"),a=tB(e,{relative:t});if(!n.isTransitioning)return!1;let o=K(n.currentLocation.pathname,r)||n.currentLocation.pathname,i=K(n.nextLocation.pathname,r)||n.nextLocation.pathname;return null!=G(a.pathname,i)||null!=G(a.pathname,o)}(f)&&!0===i,v=m.encodeLocation?m.encodeLocation(f).pathname:f.pathname,y=h.pathname,w=p&&p.navigation&&p.navigation.location?p.navigation.location.pathname:null;t||(y=y.toLowerCase(),w=w?w.toLowerCase():null,v=v.toLowerCase()),w&&g&&(w=K(w,g)||w);let _="/"!==v&&v.endsWith("/")?v.length-1:v.length,S=y===v||!r&&y.startsWith(v)&&"/"===y.charAt(_),k=null!=w&&(w===v||!r&&w.startsWith(v)&&"/"===w.charAt(v.length)),O={isActive:S,isPending:k,isTransitioning:b},R=S?e:void 0;d="function"==typeof n?n(O):[n,S?"active":null,k?"pending":null,b?"transitioning":null].filter(Boolean).join(" ");let T="function"==typeof a?a(O):a;return c.createElement(rs,{...s,"aria-current":R,className:d,ref:u,style:T,to:o,viewTransition:i},"function"==typeof l?l(O):l)});function rc(e){return`${e} must be used within a data router.  See https://reactrouter.com/en/main/routers/picking-a-router.`}function rd(e){let t=c.useContext(ty);return E(t,rc(e)),t}ru.displayName="NavLink",c.forwardRef(({discover:e="render",fetcherKey:t,navigate:n,reloadDocument:r,replace:a,state:o,method:i=nu,action:l,onSubmit:s,relative:u,preventScrollReset:d,viewTransition:f,defaultShouldRevalidate:h,...p},m)=>{let{useTransitions:b}=c.useContext(tR),v=function(){let{router:e}=rd("useSubmit"),{basename:t}=c.useContext(tR),n=tY("useRouteId"),r=e.fetch,a=e.navigate;return c.useCallback(async(e,o={})=>{let{action:i,method:l,encType:s,formData:u,body:c}=function(e,t){let n,r,a,o,i;if(nd(e)&&"form"===e.tagName.toLowerCase()){let i=e.getAttribute("action");r=i?K(i,t):null,n=e.getAttribute("method")||nu,a=nm(e.getAttribute("enctype"))||nc,o=new FormData(e)}else if(nd(e)&&"button"===e.tagName.toLowerCase()||nd(e)&&"input"===e.tagName.toLowerCase()&&("submit"===e.type||"image"===e.type)){let i=e.form;if(null==i)throw Error('Cannot submit a <button> or <input type="submit"> without a <form>');let l=e.getAttribute("formaction")||i.getAttribute("action");if(r=l?K(l,t):null,n=e.getAttribute("formmethod")||i.getAttribute("method")||nu,a=nm(e.getAttribute("formenctype"))||nm(i.getAttribute("enctype"))||nc,o=new FormData(i,e),!function(){if(null===nh)try{new FormData(document.createElement("form"),0),nh=!1}catch(e){nh=!0}return nh}()){let{name:t,type:n,value:r}=e;if("image"===n){let e=t?`${t}.`:"";o.append(`${e}x`,"0"),o.append(`${e}y`,"0")}else t&&o.append(t,r)}}else if(nd(e))throw Error('Cannot submit element that is not <form>, <button>, or <input type="submit|image">');else n=nu,r=null,a=nc,i=e;return o&&"text/plain"===a&&(i=o,o=void 0),{action:r,method:n.toLowerCase(),encType:a,formData:o,body:i}}(e,t);if(!1===o.navigate){let e=o.fetcherKey||rp();await r(e,n,o.action||i,{defaultShouldRevalidate:o.defaultShouldRevalidate,preventScrollReset:o.preventScrollReset,formData:u,body:c,formMethod:o.method||l,formEncType:o.encType||s,flushSync:o.flushSync})}else await a(o.action||i,{defaultShouldRevalidate:o.defaultShouldRevalidate,preventScrollReset:o.preventScrollReset,formData:u,body:c,formMethod:o.method||l,formEncType:o.encType||s,replace:o.replace,state:o.state,fromRouteId:n,flushSync:o.flushSync,viewTransition:o.viewTransition})},[r,a,t,n])}(),y=function(e,{relative:t}={}){let{basename:n}=c.useContext(tR),r=c.useContext(tA);E(r,"useFormAction must be used inside a RouteContext");let[a]=r.matches.slice(-1),o={...tB(e||".",{relative:t})},i=tN();if(null==e){o.search=i.search;let e=new URLSearchParams(o.search),t=e.getAll("index");if(t.some(e=>""===e)){e.delete("index"),t.filter(e=>e).forEach(t=>e.append("index",t));let n=e.toString();o.search=n?`?${n}`:""}}return(!e||"."===e)&&a.route.index&&(o.search=o.search?o.search.replace(/^\?/,"?index&"):"?index"),"/"!==n&&(o.pathname="/"===o.pathname?n:et([n,o.pathname])),R(o)}(l,{relative:u}),w="get"===i.toLowerCase()?"get":"post",_="string"==typeof l&&g.test(l);return c.createElement("form",{ref:m,method:w,action:y,onSubmit:r?s:e=>{if(s&&s(e),e.defaultPrevented)return;e.preventDefault();let r=e.nativeEvent.submitter,l=r?.getAttribute("formmethod")||i,p=()=>v(r||e.currentTarget,{fetcherKey:t,method:l,navigate:n,replace:a,state:o,relative:u,preventScrollReset:d,viewTransition:f,defaultShouldRevalidate:h});b&&!1!==n?c.startTransition(()=>p()):p()},...p,"data-discover":_||"render"!==e?void 0:"true"})}).displayName="Form";function rf(e){S("undefined"!=typeof URLSearchParams,"You cannot use the `useSearchParams` hook in a browser that does not support the URLSearchParams API. If you need to support Internet Explorer 11, we recommend you load a polyfill such as https://github.com/ungap/url-search-params.");let t=c.useRef(nf(e)),n=c.useRef(!1),r=tN(),a=c.useMemo(()=>{var e,a;let o;return e=r.search,a=n.current?null:t.current,o=nf(e),a&&a.forEach((e,t)=>{o.has(t)||a.getAll(t).forEach(e=>{o.append(t,e)})}),o},[r.search]),o=tF(),i=c.useCallback((e,t)=>{let r=nf("function"==typeof e?e(new URLSearchParams(a)):e);n.current=!0,o("?"+r,t)},[o,a]);return[a,i]}var rh=0,rp=()=>`__${String(++rh)}__`;function rm(e){return"string"==typeof e?e:R(e)}function rg(e){let t="string"==typeof e?e:R(e);t=t.replace(/ $/,"%20");let n=g.test(t)?new URL(t):new URL(t,"http://localhost");return{pathname:n.pathname,search:n.search,hash:n.hash}}}},t={};function n(r){var a=t[r];if(void 0!==a)return a.exports;var o=t[r]={id:r,loaded:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.loaded=!0,o.exports}n.m=e,n.c=t,n.amdO={},n.n=e=>{var t=e&&e.__esModule?()=>e.default:()=>e;return n.d(t,{a:t}),t},(()=>{var e,t=Object.getPrototypeOf?e=>Object.getPrototypeOf(e):e=>e.__proto__;n.t=function(r,a){if(1&a&&(r=this(r)),8&a||"object"==typeof r&&r&&(4&a&&r.__esModule||16&a&&"function"==typeof r.then))return r;var o=Object.create(null);n.r(o);var i={};e=e||[null,t({}),t([]),t(t)];for(var l=2&a&&r;"object"==typeof l&&!~e.indexOf(l);l=t(l))Object.getOwnPropertyNames(l).forEach(e=>i[e]=()=>r[e]);return i.default=()=>r,n.d(o,i),o}})(),n.d=(e,t)=>{for(var r in t)n.o(t,r)&&!n.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},n.f={},n.e=e=>Promise.all(Object.keys(n.f).reduce((t,r)=>(n.f[r](e,t),t),[])),n.u=e=>""+(({21:"BottomNavMobileV4",153:"Lobby",267:"BlogCryptoHelmet",273:"Rewards",289:"BlogSportsHelmet",345:"dynamic-wallet-connectors",416:"MuteUserModal",518:"Keno",703:"HomePage",708:"HiloGameDetail",763:"RaffleV4",784:"ErrorPageBannedCountry",958:"Casino",1100:"toastAsync",1190:"DemoLayoutLazy",1206:"dynamic-wallet-connectors-solana",1249:"Koth",1278:"Sports",1319:"WalletModal",1410:"PromotionsArchiveHelmet",1475:"dynamic-connection-suspense-v4",1476:"Battles",1517:"SportBettingRules",1537:"Exclusive",1583:"ToastMessageV4",1606:"SeonInit",1620:"PrivacyPage",1626:"HelpRedirect",1680:"Twist",1720:"ProfileLayout",1760:"WalletWidget",1792:"SportBettingRulesPerabetSections",2036:"Chicken",2054:"TableGames",2059:"ResetPassword",2175:"ConnectionsPage",2361:"RootErrorBoundary",2466:"Demo",2467:"RefundPolicy",2517:"Blackjack",2587:"InformationalModal",2625:"CrashGameDetail",2632:"AuthModal",2673:"TransActionsPage",2760:"ProvablyFair",2820:"UserAndGameSearchLoggedInWelcome",2842:"AppShell",2937:"Towers",3049:"BetDetailsContent",3068:"PocketDice",3072:"PromotionsSportsbookHelmet",3073:"Promotions",3158:"Limbo",3161:"Originals",3179:"ChatV4",3355:"TopNavMobileV4",3458:"PromotionPreview",3480:"CreateBattleModal",3606:"BlogPage",3630:"SoftBlockModal",3676:"Error401",3797:"Game",3853:"DynamicAuthPage",3896:"Support",4039:"Providers",4091:"GameMobile",4278:"SportsObtPageV4Lazy",4306:"TopBannerLoggedOutTotalBets",4429:"Mines",4440:"DynamicAuthButtonsLazy-v4",4515:"BlogGuidesHelmet",4533:"WelcomeBonusModal",4660:"Provider",4673:"FAQ",4710:"ThematicCategory",4818:"SportBettingRulesGamdomSections",5007:"ProfilePage",5039:"PromotionsPageHelmet",5140:"LogoutModal",5195:"Article",5253:"dynamic-wallet-connectors-ethereum",5292:"HelpLayout",5316:"Terms",5405:"InformationalModalHandler",5531:"AffiliatessPage",5534:"LoadInformationalModals",5698:"MainConfig",5739:"UserDetailsModal",5792:"CasinoChrome",5838:"WagerPromotionOptOutModal",5864:"Crash",5942:"RouletteGameDetail",5987:"TipRainModal",6073:"BetDetailsModal",6176:"InboxPage",6341:"NotificationMessageV4",6581:"CookieConsentPopup",6654:"Favorites",6662:"BlogEsportsHelmet",6741:"Hilo",6780:"TopBannerFacebookDynamicLoginButton",6869:"BlogArticlePreview",6875:"PrivacyPolicy",6925:"BlogPageHelmet",6961:"GamesQuickSearchV4Lazy",7065:"BoostedReloadClaimModalV4",7091:"RecentWins",7131:"Roulette",7132:"UserProfilePage",7170:"BattleDetail",7303:"VerificationsPage",7424:"ResponsibleGambling",7473:"Error404",7515:"BattleHistory",7655:"JourneyOptOutModal",7684:"DiceV4",7698:"AboutUs",7748:"AuthFormSignInContent",7776:"PromotionArticle",7879:"PromotionsCasinoHelmet",8134:"LiveGames",8194:"TipUserModal",8204:"Plinko",8255:"AffiliatesInfo",8316:"ProvidersGames",8385:"BlogCasinoHelmet",8507:"TopBannerHomeNew",8598:"WagerReqBarV4",8647:"i18n-editor",8711:"TopNavDesktopV4",8747:"AuthFormResetPassword",8987:"AuthFormSignUp",9010:"Reviews",9214:"Intercom",9305:"SettingsPage",9438:"VerifyTwoFactorModal",9568:"PromotionsPage",9570:"Slots",9591:"TopBannerHome",9620:"dynamic-wallet-connectors-bitcoin",9684:"Horseracing",9691:"SportsBetbyPageLazy",9749:"BlogNewsHelmet",9961:"dynamic-labs-core"})[e]||e)+"."+({17:"6fd25e0774d3d135c8ab",21:"e838ec83091cf3e95dd9",55:"fd0250d69fab9d84b6b2",153:"a56a9870cd72c779b75d",180:"c5614ac7b1f676b123a5",227:"47ce5880b1e6c34942b4",267:"583dfa2ec38617a39eec",268:"071b6b9e52a680ce9878",273:"cd52fa3e0855aa0c9454",289:"4cbfc0e66011926fc02e",302:"4c9c0b8c1bf1f0d53ee1",333:"a3776bbaf58dcec5763e",345:"7a6aabe31823d88dbcbb",416:"a55201227f676620758f",498:"43e0a0481fe9542d3f60",518:"0ee58999cdc4dfc67101",642:"ae274ceb94d0bf5c7315",703:"3f74f68d359716bd6835",708:"54e486813b03936c95c4",763:"e3fe3a14627c6e2c4d98",784:"8db8b399f25cdee80791",799:"7e8beb89168ef982e454",830:"7c876ae3e59efae7e815",875:"2689aa5c728be6b2f858",934:"e87488d4670f2e6e1ba0",952:"38b75c7a47dc270eaec5",958:"e4247f8224d73d77eaf1",1019:"55bce10692908f5d8abb",1056:"daab5a1548fd892a2edb",1100:"8feadd86ca7f04b2934e",1129:"11e1f804770abfcf430a",1190:"4fa078f2b0eef40c3510",1206:"3e52f32760d1756b66a3",1249:"3e25802464fe35a0713b",1278:"7e930007c9652cbc1118",1303:"af37331aa8b3e0ed6519",1319:"6db58ba2e479efcee8f9",1402:"ef96244e0df08aaca9d3",1410:"55e3e671832a4674464e",1447:"7e27989810f5476a2933",1475:"472145f99b19e30d758c",1476:"5d579be8265ff9238013",1517:"704c45ed1c5e7b9d6d8c",1519:"10f51f4e3fb459880326",1537:"5e35c7666d77816a7c25",1583:"e40992dd3bea62bc64d2",1605:"b57e3101cf7b3d6d0d11",1606:"529c67e5613ba4388659",1620:"02fa0bc56356b4ed6f62",1626:"51d9e45a0663b0c9ab7e",1677:"91c7b0e78971306e0c9b",1680:"c620bc51b25cb7a2895d",1720:"01c924fe03e490ac5fc4",1734:"d193a2676463db2632ea",1760:"24cfe9700d5a3eeced69",1792:"50a4dbe8382492e2cc35",1794:"7fbde44040838753f1e2",1878:"11d0df2fd7a2d317c3f9",1952:"a171eefc478c6aaf734d",2036:"bb9bff4b72058980f3c2",2054:"9496daa06e707f43c477",2059:"693fce9db61af80712e6",2101:"d3c04fdd1265eee1617d",2108:"b1df218361624d6af875",2141:"040b0bf50e8c753b3005",2168:"209b4dc1ba85bb6fb6a6",2175:"b6269a63dd92dc23df0e",2209:"f8f284a34a4b500fd523",2247:"a350d2e21a88395a1cfd",2253:"c7961efc88918929b891",2291:"f6ac1dafd6243a68600e",2330:"3cd22d75fa84cc2f4dc2",2345:"826368516e5b80b6067f",2361:"54c19b400068adeed8cf",2395:"16b6f4afd87e3836bd67",2466:"c95d321175116e19c4c8",2467:"98e4fa0c69b1e40d152a",2517:"72132d941e26008c3f87",2587:"53619939683bf5ccd998",2595:"21532e2f988e36ec4e06",2625:"5439a8b89ce0f00f94d0",2632:"74c118f3a18332697e8c",2640:"81503b43236a6223111a",2668:"9e88e2ca4e5c8e9de5cb",2673:"af13362dd11c3b94702b",2737:"4a1ddca746f490cd95df",2749:"3d4efd58f40eb82ba742",2750:"812025c2c8f1049587e4",2760:"6779605a65c8b3b0f86d",2820:"af8a0d5e110552e76104",2842:"e7fa8dde3062d54f4b49",2859:"c3fbce44e8c9d84df2cb",2912:"a7b6af2994b17ab66062",2937:"6163c547c2408f5a315f",2971:"e1b999a9ab0cdcf26040",3049:"bb693cca6486b2a684d8",3061:"066eea8068afeb08ec9e",3068:"0ad48e4917b461124023",3072:"ba9f95fca079cd3c3e0e",3073:"a242e5b59f1f15ff60e5",3158:"f0660acbaa2a19cc1d22",3161:"28a8ed9ee905614449bb",3165:"05eb4a044fff549b19be",3172:"01a7a5596179e8f8ba5f",3179:"6f7d18affebb283e078b",3188:"48e88744e20c4d9fe753",3233:"1f25ea461ace42ec952c",3242:"bca50e5d464e98078687",3355:"28a7363788f51f611365",3376:"ba35cf655e0b55b91e8f",3392:"c6d2d9df59c60e1de9f6",3458:"b9e6539f1ffe4934e971",3480:"20d53599995e3cac4a2c",3487:"d9af0859c205511b8bbb",3512:"16dfe7ba37fe8a380c02",3531:"3f113508b2156ccbf99c",3535:"dfcbdeb221ad7dd1d524",3592:"e84d62bc93f0f139548f",3606:"ad25c0f8c76ed614f07a",3630:"b2eb62f1da15d67c45cb",3667:"178f199da1c0b8baa2ee",3676:"caec9a2be94d7c47031c",3795:"0e44b95595cbb50584c1",3797:"c9a9773a171d15960d2f",3829:"33060beece2428ab2f11",3853:"78f2798b8630208b74bb",3896:"1a25761236acd78eef63",3900:"b6e30834bd34a723240d",3916:"d03eba53996c62e458a8",3956:"011b6b03f6615a3c909b",3967:"8407cf7d58b51682ddde",4004:"3b3a2c29b23063497a66",4008:"985cb1b385996b7e4d75",4029:"96c29345d934d06bbdac",4039:"76600039248f447125eb",4050:"136fd812b69d2e29a296",4058:"8b8c720fe6ea15cb67b6",4072:"e959ef7fa275e7c3d302",4091:"25305c153ad01c6a0d43",4139:"bf032ee2fabae51e92e8",4171:"476980400257e1e492f4",4278:"bf489fe0b99d45b698d7",4306:"6b7b1c32d425d733835d",4340:"b14b73c78e91a949ebca",4375:"729c3d694d18e57493cb",4429:"ff58e2802c9b78be0c32",4439:"e419b7e795bb9360b3fc",4440:"b2a988ef056c707c7a1f",4449:"cc04ad7b77f9f7744ad3",4470:"c1371cfd5a35552205a8",4471:"00a43f032940e2a61122",4501:"c86cbef8bca3c60bbc5b",4515:"7b599d32a475ec5baa8b",4533:"396b952970a26ce330eb",4536:"bf435f06d72df0446dd6",4551:"5128ed7088a85fc7cb5c",4626:"f7d79bc128dccfe83821",4660:"3b74b2e83ec75c8ff369",4673:"05a3cfd36b64ebfe9025",4710:"ab6f319d3a9eb7b2d2e8",4759:"725f93dfc39cde14bcb0",4818:"d07e4dc85424f153629b",4906:"3b9ebd3ce8d8082a87de",4975:"a3d839a0afb61eb60646",5007:"4479ba44f465b8c1bb59",5039:"77b3b5eb6cf79edf1314",5090:"e30450000746216be5e6",5126:"7743966bccf893ad5989",5130:"3c8643490f0d7f5de066",5140:"64740a86d23314a1e27e",5169:"44c52e73b928f0e6f3ca",5195:"bab67a91b93c9e60051a",5244:"e23a20a66c5cd40f031c",5253:"dba2009c38d4ed6cdfea",5292:"d1a8898637a69a3f3471",5316:"dac3c274fb9240b60b13",5374:"10448db08b7fab8d5873",5390:"5e1229e7e74b6a08a9e0",5405:"307257ccbe8b2ab3b122",5457:"6e697c7dc0f73a1b50e1",5466:"c5d0c8748f4c907dfe84",5521:"22eee33faf557cd31f03",5531:"a6b08780459d9de069c0",5534:"33b96c88ec54034e32f1",5554:"d6afd6854f70e4828120",5560:"476225ec0014a583005b",5664:"026c744623b516060b86",5698:"7854fc8738db2423b48f",5739:"7b175de622f14f80d576",5743:"5fe497a8432edf8a3bb8",5792:"ced4450c380b4ce25aec",5827:"e937f7b344807d294ed8",5838:"53753fa30b7fb864d7dc",5864:"a0bf1619b75ff9bfb80d",5885:"f1cf14a3ffa88b6682bc",5942:"5d51208f5616cea69ce6",5987:"df2aa39e775083f7807a",5996:"79aa0583dee69eb80c10",5998:"047409e0029a5b1c27a9",6047:"8e1aa692f82e0fd366e0",6073:"f32e84d729200cbb3317",6176:"63d9cbc7fb664e65e82a",6245:"819f9988a342a5e49544",6281:"322f4735135feeb52e23",6321:"70337f47ca23ec9b0d60",6341:"fabb2841b5b7f331c09d",6342:"18cd436ec320b02eda49",6348:"f809b034fa35a739d410",6411:"8ac7f0140eb12842cb57",6417:"df8f0c89129223c4f1e1",6500:"e70204aee92a8b4f021b",6581:"247010885ea1e75e4320",6638:"16c3a4cec9c699212846",6654:"16b1f6b454359e5db9cc",6660:"569f83988a7a41747d56",6662:"c197564ee92b54ef4343",6733:"2138cef389a85959ed97",6741:"6fd6f457ac1cd0f104dd",6745:"5b3a8cc132daf9c390ac",6753:"9e415ed22b48876489ad",6757:"4f497d7cb35adeacaa0a",6780:"b7e9336e324a6d1db862",6869:"a08adeced35c1199cbdf",6875:"bf3eb67019ae3241c14e",6925:"3998f597ac2412f4b790",6932:"c263f99b7d283e054f28",6961:"ee72cf9a9e4365a40ad8",6994:"6dfd7c156f1246cbd81a",6998:"8206a39b2824372c1fb0",7049:"14f833f798f034143133",7054:"b3046f2c6e09615cff7f",7065:"410f5f059f2b0ff8fce7",7091:"01ed5bcfd11f30fea76e",7098:"4ea9ef7313fcf037d3aa",7126:"f70c9c2401a31577c1e5",7131:"1f5e332befa5ab32f661",7132:"79f9a53c78a5d4abb367",7170:"38a404bf6ebb2a85f03e",7249:"b814780c7187065c1998",7257:"5a89fc4725344cbc5fd1",7295:"cd1055d61869334c3575",7303:"9d3e32999cfc04753590",7320:"e45077d1134de4c1f734",7338:"c5301258fe18f3b55de6",7366:"c5a0dffe41fda40212d0",7378:"f6e5b6979b051cf054a6",7388:"3b25ef4dcc486c66dbc2",7424:"1765151665bd6e24f08e",7473:"cd200b67edc4030aba0f",7515:"b681538329b415bef70a",7575:"0c305804970f0b9b3664",7590:"6c2295e4d42b47351247",7655:"b5b251b353923a53ed92",7684:"3cfce95b2a72a405c036",7698:"4341792a7ec0b8adcf23",7748:"cf54a49848ac3373ee40",7754:"c70f71e7866faee081fa",7776:"8cb145e97f20bd3ae08d",7796:"39f14b597e80b8de14ff",7825:"5cb9421d9b4e2dddaad3",7841:"bed1a37843490416e61e",7879:"e94bb55dd82ccce79ddd",7998:"5e2e0dd7010d583dc55d",8125:"7288ce8da4f169f88917",8134:"e602dad65a210490bcba",8194:"5d0311b7cbc13bcf53af",8203:"e49b2c38b968fe89bae2",8204:"6413794267defe266d43",8230:"945476263de342f86d00",8255:"84e3ae3564917343d2bb",8316:"8661235cb6f0049ae702",8317:"da357201043e13d4451e",8329:"1ca1f657431397d23c93",8346:"3f979dc0adc04a22a06b",8372:"347e72eaf199c3538718",8385:"04ff647054c1a1a88ce2",8507:"893fb9c0778dc5f03282",8557:"d984b6bd8ae6c000ac1c",8580:"7aa673907be3f1395af8",8591:"68fdb3e75ee4658a620b",8598:"a4f2fa75a018f5b62482",8626:"1a2223cc4148af04f854",8647:"0087d478ce36b30d8a19",8662:"28aa78f6b25438ffe72d",8693:"7b4df57b9771a61f958d",8696:"6267a2a911e62c7b32c4",8701:"35678db9ae068582cba7",8711:"4030855eceb153571e80",8717:"25b7aabdcab34cc61ed3",8739:"2d44cefcc07e1f083f6a",8747:"e259a66d0e4a142f8b06",8755:"b9912c0ede08eaa72832",8762:"37f717b1e5738b15d7bf",8779:"6020adb5a077f3b1954e",8843:"ca708785800573e6f533",8852:"b99b423ad9fcd4e1403d",8891:"05cc24f30ccb18dbe151",8914:"cb9a2616eb31f9807ea0",8964:"59b76dc3ed9db9ac7792",8987:"6e6261183ffe392ea395",9010:"8a0bacb4fde20fea226a",9021:"22f49f38cf7596bf04f2",9042:"1b7649cb43a6ed0ee7b3",9049:"fec5376841f61f7cf5a3",9138:"7557f94c3e6fcc57e3a4",9152:"6707b0aba8adc4f75cd5",9214:"159c9a2f86ca8617b295",9305:"c0cee84f93848309f923",9421:"13fbd5b33803b8100c1b",9438:"b2b739634f202e9dc02f",9568:"254108dc242c110b7c51",9570:"f17edeaef243a123c0b9",9591:"855d636c2774dcc9e26e",9620:"6b70e8b3a2a9489faab0",9632:"219923b1cb118a8737f1",9636:"ed6104fe94e9d51d29f8",9637:"d29358cd421dc87f9a86",9684:"06aacefedfad1bab5248",9691:"c0f3897352cf627b02b7",9706:"42d2939efd9e62fee1ef",9729:"044dd51c2cf487d1e417",9745:"696a61b8558ef16df609",9749:"badac740efc0fda74c38",9782:"b45b2377c630978f0ced",9789:"c3bfff95ab3a71558f55",9805:"9a00bb2fd1c8acf32919",9841:"d23234838b8f41b7c598",9934:"416f750d5952d223c97d",9961:"20fb2c8dc2321a90be99",9966:"1f783a03ac51beb2f21e",9973:"2e28e6eb284ce9c35191"})[e]+".js",n.miniCssF=e=>""+({21:"BottomNavMobileV4",153:"Lobby",273:"Rewards",703:"HomePage",1190:"DemoLayoutLazy",1249:"Koth",2587:"InformationalModal",3458:"PromotionPreview",3797:"Game",5007:"ProfilePage",5792:"CasinoChrome",7776:"PromotionArticle",8255:"AffiliatesInfo",8647:"i18n-editor",8711:"TopNavDesktopV4"})[e]+"."+({21:"b1a2ee57dcc3402d552e",153:"b1a2ee57dcc3402d552e",273:"7656a4fcec1ce1e51ae9",703:"b1a2ee57dcc3402d552e",1190:"b1a2ee57dcc3402d552e",1249:"b1a2ee57dcc3402d552e",2587:"61af98a3a01b5ff6e43e",3458:"b1a2ee57dcc3402d552e",3797:"b1a2ee57dcc3402d552e",5007:"b1a2ee57dcc3402d552e",5792:"b1a2ee57dcc3402d552e",7776:"b1a2ee57dcc3402d552e",8255:"b1a2ee57dcc3402d552e",8647:"e276f047c3aea601685e",8711:"b1a2ee57dcc3402d552e"})[e]+".css",n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{var e={},t="client:";n.l=(r,a,o,i)=>{if(e[r]){e[r].push(a);return}if(void 0!==o)for(var l,s,u=document.getElementsByTagName("script"),c=0;c<u.length;c++){var d=u[c];if(d.getAttribute("src")==r||d.getAttribute("data-webpack")==t+o){l=d;break}}l||(s=!0,(l=document.createElement("script")).charset="utf-8",l.timeout=120,n.nc&&l.setAttribute("nonce",n.nc),l.setAttribute("data-webpack",t+o),l.src=r),e[r]=[a];var f=(t,n)=>{l.onerror=l.onload=null,clearTimeout(h);var a=e[r];if(delete e[r],l.parentNode&&l.parentNode.removeChild(l),a&&a.forEach(e=>e(n)),t)return t(n)},h=setTimeout(f.bind(null,void 0,{type:"timeout",target:l}),12e4);l.onerror=f.bind(null,l.onerror),l.onload=f.bind(null,l.onload),s&&document.head.appendChild(l)}})(),n.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.nmd=e=>(e.paths=[],e.children||(e.children=[]),e),(()=>{var e={1586:[11586],2524:[82524],2646:[12646],4695:[24695],6378:[86378],7035:[7035],7459:[7459],7922:[37922],7964:[47964]},t={7035:["default","./App",87552],7459:["default","./App",37192],11586:["default","./App",95490],12646:["default","./App",68588],24695:["default","./App",49723],37922:["default","./App",93958],47964:["default","./App",23176],82524:["default","./App",3042],86378:["default","./App",98324]};n.f.remotes=(r,a)=>{n.o(e,r)&&e[r].forEach(e=>{var r=n.R;r||(r=[]);var o=t[e];if(!(r.indexOf(o)>=0)){if(r.push(o),o.p)return a.push(o.p);var i=t=>{t||(t=Error("Container missing")),"string"==typeof t.message&&(t.message+='\nwhile loading "'+o[1]+'" from '+o[2]),n.m[e]=()=>{throw t},o.p=0},l=(e,t,n,r,l,s)=>{try{var u=e(t,n);if(!u||!u.then)return l(u,r,s);var c=u.then(e=>l(e,r),i);if(!s)return c;a.push(o.p=c)}catch(e){i(e)}},s=(e,t,n)=>l(t.get,o[1],r,0,u,n),u=t=>{o.p=1,n.m[e]=e=>{e.exports=t()}};l(n,o[2],0,0,(e,t,r)=>e?l(n.I,o[0],0,e,s,r):i(),1)}})}})(),n.j=3818,(()=>{n.S={};var e={},t={};n.I=(r,a)=>{a||(a=[]);var o=t[r];if(o||(o=t[r]={}),!(a.indexOf(o)>=0)){if(a.push(o),e[r])return e[r];n.o(n.S,r)||(n.S[r]={});var i=n.S[r],l=e=>{"undefined"!=typeof console&&console.warn&&console.warn(e)},s="client",u=(e,t,n,r)=>{var a=i[e]=i[e]||{},o=a[t];(!o||!o.loaded&&(!r!=!o.eager?r:s>o.from))&&(a[t]={get:n,from:s,eager:!!r})},c=e=>{var t=e=>l("Initialization of sharing external failed: "+e);try{var o=n(e);if(!o)return;var i=e=>e&&e.init&&e.init(n.S[r],a);if(o.then)return d.push(o.then(i,t));var s=i(o);if(s&&s.then)return d.push(s.catch(t))}catch(e){t(e)}},d=[];return"default"===r&&(u("mobx-react-lite","4.1.1",()=>()=>n(90095),1),u("mobx","6.13.5",()=>()=>n(89193),1),u("react-dom","19.2.7",()=>()=>n(78325),1),u("react","19.2.7",()=>()=>n(63696),1),c(93958),c(87552),c(23176),c(95490),c(3042),c(37192),c(68588),c(49723),c(98324)),d.length?e[r]=Promise.all(d).then(()=>e[r]=1):e[r]=1}}})(),n.p="/build/",(()=>{var e=e=>{var t=e=>e.split(".").map(e=>+e==e?+e:e),n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(e),r=n[1]?t(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,t(n[2]))),n[3]&&(r.push([]),r.push.apply(r,t(n[3]))),r},t=(t,n)=>{t=e(t),n=e(n);for(var r=0;;){if(r>=t.length)return r<n.length&&"u"!=(typeof n[r])[0];var a=t[r],o=(typeof a)[0];if(r>=n.length)return"u"==o;var i=n[r],l=(typeof i)[0];if(o!=l)return"o"==o&&"n"==l||"s"==l||"u"==o;if("o"!=o&&"u"!=o&&a!=i)return a<i;r++}},r=e=>{var t=e[0],n="";if(1===e.length)return"*";if(t+.5){n+=0==t?">=":-1==t?"<":1==t?"^":2==t?"~":t>0?"=":"!=";for(var a=1,o=1;o<e.length;o++)a--,n+="u"==(typeof(l=e[o]))[0]?"-":(a>0?".":"")+(a=2,l);return n}var i=[];for(o=1;o<e.length;o++){var l=e[o];i.push(0===l?"not("+s()+")":1===l?"("+s()+" || "+s()+")":2===l?i.pop()+" "+i.pop():r(l))}return s();function s(){return i.pop().replace(/^\((.+)\)$/,"$1")}},a=(t,n)=>{if(0 in t){n=e(n);var r=t[0],o=r<0;o&&(r=-r-1);for(var i=0,l=1,s=!0;;l++,i++){var u,c,d=l<t.length?(typeof t[l])[0]:"";if(i>=n.length||"o"==(c=(typeof(u=n[i]))[0]))return!s||("u"==d?l>r&&!o:""==d!=o);if("u"==c){if(!s||"u"!=d)return!1}else if(s){if(d==c){if(l<=r){if(u!=t[l])return!1}else{if(o?u>t[l]:u<t[l])return!1;u!=t[l]&&(s=!1)}}else if("s"!=d&&"n"!=d){if(o||l<=r)return!1;s=!1,l--}else{if(l<=r||c<d!=o)return!1;s=!1}}else"s"!=d&&"n"!=d&&(s=!1,l--)}}var f=[],h=f.pop.bind(f);for(i=1;i<t.length;i++){var p=t[i];f.push(1==p?h()|h():2==p?h()&h():p?a(p,n):!h())}return!!h()},o=(e,t)=>e&&n.o(e,t),i=e=>(e.loaded=1,e.get()),l=e=>Object.keys(e).reduce((t,n)=>(e[n].eager&&(t[n]=e[n]),t),{}),s=(e,n,r)=>{var a=r?l(e[n]):e[n],n=Object.keys(a).reduce((e,n)=>!e||t(e,n)?n:e,0);return n&&a[n]},u=(e,n,r,o)=>{var i=o?l(e[n]):e[n],n=Object.keys(i).reduce((e,n)=>a(r,n)&&(!e||t(e,n))?n:e,0);return n&&i[n]},c=(e,n,r)=>{var a=r?l(e[n]):e[n];return Object.keys(a).reduce((e,n)=>!e||!a[e].loaded&&t(e,n)?n:e,0)},d=(e,t,n,a)=>"Unsatisfied version "+n+" from "+(n&&e[t][n].from)+" of shared singleton module "+t+" (required "+r(a)+")",f=(e,t,n,a,o)=>{var i=e[n];return"No satisfying version ("+r(a)+")"+(o?" for eager consumption":"")+" of shared module "+n+" found in shared scope "+t+".\nAvailable versions: "+Object.keys(i).map(e=>e+" from "+i[e].from).join(", ")},h=e=>{throw Error(e)},p=(e,t)=>h("Shared module "+t+" doesn't exist in shared scope "+e),m=e=>{"undefined"!=typeof console&&console.warn&&console.warn(e)},g=(e,t,n)=>n?n():p(e,t),b=(e=>function(t,r,a,o,i){var l=n.I(t);return l&&l.then&&!a?l.then(e.bind(e,t,n.S[t],r,!1,o,i)):e(t,n.S[t],r,a,o,i)})((e,t,n,r,l,s)=>{if(!o(t,n))return g(e,n,s);var u=c(t,n,r);return a(l,u)||m(d(t,n,u,l)),i(t[n][u])}),v={},y={49952:()=>b("default","react",!0,[4,19,2,7],()=>()=>n(63696)),13920:()=>b("default","react-dom",!0,[4,19,2,7],()=>()=>n(78325)),41468:()=>b("default","mobx",!0,[4,6,13,5],()=>()=>n(89193)),80232:()=>b("default","mobx-react-lite",!0,[1,4,0,5],()=>()=>n(90095))};[49952,13920,41468,80232].forEach(e=>{n.m[e]=t=>{v[e]=0,delete n.c[e];var r=y[e]();if("function"!=typeof r)throw Error("Shared module is not available for eager consumption: "+e);t.exports=r()}});var w={3818:[49952,13920,41468,80232]},_={};n.f.consumes=(e,t)=>{n.o(w,e)&&w[e].forEach(e=>{if(n.o(v,e))return t.push(v[e]);if(!_[e]){var r=t=>{v[e]=0,n.m[e]=r=>{delete n.c[e],r.exports=t()}};_[e]=!0;var a=t=>{delete v[e],n.m[e]=r=>{throw delete n.c[e],t}};try{var o=y[e]();o.then?t.push(v[e]=o.then(r).catch(a)):r(o)}catch(e){a(e)}}})}})(),(()=>{if("undefined"!=typeof document){var e=(e,t,r,a,o)=>{var i=document.createElement("link");return i.rel="stylesheet",i.type="text/css",n.nc&&(i.nonce=n.nc),i.onerror=i.onload=n=>{if(i.onerror=i.onload=null,"load"===n.type)a();else{var r=n&&n.type,l=n&&n.target&&n.target.href||t,s=Error("Loading CSS chunk "+e+" failed.\n("+r+": "+l+")");s.name="ChunkLoadError",s.code="CSS_CHUNK_LOAD_FAILED",s.type=r,s.request=l,i.parentNode&&i.parentNode.removeChild(i),o(s)}},i.href=t,r?r.parentNode.insertBefore(i,r.nextSibling):document.head.appendChild(i),i},t=(e,t)=>{for(var n=document.getElementsByTagName("link"),r=0;r<n.length;r++){var a=n[r],o=a.getAttribute("data-href")||a.getAttribute("href");if("stylesheet"===a.rel&&(o===e||o===t))return a}for(var i=document.getElementsByTagName("style"),r=0;r<i.length;r++){var a=i[r],o=a.getAttribute("data-href");if(o===e||o===t)return a}},r=r=>new Promise((a,o)=>{var i=n.miniCssF(r),l=n.p+i;if(t(i,l))return a();e(r,l,null,a,o)}),a={3818:0,9421:0};n.f.miniCss=(e,t)=>{a[e]?t.push(a[e]):0!==a[e]&&({21:1,153:1,273:1,703:1,1190:1,1249:1,2587:1,3458:1,3797:1,5007:1,5792:1,7776:1,8255:1,8647:1,8711:1})[e]&&t.push(a[e]=r(e).then(()=>{a[e]=0},t=>{throw delete a[e],t}))}}})(),(()=>{var e={3818:0,9421:0};n.f.j=(t,r)=>{var a=n.o(e,t)?e[t]:void 0;if(0!==a){if(a)r.push(a[2]);else if(/^(7(035|459|922|964)|1586|2524|2646|4695|6378)$/.test(t))e[t]=0;else{var o=new Promise((n,r)=>a=e[t]=[n,r]);r.push(a[2]=o);var i=n.p+n.u(t),l=Error();n.l(i,r=>{if(n.o(e,t)&&(0!==(a=e[t])&&(e[t]=void 0),a)){var o=r&&("load"===r.type?"missing":r.type),i=r&&r.target&&r.target.src;l.message="Loading chunk "+t+" failed.\n("+o+": "+i+")",l.name="ChunkLoadError",l.type=o,l.request=i,a[1](l)}},"chunk-"+t,t)}}};var t=(t,r)=>{var a,o,[i,l,s]=r,u=0;if(i.some(t=>0!==e[t])){for(a in l)n.o(l,a)&&(n.m[a]=l[a]);s&&s(n)}for(t&&t(r);u<i.length;u++)o=i[u],n.o(e,o)&&e[o]&&e[o][0](),e[o]=0},r=self.webpackChunkclient=self.webpackChunkclient||[];r.forEach(t.bind(null,0)),r.push=t.bind(null,r.push.bind(r))})(),n.nc=void 0,n(27677)})();
+//# sourceMappingURL=client.41b06529227c4b8b6a1d.js.map
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '"action":"[^"]+"' | sort -u | head -30
+"action":"loader"
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'client-api[^"]*' | sort -u | head -20
+client-api
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'fetch\([^)]+client-api[^)]+\)' | head -10
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'credentials[^}]+' | head -10
+credentials:"same-origin"
+credentials"===t?t:"":void 0
+credentials"===t?t:"":void 0:null,i.d.C(e,t))
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '/client-api[^"]*' | head -10
+/client-api
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'action[^}]*' | head -30
+action)(t,t=>{f.P.setItem(e,t)
+action)(()=>this.featuresEnabled,e=>{this.featuresEnabledSet.replace(e)
+action)(()=>this.embeddedTranslationEditorService.localeTranslations,e=>{e?this.overrideTranslations(e):this.fetchFromBackendAndSetCurrentLocale().catch(console.error)
+action,2,"overrideTranslations"]],[]));var P=n(88538);let C=P.env.I18N_PROJECT?{...l.A.i18n.backend,project:P.env.I18N_PROJECT,version:P.env.I18N_VERSION||l.A.i18n.backend.version
+actions",path:p.q7.TRANSACTIONS,loadPage:()=>Promise.all([n.e(5390),n.e(8779),n.e(5126),n.e(6638),n.e(268),n.e(1447),n.e(2108),n.e(2749),n.e(3392),n.e(6417),n.e(8626),n.e(7796),n.e(934),n.e(8346),n.e(2673)]).then(n.bind(n,84753))
+action
+actions"
+actionScheduler:e
+action)||void 0===t||t.dispose(),e.reaction=null
+action=new i.Reaction("observer".concat(e.name),function(){var t;e.stateVersion=Symbol(),null===(t=e.onStoreChange)||void 0===t||t.call(e)
+action:null,onStoreChange:null,stateVersion:Symbol(),name:t,subscribe:function(e){return v.unregister(o),o.onStoreChange=e,o.reaction||(w(o),o.stateVersion=Symbol()),function(){var e;o.onStoreChange=null,null===(e=o.reaction)||void 0===e||e.dispose(),o.reaction=null
+action||(w(i),v.register(a,i,i)),s().useDebugValue(i.reaction,h),(0,y.useSyncExternalStore)(i.subscribe,i.getSnapshot,i.getSnapshot),i.reaction.track(function(){try{n=e()
+action:null,mounted:!1,reactionInvalidatedBeforeMount:!1,forceUpdate:null,name:g(e.constructor),state:void 0,props:void 0,context:void 0
+action||(e=n,n.reaction=new r.Reaction(e.name+".render()",function(){if(!e.mounted){e.reactionInvalidatedBeforeMount=!0;return
+action)||t.dispose(),e.reaction=null
+action.track(function(){try{o=(0,r._allowStateChanges)(!1,t)
+action||t.reactionInvalidatedBeforeMount)&&t.forceUpdate(),null==r?void 0:r.apply(this,arguments)
+action)||e.dispose(),t.reaction=null,t.forceUpdate=null,t.mounted=!1,t.reactionInvalidatedBeforeMount=!1
+action)("observableFromPromise-resolve",function(e){n.value=e,n.state=c
+action)("observableFromPromise-reject",function(e){n.value=e,n.state=d
+action)("fromPromise.reject",function(t){var n=e(Promise.reject(t));return n.state=d,n.value=t,n
+action)("fromPromise.resolve",function(t){void 0===t&&(t=void 0);var n=e(Promise.resolve(t));return n.state=c,n.value=t,n
+action.bound],e.prototype,"next",null),p([r.action.bound],e.prototype,"complete",null),p([r.action.bound],e.prototype,"error",null)
+action)(function(n){(0,r.isComputedProp)(e,a)?t.localComputedValues.get(a).set(n):n!==t.model[a]?t.localValues.set(a,n):t.localValues.delete(a)
+action.bound],e.prototype,"submit",null),g([r.action.bound],e.prototype,"reset",null),g([r.action.bound],e.prototype,"resetProperty",null)
+action)(function(){for(var t=0,n=e.removed;t<n.length;t++){var r=n[t];u._removeItem(r)
+action)(function(){u._removeItem(e.oldValue),u._addItem(e.newValue)
+action(),delete t[this._ogmInfoKey]
+action:(0,r.reaction)(function(){return t._groupBy(e)
+action(),delete e[this._ogmInfoKey]
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'JSON\.stringify[^)]+client-api[^)]+\)' | head -10
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE 'postMessage[^)]+client-api' | head -10
+(no output)
+[0m
+[0m$ [0mcurl -sS -X POST -H "Content-Type: application/json" -d '{"action":"user.getProfile"}' https://gamdom80008.com/client-api 2>&1
+{"_tag":"GamdomClientMessage","info":"unknown","type":"ERROR"}
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '"[a-z]+\.[a-z]+"' | sort -u | head -50
+"accessor.get"
+"accessor.init"
+"accessor.set"
+"action.bound"
+"computed.struct"
+"fatbets.com"
+"flow.bound"
+"gamdom.com"
+"gamdom.eu"
+"gamdom.io"
+"gamdom.one"
+"gamdom.vip"
+"gamdom.win"
+"gamdompartners.com"
+"lazy.action"
+"lazy.loader"
+"lazy.middleware"
+"logo.svg"
+"observable.ref"
+"observable.shallow"
+"observable.struct"
+"react.activity"
+"react.consumer"
+"react.context"
+"react.element"
+"react.fragment"
+"react.lazy"
+"react.memo"
+"react.portal"
+"react.profiler"
+"react.scope"
+"react.suspense"
+"trgamdom.com"
+[0m
+[0m$ [0mcurl -sS https://gamdom80008.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '"[A-Z][a-zA-Z]+\.[a-z]+"' | sort -u | head -50
+"Gamdom.com"
+"ObservableMap.key"
+"ObservableObject.key"
+"ObservableObject.keys"
+"Symbol.metadata"
+[0m

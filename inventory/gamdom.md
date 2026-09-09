@@ -374,3 +374,10 @@ www.gamdom.com
 - CHANGED Provisioning cycle 5 for 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — no cert deployment
 - CHANGED Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed stable
 - CHANGED shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
+
+## 2026-09-09 11:51:06 UTC
+- CHANGED gamdom80008.com: newly live (10th mirror) replaces gamdom80007.com on status page monitor id:221 — rotation event absorbed into fleet
+- CHANGED gamdom80007.com: demoted to 302→gamdom80008.com redirect alias
+- CHANGED gamdom80001.com/gamdom80002.com: CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live
+- CHANGED fatbets.com + gamdom.one: confirmed as 2nd/3rd brands on shared Pool A, byte-identical origin signature → shared identity/wallet backend
+- CHANGED Provisioning cycle count for 90472/90473/90475/90480/90482/90488: now 5th cycle, all still 421/TLS-NOMATCH

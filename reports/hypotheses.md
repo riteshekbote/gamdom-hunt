@@ -748,3 +748,16 @@
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
 - LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-09 11:51:06 UTC
+- [68] gamdom.com/client-api: Cross-brand cookie replay on shared identity/wallet origin (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: deploy-parity watch (cycle 8) — passive HTTP probe across all 9 pending aliases + status page reconfirmation:
+- LEARN: ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live → 10th mirror / 20th h
+- LEARN: ACCEPTED inventory @ gamdom80007.com: demoted to 302→gamdom80008.com redirect alias — confirms brand retires numbered aliases by redirect.
+- LEARN: ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live.
+- LEARN: ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 20+ hostnames.
+- LEARN: ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 5th cycle, all still 421/TLS-NOMATCH.
+- LEARN: ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: stable.
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited.
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
+- LEARN: REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
