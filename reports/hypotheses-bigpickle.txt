@@ -1,4 +1,4 @@
-## 2026-09-09 15:23:01 UTC [target] (model bigpickle)
+## 2026-09-09 18:41:50 UTC [target] (model bigpickle)
 [CHANGED] gamdom80009.com: newly live (11th mirror, 21st hostname) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h
 [CHANGED] gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect
 [CHANGED] Status page: now lists com/eu/io/vip/win/80008/80009 (7 monitors) — absorbed 80006→80009 rotation, still 7-monitor cap
