@@ -11234,3 +11234,295 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] gamdom: 67 — No surface delta for the 7th cycle: 9 provisioned aliases stuck 421, 7-monitor set retired 80007→80008 already absorbed, Starlette pool byte-stable. Fleet churn evidence (80008 live, 80007 retired, 80001/80002 staged) keeps single-control-of-origin as the core concentration; 20+ hostnames across 2 brands funnel to one Starlette identity/wallet backend with the cross-brand cookie-replay chain (66) still gated behind one authenticated Set-Cookie replay I am not permitted to execute. Only read-only GET probes run at ≤1 rps; no data touched; risk steady.
+===== ANALYST bigpickle 2026-09-09 01:34:51 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | head -c 600; echo
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right
+[0m
+[0m$ [0mfor a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " --max-time 8 https://gamdom$a.com/client-api; done; echo
+90471:421 90472:421 90473:421 90475:421 90480:421 90482:421 90488:421 80001:421 80002:421
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | python3 -c "import sys,json; d=json.load(sys.stdin); print('monitors:', [m['name'] for m in d.get('monitorList',[])])" 2>/dev/null; echo "---"; curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | python3 -c "import sys,json; d=json.load(sys.stdin); print([ (m.get('name'),m.get('url')) for m in d.get('monitorList',[])])" 2>/dev/null
+monitors: []
+---
+[]
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "shreeram:%{http_code}\n" --max-time 8 https://shreeram-dynamic-test.teamgamdom.com/; curl -sSk -o /dev/null -w "80471/%{http_code}\n" --max-time 8 https://gamdom90471.com/client-api; curl -sSk -o /dev/null -w "80008/live:%{http_code}\n" --max-time 8 https://gamdom80008.com/client-api; curl -sSk -o /dev/null -w "80007/redirect:%{http_code}\n" --max-time 8 https://gamdom80007.com/client-api
+shreeram:401
+80471/421
+80008/live:400
+80007/redirect:302
+[0m
+The status page API `monitorList` didn't parse under my grep — let me inspect the structure correctly.
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | python3 -c "import sys,json; d=json.load(sys.stdin); print('keys:', list(d.keys())); print([ (g.get('name')) for g in d.get('groups',[])])" 2>&1 | head -c 400; echo; echo "---config check ok---"
+keys: ['config', 'incident', 'publicGroupList', 'maintenanceList']
+[]
+
+---config check ok---
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+m=d.get('config',{}).get('monitorList',[])
+print('config.monitorList count:', len(m))
+for x in m:
+    print('-', x.get('name'), x.get('url'))
+print('incident:', d.get('incident'))
+print('publicGroupList:', [(g.get('name'), len(g.get('monitorList',[]))) for g in d.get('publicGroupList',[])])
+"
+config.monitorList count: 0
+incident: None
+publicGroupList: [('Gamdom Official Domains', 7)]
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for g in d.get('publicGroupList',[]):
+    print('group:', g.get('name'))
+    for m in g.get('monitorList',[]):
+        print('  -', m.get('name'), m.get('url'), 'id:', m.get('id'))
+"
+group: Gamdom Official Domains
+  - Gamdom.com https://gamdom.com id: 13
+  - Gamdom.eu https://gamdom.eu id: 3
+  - Gamdom.io https://gamdom.io id: 2
+  - Gamdom.vip https://gamdom.vip id: 6
+  - Gamdom.win https://gamdom.win id: 5
+  - gamdom80006.com https://gamdom80006.com id: 217
+  - gamdom80008.com https://gamdom80008.com id: 221
+[0m
+[0m$ [0mls /home/runner/work/gamdom-hunt/gamdom-hunt/ 2>/dev/null; ls /home/runner/work/gamdom-hunt/gamdom-hunt/art/ 2>/dev/null | head
+README.md
+analyst-out.txt
+analyst-prompt.txt
+ctx.txt
+inventory
+knowledge
+leads
+probe-results.md
+recon-notes
+reports
+reposcan-raw
+scope.yml
+scripts
+state_bigpickle.json
+state_laguna.json
+state_ling3.json
+state_longcat.json
+state_mimo.json
+state_nemotron3.json
+triage
+[0m
+The status page now lists the 7-monitor set as: com/eu/io/vip/win/80006/80008 (id 221 replaced 80007). This confirms the rotation is stable — 80008 is now on the monitor list, 80007 retired.
+
+All 9 provisioned aliases still 421, shreeram gate still 401, 80008 live, 80007 redirect alias. No new surface this cycle. Let me finalize.
+
+STEP 1 — DELTA:
+- The 7-monitor set now confirmed at API level: com/eu/io/vip/win/80006/80008 (id 221). No monitor list change vs prior (rotation already absorbed last cycle).
+- All 9 provisioned aliases (90471/90472/90473/90475/90480/90482/90488/80001/80002) still 421/TLS-NOMATCH.
+- shreeram gate still 401, 80008 live 400, 80007 302 redirect.
+
+This is effectively a no-delta watch cycle. No new surface.
+
+STEP 3 hypotheses — the two persistent chains (cross-brand cookie replay at 66, provisioned-alias cert at 52) remain gated behind auth I cannot perform or certs that haven't landed. No new passive-verifiable lead emerged from the mirror fleet or status page.
+
+Let me output the structured blocks.
+
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 Starlette origin (com/eu/io/one/vip/win + fatbets.com + 80003/80006/80008/4567)
+confidence: 66
+reasoning: fatbets.com + gamdom.one + 10 live mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one identity/wallet backend across 2 brands / 20+ hostnames; auth transport is server-set same-origin cookie (bundle uses credentials same-origin, zero bearer/localStorage). No pre-auth surface delta this cycle; 80008 rotation already absorbed into the 7-monitor set (id 221), confirming fleet churn continues but adds no pre-auth angle.
+evidence_needed: authenticated Set-Cookie from one mirror replayed verbatim on another mirror/brand hostname → backend acceptance = replay proven.
+verify_steps: AUTH_HELPED only — own test accounts: POST /client-api on gamdom80006.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare upstream responses.
+impact: wallet/identity session theft across 2 brands + 20 hostnames (funds, withdrawal, KYC); critical if backend host-agnostic.
+testability: AUTH_HELPED
+
+[HYP] Provisioned alias cert lands with edge/backend gate-scope regression
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90471/90472/90473/90475/90480/90482/80001/80002
+confidence: 52
+reasoning: 80007→80008 rotation landed cert on the shared Starlette origin (maintained); 7th consecutive cycle with 9 pending aliases stuck 421. If a cert lands on the shreeram Basic-gated backend (90488) or a Pool-B misbound vhost, brand DNS exposes an internal test/auth surface or second origin realm. Active fleet churn (80008 now on monitor id 221) keeps this probable to eventually fire.
+evidence_needed: any pending alias returns 200/400 instead of 421, or shreeram gate-scope regression to non-401.
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8 others; 421→400/200=live); if live `curl -sSk https://<alias>/client-api|md5sum` vs 7e3a161d; `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`.
+impact: brand DNS → internal Basic-auth-gated nginx test backend or misbound origin; medium-high if gate-scope-error.
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE:
+- [PARKED] no new hypotheses emerged from passive probing this cycle; both existing chains remain valid but ungated.
+- Top 2 survive (66, 52). Staff-refill client-asserted line (48) stays AUTH_HELPED-gated, dropped below focus.
+
+STEP 5 — [NEXT] PROBE: deploy-parity watch (cycle 8) — `for a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done` (421→400/200 = newly live; confirm md5 7e3a161d or shreeram gate scope), then re-confirm 7-monitor set via gamdommirrors.com/api/status-page/gamdom-domains.
+
+STEP 6 — [LEARN] ACCEPTED watch @ 80001/80002 + 7 pending 9047x aliases: all 4 Pool B edges still 421/TLS-NOMATCH (8th cycle); 80007 still 302→80008, 80008 live, status page 7 monitors now ids 2,3,5,6,13,217,221 (80008 ratified on monitor list).
+
+STEP 7 — [RISK] gamdom: 67 — No surface delta (8th cycle). 9 provisioned aliases stuck 421; 7-monitor set stable with 80008 rotation absorbed (id 221 replaces 80007); Starlette pool byte-stable. 20+ hostnames across 2 brands funnel to one Starlette identity/wallet origin; top chain (cross-brand cookie replay, 66) still gated behind one authenticated Set-Cookie replay I am not permitted to run, and the client-asserted staffRefill line (48) remains behind the same gate. Read-only GET/HEAD probes only at ≤1 rps; no data touched; risk steady.
+
+Let me write this to the output file as per convention if there is one. Let me check the workspace structure.
+[0m$ [0mls /home/runner/work/gamdom-hunt/gamdom-hunt/leads/ /home/runner/work/gamdom-hunt/gamdom-hunt/knowledge/ /home/runner/work/gamdom-hunt/gamdom-hunt/inventory/ /home/runner/work/gamdom-hunt/gamdom-hunt/triage/ /home/runner/work/gamdom-hunt/gamdom-hunt/scripts/ 2>/dev/null
+/home/runner/work/gamdom-hunt/gamdom-hunt/inventory/:
+gamdom.md
+
+/home/runner/work/gamdom-hunt/gamdom-hunt/knowledge/:
+index.md
+
+/home/runner/work/gamdom-hunt/gamdom-hunt/leads/:
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+
+/home/runner/work/gamdom-hunt/gamdom-hunt/scripts/:
+sync-issues.py
+
+/home/runner/work/gamdom-hunt/gamdom-hunt/triage/:
+run-2026-09-02-21-51.md
+run-2026-09-02-23-43.md
+run-2026-09-03-02-16.md
+run-2026-09-03-07-14.md
+run-2026-09-03-12-07.md
+run-2026-09-03-16-28.md
+run-2026-09-03-19-24.md
+run-2026-09-03-21-53.md
+run-2026-09-03-23-43.md
+run-2026-09-04-02-12.md
+run-2026-09-04-07-16.md
+run-2026-09-04-12-09.md
+run-2026-09-04-16-24.md
+run-2026-09-04-19-21.md
+run-2026-09-04-21-31.md
+run-2026-09-04-23-15.md
+run-2026-09-05-01-00.md
+run-2026-09-05-05-24.md
+run-2026-09-05-09-18.md
+run-2026-09-05-12-47.md
+run-2026-09-05-15-43.md
+run-2026-09-05-17-50.md
+run-2026-09-05-19-45.md
+run-2026-09-05-21-49.md
+run-2026-09-05-23-28.md
+run-2026-09-06-01-18.md
+run-2026-09-06-06-02.md
+run-2026-09-06-11-00.md
+run-2026-09-06-14-12.md
+run-2026-09-06-17-07.md
+run-2026-09-06-19-13.md
+run-2026-09-06-21-23.md
+run-2026-09-06-23-05.md
+run-2026-09-07-01-03.md
+run-2026-09-07-06-08.md
+run-2026-09-07-12-38.md
+run-2026-09-07-17-54.md
+run-2026-09-07-20-56.md
+run-2026-09-07-23-15.md
+run-2026-09-08-01-13.md
+run-2026-09-08-05-59.md
+run-2026-09-08-10-54.md
+run-2026-09-08-14-50.md
+run-2026-09-08-18-13.md
+run-2026-09-08-21-11.md
+run-2026-09-08-23-25.md
+[0m
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/state_bigpickle.json 2>/dev/null | head -c 1000; echo; echo "---analyst-out---"; head -c 800 /home/runner/work/gamdom-hunt/gamdom-hunt/analyst-out.txt 2>/dev/null
+{"phase": "POC", "target": "api"}
+---analyst-out---
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" | head -c 600; echo
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n  margin-top: 0 !important;\n}\n\n#app .title-flex {\n  height: 72px;\n  width: 100%;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 24px !important;\n}\n\n#app .logo {\n  margin-right
+[0m
+[0m$ [0mfor a in 90471 90472 90473 90475 90480 9
+[0m
+The workspace has a structured layout: `state_bigpickle.json`, `leads/`, `knowledge/`, `inventory/`, `analyst-out.txt`, etc. This is my state cycle. Let me write my findings to the appropriate rotation outputs.
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/triage/run-2026-09-08-23-25.md 2>/dev/null | head -c 2000
+===== TRIAGE 2026-09-08 23:25:15 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please paste the probe results (URLs + findings) after the `LEADS:` heading so I can run the 7-Question Gate against each.
+[0m
+[0m$ [0mdate -u +"%Y-%m-%d  %H:%M:%S UTC"
+2026-09-09  01:17:13 UTC
+[0m
+[0m$ [0mtail -c 1500 /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md 2>/dev/null; echo "===HEAD==="; head -c 1200 /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md 2>/dev/null
+e ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap client-side; /client-api proxies by action name; catch-all 400 on GET subpaths → action map unenumerable; bundle hash unchanged (no new staff keys surfaced this cycle).
+evidence_needed: authenticated POST of staff action names → differentiated upstream response vs non-staff names.
+verify_steps: AUTH_HELPED only.
+impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege client-asserted.
+testability: AUTH_HELPED
+[NEXT] PROBE: deploy-parity watch (cycle 8) — `for a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done` (421→400/200 = newly live; confirm md5 7e3a161d or shreeram gate scope), then `curl -sS "https://gamdommirrors.com/api/status-page/gamdom-domains"` to re-confirm the 7-monitor set before/after any rotation.
+[RISK] gamdom: 67 — No surface delta for the 7th cycle: 9 provisioned aliases stuck 421, 7-monitor set retired 80007→80008 already absorbed, Starlette pool byte-stable. Fleet churn evidence (80008 live, 80007 retired, 80001/80002 staged) keeps single-control-of-origin as the core concentration; 20+ hostnames across 2 brands funnel to one Starlette identity/wallet backend with the cross-brand cookie-replay chain (66) still gated behind one authenticated Set-Cookie replay I am not permitted to execute. Only read-only GET probes run at ≤1 rps; no data touched; risk steady.
+===HEAD===
+## 2026-09-03 16:43:31 UTC [target] (model bigpickle)
+[HYP] Mirror-domains share wallet/auth/API trust boundary -> cross-domain ATO via client-api
+class: AUTH
+asset: gamdom80006.com /client-api (and gamdom.eu, gamdom.io, gamdom.vip, gamdom.win)
+confidence: 52
+reasoning: All 7 enumerated mirror hosts serve byte-identical casino app, identical CSP (frame-ancestors 'self' https://*.faucetcrypto.com), nginx/Varnish, and identical POST-only `/client-api` proxy (400 "only POST" on every path incl /v1 /v2 /health /graphql). UptimeRobot status page lists them as one "Gamdom Official Domains" account group. Live probes confirm corporate control; sharing implies a single upstream API/identity origin.
+evidence_needed: Two mirrors resolving to distinct upstream; or a POST to one mirror /client-api returning a session/token usable on another mirror; or browser-context CSRF (since frame-ancestors allows faucetcrypto subdomains) reaching /client-api cross-origin.
+verify_steps: Read-only first — GET /client-api and / on all mirrors (done, all 200/400). Requires AUTH_HELPED/HUMAN: authenticate on one mirror, confirm the auth cookie/session is honored by the others' /client-api. Passive only: DNS
+[0m
+[0m$ [0mcat >> /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md <<'EOF'
+
+## 2026-09-09 01:17:13 UTC [target] (model bigpickle)
+STEP 1 — DELTA:
+- NO_DELTA vs last cycle surface: all 9 pending aliases (90471/90472/90473/90475/90480/90482/90488/80001/80002) still 421/TLS-NOMATCH on all edges.
+- CHANGED (confirmation only): gamdommirrors.com/api/status-page/gamdom-domains publicGroupList directly ratifies 7 monitors = gamdom.com(13)/eu(3)/io(2)/vip(6)/win(5)/80006(217)/80008(221) — 80008 rotation now visible in the API payload itself, not just inferred.
+- CHANGED (stable): 80007 still 302→80008, 80008 live 400 (md5-verified family member), shreeram gate still 401.
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 Starlette origin (com/eu/io/one/vip/win + fatbets.com + 80003/80006/80008/4567)
+confidence: 66
+reasoning: fatbets.com + gamdom.one + 10 live mirrors serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one identity/wallet backend across 2 brands/20+ hostnames; auth transport is server-set same-origin cookie (credentials same-origin, zero bearer/localStorage). Pre-auth surface unchanged this cycle; 80008 ratified on monitor id 221 — fleet churn continues but adds no pre-auth angle.
+evidence_needed: authenticated Set-Cookie from one mirror replayed verbatim on another mirror/brand hostname → backend acceptance = replay proven.
+verify_steps: AUTH_HELPED only — own test accounts: POST /client-api on gamdom80006.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare upstream responses.
+impact: wallet/identity session theft across 2 brands + 20 hostnames (funds, withdrawal, KYC); critical if backend host-agnostic.
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with edge/backend gate-scope regression
+class: MISCONFIG
+asset: gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com; fleet 90471/90472/90473/90475/90480/90482/80001/80002
+confidence: 53
+reasoning: Active fleet churn proven (80008 live, 80007→redirect, 80001/80002 staged into Pool B DNS) yet 9 provisioned aliases sit at 421 for an 8th cycle with NO cert deploy. Longest-staged pair now 80001/80002 tailing the 80008 rotation by one cycle — the pattern indicates cert deployment batches arrive out of monitor order; when a batch lands, misbinding to the shreeram Basic-gated nginx backend (90488) or a Pool-B vhost would expose an internal test/auth realm under brand DNS.
+evidence_needed: any pending alias returns 200/400 instead of 421, or shreeram gate-scope regression to non-401.
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat the other 8; 421→400/200 = live); if live, `curl -sSk https://<alias>/client-api | md5sum` compare to 7e3a161d; `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`.
+impact: brand DNS → internal Basic-auth-gated nginx test backend or misbound origin; medium-high if gate-scope-error.
+testability: PASSIVE
+[HYP] Client-asserted privilege in /client-api action routing (staffRefillConfig shipped)
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: flagship bundle ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap client-side; /client-api proxies by action name; catch-all 400 on GET subpaths → action map unenumerable; bundle hash unchanged (no new staff keys surfaced this cycle).
+evidence_needed: authenticated POST of staff action names → differentiated upstream response vs non-staff names.
+verify_steps: AUTH_HELPED only.
+impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege client-asserted.
+testability: AUTH_HELPED
+STEP 4 — SELF-CRITIQUE:
+- [FINAL] Cross-brand cookie replay (66) — grounded in byte-identical origin signature across 2 brands/20+ hosts; gated on one authenticated replay I cannot run.
+- [FINAL] Provisioned alias gate-scope regression (53) — passive, cheap, high upside if a cert batch mislands; the only chain with a passive test remaining.
+- [PARKED] Client-asserted staffRefill (48) — still behind the same auth gate; no new bundle keys surfaced to re-rank.
+STEP 5 — [NEXT] PROBE: deploy-parity watch (cycle 9) — `for a in 90471 90472 90473 90475 90480 90482 90488 80001 80002; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done` (421→400/200 = newly live; confirm md5 7e3a161d or shreeram gate scope), then `curl -sS "https://gamdommirrors.com/api/status-page/gamdom-domains"` to re-ratify the 7-monitor set.
+STEP 6 — [LEARN] ACCEPTED watch @ 80001/80002 + 7 pending 9047x aliases: all 4 Pool B edges still 421/TLS-NOMATCH (8th cycle); status-page payload now directly lists 80008 (id 221) in the 7-monitor set; 80007 still 302→80008, 80008 live.
+STEP 7 — [RISK] gamdom: 67 — No surface delta for the 8th cycle. 9 provisioned aliases stuck 421 with zero cert deploys; 7-monitor set confirmed stable at API level (80008 id 221 absorbed); Starlette pool byte-stable. Single-control-of-origin across 2 brands / 20+ hostnames remains the core concentration; top chain (cross-brand cookie replay, 66) and the staff-asserted-privilege chain (48) both still gated behind one authenticated Set-Cookie replay I am not permitted to execute. Only read-only GET/HEAD probes at ≤1 rps; no data touched; risk steady.
+EOF
+echo "appended"; wc -l /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md
+appended
+1585 /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md
+[0m
+No surface delta — all 9 pending aliases still 421, status page 7-monitor set now directly API-confirms 80008 (id 221) replacing 80007, shreeram gate still 401. Appending rotation output to my lead file.
+Cycle complete. Structured outputs appended to `leads/lead-bigpickle.md`:
+
+STEP 1 — NO_DELTA: all 9 pending aliases (90471/90472/90473/90475/90480/90482/90488/80001/80002) still 421/TLS-NOMATCH; status-page API now directly lists 80008 (id 221) in the 7-monitor set; shreeram gate still 401; 80007 still 302→80008.
+
+STEP 3 — [HYP] Cross-brand cookie replay (AUTH, 66, AUTH_HELPED) | [HYP] Provisioned alias gate-scope regression (MISCONFIG, 53, PASSIVE) | [HYP] Client-asserted staffRefill privilege (AUTH, 48, AUTH_HELPED).
+
+STEP 5 — [NEXT] PROBE: deploy-parity watch (cycle 9) over the 9 pending aliases + status-page re-ratification.
+
+STEP 6 — [LEARN] ACCEPTED watch: 8th cycle no deploys, 80008 ratified on monitor 221.
+
+STEP 7 — [RISK] gamdom: 67 — steady; only read-only probes run, no data touched.
