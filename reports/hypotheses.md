@@ -825,3 +825,6 @@
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
 - LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-09 23:34:14 UTC
+- [0] ?: Cross-brand cookie replay via shared /client-api identity/wallet origin (from art/lead_bigpickle.txt)

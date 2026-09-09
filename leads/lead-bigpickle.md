@@ -1840,3 +1840,7 @@ evidence_needed: any pending alias returns non-421, or shreeram/stagsrv/devsrv5 
 verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8); `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
 impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope-error; split pipeline widens with each rotation
 testability: PASSIVE
+## 2026-09-09 23:33:37 UTC [target] (model bigpickle)
+[HYP] Cross-brand cookie replay via shared /client-api identity/wallet origin
+[HYP] Provisioned alias cert lands with origin misbinding / gate-scope regression
+[HYP] Kargo GitOps origin exposes sibling services / config via alternate vhosts

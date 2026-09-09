@@ -12482,3 +12482,181 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 - [RISK] gamdom:72 — Material internal ops surface (Tableau BI + TSM, Kargo deploy UI, ClickHouse origins, 2 OAuth2-proxy gates) confirmed publicly resolvable on scoped teamgamdom DNS, 5 hosts straight-to-origin; all data tiers appear auth-gated (8123 closed, OAuth state valid, Basic gates hold 401), so no exposure confirmed this cycle — risk +2 on surface expansion, not on exploit. Fleet rotation stable but 8000x/9047x pipelines now demonstrably split. Cross-brand cookie replay (70) remains the critical unexecuted chain, gated behind one authenticated Set-Cookie replay. Passive-only discipline maintained: GET/HEAD ≤1 rps, no data pulled.
+===== ANALYST bigpickle 2026-09-09 23:34:14 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in gamdom90471.com gamdom90472.com gamdom90473.com gamdom90475.com gamdom90480.com gamdom90482.com gamdom90488.com gamdom80001.com gamdom80002.com gamdom90001.com; do code=$(curl -sSk -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 "https://$h/client-api" 2>/dev/null); echo "$h /client-api -> $code"; sleep 1; done
+gamdom90471.com /client-api -> 421
+gamdom90472.com /client-api -> 421
+gamdom90473.com /client-api -> 421
+gamdom90475.com /client-api -> 421
+gamdom90480.com /client-api -> 421
+gamdom90482.com /client-api -> 421
+gamdom90488.com /client-api -> 421
+gamdom80001.com /client-api -> 421
+gamdom80002.com /client-api -> 421
+gamdom90001.com /client-api -> 000
+[0m
+Deploy-parity: all 9 aliases still 421 (cycle 7→8, unchanged). Now verifying kargo/tableau surfaces + status page.
+[0m$ [0mecho "== kargo.teamgamdom.com =="; curl -sk -o /dev/null -w "root: %{http_code} time:%{time_total}s\n" --connect-timeout 5 --max-time 12 https://kargo.teamgamdom.com/; sleep 1; curl -sk -o /dev/null -w "api/v1/projects: %{http_code}\n" --connect-timeout 5 --max-time 12 https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -c 200; sleep 1; echo "== tableau =="; curl -sk -o /dev/null -w "root: %{http_code}\n" --connect-timeout 5 --max-time 12 https://tableau.teamgamdom.com/; sleep 1; curl -sk -o /dev/null -w "auth: %{http_code}\n" --connect-timeout 5 --max-time 12 https://tableau-admin.teamgamdom.com/auth
+== kargo.teamgamdom.com ==
+root: 200 time:0.446734s
+api/v1/projects: 200
+== tableau ==
+root: 200
+auth: 403
+[0m
+kargo `/api/v1/projects` returns 200 — checking body content (Kargo is a GitOps delivery tool; this endpoint lists projects/stages):
+[0m$ [0mecho "== HEAD /api/v1/projects =="; curl -sk -I --connect-timeout 5 --max-time 12 https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -c 600; sleep 1; echo; echo "== body (truncated) =="; curl -sk --connect-timeout 5 --max-time 15 https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -c 1500; echo
+== HEAD /api/v1/projects ==
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Wed, 09 Sep 2026 23:31:18 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+
+
+== body (truncated) ==
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/monacoeditorwork/css.worker.bundle.js",
+  "html": "/monacoeditorwork/html.worker.bundle.js",
+  "json": "/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/monacoeditorwork/ts.worker.bundle.js",
+  "yaml": "/monacoeditorwork/yaml.worker.bundle.js",
+  "javascript": "/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/monacoeditorwork/html.worker.bundl
+[0m
+`/api/v1/projects` GET→HTML (SPA login fallback), but HEAD→**405** with 19B body — that's an API router rejecting HEAD, not pure static. Discriminating whether this is Argo CD vs Kargo vs other Monaco-based dashboard:
+[0m$ [0mfor p in /api/version /healthz /livez /api/v1/config /api/v1/stages; do code=$(curl -sk -o /tmp/kb.txt -w "%{http_code}" --connect-timeout 5 --max-time 12 "https://kargo.teamgamdom.com$p"); echo "GET $p -> $code | $(head -c 120 /tmp/kb.txt | tr -d '\n')"; sleep 1; done
+GET /api/version -> 200 | <!DOCTYPE html><html lang="en">  <head>    <script>self["MonacoEnvironment"] = (function (paths) {          return {
+GET /healthz -> 200 | <!DOCTYPE html><html lang="en">  <head>    <script>self["MonacoEnvironment"] = (function (paths) {          return {
+GET /livez -> 200 | <!DOCTYPE html><html lang="en">  <head>    <script>self["MonacoEnvironment"] = (function (paths) {          return {
+GET /api/v1/config -> 200 | <!DOCTYPE html><html lang="en">  <head>    <script>self["MonacoEnvironment"] = (function (paths) {          return {
+GET /api/v1/stages -> 200 | <!DOCTYPE html><html lang="en">  <head>    <script>self["MonacoEnvironment"] = (function (paths) {          return {
+[0m
+All GET→SPA fallback (200, same HTML) — API layer not responding from UI vhost. Identifying the actual tool + server:
+[0m$ [0mcurl -sk --connect-timeout 5 --max-time 15 https://kargo.teamgamdom.com/ -o /tmp/kargo_root.html; wc -c /tmp/kargo_root.html; grep -iaoE 'kargo|argo[_ -]?cd|argo rollout|akuity|gitea|jenkins|k8s|kubernetes|theia|code-server|grafana|prometheus' /tmp/kargo_root.html | sort | uniq -c | sort -rn | head -20; echo "== headers =="; curl -sk -D - -o /dev/null --connect-timeout 5 --max-time 12 https://kargo.teamgamdom.com/x.js | head -20
+1994 /tmp/kargo_root.html
+      1 kargo
+      1 Kargo
+== headers ==
+HTTP/2 200 
+cache-control: no-cache, private, max-age=0
+content-type: text/html; charset=utf-8
+date: Wed, 09 Sep 2026 23:31:47 GMT
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+pragma: no-cache
+vary: Accept-Encoding
+x-accel-expires: 0
+[0m
+Root HTML contains "Kargo" → confirmed Akuity/Argo-family GitOps tool. UI-only public surface (login SPA), API layer not exposed unauth via public vhost. Verifying tableau /auth change + fleet stability checks:
+[0m$ [0mfor u in "tableau-admin.teamgamdom.com/auth" "tableau-admin.teamgamdom.com/" "tableau.teamgamdom.com/auth" "tableau.teamgamdom.com/views/"; do code=$(curl -sk -o /tmp/tb.txt -w "%{http_code}" --connect-timeout 5 --max-time 12 "https://$u"); echo "$u -> $code | $(head -c 100 /tmp/tb.txt | tr -d '\n')"; sleep 1; done; echo "== mirrors =="; for h in gamdom80009.com gamdom80008.com; do code=$(curl -sSk -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 12 "https://$h/client-api"); echo "$h /client-api -> $code"; sleep 1; done; for h in gamdom80006.com gamdom80007.com; do code=$(curl -sSk -o /dev/null -w "%{http_code}:%{redirect_url}" --connect-timeout 5 --max-time 12 "https://$h/"); echo "$h root -> $code"; sleep 1; done
+tableau-admin.teamgamdom.com/auth -> 403 | {"timestamp":1788996723139,"status":403,"error":"Forbidden","path":"/auth"}
+tableau-admin.teamgamdom.com/ -> 200 | <!DOCTYPE html><html><head>    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+tableau.teamgamdom.com/auth -> 302 | <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>302 Found</title></head><bod
+tableau.teamgamdom.com/views/ -> 302 | <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head><title>302 Found</title></head><bod
+== mirrors ==
+gamdom80009.com /client-api -> 400
+gamdom80008.com /client-api -> 400
+gamdom80006.com root -> 302:https://gamdom80009.com/
+gamdom80007.com root -> 302:https://gamdom80008.com/
+[0m
+Fleet stable (80009→400 live, 80008→400 live, 80006/80007 redirect intact). Tableau-admin `/auth` now 403 JSON (locked). One last cross-brand cookie-Domain check on newest mirror (parked nemotron lead):
+[0m$ [0mfor h in gamdom80009.com gamdom.com fatbets.com; do echo "== $h /auth/login =="; curl -sk -D - -o /dev/null --connect-timeout 5 --max-time 12 "https://$h/auth/login" 2>/dev/null | grep -iE "^(HTTP|set-cookie|location)".; sleep 1; done
+== gamdom80009.com /auth/login ==
+HTTP/2 404 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 23:32:32 GMT
+== gamdom.com /auth/login ==
+HTTP/2 404 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 23:32:34 GMT
+== fatbets.com /auth/login ==
+HTTP/2 404 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 09 Sep 2027 23:32:35 GMT
+[0m
+Delta gathered. All 8 steps:
+
+**STEP 1 — DELTA**
+- [NEW] kargo.teamgamdom.com verified: Akuity **Kargo** GitOps UI (Monaco bootstrap, `Kargo` string in root) on direct origin 77.42.9.222 (no Fastly); GET `/api/v1/projects|/api/version|/healthz` all → 200 SPA fallback, HEAD `/api/v1/projects` → 405 — UI-only, no unauth API data. Last cycle's 45-conf HYP resolved (downgraded).
+- [CHANGED] tableau-admin.teamgamdom.com/auth → 403 (Spring-style `{"timestamp":...,"error":"Forbidden"}`), was 200 — TSM console gated; tableau.teamgamdom.com root 200, `/auth`+`/views/` → 302 (login redirect), anonymous BI content NOT reachable.
+- [CHANGED] Deploy-parity cycle 8: all 9 pending aliases (90471/90472/90473/90475/90480/90482/90488/80001/80002) still 421/TLS-NOMATCH — 8000x rotated twice in 24h while 9047x+80001/80002 flatlined 8 cycles.
+- [NEW] `/auth/login` → 404 + **host-only `gd-lang`** (no Domain attr) Set-Cookie, byte-identical on gamdom80009.com / gamdom.com / fatbets.com (nemotron's passive cookie-inspection lead closed).
+- [CONFIRMED] 80009+80008 live (400), 80006→302→80009, 80007→302→80008 — redirect chains stable. (gamdom90001.com: HTTP 000, not fleet, not pursued.)
+
+**STEP 2 — PRIORITIZE**
+- [PRIO] gamdom.com//client-api fleet (cross-brand replay), 9.1, a10 b10 t8 g8 c9 f8
+- [PRIO] kargo.teamgamdom.com (direct-origin GitOps UI), 6.5, a6 b7 t7 g7 c2 f9
+- [PRIO] pending alias fleet (9047x+80001/80002 cert landing), 5.6, a7 b6 t5 g3 c5 f6
+
+**STEP 3 — HYPOTHESES**
+[HYP] Cross-brand cookie replay via shared /client-api identity/wallet origin
+- class: AUTH
+- asset: fatbets.com/client-api (shared Starlette origin: gamdom + fatbets + gamdom.one, 21+ hostnames)
+- confidence: 72
+- reasoning: byte-identical /client-api md5 7e3a161d + /health weak-ETag across Pool A+B and 3 brands; pre-auth issuance now also uniform (host-only gd-lang only, no Domain attr on 80009/com/fatbets) so no cookie-Domain leak; session is server-set same-origin cookie → replay stays backend-level: if upstream accepts authenticated cookie across vhosts, ATO chains across brands
+- evidence_needed: one authenticated Set-Cookie replayed from one brand vhost to another on /client-api → differentiated wallet/identity response
+- verify_steps: AUTH_HELPED only — `curl -sS -b <authed-cookie> https://fatbets.com/client-api` vs `https://gamdom.com/client-api` POST action parity
+- impact: cross-brand account takeover + wallet access across Gamdom/fatbets/gamdom.one; critical
+- testability: AUTH_HELPED
+
+[HYP] Provisioned alias cert lands with origin misbinding / gate-scope regression
+- class: MISCONFIG
+- asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90471/90472/90473/90475/90480/90482/80001/80002
+- confidence: 48
+- reasoning: 8th cycle all 9 aliases still 421, yet 8000x family landed certs twice in 24h (80008, 80009) on Starlette origin — split-pipeline asymmetry proven; 90488 uniquely pins to Basic-auth nginx backend, so its eventual cert deploy is the gate-scope regression candidate
+- evidence_needed: any pending alias returns non-421 (200/400), or shreeram gate returns non-401
+- verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8) and `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+- impact: brand DNS → internal Basic-auth nginx/StageSrv/devSrv backend; medium-high if gate falls open
+- testability: PASSIVE
+
+[HYP] Kargo GitOps origin exposes sibling services / config via alternate vhosts
+- class: MISCONFIG
+- asset: kargo.teamgamdom.com / 77.42.9.222
+- confidence: 40
+- reasoning: sole direct-origin (non-Fastly, non-AWS) vhost in fleet hosting internal deploy UI publicly; GET API paths → SPA fallback proves nginx front-proxy; backend API/other vhosts may bind on same origin
+- evidence_needed: JSON (non-SPA) response from API path, or non-404 alternate vhost on 77.42.9.222
+- verify_steps: PASSIVE — `curl -sk -H 'Host: <name>.teamgamdom.com' -o /dev/null -w "%{http_code}" https://77.42.9.222/api/v1/projects`, repeat for staging/api/dev names
+- impact: exposure of internal GitOps/CI control plane or sibling services; high if reachable
+- testability: PASSIVE
+
+**STEP 4 — SELF-CRITIQUE**
+- [FINAL] Cross-brand cookie replay — confidence 72, survives; only branch opened this cycle (pre-auth cookie issuance) returned negative, closing the passive route; remains sole critical-path, AUTH_HELPED-gated.
+- [FINAL] Provisioned alias cert misbinding — confidence 48, survives; PASSIVE-verifiable; 8-cycle asymmetry + 2 Starlette rotations strengthens split-pipeline evidence even as confidence stays mid.
+- [PARKED] Kargo sibling-vhost — confidence 40, borderline; passive No-Fastly origin is genuinely uncommon but UI is correctly gated today (public login = out-of-scope class); keep parked under watch, one cheap probe queued.
+
+**STEP 5 — NEXT ACTION**
+- [NEXT] PROBE: deploy-parity cycle 9 — passive 421 recheck of 9 aliases + status-page reconfirm, and `curl -skH 'Host: staging.teamgamdom.com' https://77.42.9.222/api/v1/projects` alternate-vhost test on Kargo origin.
+
+**STEP 6 — LEARNING**
+- [LEARN] ACCEPTED recon @ kargo.teamgamdom.com: Kargo (Akuity) GitOps UI public on direct origin 77.42.9.222, UI-only (GET APIs→SPA fallback, HEAD 405) — inventory, correctly gated.
+- [LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/auth: 403 Spring-JSON, TSM gated; tableau.teamgamdom.com `/views/`→302 login — no anonymous BI exposure confirmed (public login only, data tier HUMAN_ONLY).
+- [LEARN] ACCEPTED recon @ gamdom80009.com/gamdom.com/fatbets.com /auth/login: 404 + host-only gd-lang (no Domain) identical across 3 brands — cookie-Domain branch closed pre-auth.
+- [LEARN] ACCEPTED watch @ alias fleet: cycle 8 — 9 aliases all 421; 8000x rotated twice/24h vs 9047x+80001/80002 flat 8 cycles → split-pipeline asymmetry confirmed.
+- [LEARN] ACCEPTED watch @ mirrors: 80008/80009 live, 80006→80009, 80007→80008 chains stable; status page 7-monitor cap.
+
+**STEP 7 — RISK**
+- [RISK] gamdom: 70 — No new live exposure this cycle; two fresh 200-surface findings (Kargo UI, Tableau login) are correctly gated and stay inventory-only. Single risk driver remains the cross-brand cookie-replay chain (72, critical) blocked behind one authenticated replay; fleet churn steady with split-pipeline anomaly growing (8000x rotates, 9047x stalled) — cert-landing misbind on shreeram backend is the live watch. Only read-only GET/HEAD probes; ≤1rps; no data touched.
