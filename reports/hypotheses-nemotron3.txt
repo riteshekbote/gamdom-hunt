@@ -1,24 +1,14 @@
-## 2026-09-09 01:34:40 UTC [target] (model nemotron3)
+## 2026-09-09 06:07:18 UTC [target] (model nemotron3)
 [NEW] gamdom80008.com went live on Pool B (CNAME→gamdom4567.com, root 200, /client-api 400 md5 7e3a161d, /health weak-ETag identical, gd-lang cookie); status page monitor id:221 replaces gamdom80007.com as 7th listed mirror
 [NEW] gamdom80007.com demoted to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
 [NEW] gamdom80001.com/gamdom80002.com newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames
 [NEW] fatbets.com + gamdom.one confirmed as 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52): byte-identical app bundle + /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie → single identity/wallet origin serves 3 brands / 19+ hostnames
-[NEW] flagship bundle leaks dual staffRefillConfig (30M/75M coins) + moderator tip cap client-side; trMirrorDomain=gamdom80004.com hardcoded
 [CHANGED] Provisioning cycle 5 for 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — no cert deployment
 [CHANGED] Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed stable
 [CHANGED] shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
 [PRIO] fatbets.com/client-api,8.8,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
 [PRIO] gamdom.one/client-api,8.8,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
 [PRIO] gamdom80008.com/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10
-[PRIO] gamdom80006.com/client-api,8.6,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
-[PRIO] gamdom.com/client-api,8.4,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=8
-[PRIO] gamdom4567.com/client-api,8.2,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=9
-[PRIO] gamdom80003.com/client-api,8.4,attack_surface=10,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=10
-[PRIO] gamdom.eu/client-api,8.0,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9
-[PRIO] gamdom90471.com/client-api,7.5,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
-[PRIO] gamdom90488.com/client-api,7.2,attack_surface=8,business_value=7,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=10
-[PRIO] teamgamdom.com/client-api,7.0,attack_surface=8,business_value=8,tech_exposure=7,gate_ease=5,cloud_surface=8,freshness=8
-[PRIO] shreeram-dynamic-test.teamgamdom.com,5.8,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=3,cloud_surface=7,freshness=8
 [HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
 class: AUTH
 asset: fatbets.com/client-api
