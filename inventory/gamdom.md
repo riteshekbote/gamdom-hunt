@@ -381,3 +381,19 @@ www.gamdom.com
 - CHANGED gamdom80001.com/gamdom80002.com: CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live
 - CHANGED fatbets.com + gamdom.one: confirmed as 2nd/3rd brands on shared Pool A, byte-identical origin signature → shared identity/wallet backend
 - CHANGED Provisioning cycle count for 90472/90473/90475/90480/90482/90488: now 5th cycle, all still 421/TLS-NOMATCH
+
+## 2026-09-09 15:26:45 UTC
+- CHANGED gamdom80009.com: newly live (11th mirror, 21st hostname) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h
+- CHANGED gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect
+- CHANGED Status page: now lists com/eu/io/vip/win/80008/80009 (7 monitors) — absorbed 80006→80009 rotation, still 7-monitor cap
+- CHANGED gamdom80009.com /client-api md5 7e3a161d + /health ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical to all other live mirrors — origin signature unchanged
+- CHANGED gamdom80006.com now redirects to gamdom80009.com (not gamdom80007.com or 80008.com) — redirect chain updated to point at newest live mirror
+- NEW gamdom80008.com went live on Pool B (CNAME→gamdom4567.com, root 200, /client-api 400 md5 7e3a161d, /health weak-ETag identical, gd-lang cookie); status page monitor id:221 replaces gamdom80007.com as 
+- NEW gamdom80007.com demoted to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
+- NEW gamdom80001.com/gamdom80002.com newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live hostnames
+- NEW fatbets.com + gamdom.one confirmed as 2nd/3rd brands on shared Pool A (Fastly 151.101.x.52): byte-identical app bundle + /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie → singl
+- NEW flagship bundle leaks dual staffRefillConfig (30M/75M coins) + moderator tip cap client-side; trMirrorDomain=gamdom80004.com hardcoded
+- NEW fatbets.com/gamdom.one /auth/login + /graphql → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not observable pre-auth; replay remains backend-level
+- CHANGED Provisioning cycle 5 for 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — no cert deployment
+- CHANGED Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed stable
+- CHANGED shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke

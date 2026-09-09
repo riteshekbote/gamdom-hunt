@@ -761,3 +761,29 @@
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited.
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
 - LEARN: REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+
+## RANKED HYPOTHESES 2026-09-09 15:26:45 UTC
+- [70] gamdom.com/client-api: Cross-brand cookie replay on shared identity/wallet origin (from art/lead_bigpickle.txt)
+- [68] fatbets.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: deploy-parity watch (cycle 9) — passive HTTP probe across all 9 pending aliases + status page reconfirmation:
+- NEXT(hypotheses-nemotron3.txt): PROBE: passive auth flow cookie inspection — `curl -sS -I https://fatbets.com/auth/login` (or actual login endpoint) to capture Set-Cookie headers; compare Doma
+- LEARN: ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-ap
+- LEARN: ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbe
+- LEARN: ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: still CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th
+- LEARN: ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged).
+- LEARN: ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 6th cycle, all still 421/TLS-NOMATCH.
+- LEARN: ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag stable; status page now 7 monitors (com/eu/io/vip/win/80008/80009)
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited.
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
+- LEARN: REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+- LEARN: ACCEPTED inventory @ gamdom80008.com: previously REJECTED out-of-scope (192.64.119.33) now CNAME→gamdom4567.com Fastly Pool B, fully live (root 200, /client-api
+- LEARN: ACCEPTED inventory @ gamdom80007.com: demoted from live mirror to 302→https://gamdom80008.com/ redirect alias (Varnish, no-store) — confirms brand retires numbe
+- LEARN: ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: newly CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live ho
+- LEARN: ACCEPTED inventory @ fatbets.com + gamdom.one: mined from flagship bundle (BRANDED_SUBDOMAINS + encrypted TLD keys), both live on Fastly Pool A with byte-identi
+- LEARN: ACCEPTED recon @ fatbets.com + gamdom.one: `/auth/login` + `/graphql` → 404, only host-only gd-lang Set-Cookie (no Domain attr) — cookie-Domain confusion not ob
+- LEARN: ACCEPTED recon @ flagship bundle: dual staffRefillConfig (30M/75M coins) + moderator tip cap shipped client-side; `trMirrorDomain=gamdom80004.com`
+- LEARN: ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — 5th cycle, provisioning-in-progress
+- LEARN: ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag + 7 monitors + 17× 90471 all stable
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing

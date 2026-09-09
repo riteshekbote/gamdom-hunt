@@ -1708,3 +1708,55 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
 [LEARN] REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
 [RISK] gamdom: 68 — No surface delta for the 8th cycle: 9 provisioned aliases stuck 421, 7-monitor set absorbed 80007→80008 rotation, Starlette pool byte-stable, 2 brands / 20+ hostnames confirmed on shared identity/wallet origin (fatbets.com + gamdom.one added). Cross-brand cookie-replay chain (confidence 68) remains the critical path but gated behind one authenticated Set-Cookie replay not executable in passive-only mode. Fleet churn evidence (80008 live, 80007 retired, 80001/80002 staged) keeps single-control-of-origin as the core concentration. Only read-only GET probes at ≤1 rps; no data touched; risk steady.
+## 2026-09-09 15:23:01 UTC [target] (model bigpickle)
+[CHANGED] gamdom80009.com: newly live (11th mirror, 21st hostname) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h
+[CHANGED] gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect
+[CHANGED] Status page: now lists com/eu/io/vip/win/80008/80009 (7 monitors) — absorbed 80006→80009 rotation, still 7-monitor cap
+[CHANGED] gamdom80009.com /client-api md5 7e3a161d + /health ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical to all other live mirrors — origin signature unchanged
+[CHANGED] gamdom80006.com now redirects to gamdom80009.com (not gamdom80007.com or 80008.com) — redirect chain updated to point at newest live mirror
+[PRIO] gamdom80009.com/client-api,8.2,attack_surface=9 (11th mirror, freshly rotated, off prior fleet enumeration) + business_value=9 (identity/wallet backend) + tech_exposure=6 (POST-only proxy) + gate_ease=7 (no auth at edge) + cloud_surface=7 (Fastly Pool B) + freshness=10 (rotation event)
+[PRIO] fatbets.com/client-api,7.2,attack_surface=7 (2nd brand on shared origin) + business_value=9 (wallet/identity) + tech_exposure=6 (POST-only proxy) + gate_ease=7 (no auth at edge) + cloud_surface=7 (Fastly Pool A) + freshness=6 (confirmed but not new)
+[PRIO] gamdom80001.com/client-api,5.6,attack_surface=6 (provisioned 17th hostname) + business_value=8 (shared origin) + tech_exposure=4 (currently 421) + gate_ease=3 (TLS-NOMATCH) + cloud_surface=6 (Pool B) + freshness=9 (newly discovered)
+[PRIO] gamdom80009.com/health,5.4,attack_surface=5 (health endpoint) + business_value=7 (origin fingerprint) + tech_exposure=4 (GET-only) + gate_ease=8 (no auth) + cloud_surface=7 (Pool B) + freshness=10 (new)
+[PRIO] gamdom90488.com/shreeram,4.8,attack_surface=6 (internal test backend) + business_value=7 (internal realm) + tech_exposure=7 (Basic auth gate) + gate_ease=3 (421) + cloud_surface=5 (not on edge) + freshness=4 (staged)
+[HYP] Cross-brand cookie replay on shared identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api shared gamdom4567 Starlette origin (com/eu/io/one/vip/win + fatbets.com + gamdom.one + 80003/80006→80009/80008/4567)
+confidence: 70
+reasoning: 11 live mirrors across 2 brands serve byte-identical bundle + /client-api md5 7e3a161d + /health weak-ETag → one identity/wallet backend for 21 hostnames; auth transport is server-set same-origin cookie (credentials same-origin, zero bearer/localStorage); second rotation event (80006→80009) confirms fleet churn pattern without origin change; no pre-auth surface delta this cycle; CORS blocks browser cross-origin replay but backend-level replay remains ungated
+evidence_needed: authenticated Set-Cookie from one mirror replayed verbatim on another mirror/brand hostname → backend acceptance = replay proven
+verify_steps: AUTH_HELPED only — POST /client-api on gamdom80009.com, capture Set-Cookie, replay on fatbets.com + gamdom.one + gamdom.com, compare upstream responses
+impact: wallet/identity session theft across 2 brands + 21 hostnames (funds, withdrawal, KYC); critical if backend host-agnostic
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with gate-scope regression
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90471/90472/90473/90475/90480/90482/80001/80002
+confidence: 55
+reasoning: 80006→80009 rotation landed cert on shared Starlette origin; 6th consecutive cycle with 9 pending aliases stuck 421; active fleet churn (80008, 80009 now live, 80006/80007 retired) keeps probable that cert will eventually land on shreeram Basic-gated backend (90488) or misbound vhost; number of live mirrors increasing while pending count stays flat suggests cert provisioning is pipeline-limited
+evidence_needed: any pending alias returns 200/400 instead of 421, or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8 others); if live `curl -sSk https://<alias>/client-api|md5sum` vs 7e3a161d; gate check `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth-gated nginx test backend or misbound origin; medium-high if gate-scope-error
+testability: PASSIVE
+[HYP] Client-asserted staffRefillConfig privilege in /client-api action routing
+class: AUTH
+asset: gamdom.com/client-api
+confidence: 48
+reasoning: flagship bundle ships dual staffRefillConfig (30M/75M coins/h) + moderator tip cap client-side; /client-api proxies by action name; catch-all 400 on GET subpaths → action map unenumerable; bundle hash unchanged (no new staff keys surfaced this cycle)
+evidence_needed: authenticated POST of staff action names → differentiated upstream response vs non-staff names
+verify_steps: AUTH_HELPED only
+impact: staff coin/wallet refill or moderator-tip abuse; critical if privilege client-asserted
+testability: AUTH_HELPED
+[PARKED] Client-asserted staffRefillConfig privilege: confidence 48 < 50 threshold — requires AUTH_HELPED only, no passive path, bundle hash unchanged; parked until new staff keys surface or action map enumerable.
+[FINAL] Cross-brand cookie replay: confidence 70, survives critique — backend-level fact (byte-identical origin across 2 brands / 21 hosts) grounded in passive HTTP probes + JS analysis; only gated by AUTH_HELPED test; no REJECTED class; impact critical; boosted from 68 by second rotation event proving fleet churn does not affect origin homogeneity.
+[FINAL] Provisioned alias cert lands with gate-scope regression: confidence 55, survives critique — fleet churn pattern now has 2 rotation events (80007→80008, 80006→80009) with 6 cycles of 421 persistence; PASSIVE verification available; no REJECTED class; impact medium-high.
+[NEXT] PROBE: deploy-parity watch (cycle 9) — passive HTTP probe across all 9 pending aliases + status page reconfirmation:
+[LEARN] ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-api md5 7e3a161d + /health ETag byte-identical → origin signature unchanged; 21st hostname in trust pool.
+[LEARN] ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect; gamdom80009.com inherits its Pool B slot.
+[LEARN] ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: still CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle.
+[LEARN] ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged).
+[LEARN] ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 6th cycle, all still 421/TLS-NOMATCH.
+[LEARN] ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag stable; status page now 7 monitors (com/eu/io/vip/win/80008/80009); SEO hub still 17× 90471 only.
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited.
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
+[LEARN] REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+[RISK] gamdom:70 — Second rotation event (80006→80009) in 24h confirms accelerating fleet churn while origin homogeneity is undisturbed: 11 live mirrors / 21+ hostnames across 2 brands (gamdom + fatbets/gamdom.one) now share single Starlette identity/wallet backend. Cross-brand cookie-replay chain (confidence 70) remains the critical path but gated behind one authenticated Set-Cookie replay not executable in passive-only mode. 9 provisioned aliases persistently stuck 421 for 6 cycles with 2 live rotations occurring around them suggests cert provisioning pipeline may be saturating — watchlist for eventual cert landing on shreeram Basic-gated backend. Only read-only GET probes at ≤1 rps; no data touched; risk steady with slight increase from accelerated rotation pattern.
