@@ -151,3 +151,8 @@ https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 
 ## 2026-09-09 18:45:15 UTC
 https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-09 21:40:09 UTC
+https://kargo.teamgamdom.com/` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/projects` -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400

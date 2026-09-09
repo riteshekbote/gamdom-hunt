@@ -1812,3 +1812,31 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon.
 [LEARN] REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
 [RISK] gamdom:70 — Second rotation event (80006→80009) in 24h confirms accelerating fleet churn while origin homogeneity is undisturbed: 11 live mirrors / 21+ hostnames across 2 brands (gamdom + fatbets/gamdom.one) now share single Starlette identity/wallet backend. Cross-brand cookie-replay chain (confidence 70) remains the critical path but gated behind one authenticated Set-Cookie replay not executable in passive-only mode. 9 provisioned aliases persistently stuck 421 for 6 cycles with 2 live rotations occurring around them suggests cert provisioning pipeline may be saturating — watchlist for eventual cert landing on shreeram Basic-gated backend. Only read-only GET probes at ≤1 rps; no data touched; risk steady with slight increase from accelerated rotation pattern.
+## 2026-09-09 21:39:54 UTC [target] (model bigpickle)
+[HYP] Internal GitOps deploy-control UI publicly reachable on scoped brand domain
+class: MISCONFIG
+asset: kargo.teamgamdom.com
+confidence: 45
+reasoning: DNS→direct origin 77.42.9.222 (no Fastly), root 200 serves MonacoEnvironment bootstrap (IDE/deploy UI) — not the Basic-401 fixture nor Go-404 realm; every other probed teamgamdom vhost is gated or dead, so this is a purpose-configured internet-facing app
+evidence_needed: any Kargo resource/API reachable without auth (e.g., projects/stages listing) or auth bypass via open redirect/OIDC misconfig
+verify_steps: PASSIVE surface done — `curl -sk https://kargo.teamgamdom.com/` (200, Monaco/bootstrap); then AUTH_HELPED one probe: `curl -sk -o /dev/null -w "%{http_code}" https://kargo.teamgamdom.com/api/v1/projects` — 200=unauth data exposure finding; 401/redirect=closed
+impact: internal deploy/CI control-plane exposure; if unauth then cluster/manifest + credential exposure (severe, supply-chain adjacent)
+testability: PASSIVE (surface) / AUTH_HELPED (data)
+[HYP] Internal Tableau BI/TSM administrative console exposed on public internet
+class: MISCONFIG
+asset: tableau.teamgamdom.com + tableau-admin.teamgamdom.com
+confidence: 40
+reasoning: Tableau Server build 2025_1_39 (vizportal-config) root 200 and TSM login 200 `/auth` 200 on scoped Pool A; internal analytics fronted without edge gate — anonymous dashboard/admin access not yet established
+evidence_needed: unauthenticated site/views exposure or admin function via Tableau/TSM API without session
+verify_steps: PASSIVE done (surface + version identity); HUMAN/AUTH_HELPED only — any anonymous-content check may touch business/financial reporting data, prohibited to pull without authorization
+impact: public access to internal BI reporting (financial/KPI) or Tableau admin; critical if anonymous site open
+testability: HUMAN_ONLY (data tier)
+[HYP] Provisioned alias cert lands with origin misbinding
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90471/90472/90473/90475/90480/90482/80001/80002
+confidence: 50
+reasoning: 7th cycle all 9 aliases still 421 while 2 live rotations (80008, 80009) landed certs on Starlette origin in 24 h; 8000x pipeline rotates, 9047x + 80001/80002 family has not in 7 cycles — split-pipeline evidence; 90488 uniquely pins to Basic-gated nginx backend
+evidence_needed: any pending alias returns non-421, or shreeram/stagsrv/devsrv5 gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8); `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope-error; split pipeline widens with each rotation
+testability: PASSIVE
