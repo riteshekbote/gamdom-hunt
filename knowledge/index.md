@@ -191,3 +191,8 @@
 - 2026-09-10 ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only.
 - 2026-09-10 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited.
 - 2026-09-10 REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+- 2026-09-10 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — version disclosure; CVE-2025-52455 (SSRF) and CVE-2025-52449 (RCE) both patched on 2025.1.11; impact downgraded to informational.
+- 2026-09-10 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin → 405 (real backend API, not SPA catch-all) — confirms Tableau backend handles auth routes directly; /sites → 401 proper gate; /projects → 404, /users → 404 not in REST API 3.21 schema.
+- 2026-09-10 ACCEPTED recon @ kargo.teamgamdom.com: SPA catch-all uniformly serves text/html on all GET routes even with Accept: application/json header; POST uniformly 405; Akuity Kargo v1.9.6; origin direct 77.42.9.222 (no Fastly); wildcard cert *.teamgamdom.com (Let's Encrypt).
+- 2026-09-10 ACCEPTED fleet consistency: all 6 live hosts /client-api md5 7e3a161d — byte-identical, shared origin stable (9th cycle).
+- 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment.

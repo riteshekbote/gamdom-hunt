@@ -480,3 +480,22 @@ www.gamdom.com
 - CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL `bong_ke`
 - CHANGED gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged (com/eu/io/vip/win/80008/80009)
 - CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+
+## 2026-09-10 19:05:55 UTC
+- CHANGED Tableau CVE correlation: version 2025.1.11 > 2025.1.3 — CVE-2025-52455 (SSRF) and CVE-2025-52449 (RCE via file upload) both patched; version disclosure impact downgraded
+- NEW tableau.teamgamdom.com/api/3.21/auth/signin → 405 (real backend API, not SPA catch-all) — confirms Tableau backend handles API routes directly; /sites → 401 proper auth gate; /projects → 404, /users →
+- NEW Kargo Accept: application/json probe: GET /api/v1/projects returns 200 SPA HTML (server ignores Accept header) — SPA catch-all uniform even with JSON negotiation header; no JSON surface
+- NEW Kargo deeper: all sub-paths (/api/v1/projects/test, /api/v1/applications, /api/v1/clusters, /api/v1/stages, /api/v1/freight, /api/v1/repositories) → 200 SPA catch-all GET, 405 POST — no JSON data surf
+- NEW gamdom80009.com live (11th mirror, 21st hostname) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; byte-identical /client-api md5 7e3a161d + /health ETag
+- NEW gamdom80006.com demoted: 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
+- NEW kargo.teamgamdom.com discovered: HTTP 405 on `/` and `/api/v1/projects` — GitOps/ArgoCD-like API surface on scoped brand TLD (teamgamdom.com, Pool A)
+- NEW tableau.teamgamdom.com/api/3.21/serverInfo → 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — unauthenticated version disclosure
+- NEW gamdom80004.com redirect target: now 302→gamdom80008.com (was gamdom80007.com) — redirect chain updated post-rotation
+- NEW New numbered aliases 80010-80020 tested: all 000 (connection failed) — not provisioned
+- CHANGED Status page now lists 7 monitors: com/eu/io/vip/win/80008/80009 (absorbed 80006→80009 rotation)
+- CHANGED Starlette pool signature stable: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A (Fastly 151.101.x.52) with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
+- CHANGED Provisioning cycle 7 for 90472/90473/90475/90480/90482/90488/80001/80002: all still 421/TLS-NOMATCH — no cert deployment
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths)
+- CHANGED kargo.teamgamdom.com GET /api/v1/projects → 200 SPA catch-all (Monaco IDE shell), POST → 405; GET /api/v1/applications|repositories|clusters → 405
+- CHANGED tableau.teamgamdom.com/api/3.21/sites → 401 XML "No authentication credentials were provided" — proper auth gate
