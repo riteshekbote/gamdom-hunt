@@ -854,3 +854,29 @@
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
 - LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+
+## RANKED HYPOTHESES 2026-09-10 06:43:37 UTC
+- [72] fatbets.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_nemotron3.txt)
+- [70] gamdom.com/client-api: Cross-brand cookie replay via shared /client-api identity/wallet origin (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Passive fleet consistency check — `curl -sSk -w "%{http_code}\n" https://gamdom80008.com/client-api https://gamdom80009.com/client-api https://gamdom8000
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -I https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS https://kargo.teamgamd
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: Tableau REST API returns 401 XML "No authentication credentials were provided" — proper auth gate; anony
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com: GET /api/v1/projects and /api/v1/credentials → 200 SPA catch-all (Monaco IDE shell); POST → 405; backend exists but is me
+- LEARN: ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all stable
+- LEARN: ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401 fixture-wide
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- LEARN: ACCEPTED inventory @ kargo.teamgamdom.com: new subdomain on teamgamdom.com (Pool A) exposing HTTP 405 on `/` and `/api/v1/projects` — GitOps/ArgoCD-like API sur
+- LEARN: ACCEPTED watch @ 90472/90473/90475/90480/90482/90488/80001/80002: 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401 fixture-wide
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+- LEARN: ACCEPTED watch @ gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged
+- LEARN: ACCEPTED watch @ live fleet: gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, g
+- LEARN: REJECTED new-numbered-aliases (80010-80020): all 000 (connection failed) — not provisioned
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing

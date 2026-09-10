@@ -175,3 +175,8 @@
 - 2026-09-10 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
 - 2026-09-10 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 - 2026-09-10 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-10 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: Tableau REST API returns 401 XML "No authentication credentials were provided" — proper auth gate; anonymous content hypothesis closed
+- 2026-09-10 ACCEPTED recon @ kargo.teamgamdom.com: GET /api/v1/projects and /api/v1/credentials → 200 SPA catch-all (Monaco IDE shell); POST → 405; backend exists but is method-gated with no unauthenticated JSON surface
+- 2026-09-10 ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all stable
+- 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-10 ACCEPTED inventory @ kargo.teamgamdom.com: new subdomain on teamgamdom.com (Pool A) exposing HTTP 405 on `/` and `/api/v1/projects` — GitOps/ArgoCD-like API surface

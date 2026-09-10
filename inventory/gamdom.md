@@ -435,3 +435,16 @@ www.gamdom.com
 - CHANGED Starlette pool signature stable: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
 - CHANGED fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
 - CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
+
+## 2026-09-10 06:43:37 UTC
+- NEW tableau.teamgamdom.com/api/3.21/sites → 401 XML "No authentication credentials were provided" — Tableau REST API requires auth; anonymous content hypothesis closed.
+- CHANGED kargo.teamgamdom.com/api/v1/projects: GET 200 SPA catch-all (Monaco IDE shell), POST 405 — confirms backend API exists but is method-gated; GET routes served by SPA catch-all, no JSON leak.
+- NEW kargo.teamgamdom.com POST to /api/v1/projects + /api/v1/credentials both → 405; GET /api/ → 200 SPA HTML — all GET routes caught by SPA, POST routes gated to 405.
+- NEW kargo.teamgamdom.com discovered: HTTP 405 on `/` and `/api/v1/projects` — new subdomain exposing GitOps/ArgoCD-like API surface on scoped brand domain
+- NEW Provisioning cycle 7 for 90472/90473/90475/90480/90482/90488/80001/80002: all still 421/TLS-NOMATCH — no cert deployment
+- NEW New numbered aliases 80010-80020 tested: all 000 (connection failed) — not provisioned
+- CHANGED Starlette pool signature stable: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
+- CHANGED gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
+- CHANGED gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged (com/eu/io/vip/win/80008/80009)

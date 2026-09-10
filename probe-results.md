@@ -164,3 +164,11 @@ https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 https://kargo.teamgamdom.com/api/v1/projects` -> HTTP 405
 https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 https://tableau.teamgamdom.com/api/3.21/sites` -> HTTP 404
+
+## 2026-09-10 06:43:46 UTC
+https://kargo.teamgamdom.com/api/v1/projects` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters` -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://gamdom.com/client-api -> HTTP 400
