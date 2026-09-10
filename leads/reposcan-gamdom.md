@@ -125,3 +125,12 @@ reasoning: |
 impact: None — no in-scope codebase to audit; no source-code-level findings possible.
 verify_steps: |
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
+## REPOSCAN 2026-09-10 22:37:56 UTC
+[HYP] No candidate repositories available
+class: OTHER
+asset: N/A
+confidence: 0
+reasoning: The cands.txt file contains "no org candidates" and scope.yml shows github_orgs: [none-configured]. No GitHub repositories are available for source-code auditing.
+impact: N/A
+verify_steps: N/A
+TARGET_ORG not configured for gamdom; skipping public-org deep scan.
