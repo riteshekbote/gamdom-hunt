@@ -1,4 +1,47 @@
-## 2026-09-09 23:33:37 UTC [target] (model bigpickle)
+## 2026-09-10 01:31:59 UTC [target] (model bigpickle)
+[PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6 → cross-brand cookie replay (confidence 70)
+[PRIO] fatbets.com/client-api,8.0,a=9,b=9,t=7,g=4,f=6 → cross-brand auth flow cookie inspection
+[PRIO] gamdom90488.com→shreeram,5.5,a=7,b=7,t=3,g=8,f=7 → cert landing → internal backend
 [HYP] Cross-brand cookie replay via shared /client-api identity/wallet origin
-[HYP] Provisioned alias cert lands with origin misbinding / gate-scope regression
-[HYP] Kargo GitOps origin exposes sibling services / config via alternate vhosts
+class: AUTH
+asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
+confidence: 70
+reasoning: Byte-identical origin serves 3 brands / 21+ hostnames; auth transport is server-set same-origin cookie (no bearer/localStorage); CORS blocks browser cross-origin replay but backend-level cookie acceptance on shared Starlette origin remains untested; fleet churn (2 rotation events in 48h) does not affect origin homogeneity
+evidence_needed: authenticated Set-Cookie capture from one brand + replay POST to another brand's /client-api with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across entire trust pool (21+ hosts, 3 brands); critical
+testability: AUTH_HELPED
+[HYP] Kargo GitOps deploy-control UI exposes unauthenticated project/stage/credential data
+class: MISCONFIG
+asset: kargo.teamgamdom.com
+confidence: 45
+reasoning: Origin 77.42.9.222 (direct, no Fastly), Monaco IDE bootstrap served without auth gate; purpose-configured internet-facing GitOps UI distinct from all other teamgamdom vhosts (gated or dead); API endpoints may not be auth-gated like the UI
+evidence_needed: any Kargo /api/v1/projects or /api/v1/stages or similar endpoint returning JSON without auth
+verify_steps: AUTH_HELPED — `curl -sk https://kargo.teamgamdom.com/api/v1/projects`
+impact: internal deploy/CI + manifest + credential exposure; severe, supply-chain adjacent
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 7th cycle all 8 aliases still 421 while 2 live rotations (80008, 80009) landed certs on Starlette origin; 8000x pipeline rotates, 9047x family has not in 7 cycles — split-pipeline evidence; 90488 uniquely pins to Basic-gated nginx backend; shreeram gate still holds 401 fixture-wide
+evidence_needed: any pending alias returns non-421, or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api`; `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope-error
+testability: PASSED (PASSIVE + monitoring)
+[PARKED] Kargo GitOps deploy-control UI: confidence 45 < 50 threshold — requires AUTH_HELPED for data check, surface unchanged from prior cycle, no new evidence. Parked until new probe vector identified or auth-assisted test available.
+[FINAL] Cross-brand cookie replay via shared /client-api origin: confidence 70, survives critique — backend-level fact grounded in 7 cycles of byte-identical probes across 3 brands / 21+ hosts; fleet churn (2 rotation events) confirms dynamic edge with static origin; gated by AUTH_HELPED test only; no REJECTED class; impact critical.
+[FINAL] Provisioned alias cert lands with gate-scope regression: confidence 50, survives critique — 7 cycles of 421 persistence with 2 live rotations proving split pipeline; PASSIVE verification available; no REJECTED class; impact medium-high.
+[NEXT] PROBE: Passive Tableau anonymous content probe — `curl -sSk https://tableau.teamgamdom.com/api/3.21/sites` to check if Tableau REST API is exposed without auth (version match to vizportal-config build 2025_1_39). If 200+JSON with site data → MISCONFIG finding; 401/403 = closed. This is the highest-value passive-checkable surface that hasn't been probed for data exposure.
+[LEARN] ACCEPTED watch @ 90472/90473/90475/90480/90482/90488/80001/80002: 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+[LEARN] ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401 fixture-wide
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+[LEARN] ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+[LEARN] ACCEPTED watch @ gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged
+[LEARN] ACCEPTED watch @ kargo.teamgamdom.com: still 200 (Monaco IDE bootstrap), tableau.teamgamdom.com: still 200 (vizportal 2025_1_39), staging.teamgamdom.com: still 503
+[LEARN] ACCEPTED watch @ live fleet: gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
+[LEARN] REJECTED new-numbered-aliases (80010-80020): all 000 (connection failed) — not provisioned
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon
+[LEARN] REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com
+[RISK] gamdom:72 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 7 cycles of evidence accumulation). 7th consecutive cycle with 8 pending aliases stuck 421 while 2 rotations occurred in the 8000x pipeline reinforces split-pipeline architecture. 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn does not affect origin homogeneity. Tableau admin surface (vizportal-config 2025_1_39) remains unprobed for anonymous content exposure — highest-value passive-checkable surface left. Kargo GitOps UI (Monaco IDE) remains the most severe unauthenticated surface if API is open but requires AUTH_HELPED. Risk steady at 72; slight increase from 7 cycles of stability confirming hypothesis robustness.

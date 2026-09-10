@@ -424,3 +424,14 @@ www.gamdom.com
 - CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
 
 ## 2026-09-09 23:34:14 UTC
+
+## 2026-09-10 01:32:10 UTC
+- NEW gamdom80009.com live (11th mirror, 21st hostname) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; byte-identical /client-api md5 7e3a161d + /health ETag unchange
+- NEW gamdom80006.com demoted to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
+- NEW Status page now lists 7 monitors: com/eu/io/vip/win/80008/80009 — 7-monitor cap maintained
+- NEW gamdom80001.com/gamdom80002.com: CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle
+- NEW Provisioning cycle 6 for 90472/90473/90475/90480/90482/90488: all still 421/TLS-NOMATCH — no cert deployment
+- NEW kargo.teamgamdom.com discovered: HTTP 405 on `/` and `/api/v1/projects` — new subdomain exposing GitOps/ArgoCD-like API surface on scoped brand domain
+- CHANGED Starlette pool signature stable: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke

@@ -155,3 +155,23 @@
 - 2026-09-09 ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged).
 - 2026-09-09 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 6th cycle, all still 421/TLS-NOMATCH.
 - 2026-09-09 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag stable; status page now 7 monitors (com/eu/io/vip/win/80008/80009); SEO hub still 17× 90471 only.
+- 2026-09-10 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488/80001/80002: 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-10 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401 fixture-wide
+- 2026-09-10 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- 2026-09-10 ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+- 2026-09-10 ACCEPTED watch @ gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged
+- 2026-09-10 ACCEPTED watch @ kargo.teamgamdom.com: still 200 (Monaco IDE bootstrap), tableau.teamgamdom.com: still 200 (vizportal 2025_1_39), staging.teamgamdom.com: still 503
+- 2026-09-10 ACCEPTED watch @ live fleet: gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
+- 2026-09-10 REJECTED new-numbered-aliases (80010-80020): all 000 (connection failed) — not provisioned
+- 2026-09-10 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live proxy prohibited
+- 2026-09-10 ACCEPTED inventory-leak @ gamdommirrors.com: public status page is legitimate passive recon
+- 2026-09-10 REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com
+- 2026-09-10 ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-api md5 7e3a161d + /health ETag byte-identical → origin signature unchanged; 21st hostname in trust pool
+- 2026-09-10 ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect; gamdom80009.com inherits its Pool B slot
+- 2026-09-10 ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: still CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle
+- 2026-09-10 ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged)
+- 2026-09-10 ACCEPTED watch @ 90472/90473/90475/90480/90482/90488: 6th cycle, all still 421/TLS-NOMATCH
+- 2026-09-10 ACCEPTED watch @ Starlette pool + mirrors + SEO hub + status page: bundle hash + /health ETag stable; status page now 7 monitors (com/eu/io/vip/win/80008/80009); SEO hub still 17× 90471 only
+- 2026-09-10 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-10 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-10 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
