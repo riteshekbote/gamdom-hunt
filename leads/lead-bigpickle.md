@@ -2041,3 +2041,37 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED fleet consistency: all 6 live hosts /client-api md5 7e3a161d — byte-identical, shared origin stable (9th cycle).
 [LEARN] ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment.
 [RISK] gamdom:73 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 9 cycles of evidence accumulation). 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn (2 rotation events in 48h) does not affect origin homogeneity. Tableau version disclosure correlated against known CVEs — both patched (2025.1.11 > 2025.1.3); impact downgraded to informational. Kargo SPA catch-all uniformly masks backend (v1.9.6, direct origin, no CDN) — no JSON surface even with Accept header; parked until auth-assisted probe. 8 pending aliases stuck 421 in 9th cycle while 2 rotations occurred in 8000x pipeline — split-pipeline evidence persists. Risk steady at 73.
+## 2026-09-10 21:25:51 UTC [target] (model bigpickle)
+[PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6   # shared origin 3 brands / 21+ hosts, cookie-auth replay
+[PRIO] fatbets.com/client-api,8.0,a=9,b=9,t=7,g=4,f=6     # same shared origin, cross-brand auth flow
+[PRIO] 90488→shreeram (alias fleet),5.5,a=6,b=8,t=5,g=7,f=6 # split-pipeline misbinding watch
+[PRIO] kargo.teamgamdom.com,5.5,a=6,b=8,t=5,g=6,f=7       # GitOps SPA, POST-gated, direct origin
+[HYP] Cross-brand cookie replay via shared /client-api origin
+class: AUTH
+asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
+confidence: 70
+reasoning: Byte-identical /client-api (md5 7e3a161d) across 7 hosts, 10th continuous cycle; single Starlette identity/wallet backend; server-set same-origin cookie auth (proven from client JS); CORS ACAO absent → browser replay blocked, backend-level acceptance untested; 2 fleet rotations (80008/80009) with static origin signature
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another brand with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482/80001/80002
+confidence: 50
+reasoning: 10th cycle all 8 aliases 421 while 2 rotations (80008, 80009) landed certs in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-gated nginx test backend; shreeram gate still 401 fixture-wide
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w \"%{http_code}\" https://gamdom90488.com/client-api` (repeat cycle) + `curl -sS -o /dev/null -w \"%{http_code}\" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope regression
+testability: PASSIVE + monitoring
+[HYP] Kargo GitOps API enumeration behind SPA catch-all
+class: MISCONFIG
+asset: kargo.teamgamdom.com
+confidence: 25
+reasoning: All GET → SPA text/html even with Accept: application/json; POST → 405 method-gate; v1.9.6 direct origin 77.42.9.222 (no Fastly); no JSON surface without auth
+evidence_needed: any endpoint returning JSON unauthenticated; auth-assisted route discovery
+verify_steps: AUTH_HELPED enumeration of /api/v1/* with session
+impact: internal GitOps/CD exposure; severe if routes open
+testability: AUTH_HELPED
+[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/gamdom-domains` (now-JSON Kuma endpoint) — track monitor-list + heartbeat config as authoritative fleet state each cycle, and re-run the 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... gamdom90488.com/client-api`) to catch the first pending alias going live, which is the falsification point for the split-pipeline misbinding hypothesis.
+[RISK] gamdom: 73 — Cross-brand cookie replay (confidence 70) remains the only critical path, gated strictly by AUTH_HELPED; fleet + provisioning stable for 10th cycle with no new surface; newly-working Kuma JSON endpoint adds authoritative passive fleet state but no new risk. Kargo/Tableau surfaces closed (no unauthenticated data). No delta pushes risk either direction.

@@ -196,3 +196,8 @@
 - 2026-09-10 ACCEPTED recon @ kargo.teamgamdom.com: SPA catch-all uniformly serves text/html on all GET routes even with Accept: application/json header; POST uniformly 405; Akuity Kargo v1.9.6; origin direct 77.42.9.222 (no Fastly); wildcard cert *.teamgamdom.com (Let's Encrypt).
 - 2026-09-10 ACCEPTED fleet consistency: all 6 live hosts /client-api md5 7e3a161d — byte-identical, shared origin stable (9th cycle).
 - 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- 2026-09-10 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, no JSON surface exposed passively
+- 2026-09-10 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper auth gate; CVE-2025-52455/52449 patched on 2025.1.11
+- 2026-09-10 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-10 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)
+- 2026-09-10 ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical

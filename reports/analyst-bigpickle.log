@@ -14639,3 +14639,156 @@ testability: AUTH_HELPED
 ## STEP 7 — RISK
 
 [RISK] gamdom:73 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 9 cycles of evidence accumulation). 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn (2 rotation events in 48h) does not affect origin homogeneity. Tableau version disclosure correlated against known CVEs — both patched (2025.1.11 > 2025.1.3); impact downgraded to informational. Kargo SPA catch-all uniformly masks backend (v1.9.6, direct origin, no CDN) — no JSON surface even with Accept header; parked until auth-assisted probe. 8 pending aliases stuck 421 in 9th cycle while 2 rotations occurred in 8000x pipeline — split-pipeline evidence persists. Risk steady at 73.
+===== ANALYST bigpickle 2026-09-10 21:37:45 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in gamdom80001.com gamdom80002.com gamdom90472.com gamdom90473.com gamdom90475.com gamdom90480.com gamdom90482.com gamdom90488.com; do printf "%s " $h; curl -sSk -m 10 -o /dev/null -w "%{http_code}\n" "https://$h/client-api"; done
+gamdom80001.com 421
+gamdom80002.com 421
+gamdom90472.com 421
+gamdom90473.com 421
+gamdom90475.com 421
+gamdom90480.com 421
+gamdom90482.com 421
+gamdom90488.com 421
+[0m
+[0m$ [0mfor h in gamdom80004.com gamdom80006.com gamdom80007.com; do printf "%s " $h; curl -sSk -m 10 -o /dev/null -w "%{http_code} -> %{redirect_url}\n" "https://$h/"; done; printf "shreeram "; curl -sS -m 10 -o /dev/null -w "%{http_code}\n" https://shreeram-dynamic-test.teamgamdom.com/
+gamdom80004.com 302 -> https://gamdom80008.com/
+gamdom80006.com 302 -> https://gamdom80009.com/
+gamdom80007.com 302 -> https://gamdom80008.com/
+shreeram 401
+[0m
+[0m$ [0mfor h in gamdom.com fatbets.com gamdom.one gamdom80008.com gamdom80009.com gamdom80003.com gamdom.eu; do printf "%s " $h; curl -sSk -m 10 "https://$h/client-api" -o /tmp/opencode/b_$h -w "%{http_code} "; md5sum < /tmp/opencode/b_$h | cut -d' ' -f1; done
+gamdom.com 400 7e3a161d6cde2700fcdc0f6be4520745
+fatbets.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom.one 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80008.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80003.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom.eu 400 7e3a161d6cde2700fcdc0f6be4520745
+[0m
+[0m$ [0mcurl -sSk -m 10 "https://gamdom-girisi.com" | grep -o "gamdom90471" | wc -l; curl -sSk -m 10 -o /dev/null -w "seo_hub http=%{http_code} type=%{content_type}\n" "https://gamdom-girisi.com"
+17
+seo_hub http=200 type=text/html; charset=UTF-8
+[0m
+[0m$ [0mcurl -sSk -m 10 "https://gamdommirrors.com/api/status-page/gamdom-domains" -o /tmp/opencode/kuma.json -w "kuma http=%{http_code} type=%{content_type}\n"; head -c 300 /tmp/opencode/kuma.json
+kuma http=200 type=application/json; charset=utf-8
+{"config":{"slug":"gamdom-domains","title":"Gamdom Official Domains","description":"","icon":"/upload/logo1.png?t=1780595715016","theme":"auto","published":true,"showTags":false,"customCSS":".alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody
+[0m
+Kuma status-page API now returns real JSON (previously SPA). Extracting the live monitor list:
+[0m$ [0mpython3 -c "
+import json
+d=json.load(open('/tmp/opencode/kuma.json'))
+def walk(o,depth=0):
+    if isinstance(o,dict):
+        for k,v in o.items():
+            if k.lower() in ('name','url','hostname','method','slug'):
+                print('  '*depth, k, '=', str(v)[:80])
+            walk(v,depth+1)
+    elif isinstance(o,list):
+        for i in o: walk(i,depth+1)
+# print top-level keys
+print('KEYS:', list(d.keys()))
+for m in d.get('monitors',[]):
+    print('MONITOR:', json.dumps(m)[:200])
+"
+KEYS: ['config', 'incident', 'publicGroupList', 'maintenanceList']
+[0m
+[0m$ [0mpython3 -c "
+import json
+d=json.load(open('/tmp/opencode/kuma.json'))
+pgl=d.get('publicGroupList',[])
+print('groups:',len(pgl))
+for g in pgl:
+    print('GROUP:', g.get('name'), '| monitors:', len(g.get('monitorList',[])))
+    for m in g.get('monitorList',[]):
+        print('   -', m.get('name'), '| url:', str(m.get('url'))[:60], '| method:', m.get('method'), '| id:', m.get('id'))
+"
+groups: 1
+GROUP: Gamdom Official Domains | monitors: 7
+   - Gamdom.com | url: https://gamdom.com | method: None | id: 13
+   - Gamdom.eu | url: https://gamdom.eu | method: None | id: 3
+   - Gamdom.io | url: https://gamdom.io | method: None | id: 2
+   - Gamdom.vip | url: https://gamdom.vip | method: None | id: 6
+   - Gamdom.win | url: https://gamdom.win | method: None | id: 5
+   - gamdom80008.com | url: https://gamdom80008.com | method: None | id: 221
+   - gamdom80009.com | url: https://gamdom80009.com | method: None | id: 223
+[0m
+[0m$ [0mpython3 -c "
+import json
+d=json.load(open('/tmp/opencode/kuma.json'))
+inc=d.get('incident',[])
+print('incidents:',len(inc))
+for i in inc:
+    print(' -', i.get('title'), '| time:', i.get('createdDate') or i.get('time'), '| closed:', ('closedDate' in i))
+"
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+TypeError: object of type 'NoneType' has no len()
+[0m
+**STEP 1 — DELTA**
+- [CHANGED] gamdommirrors.com/api/status-page/gamdom-domains now returns **real JSON** (application/json) — previously SPA/unparseable; monitor list: 7 = com/eu/io/vip/win (ids 13,3,2,6,5) + 80008 (221) + 80009 (223); group "Gamdom Official Domains"
+- [CHANGED] Fleet `/client-api` body md5 7e3a161d byte-identical across 7 hosts (gamdom.com/eu, fatbets, one, 80003/80008/80009) — 10th stable cycle, shared origin unchanged
+- [CHANGED] All 8 pending aliases (80001/80002/90472/90473/90475/90480/90482/90488) still 421 — 10th cycle, no cert deployment
+- [CHANGED] Redirect chain stable: 80004→80008, 80006→80009, 80007→80008; shreeram gate 401; SEO hub still 17× 90471
+
+**STEP 2 — PRIORITIZE**
+```
+[PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6   # shared origin 3 brands / 21+ hosts, cookie-auth replay
+[PRIO] fatbets.com/client-api,8.0,a=9,b=9,t=7,g=4,f=6     # same shared origin, cross-brand auth flow
+[PRIO] 90488→shreeram (alias fleet),5.5,a=6,b=8,t=5,g=7,f=6 # split-pipeline misbinding watch
+[PRIO] kargo.teamgamdom.com,5.5,a=6,b=8,t=5,g=6,f=7       # GitOps SPA, POST-gated, direct origin
+```
+
+**STEP 3 — HYPOTHESES**
+```
+[HYP] Cross-brand cookie replay via shared /client-api origin
+class: AUTH
+asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
+confidence: 70
+reasoning: Byte-identical /client-api (md5 7e3a161d) across 7 hosts, 10th continuous cycle; single Starlette identity/wallet backend; server-set same-origin cookie auth (proven from client JS); CORS ACAO absent → browser replay blocked, backend-level acceptance untested; 2 fleet rotations (80008/80009) with static origin signature
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another brand with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482/80001/80002
+confidence: 50
+reasoning: 10th cycle all 8 aliases 421 while 2 rotations (80008, 80009) landed certs in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-gated nginx test backend; shreeram gate still 401 fixture-wide
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w \"%{http_code}\" https://gamdom90488.com/client-api` (repeat cycle) + `curl -sS -o /dev/null -w \"%{http_code}\" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope regression
+testability: PASSIVE + monitoring
+
+[HYP] Kargo GitOps API enumeration behind SPA catch-all
+class: MISCONFIG
+asset: kargo.teamgamdom.com
+confidence: 25
+reasoning: All GET → SPA text/html even with Accept: application/json; POST → 405 method-gate; v1.9.6 direct origin 77.42.9.222 (no Fastly); no JSON surface without auth
+evidence_needed: any endpoint returning JSON unauthenticated; auth-assisted route discovery
+verify_steps: AUTH_HELPED enumeration of /api/v1/* with session
+impact: internal GitOps/CD exposure; severe if routes open
+testability: AUTH_HELPED
+```
+
+**STEP 4 — SELF-CRITIQUE**
+- [PARKED] Kargo: confidence 25 < 40 — SPA catch-all masks all GET (ignores Accept), POST=405 method gating; no unauthenticated JSON surface.
+- [PARKED] Tableau: confidence 0 — CVE-2025-52455/52449 patched on 2025.1.11; REST API 401 gate on /sites; prior-proposed PUT/DELETE on /auth/signin dropped (violates passive-first GET/HEAD/OPTIONS rule).
+- [FINAL] Cross-brand cookie replay (70): survives 10th critique cycle; no REJECTED class; AUTH_HELPED only; impact critical.
+- [FINAL] Alias cert → shreeram misbinding (50): survives critique; passive verification available; no REJECTED class.
+
+**STEP 5 — NEXT ACTION**
+[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/gamdom-domains` (now-JSON Kuma endpoint) — track monitor-list + heartbeat config as authoritative fleet state each cycle, and re-run the 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... gamdom90488.com/client-api`) to catch the first pending alias going live, which is the falsification point for the split-pipeline misbinding hypothesis.
+
+**STEP 6 — LEARNING**
+- [LEARN] ACCEPTED recon @ gamdommirrors.com/api/status-page/gamdom-domains: corrects prior "SPA unparseable" — now returns JSON config, 7 monitors = com/eu/io/vip/win/80008/80009 (ids 13,3,2,6,5,221,223), group "Gamdom Official Domains"; passive inventory vector restored and authoritative.
+- [LEARN] ACCEPTED watch @ fleet: 10th cycle, 7 hosts /client-api 400 md5 7e3a161d byte-identical — shared origin stable.
+- [LEARN] ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 10th cycle all 421/TLS-NOMATCH — no cert deployment; no 80010-80020 provisioning.
+- [LEARN] ACCEPTED watch @ redirect chain: 80004→80008, 80006→80009, 80007→80008 (direct to live); shreeram 401; SEO hub still 17× 90471 only.
+- [LEARN] REJECTED Tableau auth-route method enumeration (PUT/DELETE /api/3.21/auth/signin): non-GET/HEAD/OPTIONS on live host violates passive-first rule; parked scope already closed (patched version + 401 gate).
+
+**STEP 7 — RISK**
+[RISK] gamdom: 73 — Cross-brand cookie replay (confidence 70) remains the only critical path, gated strictly by AUTH_HELPED; fleet + provisioning stable for 10th cycle with no new surface; newly-working Kuma JSON endpoint adds authoritative passive fleet state but no new risk. Kargo/Tableau surfaces closed (no unauthenticated data). No delta pushes risk either direction.

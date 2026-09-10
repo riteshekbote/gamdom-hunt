@@ -196,3 +196,10 @@ https://kargo.teamgamdom.com/api/v1/repositories` -> HTTP 405
 https://kargo.teamgamdom.com/api/v1/clusters` -> HTTP 405
 https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 https://tableau.teamgamdom.com/api/3.21/auth/signin` -> HTTP 404
+
+## 2026-09-10 21:37:52 UTC
+https://kargo.teamgamdom.com/api/v1/projects` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters` -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400

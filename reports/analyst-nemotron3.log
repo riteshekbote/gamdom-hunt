@@ -8296,3 +8296,271 @@ testability: AUTH_HELPED
 ### STEP 7 — RISK
 
 [RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-10 21:37:45 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mdate -u +"%Y-%m-%d %H:%M:%S UTC"
+2026-09-10 21:25:00 UTC
+[0m
+[0m$ [0mcurl -sS -I https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -20
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Thu, 10 Sep 2026 21:25:32 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+[0m
+[0m$ [0mcurl -sS https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -30
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/monacoeditorwork/css.worker.bundle.js",
+  "html": "/monacoeditorwork/html.worker.bundle.js",
+  "json": "/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/monacoeditorwork/ts.worker.bundle.js",
+  "yaml": "/monacoeditorwork/yaml.worker.bundle.js",
+  "javascript": "/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/monacoeditorwork/css.worker.bundle.js",
+[0m
+[0m$ [0mcurl -sS -I https://kargo.teamgamdom.com/api/v1/applications 2>&1 | head -10
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Thu, 10 Sep 2026 21:26:41 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+[0m
+[0m$ [0mcurl -sS https://kargo.teamgamdom.com/api/v1/applications 2>&1 | head -5
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -5
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+[0m
+[0m$ [0mcurl -sS https://tableau.teamgamdom.com/api/3.21/serverInfo 2>&1 | head -20
+<?xml version='1.0' encoding='UTF-8'?><tsResponse xmlns="http://tableau.com/api" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://tableau.com/api https://help.tableau.com/samples/en-us/rest_api/ts-api_3_21.xsd"><serverInfo><productVersion build="20251.25.1210.1815">2025.1.11</productVersion><prepConductorVersion>2025.1.0</prepConductorVersion><restApiVersion>3.25</restApiVersion></serverInfo></tsResponse>
+[0m
+[0m$ [0mcurl -sS -I https://tableau.teamgamdom.com/api/3.21/auth/signin 2>&1 | head -10
+HTTP/2 405 
+server: Tableau
+tableau_error_source: Client
+tableau_status_code: 5
+tableau_error_code: 0xA4C5B7AC
+tableau_service_name: vizportal
+content-type: application/xml;charset=UTF-8
+x-tableau: Tableau Server
+p3p: CP="NON"
+x-ua-compatible: IE=Edge
+[0m
+[0m$ [0mcurl -sS https://tableau.teamgamdom.com/api/3.21/auth/signin 2>&1 | head -10
+<?xml version='1.0' encoding='UTF-8'?><tsResponse xmlns="http://tableau.com/api" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://tableau.com/api https://help.tableau.com/samples/en-us/rest_api/ts-api_3_25.xsd"><error code="405000"><summary>Method Not Allowed</summary><detail>The HTTP method 'GET' is not supported for the given resource</detail></error></tsResponse>
+[0m
+[0m$ [0mfor h in gamdom.com gamdom.eu gamdom.io gamdom.vip gamdom.win gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one; do echo "=== $h ==="; curl -sS -I "https://$h/client-api" 2>&1 | grep -E "HTTP|content-length|content-type|etag"; done
+=== gamdom.com ===
+HTTP/2 400 
+content-length: 26
+=== gamdom.eu ===
+HTTP/2 400 
+content-length: 26
+=== gamdom.io ===
+HTTP/2 400 
+content-length: 26
+=== gamdom.vip ===
+HTTP/2 400 
+content-length: 26
+=== gamdom.win ===
+HTTP/2 400 
+content-length: 26
+=== gamdom80008.com ===
+HTTP/2 400 
+content-length: 26
+=== gamdom80009.com ===
+HTTP/2 400 
+content-length: 26
+=== gamdom80003.com ===
+HTTP/2 400 
+content-length: 26
+=== fatbets.com ===
+HTTP/2 400 
+content-length: 26
+=== gamdom.one ===
+HTTP/2 400 
+content-length: 26
+[0m
+[0m$ [0mfor h in gamdom.com gamdom.eu gamdom.io gamdom.vip gamdom.win gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one; do echo -n "$h: "; curl -sS "https://$h/client-api" | md5sum; done
+gamdom.com: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom.eu: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom.io: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom.vip: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom.win: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom80008.com: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom80009.com: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom80003.com: 7e3a161d6cde2700fcdc0f6be4520745  -
+fatbets.com: 7e3a161d6cde2700fcdc0f6be4520745  -
+gamdom.one: 7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mfor h in gamdom.com gamdom.eu gamdom.io gamdom.vip gamdom.win gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one; do echo -n "$h: "; curl -sS -I "https://$h/health" 2>&1 | grep -i etag; done
+gamdom.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.eu: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.io: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.vip: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.win: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80008.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80009.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80003.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+fatbets.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.one: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sS -I https://fatbets.com/auth/login 2>&1 | head -20
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 10 Sep 2027 21:32:29 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-40fade37-dcd3-4cc5-9f4d-4a66036d611f' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+date: Thu, 10 Sep 2026 21:32:29 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-khef600091-IAD, cache-iad-kiad7000038-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.one/auth/login 2>&1 | head -20
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Fri, 10 Sep 2027 21:32:56 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-97d39768-73fd-47c8-8b34-b5546e82cfd9' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+date: Thu, 10 Sep 2026 21:32:56 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200160-IAD, cache-iad-kiad7000085-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mfor h in gamdom90472.com gamdom90473.com gamdom90475.com gamdom90480.com gamdom90482.com gamdom90488.com gamdom80001.com gamdom80002.com; do echo -n "$h: "; timeout 5 curl -sS -I "https://$h/client-api" 2>&1 | head -1; done
+gamdom90472.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+gamdom90473.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90473.com'
+gamdom90475.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90475.com'
+gamdom90480.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90480.com'
+gamdom90482.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90482.com'
+gamdom90488.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+gamdom80001.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80001.com'
+gamdom80002.com: curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80002.com'
+[0m
+[0m$ [0mcurl -sS https://gamdom-girisi.com 2>&1 | grep -oE 'gamdom[0-9]+\.com' | sort -u
+gamdom90471.com
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/status/gamdom-domains 2>&1 | grep -oE 'gamdom[0-9a-zA-Z.-]+\.com' | sort -u
+gamdom80008.com
+gamdom80009.com
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/api/badge/1 2>&1 | head -10
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" id="theme-color" content="" />
+    <meta name="description" content="Uptime Kuma monitoring tool" />
+[0m
+**STEP 1 — DELTA**  
+NO_DELTA — Surface stable since last analysis (2026-09-10 19:05:55). Confirmed: 10 live hosts (gamdom.com/eu/io/vip/win, gamdom80008/80009/80003, fatbets.com, gamdom.one) share byte-identical `/client-api` (md5 7e3a161d) + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"; 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) remain 421/TLS-NOMATCH (9th cycle); kargo.teamgamdom.com GET 200 SPA catch-all / HEAD+POST 405, no JSON surface; tableau.teamgamdom.com 2025.1.11 (CVEs patched), REST auth gate 401/405; SEO hub 17× gamdom90471.com only; status page 7 monitors (com/eu/io/vip/win/80008/80009).
+
+**STEP 2 — PRIORITIZE**  
+[PRIO] fatbets.com/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9  
+[PRIO] gamdom.one/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9  
+[PRIO] gamdom80009.com/client-api,7.8,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10  
+[PRIO] gamdom80008.com/client-api,7.7,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10  
+[PRIO] gamdom.com/client-api,7.8,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8  
+[PRIO] kargo.teamgamdom.com/api/v1/projects,6.8,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=6,cloud_surface=7,freshness=10  
+[PRIO] gamdom80003.com/client-api,7.3,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9  
+
+**STEP 3 — HYPOTHESES**  
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one  
+class: AUTH  
+asset: fatbets.com/client-api  
+confidence: 72  
+reasoning: fatbets.com + gamdom.one + gamdom.com confirmed on Pool A (Fastly 151.101.x.52) with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", and host-only gd-lang cookie policy identical across 3 brands / 21+ hostnames; single shared backend serves all; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa  
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80009 accepted by fatbets.com/client-api  
+verify_steps: (passive) `curl -sS -I https://fatbets.com/auth/login` capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80009.com; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on fatbets.com/client-api and gamdom.one/client-api  
+impact: Cross-brand account takeover across 3 brands / 21+ hostnames; high  
+testability: AUTH_HELPED  
+
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors including newly rotated gamdom80009.com  
+class: AUTH  
+asset: gamdom80009.com/client-api  
+confidence: 69  
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors + Pool A flagship; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others including newly rotated 80009  
+evidence_needed: Same session cookie minted on gamdom80008 accepted by gamdom80009/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers  
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80008 vs gamdom80009 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80008, replay cookie on 80009/client-api and 90471/client-api  
+impact: Cross-domain account takeover across all 17+ mirror hostnames; medium-high  
+testability: AUTH_HELPED  
+
+[HYP] kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control without authentication  
+class: MISCONFIG  
+asset: kargo.teamgamdom.com/api/v1/projects  
+confidence: 58  
+reasoning: Newly discovered subdomain on scoped brand TLD (teamgamdom.com, Pool A) returns HTTP 405 on `/` and `/api/v1/projects` — method not allowed indicates endpoint exists and accepts specific verbs; ArgoCD/Kargo API surface typically exposes project listings, application status, deployment controls; GET /api/v1/projects returns 200 SPA catch-all, HEAD/POST → 405; if unauthenticated or weak auth on backend API, could leak infrastructure topology, deployment secrets, or allow supply-chain manipulation  
+evidence_needed: Response body/headers for GET /api/v1/projects with Accept: application/json (expect 401/403 if protected, 200 JSON if exposed); check for /api/v1/applications, /api/v1/repositories, /api/v1/clusters endpoints returning JSON vs SPA  
+verify_steps: (passive) `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters`; ≤1 rps, read-only  
+impact: Infrastructure reconnaissance, deployment pipeline exposure, potential supply-chain manipulation if write endpoints accessible; medium  
+testability: PASSIVE  
+
+**STEP 4 — SELF-CRITIQUE**  
+[PARKED] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors: confidence 69 but requires AUTH_HELPED (live session) — cannot verify passively; parked until authorized test account available  
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one: confidence 72 but requires AUTH_HELPED (live session) — cannot verify passively; parked until authorized test account available  
+[FINAL] 1) kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control (58, PASSIVE testability, medium impact)  
+[FINAL] 2) Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (72, AUTH_HELPED testability, high impact)  
+[FINAL] 3) Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors (69, AUTH_HELPED testability, medium-high impact)  
+
+**STEP 5 — NEXT ACTION**  
+[NEXT] PROBE: `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters` — passive enumeration of ArgoCD/Kargo API surface on newly discovered subdomain; ≤1 rps, GET only  
+
+**STEP 6 — LEARNING**  
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, no JSON surface exposed passively  
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper auth gate; CVE-2025-52455/52449 patched on 2025.1.11  
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment  
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)  
+[LEARN] ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised  
+[LEARN] ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical  
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)  
+
+**STEP 7 — RISK**  
+[RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

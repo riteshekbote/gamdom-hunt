@@ -2986,3 +2986,52 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
 [RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+## 2026-09-10 21:37:34 UTC [target] (model nemotron3)
+[PRIO] fatbets.com/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9  
+[PRIO] gamdom.one/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9  
+[PRIO] gamdom80009.com/client-api,7.8,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10  
+[PRIO] gamdom80008.com/client-api,7.7,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10  
+[PRIO] gamdom.com/client-api,7.8,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8  
+[PRIO] kargo.teamgamdom.com/api/v1/projects,6.8,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=6,cloud_surface=7,freshness=10  
+[PRIO] gamdom80003.com/client-api,7.3,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=9  
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one  
+class: AUTH  
+asset: fatbets.com/client-api  
+confidence: 72  
+reasoning: fatbets.com + gamdom.one + gamdom.com confirmed on Pool A (Fastly 151.101.x.52) with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", and host-only gd-lang cookie policy identical across 3 brands / 21+ hostnames; single shared backend serves all; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa  
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80009 accepted by fatbets.com/client-api  
+verify_steps: (passive) `curl -sS -I https://fatbets.com/auth/login` capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom80009.com; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on fatbets.com/client-api and gamdom.one/client-api  
+impact: Cross-brand account takeover across 3 brands / 21+ hostnames; high  
+testability: AUTH_HELPED  
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors including newly rotated gamdom80009.com  
+class: AUTH  
+asset: gamdom80009.com/client-api  
+confidence: 69  
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors + Pool A flagship; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others including newly rotated 80009  
+evidence_needed: Same session cookie minted on gamdom80008 accepted by gamdom80009/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers  
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80008 vs gamdom80009 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80008, replay cookie on 80009/client-api and 90471/client-api  
+impact: Cross-domain account takeover across all 17+ mirror hostnames; medium-high  
+testability: AUTH_HELPED  
+[HYP] kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control without authentication  
+class: MISCONFIG  
+asset: kargo.teamgamdom.com/api/v1/projects  
+confidence: 58  
+reasoning: Newly discovered subdomain on scoped brand TLD (teamgamdom.com, Pool A) returns HTTP 405 on `/` and `/api/v1/projects` — method not allowed indicates endpoint exists and accepts specific verbs; ArgoCD/Kargo API surface typically exposes project listings, application status, deployment controls; GET /api/v1/projects returns 200 SPA catch-all, HEAD/POST → 405; if unauthenticated or weak auth on backend API, could leak infrastructure topology, deployment secrets, or allow supply-chain manipulation  
+evidence_needed: Response body/headers for GET /api/v1/projects with Accept: application/json (expect 401/403 if protected, 200 JSON if exposed); check for /api/v1/applications, /api/v1/repositories, /api/v1/clusters endpoints returning JSON vs SPA  
+verify_steps: (passive) `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories`; `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters`; ≤1 rps, read-only  
+impact: Infrastructure reconnaissance, deployment pipeline exposure, potential supply-chain manipulation if write endpoints accessible; medium  
+testability: PASSIVE  
+[PARKED] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors: confidence 69 but requires AUTH_HELPED (live session) — cannot verify passively; parked until authorized test account available  
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one: confidence 72 but requires AUTH_HELPED (live session) — cannot verify passively; parked until authorized test account available  
+[FINAL] 1) kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control (58, PASSIVE testability, medium impact)  
+[FINAL] 2) Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (72, AUTH_HELPED testability, high impact)  
+[FINAL] 3) Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors (69, AUTH_HELPED testability, medium-high impact)  
+[NEXT] PROBE: `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters` — passive enumeration of ArgoCD/Kargo API surface on newly discovered subdomain; ≤1 rps, GET only  
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, no JSON surface exposed passively  
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper auth gate; CVE-2025-52455/52449 patched on 2025.1.11  
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment  
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)  
+[LEARN] ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised  
+[LEARN] ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical  
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)  
+[RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
