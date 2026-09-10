@@ -1,13 +1,14 @@
-## 2026-09-10 21:25:51 UTC [target] (model bigpickle)
+## 2026-09-10 23:24:39 UTC [target] (model bigpickle)
 [PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6   # shared origin 3 brands / 21+ hosts, cookie-auth replay
-[PRIO] fatbets.com/client-api,8.0,a=9,b=9,t=7,g=4,f=6     # same shared origin, cross-brand auth flow
-[PRIO] 90488→shreeram (alias fleet),5.5,a=6,b=8,t=5,g=7,f=6 # split-pipeline misbinding watch
+[PRIO] fatbets.com/client-api,8.5,a=9,b=10,t=7,g=4,f=6    # same shared origin, cross-brand auth flow
+[PRIO] gamdom90488.com→shreeram fleet,5.5,a=6,b=8,t=5,g=7,f=6 # split-pipeline misbinding watch
 [PRIO] kargo.teamgamdom.com,5.5,a=6,b=8,t=5,g=6,f=7       # GitOps SPA, POST-gated, direct origin
+[PRIO] gamdommirrors.com Kuma JSON,3.0,a=3,b=4,t=4,g=8,f=6 # newly-JSON heartbeat endpoint = authoritative passive fleet state
 [HYP] Cross-brand cookie replay via shared /client-api origin
 class: AUTH
 asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
 confidence: 70
-reasoning: Byte-identical /client-api (md5 7e3a161d) across 7 hosts, 10th continuous cycle; single Starlette identity/wallet backend; server-set same-origin cookie auth (proven from client JS); CORS ACAO absent → browser replay blocked, backend-level acceptance untested; 2 fleet rotations (80008/80009) with static origin signature
+reasoning: /client-api md5 7e3a161d byte-identical across all 6 live hosts probed this cycle (gamdom.com/80008/80009/80003/fatbets/gamdom.one), 11th continuous cycle; single Starlette identity/wallet backend; server-set same-origin cookie auth (from client bundle); CORS ACAO absent → browser replay blocked, backend acceptance untested; 2 fleet rotations (80008/80009) with static origin signature
 evidence_needed: authenticated Set-Cookie from one brand + replay POST to another brand with same cookie
 verify_steps: AUTH_HELPED only
 impact: ATO across 3 brands / 21+ hostnames; critical
@@ -16,12 +17,12 @@ testability: AUTH_HELPED
 class: MISCONFIG
 asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482/80001/80002
 confidence: 50
-reasoning: 10th cycle all 8 aliases 421 while 2 rotations (80008, 80009) landed certs in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-gated nginx test backend; shreeram gate still 401 fixture-wide
+reasoning: 11th cycle all 8 aliases 421 while 80008/80009 rotations landed certs on Starlette origin in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-gated nginx test backend; shreeram gate still 401 fixture-wide
 evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression to non-401
-verify_steps: PASSIVE — `curl -sSk -o /dev/null -w \"%{http_code}\" https://gamdom90488.com/client-api` (repeat cycle) + `curl -sS -o /dev/null -w \"%{http_code}\" https://shreeram-dynamic-test.teamgamdom.com/`
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (per cycle) + `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
 impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope regression
 testability: PASSIVE + monitoring
-[HYP] Kargo GitOps API enumeration behind SPA catch-all
+[HYP] Kargo GitOps backend unauthenticated enumeration behind SPA catch-all
 class: MISCONFIG
 asset: kargo.teamgamdom.com
 confidence: 25
@@ -30,5 +31,13 @@ evidence_needed: any endpoint returning JSON unauthenticated; auth-assisted rout
 verify_steps: AUTH_HELPED enumeration of /api/v1/* with session
 impact: internal GitOps/CD exposure; severe if routes open
 testability: AUTH_HELPED
-[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/gamdom-domains` (now-JSON Kuma endpoint) — track monitor-list + heartbeat config as authoritative fleet state each cycle, and re-run the 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... gamdom90488.com/client-api`) to catch the first pending alias going live, which is the falsification point for the split-pipeline misbinding hypothesis.
-[RISK] gamdom: 73 — Cross-brand cookie replay (confidence 70) remains the only critical path, gated strictly by AUTH_HELPED; fleet + provisioning stable for 10th cycle with no new surface; newly-working Kuma JSON endpoint adds authoritative passive fleet state but no new risk. Kargo/Tableau surfaces closed (no unauthenticated data). No delta pushes risk either direction.
+[PARKED] Kargo GitOps backend unauthenticated enumeration: confidence 25 < 40 — SPA catch-all uniform even with Accept: application/json; POST=405 method-gating not data leak; no JSON surface confirmed unauthenticated.
+[PARKED] Tableau version disclosure / method enumeration: confidence 0 — PUT/DELETE on /api/3.21/auth/signin is a non-GET/HEAD/OPTIONS live probe and violates passive-first rule; version 2025.1.11 already patched for CVE-2025-52455/52449; /sites 401 proper gate. Line closed.
+[FINAL] Cross-brand cookie replay via shared /client-api origin: confidence 70 — survives critique; 11 consecutive cycles byte-identical across 3 brands / 21+ hosts; fleet churn with static origin; gated by AUTH_HELPED only; no REJECTED class; impact critical.
+[FINAL] Provisioned alias cert lands with gate-scope regression: confidence 50 — survives critique; 11 cycles of 421 persistence vs 2 live rotations proving split pipeline; PASSIVE verification available; no REJECTED class; impact medium-high.
+[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains` (track heartbeatList id-set {2,3,5,6,13,221,223} every cycle as authoritative fleet rotation state) + re-run 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... https://gamdom90488.com/client-api`) to catch the first pending alias going non-421 — the falsification point for the split-pipeline misbinding hypothesis.
+[LEARN] ACCEPTED recon @ gamdommirrors.com/api/status-page/heartbeat/gamdom-domains: now-JSON Kuma public heartbeat endpoint exposes authoritative monitor id-set (7: 2,3,5,6,13,221,223) — no rotation this cycle, 80008(id:221)+80009(id:223) still listed; alternate-slug enumeration (default/main-status/gamdom/master/gamdom-domains-2/statuspage) empty — passive recon only, no data leak.
+[LEARN] ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 11th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+[LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (11th cycle).
+[LEARN] ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com gate 401; SEO hub still 17× gamdom90471 only; gamdom90471.com still 421.
+[RISK] gamdom: 73 — No delta. Cross-brand cookie replay (confidence 70) remains the only critical path, strictly AUTH_HELPED-gated, now with 11-cycle byte-identical origin evidence. Split-pipeline misbinding holds (11th cycle, 8 aliases 421 vs 2 rotations live). Newly-machine-readable Kuma JSON endpoint strengthens passive fleet monitoring but adds no risk. Kargo/Tableau surfaces closed (no unauthenticated data). Risk steady at 73.

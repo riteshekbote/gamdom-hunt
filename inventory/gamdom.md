@@ -501,3 +501,14 @@ www.gamdom.com
 - CHANGED tableau.teamgamdom.com/api/3.21/sites → 401 XML "No authentication credentials were provided" — proper auth gate
 
 ## 2026-09-10 21:37:45 UTC
+
+## 2026-09-10 23:24:51 UTC
+- NEW Tableau CVE correlation complete: 2025.1.11 patches CVE-2025-52455 (SSRF) and CVE-2025-52449 (RCE) — version disclosure downgraded to informational
+- NEW Kargo Accept:application/json probe confirms SPA catch-all ignores header — no JSON API surface exposed passively
+- NEW gamdom80004.com redirect target updated: now 302→gamdom80008.com (was gamdom80007.com) — redirect chain flattened post-rotation
+- NEW Numbered aliases 80010-80020 tested: all 000 (connection failed) — not provisioned
+- CHANGED Status page monitors: com/eu/io/vip/win/80008/80009 (7 monitors, absorbed 80006→80009 rotation)
+- CHANGED Provisioning cycle 9 for 90472/90473/90475/90480/90482/90488/80001/80002: all 421/TLS-NOMATCH — no cert deployment
+- CHANGED Starlette pool signature stable 10th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+- CHANGED Live fleet stable: 6 mirrors + 2 brands all /client-api 400, ETag identical
+- CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised

@@ -201,3 +201,9 @@
 - 2026-09-10 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - 2026-09-10 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)
 - 2026-09-10 ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
+- 2026-09-10 ACCEPTED recon @ gamdommirrors.com/api/status-page/heartbeat/gamdom-domains: now-JSON Kuma public heartbeat endpoint exposes authoritative monitor id-set (7: 2,3,5,6,13,221,223) — no rotation this cycle, 80008(id:221)+80009(id:223) still listed; alternate-slug enumeration (default/main-status/gamdom/master/gamdom-domains-2/statuspage) empty — passive recon only, no data leak.
+- 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 11th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- 2026-09-10 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (11th cycle).
+- 2026-09-10 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com gate 401; SEO hub still 17× gamdom90471 only; gamdom90471.com still 421.
+- 2026-09-10 ACCEPTED inventory @ gamdom80004.com: redirect target updated to gamdom80008.com (was gamdom80007.com) — redirect chain flattened post-rotation
+- 2026-09-10 REJECTED new-numbered-aliases @ 80010-80020: all 000 (connection failed) — not provisioned

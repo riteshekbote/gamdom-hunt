@@ -975,3 +975,26 @@
 - LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
 - LEARN: ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag id
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+
+## RANKED HYPOTHESES 2026-09-10 23:24:51 UTC
+- [70] gamdom.com/client-api: Cross-brand cookie replay via shared /client-api origin (from art/lead_bigpickle.txt)
+- [55] kargo.teamgamdom.com/api/v1/projects: kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control via unauthenticated JSON endpoints (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains` (track heartbeatList id-set {2,3,5,6,13,221,223} every cycle as authoritat
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS -H "Accept: application/json" https://kargo.teamgamdom
+- LEARN: ACCEPTED recon @ gamdommirrors.com/api/status-page/heartbeat/gamdom-domains: now-JSON Kuma public heartbeat endpoint exposes authoritative monitor id-set (7: 2,
+- LEARN: ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 11th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- LEARN: ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (1
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com gate 401; SEO hub still 17× gamdom90471 only; gamdom90471.com still 421.
+- LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper 
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, n
+- LEARN: ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th
+- LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+- LEARN: ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag id
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- LEARN: ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-ap
+- LEARN: ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbe
+- LEARN: ACCEPTED inventory @ gamdom80004.com: redirect target updated to gamdom80008.com (was gamdom80007.com) — redirect chain flattened post-rotation
+- LEARN: REJECTED new-numbered-aliases @ 80010-80020: all 000 (connection failed) — not provisioned
