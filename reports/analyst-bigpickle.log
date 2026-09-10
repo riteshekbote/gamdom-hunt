@@ -13228,3 +13228,309 @@ testability: PASSIVE + monitoring
 **STEP 7 — RISK**
 
 [RISK] gamdom:73 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 7+ cycles of evidence accumulation). 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn (2 rotation events in 48h) does not affect origin homogeneity. Tableau REST API confirmed auth-gated (401), closing that vector. Kargo backend confirmed method-gated (POST 405, GET SPA catch-all) with no unauthenticated JSON surface — parked until auth-assisted probe available. 8 pending aliases stuck 421 in 7th cycle while 2 rotations occurred in 8000x pipeline — split-pipeline evidence persists. Risk steady at 73; slight uptick from Kargo 405 confirming backend API exists (adds surface behind auth).
+===== ANALYST bigpickle 2026-09-10 12:03:17 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sSk -w "\n%{http_code}" https://gamdom80008.com/client-api 2>/dev/null | tail -2 && echo "---" && curl -sSk -w "\n%{http_code}" https://gamdom80009.com/client-api 2>/dev/null | tail -2 && echo "---" && curl -sSk -w "\n%{http_code}" https://gamdom80003.com/client-api 2>/dev/null | tail -2
+Invalid request, only POST
+400---
+Invalid request, only POST
+400---
+Invalid request, only POST
+400
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}\n" https://gamdom80001.com/client-api https://gamdom80002.com/client-api https://gamdom90480.com/client-api https://gamdom90482.com/client-api https://gamdom90488.com/client-api https://gamdom90472.com/client-api https://gamdom90473.com/client-api https://gamdom90475.com/client-api
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [1472b5d875b6c51fd54448f672418b8d2b915b50b3c0b54e0283ab7ddb7f6110] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+Requested host does not match any Subject Alternative Names (SANs) on TLS certificate [0a9c8d0a7a6dccb396a538a07a603433b6ea97bf1b1b56fa4962fe488a93711e] in use with this connection.
+
+Visit https://www.fastly.com/documentation/guides/concepts/errors/#routing-errors for more information.
+
+421
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}\n" https://gamdom.com/client-api https://gamdom.eu/client-api https://gamdom.io/client-api https://gamdom.vip/client-api https://gamdom.win/client-api https://fatbets.com/client-api https://gamdom.one/client-api
+400
+Invalid request, only POST400
+Invalid request, only POST400
+Invalid request, only POST400
+Invalid request, only POST400
+Invalid request, only POST400
+Invalid request, only POST400
+[0m
+[0m$ [0mcurl -sSk -D - -o /dev/null https://gamdom80008.com/health 2>/dev/null | grep -i etag
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sSk -D - -o /dev/null https://gamdom80003.com/health 2>/dev/null | grep -i etag
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sSk https://gamdom.com/client-api 2>/dev/null | md5sum && curl -sSk https://gamdom80008.com/client-api 2>/dev/null | md5sum && curl -sSk https://gamdom80009.com/client-api 2>/dev/null | md5sum && curl -sSk https://gamdom80003.com/client-api 2>/dev/null | md5sum && curl -sSk https://fatbets.com/client-api 2>/dev/null | md5sum && curl -sSk https://gamdom.one/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code} %{redirect_url}\n" https://gamdom80007.com/client-api https://gamdom80006.com/client-api
+302 https://gamdom80008.com/client-api
+302 https://gamdom80009.com/client-api
+[0m
+[0m$ [0mcurl -sSk https://gamdommirrors.com/status/gamdom-domains 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); [print(m['name'],m['id']) for m in d.get('monitorList',d.get('monitor',[]))]" 2>/dev/null || curl -sSk https://gamdommirrors.com/status/gamdom-domains 2>/dev/null | head -c 2000
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <link rel="icon" href="/upload/logo1.png?t=1780595715016">
+    <link rel="manifest" href="/api/status-page/gamdom-domains/manifest.json">
+    <meta name="theme-color" id="theme-color" content="">
+    <meta name="description" content="">
+    <title>Gamdom Official Domains</title>
+    <style>        .noscript-message {
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+  <script type="module" crossorigin="" src="/assets/index-B_z9mVlf.js"></script>
+  <link rel="stylesheet" crossorigin="" href="/assets/index-bOVKKa1O.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+<meta property="og:title" content="Gamdom Official Domains"><meta property="og:description" content="">
+            <script id="preload-data" data-json="{}">
+                window.preloadData = {'config':{'slug':'gamdom-domains','title':'Gamdom Official Domains','description':'','icon':'/upload/logo1.png?t=1780595715016','theme':'auto','published':true,'showTags':false,'customCSS':'.alert-heading p {\n  display: flex;\n  justify-content: center;\n  gap: 12px;\n}\n\n/* new styles */\n\nbody {\n  background: #080D13;\n  color: #F9F9F9;\n}\n\n#app .container {\n  padding-top: 1rem;\n
+[0m
+[0m$ [0mcurl -sSk -I https://kargo.teamgamdom.com/api/v1/projects 2>/dev/null | head -20
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Thu, 10 Sep 2026 11:48:37 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+[0m
+[0m$ [0mcurl -sSk -I https://kargo.teamgamdom.com/api/v1/credentials 2>/dev/null | head -20
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Thu, 10 Sep 2026 11:48:37 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/api/v1/projects -H "Accept: application/json" 2>/dev/null | head -c 500
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location
+[0m
+[0m$ [0mcurl -sSk -X POST https://kargo.teamgamdom.com/api/v1/projects -H "Content-Type: application/json" -d '{}' 2>/dev/null | head -c 300
+Method Not Allowed
+[0m
+[0m$ [0mcurl -sSk -D - https://kargo.teamgamdom.com/ 2>/dev/null | head -30
+HTTP/2 200 
+cache-control: no-cache, private, max-age=0
+content-type: text/html; charset=utf-8
+date: Thu, 10 Sep 2026 11:48:45 GMT
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+pragma: no-cache
+vary: Accept-Encoding
+x-accel-expires: 0
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+[0m
+[0m$ [0mcurl -sSk -o /dev/null -w "%{http_code}" https://gamdom-girisi.com/ 2>/dev/null && echo "" && curl -sSk https://gamdom-girisi.com/ 2>/dev/null | grep -oP 'gamdom\d+\.com' | sort -u
+200
+gamdom90471.com
+[0m
+[0m$ [0mfor path in /api/v1/stages /api/v1/promotions /api/v1/rollouts /api/v1/artifacts /api/v1/clusters /api/v1/freights /api/v1/warehouse /api/v1/agents /api/v1/clusterAliases /api/v1/clusterAgents; do code=$(curl -sSk -o /dev/null -w "%{http_code}" "https://kargo.teamgamdom.com${path}" 2>/dev/null); echo "$code $path"; done
+200 /api/v1/stages
+200 /api/v1/promotions
+200 /api/v1/rollouts
+200 /api/v1/artifacts
+200 /api/v1/clusters
+200 /api/v1/freights
+200 /api/v1/warehouse
+200 /api/v1/agents
+200 /api/v1/clusterAliases
+200 /api/v1/clusterAgents
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/api/v1/stages -H "Accept: application/json" 2>/dev/null | head -c 200
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, la
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/api/v1/clusters -H "Accept: application/json" 2>/dev/null | head -c 200
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, la
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/api/v1/agents -H "Accept: application/json" 2>/dev/null | head -c 200
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, la
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/api/v1/warehouse -H "Accept: application/json" 2>/dev/null | head -c 200
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, la
+[0m
+[0m$ [0mcurl -sSk -D - https://kargo.teamgamdom.com/.well-known/openid-configuration 2>/dev/null | head -20
+HTTP/2 200 
+cache-control: no-cache, private, max-age=0
+content-type: text/html; charset=utf-8
+date: Thu, 10 Sep 2026 11:49:09 GMT
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+pragma: no-cache
+vary: Accept-Encoding
+x-accel-expires: 0
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+[0m
+[0m$ [0mcurl -sSk -D - https://kargo.teamgamdom.com/api/ 2>/dev/null | head -30
+HTTP/2 200 
+cache-control: no-cache, private, max-age=0
+content-type: text/html; charset=utf-8
+date: Thu, 10 Sep 2026 11:49:09 GMT
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+pragma: no-cache
+vary: Accept-Encoding
+x-accel-expires: 0
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+[0m
+[0m$ [0mfor path in /api/v1/projects /api/v1/credentials /api/v1/clusters /api/v1/stages /api/v1/promotions /api/v1/rollouts /api/v1/freights /api/v1/agents /api/v1/warehouse; do code=$(curl -sSk -X POST -o /dev/null -w "%{http_code}" "https://kargo.teamgamdom.com${path}" -H "Content-Type: application/json" -d '{}' 2>/dev/null); echo "$code POST $path"; done
+405 POST /api/v1/projects
+405 POST /api/v1/credentials
+405 POST /api/v1/clusters
+405 POST /api/v1/stages
+405 POST /api/v1/promotions
+405 POST /api/v1/rollouts
+405 POST /api/v1/freights
+405 POST /api/v1/agents
+405 POST /api/v1/warehouse
+[0m
+[0m$ [0mcurl -sSk -X OPTIONS -D - -o /dev/null https://kargo.teamgamdom.com/api/v1/projects 2>/dev/null | head -15
+HTTP/2 405 
+content-type: text/plain; charset=utf-8
+date: Thu, 10 Sep 2026 11:49:26 GMT
+vary: Accept-Encoding
+x-content-type-options: nosniff
+content-length: 19
+[0m
+[0m$ [0mfor method in PUT PATCH DELETE; do code=$(curl -sSk -X $method -o /dev/null -w "%{http_code}" "https://kargo.teamgamdom.com/api/v1/projects" 2>/dev/null); echo "$code $method /api/v1/projects"; done
+405 PUT /api/v1/projects
+405 PATCH /api/v1/projects
+405 DELETE /api/v1/projects
+[0m
+[0m$ [0mcurl -sSk https://kargo.teamgamdom.com/v1/projectSets 2>/dev/null | head -c 100
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths)
+[0m
+## STEP 1 — DELTA
+
+NO_DELTA — fleet status page badge N/A (SPA unparseable), all monitored hosts stable, no rotation events, no cert deployments on pending aliases. Kargo deep enumerated but unchanged (SPA catch-all GET, 405 all methods POST).

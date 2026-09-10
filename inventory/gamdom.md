@@ -448,3 +448,17 @@ www.gamdom.com
 - CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
 - CHANGED gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
 - CHANGED gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged (com/eu/io/vip/win/80008/80009)
+
+## 2026-09-10 12:03:17 UTC
+- NEW kargo.teamgamdom.com ArgoCD-like API surface: GET `/api/v1/projects` → 200 (SPA catch-all), POST → 405; GET `/api/v1/applications|repositories|clusters` → 405 — method-gated backend exists behind SPA
+- NEW tableau.teamgamdom.com Tableau REST API: `/api/3.21/sites` → 401 XML "No authentication credentials were provided" — proper auth gate, anonymous content hypothesis closed
+- NEW gamdom80009.com live (11th mirror, 21st hostname): replaces gamdom80006.com on status page monitor id:223; byte-identical `/client-api` md5 7e3a161d + `/health` weak-ETag — second rotation in 24h
+- NEW gamdom80006.com demoted: 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
+- NEW gamdom80001.com/gamdom80002.com: CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle
+- NEW Provisioning cycle 7 for 90472/90473/90475/90480/90482/90488/80001/80002: all still 421/TLS-NOMATCH — no cert deployment
+- NEW New numbered aliases 80010-80020 tested: all 000 (connection failed) — not provisioned
+- CHANGED Starlette pool signature stable: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
+- CHANGED shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL `bong_ke`
+- CHANGED gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged (com/eu/io/vip/win/80008/80009)
+- CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised

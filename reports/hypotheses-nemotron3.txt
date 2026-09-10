@@ -1,13 +1,17 @@
-## 2026-09-10 06:39:59 UTC [target] (model nemotron3)
-[NEW] kargo.teamgamdom.com discovered: HTTP 405 on `/` and `/api/v1/projects` — new subdomain exposing GitOps/ArgoCD-like API surface on scoped brand domain
+## 2026-09-10 12:02:31 UTC [target] (model nemotron3)
+[NEW] kargo.teamgamdom.com ArgoCD-like API surface: GET `/api/v1/projects` → 200 (SPA catch-all), POST → 405; GET `/api/v1/applications|repositories|clusters` → 405 — method-gated backend exists behind SPA
+[NEW] tableau.teamgamdom.com Tableau REST API: `/api/3.21/sites` → 401 XML "No authentication credentials were provided" — proper auth gate, anonymous content hypothesis closed
+[NEW] gamdom80009.com live (11th mirror, 21st hostname): replaces gamdom80006.com on status page monitor id:223; byte-identical `/client-api` md5 7e3a161d + `/health` weak-ETag — second rotation in 24h
+[NEW] gamdom80006.com demoted: 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — brand retires numbered aliases by redirect
+[NEW] gamdom80001.com/gamdom80002.com: CNAME→gamdom4567.com Pool B DNS, all 4 edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle
 [NEW] Provisioning cycle 7 for 90472/90473/90475/90480/90482/90488/80001/80002: all still 421/TLS-NOMATCH — no cert deployment
 [NEW] New numbered aliases 80010-80020 tested: all 000 (connection failed) — not provisioned
-[CHANGED] Starlette pool signature stable: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+[CHANGED] Starlette pool signature stable: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
 [CHANGED] fatbets.com + gamdom.one confirmed as 2nd/3rd brands on Pool A with byte-identical origin signature — shared identity/wallet backend serves 3 brands / 21+ hostnames
-[CHANGED] shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL bong_ke
-[CHANGED] gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all /client-api 400, ETag identical
+[CHANGED] shreeram-dynamic-test.teamgamdom.com Basic realm="secret" gate holds 401 fixture-wide (7 paths); teamgamdom Go realm 404 + VCL `bong_ke`
 [CHANGED] gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged (com/eu/io/vip/win/80008/80009)
-[PRIO] kargo.teamgamdom.com,8.3,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=10
+[CHANGED] SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+[PRIO] kargo.teamgamdom.com/api/v1/projects,8.3,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=10
 [PRIO] fatbets.com/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9
 [PRIO] gamdom.one/client-api,8.2,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=6,cloud_surface=9,freshness=9
 [PRIO] gamdom80009.com/client-api,7.8,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=9,freshness=10
@@ -61,4 +65,10 @@ testability: PASSIVE
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
 [LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+[LEARN] ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-api md5 7e3a161d + /health ETag byte-identical → origin signature unchanged; 21st hostname in trust pool
+[LEARN] ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect; gamdom80009.com inherits its Pool B slot
+[LEARN] ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: still CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th cycle
+[LEARN] ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged)
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: Tableau REST API returns 401 XML "No authentication credentials were provided" — proper auth gate; anonymous content hypothesis closed
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com: GET /api/v1/projects and /api/v1/credentials → 200 SPA catch-all (Monaco IDE shell); POST → 405; backend exists but is method-gated with no unauthenticated JSON surface
 [RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
