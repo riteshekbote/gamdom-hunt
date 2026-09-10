@@ -901,3 +901,37 @@
 - LEARN: ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged)
 - LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: Tableau REST API returns 401 XML "No authentication credentials were provided" — proper auth gate; anony
 - LEARN: ACCEPTED recon @ kargo.teamgamdom.com: GET /api/v1/projects and /api/v1/credentials → 200 SPA catch-all (Monaco IDE shell); POST → 405; backend exists but is me
+
+## RANKED HYPOTHESES 2026-09-10 15:56:24 UTC
+- [72] fatbets.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_nemotron3.txt)
+- [70] gamdom.com/client-api: Cross-brand cookie replay via shared /client-api identity/wallet origin (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Tableau version disclosure correlation — `curl -sSk https://tableau.teamgamdom.com/api/3.21/serverInfo` to verify the leaked version (2025.1.11) against 
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -I https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS https://kargo.teamgamdom.com/api/v1/projects` && `curl -sS https://kargo.teamgamd
+- LEARN: kargo.teamgamdom.com SPA catch-all returns `content-type: text/html; charset=utf-8` on ALL GET routes including `/env`, `/debug`, `/metrics`, `/healthz`, `/read
+- LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST A
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com: SPA catch-all uniformly serves text/html on all GET routes including /env /debug /metrics /healthz /readyz /robots.txt; P
+- LEARN: CHANGED redirect chain: gamdom80004.com now 302→gamdom80008.com (was gamdom80007.com) — both redirect aliases point directly at current live mirror, no longer c
+- LEARN: ACCEPTED watch @ live fleet: all 6 live mirrors + 2 brand domains stable, /client-api 400 + /health ETag byte-identical.
+- LEARN: ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 8th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401.
+- LEARN: ACCEPTED watch @ gamdommirrors.com status page: 7 monitors (com/eu/io/vip/win/80008/80009), badge API returns SPA.
+- LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only.
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited.
+- LEARN: REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+- LEARN: ACCEPTED inventory @ kargo.teamgamdom.com: new subdomain on teamgamdom.com (Pool A) exposing HTTP 405 on `/` and `/api/v1/projects` — GitOps/ArgoCD-like API sur
+- LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: Tableau REST API returns 401 XML "No authentication credentials were provided" — proper auth gate; anony
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com: GET /api/v1/projects and /api/v1/credentials → 200 SPA catch-all (Monaco IDE shell); POST → 405; backend exists but is me
+- LEARN: ACCEPTED watch @ 90472/90473/90475/90480/90482/90488/80001/80002: 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401 fixture-wide
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
+- LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+- LEARN: ACCEPTED watch @ gamdommirrors.com status page: badge N/A (SPA unparseable), 7 monitors presumed unchanged
+- LEARN: ACCEPTED watch @ live fleet: gamdom80008.com (302→80007 retired), gamdom80009.com (302→80006 retired), gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, g
+- LEARN: REJECTED new-numbered-aliases (80010-80020): all 000 (connection failed) — not provisioned
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid sessi
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains
+- LEARN: REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- LEARN: ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-ap
+- LEARN: ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbe
+- LEARN: ACCEPTED inventory @ gamdom80001.com/gamdom80002.com: still CNAME→gamdom4567.com Pool B DNS, all edges 421/TLS-NOMATCH — 17th/18th provisioned-not-yet-live; 6th
+- LEARN: ACCEPTED inventory @ fatbets.com + gamdom.one: shared identity/wallet origin serves 2 brands / 21+ hostnames (unchanged)

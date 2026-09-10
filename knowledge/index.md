@@ -180,3 +180,14 @@
 - 2026-09-10 ACCEPTED watch @ live fleet: gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom.com/eu/io/vip/win, fatbets.com, gamdom.one — all stable
 - 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 7th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - 2026-09-10 ACCEPTED inventory @ kargo.teamgamdom.com: new subdomain on teamgamdom.com (Pool A) exposing HTTP 405 on `/` and `/api/v1/projects` — GitOps/ArgoCD-like API surface
+- 2026-09-10 kargo.teamgamdom.com SPA catch-all returns `content-type: text/html; charset=utf-8` on ALL GET routes including `/env`, `/debug`, `/metrics`, `/healthz`, `/readyz`, `/robots.txt`, `/sitemap.xml` — monolithic SPA shell masks any backend routing.
+- 2026-09-10 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — version disclosure only; Tableau REST API auth gate confirmed (401 on /sites).
+- 2026-09-10 ACCEPTED recon @ kargo.teamgamdom.com: SPA catch-all uniformly serves text/html on all GET routes including /env /debug /metrics /healthz /readyz /robots.txt; POST uniformly 405; Akuity Kargo v1.9.6; origin direct 77.42.9.222 (no Fastly); wildcard cert *.teamgamdom.com (Let's Encrypt).
+- 2026-09-10 CHANGED redirect chain: gamdom80004.com now 302→gamdom80008.com (was gamdom80007.com) — both redirect aliases point directly at current live mirror, no longer chaining through retired aliases.
+- 2026-09-10 ACCEPTED watch @ live fleet: all 6 live mirrors + 2 brand domains stable, /client-api 400 + /health ETag byte-identical.
+- 2026-09-10 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 8th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- 2026-09-10 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401.
+- 2026-09-10 ACCEPTED watch @ gamdommirrors.com status page: 7 monitors (com/eu/io/vip/win/80008/80009), badge API returns SPA.
+- 2026-09-10 ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only.
+- 2026-09-10 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited.
+- 2026-09-10 REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.

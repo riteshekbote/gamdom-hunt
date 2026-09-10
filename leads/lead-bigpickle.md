@@ -1941,3 +1941,56 @@ testability: PASSIVE + monitoring
 [LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable
 [RISK] gamdom:73 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 7+ cycles of evidence accumulation). 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn (2 rotation events in 48h) does not affect origin homogeneity. Tableau REST API confirmed auth-gated (401), closing that vector. Kargo backend confirmed method-gated (POST 405, GET SPA catch-all) with no unauthenticated JSON surface — parked until auth-assisted probe available. 8 pending aliases stuck 421 in 7th cycle while 2 rotations occurred in 8000x pipeline — split-pipeline evidence persists. Risk steady at 73; slight uptick from Kargo 405 confirming backend API exists (adds surface behind auth).
 ## 2026-09-10 11:49:45 UTC [target] (model bigpickle)
+## 2026-09-10 15:56:12 UTC [target] (model bigpickle)
+[CHANGED] gamdom80004.com redirect target: now 302→gamdom80008.com (was gamdom80007.com) — redirect chain updated post-rotation.
+[CHANGED] gamdom80007.com redirect: still 302→gamdom80008.com (unchanged from last cycle, but gamdom80004.com no longer chains through 80007→80008; both redirect directly to 80008).
+[NEW] kargo.teamgamdom.com POST /api/v1/repositories + POST /api/v1/clusters both → 405 (backend method-gated); GET still SPA catch-all. No JSON surface.
+[NEW] tableau.teamgamdom.com /api/3.21/serverInfo → 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — unauthenticated version disclosure.
+[NEW] kargo.teamgamdom.com v1.9.6 confirmed from client bundle; origin 77.42.9.222 direct (no Fastly), wildcard cert *.teamgamdom.com (Let's Encrypt, expires Oct 27).
+[LEARN] kargo.teamgamdom.com SPA catch-all returns `content-type: text/html; charset=utf-8` on ALL GET routes including `/env`, `/debug`, `/metrics`, `/healthz`, `/readyz`, `/robots.txt`, `/sitemap.xml` — monolithic SPA shell masks any backend routing.
+[PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6 → cross-brand cookie replay (shared Starlette origin serves 3 brands / 21+ hostnames; server-set same-origin cookie; backend-level acceptance untested)
+[PRIO] fatbets.com/client-api,8.0,a=9,b=9,t=7,g=4,f=6 → same shared origin, cross-brand auth flow
+[PRIO] kargo.teamgamdom.com,5.5,a=6,b=8,t=5,g=6,f=7 → Akuity Kargo v1.9.6 GitOps SPA + POST-gated API; no unauthenticated JSON surface; direct origin (no CDN)
+[PRIO] tableau.teamgamdom.com,3.5,a=4,b=6,t=4,g=3,f=7 → version disclosure (2025.1.11) + REST API auth gate confirmed; vizportal SPA surface
+[HYP] Cross-brand cookie replay via shared /client-api identity/wallet origin
+class: AUTH
+asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
+confidence: 70
+reasoning: Byte-identical origin serves 3 brands / 21+ hostnames; auth transport is server-set same-origin cookie (no bearer/localStorage); CORS blocks browser cross-origin replay (no ACAO headers); backend-level cookie acceptance on shared Starlette origin remains untested; fleet churn (2 rotation events in 48h) does not affect origin homogeneity; 8 consecutive cycles of /client-api 400 md5 7e3a161d + /health weak-ETag confirm shared origin stable
+evidence_needed: authenticated Set-Cookie capture from one brand + replay POST to another brand's /client-api with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across entire trust pool (21+ hosts, 3 brands); critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482/80001/80002
+confidence: 50
+reasoning: 8th cycle all 8 aliases still 421 while 2 live rotations (80008, 80009) landed certs on Starlette origin in 48h; 8000x pipeline rotates, 9047x + 80001/80002 family has not in 8 cycles — split-pipeline evidence; 90488 uniquely pins to Basic-gated nginx backend; shreeram gate still holds 401 fixture-wide
+evidence_needed: any pending alias returns non-421, or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` (repeat 8); `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope-error
+testability: PASSIVE + monitoring
+[HYP] Kargo GitOps backend API unauthenticated enumeration behind SPA catch-all
+class: MISCONFIG
+asset: kargo.teamgamdom.com
+confidence: 30
+reasoning: All GET routes return SPA HTML (content-type: text/html) — monolithic catch-all masks backend routing; all POST to /api/v1/* returns 405 (method-gated); source maps not real (SPA catch-all); globalAPI:false in Monaco config; version v1.9.6 confirmed; origin direct (77.42.9.222, no Fastly); Akuity Kargo open-source has documented API patterns but no unauthenticated surface confirmed without AUTH_HELPED
+evidence_needed: any endpoint returning JSON without auth; authenticated probe may discover routes behind SPA catch-all
+verify_steps: AUTH_HELPED — authenticated enumeration of /api/v1/* routes with Accept: application/json
+impact: internal GitOps/CD pipeline exposure (projects, stages, freight, credentials); severe if routes open
+testability: AUTH_HELPED
+[PARKED] Kargo GitOps backend unauthenticated enumeration: confidence 30 < 40 threshold — SPA catch-all uniformly masks all GET routes; POST=405 is method-gating (not data leak); no JSON data surface confirmed without auth. Parked until authenticated probe available.
+[FINAL] Cross-brand cookie replay via shared /client-api origin: confidence 70, survives critique — 8 consecutive cycles of byte-identical probes across 3 brands / 21+ hosts; fleet churn (2 rotation events) confirms dynamic edge with static origin; gated by AUTH_HELPED test only; no REJECTED class; impact critical.
+[FINAL] Provisioned alias cert lands with gate-scope regression: confidence 50, survives critique — 8 cycles of 421 persistence with 2 live rotations proving split pipeline; PASSIVE verification available; no REJECTED class; impact medium-high.
+[NEXT] PROBE: Tableau version disclosure correlation — `curl -sSk https://tableau.teamgamdom.com/api/3.21/serverInfo` to verify the leaked version (2025.1.11) against known CVEs; also check `curl -sSk https://kargo.teamgamdom.com/api/v1/version` with POST method to see if the 405 response body leaks version info; and passive fleet consistency re-check: `curl -sSk -w "%{http_code}\n" https://gamdom80008.com/client-api https://gamdom80009.com/client-api https://gamdom80003.com https://gamdom.com/client-api https://fatbets.com/client-api https://gamdom.one/client-api` to verify all 6 live hosts still return 400 body md5 7e3a161d.
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — version disclosure only; Tableau REST API auth gate confirmed (401 on /sites).
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com: SPA catch-all uniformly serves text/html on all GET routes including /env /debug /metrics /healthz /readyz /robots.txt; POST uniformly 405; Akuity Kargo v1.9.6; origin direct 77.42.9.222 (no Fastly); wildcard cert *.teamgamdom.com (Let's Encrypt).
+[LEARN] CHANGED redirect chain: gamdom80004.com now 302→gamdom80008.com (was gamdom80007.com) — both redirect aliases point directly at current live mirror, no longer chaining through retired aliases.
+[LEARN] ACCEPTED watch @ live fleet: all 6 live mirrors + 2 brand domains stable, /client-api 400 + /health ETag byte-identical.
+[LEARN] ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 8th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+[LEARN] ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com: gate holds 401.
+[LEARN] ACCEPTED watch @ gamdommirrors.com status page: 7 monitors (com/eu/io/vip/win/80008/80009), badge API returns SPA.
+[LEARN] ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only.
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited.
+[LEARN] REJECTED out-of-scope @ trgamdom.com: parked on hugedomains.com.
+[RISK] gamdom:73 — Cross-brand cookie-replay chain remains the critical path (confidence 70, 8 cycles of evidence accumulation). 3 brands / 21+ hostnames share single Starlette identity/wallet backend with server-set same-origin cookie auth. Fleet churn (2 rotation events in 48h) does not affect origin homogeneity. Tableau REST API leaked unauthenticated version info (2025.1.11, build 20251.25.1210.1815) — low impact. Kargo SPA catch-all uniformly masks backend (v1.9.6, direct origin, no CDN) — parked until auth-assisted probe. 8 pending aliases stuck 421 in 8th cycle while 2 rotations occurred in 8000x pipeline — split-pipeline evidence persists. Risk steady at 73.
