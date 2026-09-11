@@ -233,3 +233,10 @@
 - 2026-09-11 ACCEPTED watch @ gamdommirrors.com heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
 - 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 12th cycle
 - 2026-09-11 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-11 ACCEPTED recon @ gamdom.com/api/auth/login: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- 2026-09-11 ACCEPTED recon @ fatbets.com/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.one/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.com/socket.io: HTTP 403 "Forbidden: Invalid Origin" — Origin validation enforced
+- 2026-09-11 ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment

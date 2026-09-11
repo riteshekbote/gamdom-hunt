@@ -1097,3 +1097,17 @@
 ## RANKED HYPOTHESES 2026-09-11 21:56:31 UTC
 - [45] oauth2-proxy.teamgamdom.com: Domain-wide oauth2-proxy session cookie pivots across every *.teamgamdom.com service on auth (from art/lead_bigpickle.txt)
 - NEXT(hypotheses-bigpickle.txt): PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; c
+
+## RANKED HYPOTHESES 2026-09-11 23:39:16 UTC
+- [70] fatbets.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; c
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -I https://gamdom.com/api/auth 2>&1 | grep -i set-cookie` && `curl -sS -I https://fatbets.com/api/auth 2>&1 | grep -i set-cookie` && `curl -sS 
+- LEARN: ACCEPTED recon @ gamdom.com/api/auth/login: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- LEARN: ACCEPTED recon @ fatbets.com/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- LEARN: ACCEPTED recon @ gamdom.one/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- LEARN: ACCEPTED recon @ gamdom.com/socket.io: HTTP 403 "Forbidden: Invalid Origin" — Origin validation enforced
+- LEARN: ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- LEARN: ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

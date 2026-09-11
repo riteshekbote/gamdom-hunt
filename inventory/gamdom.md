@@ -565,3 +565,11 @@ www.gamdom.com
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
 
 ## 2026-09-11 21:56:31 UTC
+
+## 2026-09-11 23:39:16 UTC
+- NEW Verified /api/auth/login returns 404 on all 3 Pool A brands (gamdom.com, fatbets.com, gamdom.one) with identical host-only `gd-lang` cookie (no Domain, no SameSite, no HttpOnly) — real auth endpoint n
+- NEW Confirmed socket.io on gamdom.com requires valid Origin (403 "Forbidden: Invalid Origin"); gamdommirrors.com socket.io accessible and issues SID
+- CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+- CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+- CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle

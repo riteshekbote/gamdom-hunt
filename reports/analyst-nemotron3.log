@@ -9913,3 +9913,287 @@ x-served-by: cache-iad-kcgs7200117-IAD, cache-iad-kcgs7200117-IAD
 [0m$ [0mcurl -sS -X POST https://gamdom.com/login-steam -d "openid.ns=http://specs.openid.net/auth/2.0" 2>&1 | head -30
 Found. Redirecting to https://steamcommunity.com/openid/login?openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.realm=https%3A%2F%2Flogin.gambldom.com&openid.return_to=https%3A%2F%2Flogin.gambldom.com%2Fauth%2Fsteam%2Freturn%3FpreviousLink%3DeyJwcmV2aW91c0xpbmsiOiIifQ%3D%3D
 [0m
+===== ANALYST nemotron3 2026-09-11 23:39:16 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/
+total 352
+drwxr-xr-x 12 runner runner   4096 Sep 11 23:31 .
+drwxr-xr-x  3 runner runner   4096 Sep 11 23:31 ..
+drwxr-xr-x  7 runner runner   4096 Sep 11 23:31 .git
+drwxr-xr-x  3 runner runner   4096 Sep 11 23:31 .github
+-rw-r--r--  1 runner runner   1691 Sep 11 23:31 README.md
+-rw-r--r--  1 runner runner     43 Sep 11 23:31 analyst-out.txt
+-rw-r--r--  1 runner runner 133004 Sep 11 23:31 analyst-prompt.txt
+-rw-r--r--  1 runner runner 129223 Sep 11 23:31 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 leads
+-rw-r--r--  1 runner runner   7807 Sep 11 23:31 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 reports
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 11 23:31 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 scripts
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 11 23:31 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 triage
+[0m
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead scope.yml
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/leads/
+total 880
+drwxr-xr-x  2 runner runner   4096 Sep 11 23:31 .
+drwxr-xr-x 12 runner runner   4096 Sep 11 23:31 ..
+-rw-r--r--  1 runner runner 311276 Sep 11 23:31 lead-bigpickle.md
+-rw-r--r--  1 runner runner   3060 Sep 11 23:31 lead-laguna.md
+-rw-r--r--  1 runner runner   3000 Sep 11 23:31 lead-ling3.md
+-rw-r--r--  1 runner runner   3120 Sep 11 23:31 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 11 23:31 lead-mimo.md
+-rw-r--r--  1 runner runner 553100 Sep 11 23:31 lead-nemotron3.md
+-rw-r--r--  1 runner runner   7633 Sep 11 23:31 reposcan-gamdom.md
+[0m
+[0m✗ [0mRead leads/lead-nemotron3.md failed[90m [limit=5000, offset=140000][0m
+[91m[1mError: [0mOffset 140000 is out of range for this file (3401 lines)
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=5000, offset=2800][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=5000, offset=3098][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=5000, offset=3389][0m
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/api/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:32 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-58a68da7-4ac4-4ba6-a6b2-b423af93c7b6' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:32 GMT
+x-served-by: cache-lcy-eglc8600047-LCY, cache-lcy-eglc8600047-LCY, cache-pao-kpao1770066-PAO
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://fatbets.com/api/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:32 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-fdd70c9d-91c5-457d-845c-060aef069741' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:32 GMT
+x-served-by: cache-lcy-egml8630094-LCY, cache-lcy-egml8630094-LCY, cache-pao-kpao1770031-PAO
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.one/api/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:32 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-99dd61d6-1314-4cea-a8b1-253743ffb7bc' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:32 GMT
+x-served-by: cache-lcy-eglc8600047-LCY, cache-lcy-eglc8600047-LCY, cache-pao-kpao1770060-PAO
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/api/auth 2>&1 | head -20
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:46 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-7a7dd08d-ab44-43bb-a766-affeece8ea82' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:47 GMT
+x-served-by: cache-lcy-egml8630087-LCY, cache-lcy-egml8630087-LCY, cache-sjc1000136-SJC
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/auth 2>&1 | head -20
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:48 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-06f341c2-de94-496b-920e-135b6abfdaa2' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:48 GMT
+x-served-by: cache-lcy-eglc8600084-LCY, cache-lcy-eglc8600084-LCY, cache-sjc1000141-SJC
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/login 2>&1 | head -20
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 23:36:48 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-300aab4a-49b3-4c22-9fb0-322aa7161a24' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+server: nginx
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 23:36:48 GMT
+x-served-by: cache-lcy-eglc8600043-LCY, cache-lcy-eglc8600043-LCY, cache-sjc1000125-SJC
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | head -c 5000
+(()=>{var e={92445:(e,t,n)=>{"use strict";n.d(t,{q:()=>i});var r=n(29172),a=n(50176),o=n(51337);let i=new a.E({defaultOptions:{queries:{refetchOnWindowFocus:!1,refetchOnReconnect:!1}},queryCache:new o.$({onError:(e,t)=>{var a;if(null===(a=t.meta)||void 0===a?void 0:a.showGlobalError){(async()=>{try{let{toast:t}=await Promise.all([n.e(5390),n.e(8779),n.e(5130),n.e(1100)]).then(n.bind(n,2668)),{isGamdomClientMessage:a}=await Promise.resolve().then(n.bind(n,45844));a(e)&&t.error(e),t.error((0,r.o5)("Unknown error"))}catch(e){console.error("toast is not defined",e)}})();return}}})})},32369:(e,t,n)=>{"use strict";n.d(t,{Ay:()=>m,mh:()=>p});var r=n(56129),a=n(41468),o=n(45844),i=n(12126),l=n(20494),s=n(96338),u=n(92445),c=n(22760),d=n(11875),f=n(36904);let h=new class{hydrateFromLocalStorage(){var e;this.isLoggedInLocalStorage=f.P.getItem(f.Z.IS_LOGGED_IN),this.isEventImagesEnabled=null!==(e=f.P.getItem(f.Z.IS_EVENT_IMAGES_ENABLED))&&void 0!==e?e:this.isEventImagesEnabled}persist(e,t){(0,a.reaction)(t,t=>{f.P.setItem(e,t)})}async fetchAndUpdateBasicData(){try{let e=await this.fetchBasicDataQuery();return(0,a.runInAction)(()=>{this.basicData=e,this.isLoggedInLocalStorage=!!e.user}),await this.disableAllBasicDataFeaturesIfCorrupted(),this.basicData}finally{(0,a.runInAction)(()=>{this.hasFetchedBasicData=!0})}}async fetchBasicDataQuery(){return await u.q.fetchQuery({queryKey:[d.Ay.profile.basic_info.name],queryFn:async()=>await d.Ay.profile.basic_info(void 0),staleTime:1/0,retry:(e,t)=>{if(!(0,o.isGamdomClientMessage)(t))return!1;let n=t.info;return e<2&&"session"===n.type&&403===n.statusCode&&(console.log("Retrying fetchBasicData... Attempt: ".concat(e)),!0)}})}enabledFeaturesChanged(e){this.enabledFeaturesFromSocket=e}setIsLoggedInLocalStorage(e){this.isLoggedInLocalStorage=e}async setChatHistoryLength(e){var t;let n=null===(t=this.basicData)||void 0===t?void 0:t.user;if(!n)return;let r=n.chat_history_length;n.chat_history_length=e;try{await d.Ay.profile.setChatHistoryLength(e)}catch(e){throw n.chat_history_length=r,e}}setUpdatedUser(e){if(!this.basicData){console.error("Cannot update user: BasicData is not defined");return}e||(this.basicData.user=null),this.basicData.user?(0,a.set)(this.basicData.user,e):this.basicData.user=e}toggleEventsModeEnable(){this.isEventImagesEnabled=!this.isEventImagesEnabled}get featuresEnabled(){var e;let t=window.__GAMDOM_FEATURES__||[];return this.enabledFeaturesFromSocket||(null===(e=this.basicData)||void 0===e?void 0:e.featuresEnabled)||t}async disableAllBasicDataFeaturesIfCorrupted(){var e;let t=null===(e=document.cookie.split("; ").find(e=>e.startsWith("fehash=")))||void 0===e?void 0:e.split("=")[1];if(!this.basicData||!t)return;let n=atob(t),{featuresEnabled:r,user:a}=this.basicData,o=r.join("");a&&(o+="".concat(a.id).concat(a.username)),n!==Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(o)))).map(e=>("00"+e.toString(16)).slice(-2)).join("")&&(this.basicData.featuresEnabled.length=0)}get eventImages(){var e,t;return null!==(t=null===(e=this.basicData)||void 0===e?void 0:e.eventImages)&&void 0!==t?t:null}get isUserLoggedIn(){var e;return!!(null===(e=this.basicData)||void 0===e?void 0:e.user)}get isBannedLimited(){var e,t,n,r;return(null===(t=this.basicData)||void 0===t?void 0:null===(e=t.user)||void 0===e?void 0:e.ban_access_type)===i.e.WITHDRAWAL_ONLY||(null===(r=this.basicData)||void 0===r?void 0:null===(n=r.user)||void 0===n?void 0:n.ban_access_type)===i.e.WITHDRAWAL_AUTO_LOCK}get getLogo(){var e;return null!==(e=this.getThemedLogo)&&void 0!==e?e:(0,s.Wg)("logo.svg",{kind:"static",type:"base"},{[l.V.PERABET_CONTENT]:this.getIsFeatureEnabled(l.V.PERABET_CONTENT)})}get getThemedLogo(){var e;return this.isFatbetsDomain?(0,s.Wg)("fatbets-logo.svg",{kind:"static",type:"base"}):this.getIsFeatureEnabled(l.V.EVENT_LOGO)&&(null===(e=this.eventImages)||void 0===e?void 0:e.logo)&&this.isEventImagesEnabled?(0,s.Wg)(this.eventImages.logo,{kind:"dyn",type:"cdn"}):null}get getBackground(){var e;return this.getIsFeatureEnabled(l.V.EVENT_BACKGROUND)&&(null===(e=this.eventImages)||void 0===e?void 0:e.background)&&this.isEventImagesEnabled?(0,s.Wg)(this.eventImages.background,{kind:"dyn",type:"cdn"}):null}get isFatbetsDomain(){var e;return window.location.hostname.includes(null===(e=c.s.BRANDED_SUBDOMAINS)||void 0===e?void 0:e.fatbets)}constructor(){(0,r._)(this,"basicData",null),(0,r._)(this,"enabledFeaturesFromSocket",null),(0,r._)(this,"isLoggedInLocalStorage",null),(0,r._)(this,"featuresEnabledSet",a.observable.set()),(0,r._)(this,"hasFetchedBasicData",!1),(0,r._)(this,"isEventImagesEnabled",!0),(0,r._)(this,"getIsFeatureEnabled",e=>this.featuresEnabledSet.has(e)),this.hydrateFromLocalStorage(),(0,a.makeAutoObservable)(this),(0,a.reaction)(()=>this.featuresEnabled,e=>{this.featuresEnabledSet.replace(e)},{fireImmediately:!0}),this.persist(f.Z.IS_LOGGED_IN,()=>this.isLoggedInLocalStorage),this.persist(f.Z.IS_EVENT_IMAGES_ENABLED,()=>this.isEventImagesE
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '/api/[a-zA-Z0-9/_-]+' | sort -u | head -50
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | grep -oE '"(/api/[^"]+)"' | sort -u | head -50
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | strings | grep -iE '(auth|login|session|token)' | head -30
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_092d57a94001iTlk2Aan3jrNJD
+
+",addressCountry:"CR",jurisdiction:"Costa Rica",issuedBy:"the Government of the Autonomous Island of Anjouan, Union of Comoros",ogImage:"/static/img/og.avif",sameAs:["https://www.facebook.com/gamdomfb/","https://x.com/Gamdom","https://www.instagram.com/gamdomhq","https://discord.gg/gamdom","https://www.youtube.com/@officialgamdom","https://www.linkedin.com/company/gamdom-com/","https://www.reddit.com/r/gamdom/","https://www.trustpilot.com/review/gamdom.com","https://gamdom.eu","https://gamdom.io","https://gamdom.vip","https://gamdom.win","https://trgamdom.com","https://uk.trustpilot.com/review/gamdom.com","https://www.bitcoin.com/gambling/reviews/gamdom/","https://www.similarweb.com/website/gamdom.com/","https://www.askgamblers.com/online-casinos/reviews/gamdom-casino","https://www.aboutslots.com/reviews/gamdom","https://blockonomi.com/gamdom-review/","https://casino.guru/gamdom-casino-review","https://www.ccn.com/gamdom-casino-review/","https://online.worldcasinodirectory.com/gamdom-casino","https://casino.guide/gamdom/","https://www.strafe.com/esports-betting/reviews/gamdom/","https://www.cryptonewsz.com/gambling/reviews/gamdom-casino/","https://www.bookmakers.bet/review/gamdom/","https://medium.com/@reynaldahamilton/gamdom-review-explore-the-crypto-casino-85b15e56c8cf","https://www.riverfronttimes.com/gaming/gamdom-review-insights-and-detailed-findings-42349644","https://blockchainreporter.net/gamdom-review-the-ultimate-fusion-of-crypto-casino-and-social-gaming/","https://atozmarkets.com/crypto-gambling/gamdom/","https://www.casinowow.com/casino-reviews/gamdom-casino","https://www.vegasslotsonline.com/reviews/gamdom-casino/","https://www.esports.net/betting/sites/gamdom/","https://lcb.org/casinos/gamdom-casino","https://cryptwerk.com/company/gamdom/","https://gamblecritic.net/casino/gamdom-casino/","https://www.esportsbets.com/reviews/gamdom/","https://wizardofodds.com/online-casinos/reviews/gamdom-casino/","https://allcasinos.in/reviews/gamdom-casino/","https://www.gamblingjudge.com/reviews/gamdom-casino/","https://bitcoinchaser.com/review/gamdom/","https://casinomentor.com/reviews/gamdom-casino","https://casinobee.com/nz/reviews/gamdom-casino/"],trHostname:"trgamdom.com",ukMirrorDomain:"gamdom.io",trMirrorDomain:"gamdom80004.com",helpCenterUrl:"https://help.gamdom.com/",helpArticles:{depositMethods:"https://help.gamdom.com/en/articles/8981140-deposit-methods",howToDeposit:"https://help.gamdom.com/en/articles/8818767-how-to-deposit",howToWithdraw:"https://help.gamdom.com/en/articles/9734074-how-to-withdraw",supportedChains:"https://help.gamdom.com/en/articles/13351931-supported-chains"},officialMirrorsUrl:"https://gamdommirrors.com/",careersUrl:"https://www.gamdomcareers.com",licenseBaseUrl:"https://cert.gcb.cw/certificate?id=",licenseHosts:{"gamdom.com":"ZXlKcGRpSTZJakZvTHk4ck1WbFNWbk5VTUVwRGNUWjJiMGhUUzNjOVBTSXNJblpoYkhWbElqb2lVV2N4U2tRNWNrOXNTbXBRYWxaVWFGaElVakIzZHowOUlpd2liV0ZqSWpvaVpqYzFZakpqT1dVNU1EVXpZakl3WVdZNE56WTJaVEkxWmpoaE1XRmpPV1U1TkRFMlpEVm1NMlV6TURFelpXWXdPREkyWWpabU9VSTROR1kzWW1KbU1TSXNJblJoWnlJNklpSjk=","gamdom.io":"ZXlKcGRpSTZJak55Y2tsemVIaHhjV05TZEVOdFduSjJNalJ6YVhjOVBTSXNJblpoYkhWbElqb2lXRGhZVTI1UVNGVkNkVlk1T0hkbU0ybEphamcxVVQwOUlpd2liV0ZqSWpvaU1UQmhOalV6WVRCa1pHRTROREEwWWpZNFlUYzVNek0yWlRJeVlqazNNRFUwTnpKbVl6azJOVEJrTUdGak56RTNOelEzWVRoak5XSTFaVEEyT0dWbU1TSXNJblJoWnlJNklpSjk=","gamdom.win":"ZXlKcGRpSTZJblJ6TkhkSWRVeDNSMGhOZWxwTlRuSXZRamxoYjNjOVBTSXNJblpoYkhWbElqb2lVU3MzT1RaeE1sVlhTM05WVTBaNk1YTlBjbU41WnowOUlpd2liV0ZqSWpvaVpHUTBZVGszTURjek5UY3dNbVkwT1dVM1pEZGxNVEF6TVdGak5tUTJNekZqTldRMll6ZGpORFkyTkdZeU5EbGtZak5oTXpnd09UQm1OVGxqT1dNMk9TSXNJblJoWnlJNklpSjk=","gamdom.one":"ZXlKcGRpSTZJbTVyWkVodGNFMUtUVkZUYmtjdmRsb3hkMlpPYTNjOVBTSXNJblpoYkhWbElqb2lUWEZxZUdwWVZEbE9hbkpvYjBndmFETXJOakZ5UVQwOUlpd2liV0ZqSWpvaU9XTTJNelk0WkdZeVlXSXlNMlZpTWpobE4yRTRORGczTkRabU9HWTFOR0UzWWpZek1EaG1PVE5tWmpGbE1EaGtaVGc0WldOak5USXdZekpoTUdZMllTSXNJblJoWnlJNklpSjk=","trgamdom.com":"ZXlKcGRpSTZJbEZpY2tOU2NHVnZhMGhKVDJSNmFESndNa2x3UmtFOVBTSXNJblpoYkhWbElqb2lPRzFwTDI1dFlUY3ZiRnBNV2pkNFEzbDBaSEoyZHowOUlpd2liV0ZqSWpvaU9URTNNamRoTnpFNVlXRXpNak0yTlRFNVpXTTJOelJsWm1Oa09XTm1ZelUyWXpNM016STRaVFl4WWpJNU1HVmhZVEkzTURVeU1XRmhPRGswWkRabVlpSXNJblJoWnlJNklpSjk=","gamdom.vip":"ZXlKcGRpSTZJalU1T1d4RFZYWk5kRnAwU0RBemFXWjJaMVJHVG5jOVBTSXNJblpoYkhWbElqb2ljMWR4ZEhCMGRUZzRUVEV3UzNGUWJUSlhSRkpoWnowOUlpd2liV0ZqSWpvaU1tVmxPR1ZrTTJFMFl6UXpaV1ppT1dZMVl6Vm1abU15TkROaU9EWTRPVE5sWkROaU16RTFPV1prTXpCbU5qVXlNbVF4TmprMk5UTXlNR1k1WWpFNU1DSXNJblJoWnlJNklpSjk=","gamdom.eu":"ZXlKcGRpSTZJbmxyVEZwYU5uaE5PVUZJYUhBeVNGQnlOWFZZV2tFOVBTSXNJblpoYkhWbElqb2lja3BOYkZkbVIyMUpOR0Z1YkRkeVdEVmtNWFpKZHowOUlpd2liV0ZqSWpvaU9HSXpPVGt3T0dNeE9UYzFOVEZoWVRSak9XVTFPR1UxTVJGak1tRmtaVGhtWW1aak1tRTVOVGcwWVRoaFpqSTBOVFEyWlRnM05XWTFOamcxWVdJeE55SXNJblJoWnlJNklpSjk"}},gameMaxBets:{dice:1e5,crash:5e5,roulette:{red:5e5,black:5e5,green:25e3},hilo:{hi:1e6,lo:1e6,red:1e6,black:1e6,"2-9":5e4,JQKA:5e4,KA:5e4,A:5e4,joker:5e4},plinko:1e4,mines:5e5,keno:5e5,pocket_dice:5e4,limbo:5e5,blackjack:1e5,twist:1e4,towers:1e3,chicken:5e5},gameMaxWin:{crash:15e5,dice:15e5,plinko:5e6,mines:25e5,keno:3e6,roulette:1e6,hilo:25e5,pocket_dice:2e6,limbo:2e6,blackjack:8e5,twist:5e6,towers:5e6,chicken:25e5}}},8209:(e,t,n)=>{"use strict";n.d(t,{A:()=>c});let r="https://discord.gg/gamdom",a="https://www.facebook.com/gamdomfb/",o="https://www.instagram.com/gamdomhq",i="https://x.com/Gamdom",l="https://www.youtube.com/@officialgamdom",s={CAPTCHA_ENABLED:!1,CMS_LOCAL_AUTH:!1,STAGING_ENV:!1,TWO_FA_ADMIN_DOMAIN_CHECK:!0,CAPTCHA_TYPE:"turnstile",CAPTCHA_SITE_KEY:"0x4AAAAAAAVYmhQqnlHxZkQ7",CAPTCHA_INVISIBLE_SITE_KEY:"0x4AAAAAAAVj3vrx8ZWsyxIS",IS_TESTNET_CRYPTO_WITHDRAWAL_VALIDATION:!1,UAId:"",MONTHLY_KOTH_START_DAY:16,onesignalAppId:"",seonPublicKey:"",wagerDeduct:.75,minBetForDepositBonusCoins:300,conversionFactorUSDtoCoins:1500,vipThresholdsUsd:{VIP:15e3,SUPER_VIP:5e4,OUTLIER:5e5,BIG_WINNER:-5e4},namePromotionXpBonusMultiplier:1.1,hiddenModeUsername:"Hidden user",minimumBigWinAmount:3e7,zeroEdgeRtpBetLimitCoins:75e5,zeroEdgeRtpMaximumBetLimitUsd:1e3,zeroEdgeRtpMaxBetUsdHilo:10,zeroEdgeRtpMinBetUsdHilo:.1,zeroEdgeHouseEdgePercentByGame:{DICE:1,HILO:1,ROULETTE:1,CRASH:1,blackjack:.57,plinko:1,mines:1,keno:1,pocket_dice:1,limbo:1,twist:1,towers:2,chicken:1},softswissScriptUrl:"https://s3.eu-central-1.amazonaws.com/ignition.button/round-1/connector.js",analytics:{googleTagManager:"",mixpanelBrowserToken:"",mixpanelApiPath:"/_mp/api"},gameMaxBets:{dice:5e4,crash:5e4,roulette:{red:5e4,black:5e4,green:1e4},hilo:{hi:5e4,lo:5e4,red:5e4,black:5e4,"2-9":1e3,JQKA:1e3,KA:1e3,A:1e3,joker:1e3},plinko:1e3,mines:5e4,keno:5e4,pocket_dice:5e4,limbo:5e3,blackjack:1e5,twist:1e4,towers:1e3,chicken:5e5},gameMaxWin:{crash:5e5,dice:8e5,plinko:2e6,mines:1e6,keno:1e6,roulette:1e6,hilo:1e6,pocket_dice:2e6,limbo:1e6,blackjack:8e5,twist:5e6,towers:5e6,chicken:25e5},gameMinBets:{crash:.01,dice:.01,roulette:.01,hilo:.01,pocket_dice:.01,limbo:.01,blackjack:.01,twist:.0
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | strings | grep -oE '(/api/[a-zA-Z0-9/_-]+)' | sort -u | head -50
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | strings | grep -iE 'client-api|identity|wallet|session|auth' | head -20
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_092d5b2b7001BuqLLTphyBiO47
+
+(no output)
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | strings | grep -E '^/|^\/api' | head -20
+//# sourceMappingURL=client.41b06529227c4b8b6a1d.js.map
+[0m
+[0m$ [0mcurl -sS https://gamdom.com/build/client.41b06529227c4b8b6a1d.js 2>&1 | strings | grep -iE 'baseurl|base_url|apiurl|api_url|fetch|axios' | head -20
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_092d5ef8c001ntCs59hZNk6iJS
+
+(no output)
+[0m
+[0m$ [0mcurl -sS "https://gamdom.com/socket.io/?EIO=4&transport=polling" 2>&1 | head -c 500
+{"code":4,"message":"Forbidden: Invalid Origin"}
+[0m
+[0m$ [0mcurl -sS "https://gamdommirrors.com/socket.io/?EIO=4&transport=polling" 2>&1 | head -c 500
+0{"sid":"pSE6FoMOr8_xW-gpAred","upgrades":["websocket"],"pingInterval":25000,"pingTimeout":20000,"maxPayload":1000000}
+[0m
+Now I have sufficient data. Let me produce the structured analysis.
+
+---
+
+**STEP 1 — DELTA**
+
+[NEW] Verified /api/auth/login returns 404 on all 3 Pool A brands (gamdom.com, fatbets.com, gamdom.one) with identical host-only `gd-lang` cookie (no Domain, no SameSite, no HttpOnly) — real auth endpoint not at this path
+[NEW] Confirmed socket.io on gamdom.com requires valid Origin (403 "Forbidden: Invalid Origin"); gamdommirrors.com socket.io accessible and issues SID
+[CHANGED] Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+[CHANGED] Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+[CHANGED] SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+[CHANGED] Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+
+---
+
+**STEP 2 — PRIORITIZE**
+
+[PRIO] fatbets.com/client-api,8.65,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
+[PRIO] gamdom.one/client-api,8.65,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
+[PRIO] gamdom80009.com/client-api,8.60,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10
+[PRIO] gamdom80008.com/client-api,8.50,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+[PRIO] gamdom.com/client-api,8.40,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=4,cloud_surface=9,freshness=7
+[PRIO] kargo.teamgamdom.com/api/v1/projects,8.10,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=7,cloud_surface=7,freshness=10
+[PRIO] gamdom80003.com/client-api,8.05,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+
+---
+
+**STEP 3 — HYPOTHESES**
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: fatbets.com + gamdom.one + gamdom.com confirmed on Pool A (Fastly 151.101.x.52) with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", and host-only gd-lang cookie policy identical across 3 brands / 21+ hostnames; single shared backend serves all; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from actual auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80009 accepted by fatbets.com/client-api
+verify_steps: (passive) curl -sS -I https://gamdom.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://fatbets.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://gamdom.one/api/auth 2>&1 | grep -i set-cookie — locate real auth endpoint (not /auth/login which 404s) and capture session cookie attributes across brands; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on fatbets.com/client-api and gamdom.one/client-api
+impact: Cross-brand account takeover across 3 brands / 21+ hostnames; high
+testability: AUTH_HELPED
+
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors including newly rotated gamdom80009.com
+class: AUTH
+asset: gamdom80009.com/client-api
+confidence: 67
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors + Pool A flagship; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others including newly rotated 80009
+evidence_needed: Same session cookie minted on gamdom80008 accepted by gamdom80009/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
+verify_steps: (passive) curl -sS -I https://gamdom80008.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://gamdom80009.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://gamdom4567.com/api/auth 2>&1 | grep -i set-cookie — capture Set-Cookie headers during auth flow on 80008 vs 80009 vs 4567; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80008, replay cookie on 80009/client-api and 90471/client-api
+impact: Cross-domain account takeover across all 17+ mirror hostnames; medium-high
+testability: AUTH_HELPED
+
+[HYP] oauth2-proxy.teamgamdom.com domain-wide session cookie permits cross-service pivot within teamgamdom.com
+class: OAUTH
+asset: oauth2-proxy.teamgamdom.com/oauth2/auth
+confidence: 45
+reasoning: oauth2-proxy.teamgamdom.com probed 2026-09-11 returns HTTP 401 on /oauth2/auth (not 404) — real OAuth2 proxy endpoint exists on scoped brand TLD (teamgamdom.com, Pool A); oauth2-proxy typically issues domain-scoped session cookies valid across all *.teamgamdom.com subdomains; if cookie Domain=.teamgamdom.com and SameSite=Lax/None, session from one service (e.g., kargo, tableau, shreeram) pivots to others; bigpickle model independently flagged this at confidence 35
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from oauth2-proxy /oauth2/auth flow; whether cookie accepted by kargo.teamgamdom.com, tableau.teamgamdom.com, staging.teamgamdom.com
+verify_steps: (passive) curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth 2>&1 | grep -i set-cookie — capture session cookie attributes; (AUTH_HELPED) authenticate via oauth2-proxy, replay cookie on kargo/tableau/shreeram endpoints
+impact: Cross-service session pivot across all *.teamgamdom.com services (ArgoCD, Tableau, internal test backends); medium
+testability: AUTH_HELPED
+
+---
+
+**STEP 4 — SELF-CRITIQUE**
+
+[PARKED] kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control: confidence 40 at threshold; all 6 endpoints tested with Accept:application/json return SPA catch-all — no JSON surface passively observable; hypothesis not falsifiable without AUTH_HELPED or different content-negotiation
+[FINAL] 1) Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (70, AUTH_HELPED, high impact)
+[FINAL] 2) Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors (67, AUTH_HELPED, medium-high impact)
+[FINAL] 3) oauth2-proxy.teamgamdom.com domain-wide session cookie permits cross-service pivot within teamgamdom.com (45, AUTH_HELPED, medium impact)
+
+---
+
+**STEP 5 — NEXT ACTION**
+
+[NEXT] PROBE: `curl -sS -I https://gamdom.com/api/auth 2>&1 | grep -i set-cookie` && `curl -sS -I https://fatbets.com/api/auth 2>&1 | grep -i set-cookie` && `curl -sS -I https://gamdom.one/api/auth 2>&1 | grep -i set-cookie` — locate actual auth endpoint (not /auth/login which 404s) and capture session cookie attributes across brands; passive, ≤1 rps
+
+---
+
+**STEP 6 — LEARNING**
+
+[LEARN] ACCEPTED recon @ gamdom.com/api/auth/login: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+[LEARN] ACCEPTED recon @ fatbets.com/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+[LEARN] ACCEPTED recon @ gamdom.one/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+[LEARN] ACCEPTED recon @ gamdom.com/socket.io: HTTP 403 "Forbidden: Invalid Origin" — Origin validation enforced
+[LEARN] ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+---
+
+**STEP 7 — RISK**
+
+[RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008/80009 live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com fully SPA-gated; oauth2-proxy.teamgamdom.com confirms OAuth2 SSO layer on teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
