@@ -207,3 +207,20 @@
 - 2026-09-10 ACCEPTED watch @ shreeram-dynamic-test.teamgamdom.com gate 401; SEO hub still 17× gamdom90471 only; gamdom90471.com still 421.
 - 2026-09-10 ACCEPTED inventory @ gamdom80004.com: redirect target updated to gamdom80008.com (was gamdom80007.com) — redirect chain flattened post-rotation
 - 2026-09-10 REJECTED new-numbered-aliases @ 80010-80020: all 000 (connection failed) — not provisioned
+- 2026-09-11 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 12th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- 2026-09-11 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (12th cycle).
+- 2026-09-11 ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
+- 2026-09-11 ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.
+- 2026-09-11 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing
+- 2026-09-11 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page of in-scope org service is legitimate passive recon resolving true operating domains (bypasses wildcard/CDN ambiguity)
+- 2026-09-11 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com not operated by Gamdom; only reportable as brand-jacking/phishing
+- 2026-09-11 ACCEPTED inventory @ gamdom80009.com: newly live (11th mirror) replaces gamdom80006.com on status page monitor id:223 — second rotation event in 24h; /client-api md5 7e3a161d + /health ETag byte-identical → origin signature unchanged; 21st hostname in trust pool
+- 2026-09-11 ACCEPTED inventory @ gamdom80006.com: demoted from live mirror to 302→https://gamdom80009.com/ redirect alias (Varnish, no-store) — confirms brand retires numbered aliases by redirect; gamdom80009.com inherits its Pool B slot
+- 2026-09-11 ACCEPTED inventory @ gamdom80004.com: redirect target updated to gamdom80008.com (was gamdom80007.com) — redirect chain flattened post-rotation
+- 2026-09-11 REJECTED new-numbered-aliases @ 80010-80020: all 000 (connection failed) — not provisioned
+- 2026-09-11 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper auth gate; CVE-2025-52455/52449 patched on 2025.1.11
+- 2026-09-11 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, no JSON surface exposed passively
+- 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)
+- 2026-09-11 ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+- 2026-09-11 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (11th cycle)
