@@ -260,3 +260,8 @@ https://kargo.teamgamdom.com/api/v1/stages -> HTTP 405
 https://kargo.teamgamdom.com/api/v1/freight -> HTTP 405
 https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
 https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+
+## 2026-09-11 21:56:36 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401

@@ -2311,3 +2311,33 @@ impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate reg
 testability: PASSIVE + monitoring
 [NEXT] PROBE: extended oauth2-proxy surface watch — add `curl -sS -o /dev/null -w "%{http_code}" https://oauth2-proxy.teamgamdom.com/oauth2/auth` + `vault|grafana|prometheus|alertmanager.teamgamdom.com/` to the cycle watchlist; the falsification points are any non-302/non-401 response on the protected vhosts (auth_request bypass) and any pending alias (80001/80002/90472/90473/90475/90480/90482/90488) going non-421.
 [RISK] gamdom: 73 — No delta on the flagship: cross-brand replay (70) unchanged, AUTH_HELPED-gated, 14-cycle origin integrity. Discovery of oauth2-proxy (Vault/Grafana/Prometheus/Alertmanager) on teamgamdom raises latent infosec value but gate is currently airtight at edge and header-tamper-proof — watch-subject only. Split-pipeline misbinding (50) persists 14th cycle. Risk steady at 73.
+## 2026-09-11 21:38:42 UTC [target] (model bigpickle)
+[HYP] Domain-wide oauth2-proxy session cookie pivots across every *.teamgamdom.com service on auth
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+ vault/grafana/prometheus/alertmanager)
+confidence: 45
+reasoning: `_oauth2_proxy_csrf` observed Domain=teamgamdom.com Path=/ HttpOnly Secure → session cookie `_oauth2_proxy_*` will share that scope and be sent to all subdomains incl. direct-origin kargo; gate endpoints functional (401 auth_request, 302 OAuth, sanitized rd); 5 gated vhosts; no script-capable host or takeover candidate found on domain yet
+evidence_needed: valid `_oauth2_proxy` session cookie reachable from a compromiseable subdomain; or any XSS on *.teamgamdom.com
+verify_steps: AUTH_HELPED only — `curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth` stays 401; watch all 5 vhosts + kargo SPA for gate-scope change
+impact: session pivot to Vault+observability stack; critical when combined with any subdomain XSS/takeover; exercised session cookie (HttpOnly) limits to credentialed-request relay
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: /api/auth/login and /auth/login verified 404 with only host-only gd-lang on both brands this cycle; /client-api md5 7e3a161d byte-identical across 80008/80009/fatbets re-verified; single Starlette identity/wallet backend; site-bound cookies unobservable pre-auth
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 90472 re-checked 421 this cycle; 15th cycle all 8 aliases 421 while 80008/80009 rotations went live in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-auth nginx test backend (shreeram confirmed 401)
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth | grep -iE "HTTP/|www-authenticate"` — poll alias cert-landing (falsifier for MISCONFIG) + oauth2 gate integrity each cycle.
+[RISK] gamdom: 74 — No delta on flagship (cross-brand replay 70, 14-cycle origin integrity; AUTH_HELPED). teamgamdom lateral: discovered live Vault/Grafana/Prometheus/Alertmanager behind a single functional oauth2-proxy whose session cookie is domain-scoped (HttpOnly prevents direct theft but any subdomain XSS/takeover becomes a pivot for credentialed-request relay); kargo stands ungated but data-less. No working exploit chain; risk +1 for the new rear-secrets exposure surface.

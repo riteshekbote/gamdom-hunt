@@ -1093,3 +1093,7 @@
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 - LEARN: ACCEPTED recon @ fatbets.com/gamdom.one/gamdom80009.com/gamdom80008.com/gamdom80003.com: all return identical host-only gd-lang cookie (no Domain/SameSite/HttpO
 - LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all (Monaco IDE) even with Accept:application/json — no unauthenticated JSON AP
+
+## RANKED HYPOTHESES 2026-09-11 21:56:31 UTC
+- [45] oauth2-proxy.teamgamdom.com: Domain-wide oauth2-proxy session cookie pivots across every *.teamgamdom.com service on auth (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; c

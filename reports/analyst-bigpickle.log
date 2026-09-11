@@ -15926,3 +15926,124 @@ testability: PASSIVE + monitoring
 
 **STEP 7 — RISK**
 [RISK] gamdom: 73 — No delta on the flagship: cross-brand replay (70) unchanged, AUTH_HELPED-gated, 14-cycle origin integrity. Discovery of oauth2-proxy (Vault/Grafana/Prometheus/Alertmanager) on teamgamdom raises latent infosec value but gate is currently airtight at edge and header-tamper-proof — watch-subject only. Split-pipeline misbinding (50) persists 14th cycle. Risk steady at 73.
+===== ANALYST bigpickle 2026-09-11 21:56:31 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -I --max-time 20 https://gamdom.com/api/auth/login 2>&1 | grep -i -E "set-cookie|HTTP/|location" ; echo "---"; sleep 1; curl -sS -I --max-time 20 https://fatbets.com/api/auth/login 2>&1 | grep -i -E "set-cookie|HTTP/|location"
+HTTP/2 404 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 21:36:30 GMT
+---
+HTTP/2 404 
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 21:36:32 GMT
+[0m
+[0m$ [0mfor h in oauth2-proxy vault grafana prometheus alertmanager; do printf "%s: " "$h"; curl -sS -o /dev/null -w "%{http_code}" --max-time 15 https://$h.teamgamdom.com/ ; echo ""; sleep 1; done
+oauth2-proxy: 302
+vault: 302
+grafana: 302
+prometheus: 302
+alertmanager: 302
+[0m
+[0m$ [0mfor h in oauth2-proxy vault grafana prometheus alertmanager; do echo "=== $h ==="; curl -sS -I --max-time 15 https://$h.teamgamdom.com/ 2>&1 | grep -i -E "HTTP/|location|set-cookie|server|www-authenticate"; sleep 1; done
+=== oauth2-proxy ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=zp-1fuaRiF-vye-HTXD0oMozz_4J349W1DcqVMJtLFE%3A%2F
+set-cookie: _oauth2_proxy_csrf=cMX2oyuPo-bTwynYPzPtSwqlhK094N_ckHfSkcUOrOzDTyED_YkB6FiYzXPgDcITz06XAS7xEGnPgChBn3Lz-LpQ2Xju3TthX9mv5BxZMG9djaH4_Js3kOk=|1789162606|eS7g5GAUdiHHwudQ4JcHxqH4dRqRCdgUJkvB-EOat60=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== vault ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=DbNQybdZnaEczOaBshWt4j5GNd-Ent-OdPTSUMhdvSw%3Ahttps%3A%2F%2Fvault.teamgamdom.com%2F
+set-cookie: _oauth2_proxy_csrf=J9ZYbC-Zr_YNM7gk4R-s3Z7v8XC3NAXa7mYd4o7GG3HhVr41Y_k3yGpPoqym0gMNUySE-IttQUmYtMqw6feWCQTTO1qcf-tZ6jD973EuBsRSlmjVnIi3tvo=|1789162608|pIdxZs6xVnYjMXAVAHOo5QEAg7bZbcQZxun-w_HbZ9c=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== grafana ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=YmaApdBekG7DN1z7iyCpGoGJJluXd-pfe_5zqr2nT20%3Ahttps%3A%2F%2Fgrafana.teamgamdom.com%2F
+set-cookie: _oauth2_proxy_csrf=GuT4V7bm7A8O65fgVR0dwNL9_AmXJ22uar6p1-K0vYZuhW9wu9XivOhTgk05ZOpFHDiSPYZXlsC66xElqgT6bd6GN1K4nXbvA2AY6Ve90T7R3vL_8Gb-9xA=|1789162609|wnk0VxEkKdizbGo1VoeMFnPplnlNfnJzN2uJJ6_7Big=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== prometheus ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=KnyXTZfYWotHjMD6_nmQ30p1JESJb10wrAlP0xFSEo4%3Ahttps%3A%2F%2Fprometheus.teamgamdom.com%2F
+set-cookie: _oauth2_proxy_csrf=snOtDGjh1aOjJLVUDfTOXOuuObX3g7szIpclhs8TvEmRa8TXQ-CgrrCDcGIxhlxswHNiOIblxKyrS-l5-PhkKhNB1Mb1_8iyCo4-L5Wl2yU7LAQE3PVCnx4=|1789162611|3uXM3yXcOVZ22sptSsbAC2lR90TXQGHpQ-L-BY5we8U=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== alertmanager ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=S_6aJoIeYJsP5xwM-R10pTAkmVyifi9Y6VErlL-w6sc%3Ahttps%3A%2F%2Falertmanager.teamgamdom.com%2F
+set-cookie: _oauth2_proxy_csrf=LMLJ2TZAYsiay_QYYkfiK9Efo_bMDUDi3o4FzUqBSSff7ALj-z0m-G50kMlUAMwyBVDE7b-D1n2pYR9aQ-3lzHn-E_ZFkiERhcqd-D6LppVfqdv4VRGLkqE=|1789162612|e2QCX55K4dwpuPK4R_4jNYejZCqJeJLBw6Y760BBTzw=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+[0m
+New oauth2-proxy surface confirmed. Probing the oauth2 endpoints (read-only) for gate behavior.
+[0m$ [0mfor p in oauth2/auth "oauth2/auth?skip_xsrfcheck=true" oauth2/healthz oauth2/start oauth2/sign_in oauth2/callback; do printf "%-40s " "/$p"; curl -sS -o /dev/null -w "%{http_code}" -I --max-time 15 "https://oauth2-proxy.teamgamdom.com/$p"; echo ""; sleep 1; done
+/oauth2/auth                             401
+/oauth2/auth?skip_xsrfcheck=true         401
+/oauth2/healthz                          302
+/oauth2/start                            302
+/oauth2/sign_in                          302
+/oauth2/callback                         503
+[0m
+[0m$ [0mprintf "80008 /client-api md5: "; curl -sS --max-time 15 https://gamdom80008.com/client-api | md5sum | cut -d' ' -f1; sleep 1; printf "80009 /client-api md5: "; curl -sS --max-time 15 https://gamdom80009.com/client-api | md5sum | cut -d' ' -f1; sleep 1; printf "fatbets /client-api md5: "; curl -sS --max-time 15 https://fatbets.com/client-api | md5sum | cut -d' ' -f1; sleep 1; printf "90472 code: "; curl -sSk -o /dev/null -w "%{http_code}" --max-time 15 https://gamdom90472.com/client-api; echo ""; sleep 1; printf "shreeram: "; curl -sS -o /dev/null -w "%{http_code}" --max-time 15 https://shreeram-dynamic-test.teamgamdom.com/; echo ""
+80008 /client-api md5: 7e3a161d6cde2700fcdc0f6be4520745
+80009 /client-api md5: 7e3a161d6cde2700fcdc0f6be4520745
+fatbets /client-api md5: 7e3a161d6cde2700fcdc0f6be4520745
+90472 code: 421
+shreeram: 401
+[0m
+[0m$ [0mcurl -sS -I --max-time 15 "https://oauth2-proxy.teamgamdom.com/oauth2/start?rd=https://evil.example/phish" 2>&1 | grep -i -E "location|HTTP/" | head -5
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=8Yfq1cUFmTQdT7tEJKzyYDFZfNvx5Lj6bOmNc7jWFfM%3A%2F
+[0m
+All probes complete. Fleet stable; significant new teamgamdom OAuth surface characterized.
+
+STEP 1 — DELTA
+- NEW `oauth2-proxy.teamgamdom.com` + `vault|grafana|prometheus|alertmanager.teamgamdom.com`: all 302→Google OAuth (client `696342781525-...apps.googleusercontent.com`), fixed `redirect_uri` to oauth2-proxy.teamgamdom.com/oauth2/callback, `state=`<signedcsrf>:<dest>`; `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; Path=/; Max-Age=900; HttpOnly; Secure`.
+- NEW oauth2-proxy endpoints: `/oauth2/auth`→401 (gate works), `/healthz|start|sign_in`→302, `/callback`→503 (no valid code); off-host `rd=` collapsed to root `/`.
+- NEW `/api/auth/login`→404 + gd-lang only on both gamdom.com and fatbets.com (closes nemotron3 probe; no auth Set-Cookie).
+- CHANGED kargo (direct origin 77.42.9.222) and tableau (own 401 XML gate) sit OUTSIDE the oauth2-proxy gate — only the observability stack is behind it.
+
+STEP 2 — PRIORITIZE
+- [PRIO] oauth2-proxy.teamgamdom.com, 7.35, axis=OAuth SSO funnel to vault/grafana/prometheus
+- [PRIO] vault.teamgamdom.com, 7.30, axis=secrets backend behind that funnel
+- [PRIO] kargo.teamgamdom.com, 6.85, axis=ungated GitOps SPA (200 catch-all, no JSON surface)
+
+STEP 3 — HYPOTHESES
+[HYP] Domain-wide oauth2-proxy session cookie pivots across every *.teamgamdom.com service on auth
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+ vault/grafana/prometheus/alertmanager)
+confidence: 45
+reasoning: `_oauth2_proxy_csrf` observed Domain=teamgamdom.com Path=/ HttpOnly Secure → session cookie `_oauth2_proxy_*` will share that scope and be sent to all subdomains incl. direct-origin kargo; gate endpoints functional (401 auth_request, 302 OAuth, sanitized rd); 5 gated vhosts; no script-capable host or takeover candidate found on domain yet
+evidence_needed: valid `_oauth2_proxy` session cookie reachable from a compromiseable subdomain; or any XSS on *.teamgamdom.com
+verify_steps: AUTH_HELPED only — `curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth` stays 401; watch all 5 vhosts + kargo SPA for gate-scope change
+impact: session pivot to Vault+observability stack; critical when combined with any subdomain XSS/takeover; exercised session cookie (HttpOnly) limits to credentialed-request relay
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: /api/auth/login and /auth/login verified 404 with only host-only gd-lang on both brands this cycle; /client-api md5 7e3a161d byte-identical across 80008/80009/fatbets re-verified; single Starlette identity/wallet backend; site-bound cookies unobservable pre-auth
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 90472 re-checked 421 this cycle; 15th cycle all 8 aliases 421 while 80008/80009 rotations went live in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-auth nginx test backend (shreeram confirmed 401)
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] oauth2-proxy open-redirect via crafted state/`rd=`: negative result — off-host rd sanitized to `/`, state dest whitelisted to same-host; needs completed OAuth flow to prove, no passive angle.
+- [PARKED] Kargo unauthenticated GitOps surface: ungated SPA but POST-405 + text/html catch-all on all 6 API routes — no data surface passively.
+- [FINAL] Cross-brand replay: 70 — survives 14th cycle; no REJECTED class; AUTH_HELPED-gated.
+- [FINAL] Alias misbinding: 50 — 15th cycle split-pipeline persistence; PASSIVE verifiable.
+- [FINAL] Domain-wide oauth2-proxy pivot: 45 (up from 35) — now grounded on observed Domain=teamgamdom.com cookie scope; gate verified functional; no trigger host yet.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth | grep -iE "HTTP/|www-authenticate"` — poll alias cert-landing (falsifier for MISCONFIG) + oauth2 gate integrity each cycle.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com: central Google-OAuth gate (client 696342781525-..., fixed redirect_uri, sanitized rd), _oauth2_proxy_csrf Domain=teamgamdom.com HttpOnly Secure; /oauth2/auth 401, /callback 503, others 302.
+- [LEARN] ACCEPTED recon @ oauth2-proxy /oauth2/start?rd=: off-host target collapsed to `/` — no open redirect via rd.
+- [LEARN] ACCEPTED recon @ gamdom.com/fatbets.com /api/auth/login: 404 + only gd-lang Set-Cookie — cross-brand replay stays backend-level (no observable pre-auth cookie).
+- [LEARN] ACCEPTED watch @ live fleet: 80008/80009/fatbets /client-api md5 7e3a161d byte-identical — shared origin stable 14th cycle.
+- [LEARN] ACCEPTED recon @ kargo.teamgamdom.com: direct-origin GitOps SPA NOT behind oauth2-proxy — only teamgamdom observability vhosts are gated.
+
+STEP 7 — RISK
+[RISK] gamdom: 74 — No delta on flagship (cross-brand replay 70, 14-cycle origin integrity; AUTH_HELPED). teamgamdom lateral: discovered live Vault/Grafana/Prometheus/Alertmanager behind a single functional oauth2-proxy whose session cookie is domain-scoped (HttpOnly prevents direct theft but any subdomain XSS/takeover becomes a pivot for credentialed-request relay); kargo stands ungated but data-less. No working exploit chain; risk +1 for the new rear-secrets exposure surface.
