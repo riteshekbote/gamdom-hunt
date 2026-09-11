@@ -2281,3 +2281,33 @@ testability: PASSIVE + monitoring
 [LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (13th cycle).
 [LEARN] ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
 [LEARN] ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.
+## 2026-09-11 19:02:59 UTC [target] (model bigpickle)
+[HYP] Domain-wide oauth2-proxy session cookie permits cross-service pivot within teamgamdom
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com + grafana/prometheus/vault/alertmanager
+confidence: 35
+reasoning: `_oauth2_proxy_csrf` scoped `Domain=teamgamdom.com; Path=/` reaches every subdomain incl. direct-origin kargo (77.42.9.222); authenticated `_oauth2_proxy_*` session cookie will share that scope; Vault/Grafana/Prometheus/Alertmanager are high-value; but edge gate is uniform 302+401, OAuth state target cannot be tampered via XFH/XFP, no XSS host found on domain yet
+evidence_needed: valid Google-org session cookie observed across teamgamdom; any script-capable host on *.teamgamdom.com that can relay credentialed requests
+verify_steps: AUTH_HELPED only — no passive proof possible (all paths gated)
+impact: session pivot to internal Vault+observability stack; critical if triggered
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: /client-api md5 7e3a161d byte-identical across all 6 live hosts, 14th consecutive cycle; single Starlette identity/wallet backend; site-bound cookies ruled out pre-auth; CORS ACAO absent
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 14th cycle all 8 aliases 421 while 80008/80009 rotations landed certs on Starlette in 48h — split pipeline persists; 90488 uniquely pins to Basic-gated nginx backend; gate still 401 fixture-wide
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` + `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: extended oauth2-proxy surface watch — add `curl -sS -o /dev/null -w "%{http_code}" https://oauth2-proxy.teamgamdom.com/oauth2/auth` + `vault|grafana|prometheus|alertmanager.teamgamdom.com/` to the cycle watchlist; the falsification points are any non-302/non-401 response on the protected vhosts (auth_request bypass) and any pending alias (80001/80002/90472/90473/90475/90480/90482/90488) going non-421.
+[RISK] gamdom: 73 — No delta on the flagship: cross-brand replay (70) unchanged, AUTH_HELPED-gated, 14-cycle origin integrity. Discovery of oauth2-proxy (Vault/Grafana/Prometheus/Alertmanager) on teamgamdom raises latent infosec value but gate is currently airtight at edge and header-tamper-proof — watch-subject only. Split-pipeline misbinding (50) persists 14th cycle. Risk steady at 73.

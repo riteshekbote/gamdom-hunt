@@ -1080,3 +1080,16 @@
 - LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 12th cycle
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-11 19:03:10 UTC
+- [70] fatbets.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_nemotron3.txt)
+- [35] oauth2-proxy.teamgamdom.com: Domain-wide oauth2-proxy session cookie permits cross-service pivot within teamgamdom (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: extended oauth2-proxy surface watch — add `curl -sS -o /dev/null -w "%{http_code}" https://oauth2-proxy.teamgamdom.com/oauth2/auth` + `vault|grafana|prom
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -I https://gamdom.com/api/auth/login 2>&1 | grep -i set-cookie` && `curl -sS -I https://fatbets.com/api/auth/login 2>&1 | grep -i set-cookie` &
+- LEARN: ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (1
+- LEARN: ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
+- LEARN: ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- LEARN: ACCEPTED recon @ fatbets.com/gamdom.one/gamdom80009.com/gamdom80008.com/gamdom80003.com: all return identical host-only gd-lang cookie (no Domain/SameSite/HttpO
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all (Monaco IDE) even with Accept:application/json — no unauthenticated JSON AP

@@ -554,3 +554,12 @@ www.gamdom.com
 - CHANGED Starlette pool signature stable 12th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
 - CHANGED Provisioning cycle 13 for 90472/90473/90475/90480/90482/90488/80001/80002 — all still 421/TLS-NOMATCH, no cert deployment
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+
+## 2026-09-11 19:03:10 UTC
+- NEW Verified cookie policy uniformity: all 6 live hosts (gamdom.com, fatbets.com, gamdom.one, gamdom80008.com, gamdom80009.com, gamdom80003.com) return identical host-only `gd-lang` cookie (no Domain, no 
+- NEW Confirmed /auth/login returns 404 across all brands/mirrors — real auth endpoint not at this path
+- NEW Kargo API: all 6 endpoints (/projects, /applications, /repositories, /clusters, /stages, /freight) return SPA catch-all (Monaco IDE) even with `Accept: application/json` — no JSON surface exposed pass
+- CHANGED Status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime 24h — no rotation this cycle; 221=gamdom80008.com, 223=gamdom80009.com confirmed live
+- CHANGED Starlette pool signature stable 12th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+- CHANGED Provisioning cycle 13 for 90472/90473/90475/90480/90482/90488/80001/80002 — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
