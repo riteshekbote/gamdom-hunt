@@ -523,3 +523,14 @@ www.gamdom.com
 - CHANGED Status page monitors: com/eu/io/vip/win/80008/80009 (7 monitors, absorbed 80006→80009 rotation)
 - CHANGED Live fleet stable: 6 mirrors + 2 brands all /client-api 400, ETag identical
 - CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+
+## 2026-09-11 06:42:49 UTC
+- NEW Provisioning cycle 9: 90472/90473/90475/90480/90482/90488/80001/80002 all still 421/TLS-NOMATCH — no cert deployment
+- NEW Kargo Accept:application/json probe: all 6 endpoints (/projects, /applications, /repositories, /clusters, /stages, /freight) return 200 text/html — SPA catch-all ignores header, no JSON API surface
+- NEW Status page Kuma heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all healthy (100% uptime 24h) — no rotation this cycle
+- NEW SEO hub gamdom-girisi.com: still only gamdom90471.com (17×) — no new alias advertised
+- CHANGED Live fleet stable: 6 mirrors + 2 brands all /client-api 400 + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical — shared origin confirmed 10th cycle
+- CHANGED gamdom80004.com redirect target: 302→gamdom80008.com (was 80007) — chain flattened post-rotation
+- CHANGED Numbered aliases 80010-80020: all 000 — not provisioned
+- CHANGED Tableau 2025.1.11 patches CVE-2025-52455/52449 — version disclosure downgraded to informational
+- CHANGED shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths)

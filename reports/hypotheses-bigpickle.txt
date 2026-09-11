@@ -1,4 +1,4 @@
-## 2026-09-11 01:27:08 UTC [target] (model bigpickle)
+## 2026-09-11 06:37:26 UTC [target] (model bigpickle)
 [PRIO] gamdom.com/client-api,8.5,a=10,b=10,t=7,g=4,f=6   # shared origin 3 brands / 21+ hosts, cookie-auth replay
 [PRIO] fatbets.com/client-api,8.5,a=9,b=10,t=7,g=4,f=6    # same shared origin, cross-brand auth flow
 [PRIO] gamdom90488.com→shreeram fleet,5.5,a=6,b=8,t=5,g=7,f=6 # split-pipeline misbinding watch
@@ -34,7 +34,7 @@ testability: AUTH_HELPED
 [PARKED] Kargo GitOps backend unauthenticated enumeration: confidence 25 < 40 — SPA catch-all uniform even with Accept: application/json; POST=405 method-gating not data leak; no JSON surface confirmed unauthenticated.
 [FINAL] Cross-brand cookie replay via shared /client-api origin: confidence 70 — survives critique; 12 consecutive cycles byte-identical across 3 brands / 21+ hosts; fleet churn with static origin; gated by AUTH_HELPED only; no REJECTED class; impact critical.
 [FINAL] Provisioned alias cert lands with gate-scope regression: confidence 50 — survives critique; 12 cycles of 421 persistence vs 2 live rotations proving split pipeline; PASSIVE verification available; no REJECTED class; impact medium-high.
-[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains` (track monitor id-set {2,3,5,6,13,221,223} every cycle as authoritative fleet rotation state) + re-run 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... https://gamdom90488.com/client-api`) to catch the first pending alias going non-421 — the falsification point for the split-pipeline misbinding hypothesis.
+[NEXT] PROBE: `curl -sSk https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains` (track heartbeatList id-set {2,3,5,6,13,221,223} every cycle as authoritative fleet rotation state) + re-run 8-alias 421 watch (`curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api ... https://gamdom90488.com/client-api`) to catch the first pending alias going non-421 — the falsification point for the split-pipeline misbinding hypothesis.
 [LEARN] ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 12th cycle, all still 421/TLS-NOMATCH — no cert deployment.
 [LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (12th cycle).
 [LEARN] ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
