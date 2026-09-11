@@ -1,9 +1,9 @@
-## 2026-09-11 06:42:38 UTC [target] (model nemotron3)
-[NEW] Provisioning cycle 9: 90472/90473/90475/90480/90482/90488/80001/80002 all still 421/TLS-NOMATCH — no cert deployment
-[NEW] Kargo Accept:application/json probe: all 6 endpoints (/projects, /applications, /repositories, /clusters, /stages, /freight) return 200 text/html — SPA catch-all ignores header, no JSON API surface
-[NEW] Status page Kuma heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all healthy (100% uptime 24h) — no rotation this cycle
+## 2026-09-11 11:52:51 UTC [target] (model nemotron3)
+[NEW] Provisioning cycle advanced to 12th for 90472/90473/90475/90480/90482/90488/80001/80002 — all still 421/TLS-NOMATCH, no cert deployment
+[NEW] Kargo Accept:application/json probe confirms SPA catch-all ignores header — no JSON API surface exposed passively (6 endpoints tested)
+[NEW] Status page Kuma heartbeat JSON: 7 monitors (ids 2,3,5,6,13,221,223) all healthy — no rotation this cycle
 [NEW] SEO hub gamdom-girisi.com: still only gamdom90471.com (17×) — no new alias advertised
-[CHANGED] Live fleet stable: 6 mirrors + 2 brands all /client-api 400 + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical — shared origin confirmed 10th cycle
+[CHANGED] Live fleet stable: 6 mirrors + 2 brands all `/client-api` 400 + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical — shared origin confirmed 12th cycle
 [CHANGED] gamdom80004.com redirect target: 302→gamdom80008.com (was 80007) — chain flattened post-rotation
 [CHANGED] Numbered aliases 80010-80020: all 000 — not provisioned
 [CHANGED] Tableau 2025.1.11 patches CVE-2025-52455/52449 — version disclosure downgraded to informational
@@ -57,8 +57,8 @@ testability: PASSIVE
 [LEARN] REJECTED new-numbered-aliases @ 80010-80020: all 000 (connection failed) — not provisioned
 [LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/auth/signin: GET 405 XML "Method Not Allowed" — Tableau backend handles API routes directly; /sites 401 proper auth gate; CVE-2025-52455/52449 patched on 2025.1.11
 [LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HEAD 405, GET 200 SPA catch-all (Monaco IDE), Accept: application/json ignored — SPA catch-all uniform, no JSON surface exposed passively
-[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 9th cycle, all still 421/TLS-NOMATCH — no cert deployment
-[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 12th cycle, all still 421/TLS-NOMATCH — no cert deployment
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (12th cycle)
 [LEARN] ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
-[LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (11th cycle)
+[LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (12th cycle)
 [RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

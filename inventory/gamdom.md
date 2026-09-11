@@ -534,3 +534,14 @@ www.gamdom.com
 - CHANGED Numbered aliases 80010-80020: all 000 — not provisioned
 - CHANGED Tableau 2025.1.11 patches CVE-2025-52455/52449 — version disclosure downgraded to informational
 - CHANGED shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths)
+
+## 2026-09-11 11:52:59 UTC
+- NEW Provisioning cycle advanced to 12th for 90472/90473/90475/90480/90482/90488/80001/80002 — all still 421/TLS-NOMATCH, no cert deployment
+- NEW Kargo Accept:application/json probe confirms SPA catch-all ignores header — no JSON API surface exposed passively (6 endpoints tested)
+- NEW Status page Kuma heartbeat JSON: 7 monitors (ids 2,3,5,6,13,221,223) all healthy — no rotation this cycle
+- NEW SEO hub gamdom-girisi.com: still only gamdom90471.com (17×) — no new alias advertised
+- CHANGED Live fleet stable: 6 mirrors + 2 brands all `/client-api` 400 + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical — shared origin confirmed 12th cycle
+- CHANGED gamdom80004.com redirect target: 302→gamdom80008.com (was 80007) — chain flattened post-rotation
+- CHANGED Numbered aliases 80010-80020: all 000 — not provisioned
+- CHANGED Tableau 2025.1.11 patches CVE-2025-52455/52449 — version disclosure downgraded to informational
+- CHANGED shreeram-dynamic-test.teamgamdom.com: Basic realm="secret" gate holds 401 fixture-wide (7 paths)

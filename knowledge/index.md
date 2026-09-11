@@ -224,3 +224,7 @@
 - 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (10th cycle)
 - 2026-09-11 ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
 - 2026-09-11 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (11th cycle)
+- 2026-09-11 ACCEPTED watch @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment.
+- 2026-09-11 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (13th cycle).
+- 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 12th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (12th cycle)
