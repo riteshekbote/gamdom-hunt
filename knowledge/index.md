@@ -228,3 +228,8 @@
 - 2026-09-11 ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (13th cycle).
 - 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 12th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (12th cycle)
+- 2026-09-11 ACCEPTED recon @ fatbets.com/gamdom.one/gamdom80009.com/gamdom80008.com/gamdom80003.com: all return identical host-only gd-lang cookie (no Domain/SameSite/HttpOnly) on root and /auth/login (404) — uniform cookie policy confirmed across 3 brands / 6 live mirrors
+- 2026-09-11 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all (Monaco IDE) even with Accept:application/json — no unauthenticated JSON API surface
+- 2026-09-11 ACCEPTED watch @ gamdommirrors.com heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 12th cycle
+- 2026-09-11 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

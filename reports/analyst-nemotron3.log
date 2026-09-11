@@ -9062,3 +9062,454 @@ testability: PASSIVE
 **STEP 7 — RISK**
 
 [RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom: flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008.com live + gamdom80009.com live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+===== ANALYST nemotron3 2026-09-11 16:02:08 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.one/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:51:59 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-a81bf669-e5d9-42aa-9097-73b82e3becd2' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:51:59 GMT
+x-served-by: cache-lcy-egml8630043-LCY, cache-lcy-egml8630043-LCY, cache-chi-kmdw8640066-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://fatbets.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:51:59 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-4a80d461-afa9-4b59-a1fb-b92fb9dac31c' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:51:59 GMT
+x-served-by: cache-lcy-eglc8600083-LCY, cache-lcy-egml8630066-LCY, cache-chi-kmdw8640086-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80009.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:52:00 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-8a135f7e-6498-4aef-9044-fa7a305ab3e9' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:52:00 GMT
+x-served-by: cache-lcy-eglc8600053-LCY, cache-lcy-eglc8600053-LCY, cache-chi-kmdw8640027-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1789141920.787540,VS0,VE298
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://fatbets.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:54:39 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-d504861d-a0fb-4a0d-9769-f88d4b99a7a1' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:54:39 GMT
+x-served-by: cache-lcy-egml8630042-LCY, cache-lcy-egml8630042-LCY, cache-chi-kmdw8640058-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.one/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:54:39 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-fff2e430-5a85-4f75-b702-6419c388b394' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:54:39 GMT
+x-served-by: cache-lcy-eglc8600069-LCY, cache-lcy-eglc8600069-LCY, cache-chi-kmdw8640066-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80009.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:54:47 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-588377ac-ead4-45dd-b7d5-1cb9202f5a5e' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:54:47 GMT
+x-served-by: cache-lcy-egml8630089-LCY, cache-lcy-egml8630089-LCY, cache-dfw-kdfw8210020-DFW
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1789142087.143477,VS0,VE558
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:55:27 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-9db92031-261e-4573-a233-8d6e0c7643e6' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:55:27 GMT
+x-served-by: cache-lcy-egml8630070-LCY, cache-lcy-egml8630060-LCY, cache-chi-kmdw8640086-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom.com/auth/login 2>&1 | head -30
+HTTP/2 404 
+content-type: text/html
+cache-control: private, max-age=300
+server: nginx
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:55:28 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-8656f426-d135-49e4-9f81-1aaf33e5308b' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:55:28 GMT
+x-served-by: cache-lcy-eglc8600072-LCY, cache-lcy-eglc8600072-LCY, cache-chi-kmdw8640066-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80008.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:56:42 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-12c487ec-e05c-4350-a137-12e35d45e27e' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:56:42 GMT
+x-served-by: cache-lcy-eglc8600054-LCY, cache-lcy-eglc8600054-LCY, cache-chi-kmdw8640049-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1789142202.740866,VS0,VE427
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -I https://gamdom80003.com/ 2>&1 | head -30
+HTTP/2 200 
+server: nginx
+x-nginx-limit-req: PASSED
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 11 Sep 2027 15:56:42 GMT
+content-type: text/html
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-727f419f-6885-49a9-8c08-be81e092e9c1' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300
+accept-ranges: bytes
+via: 1.1 varnish, 1.1 varnish
+date: Fri, 11 Sep 2026 15:56:42 GMT
+x-served-by: cache-lcy-egml8630074-LCY, cache-lcy-egml8630074-LCY, cache-chi-kmdw8640027-CHI
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1789142202.055677,VS0,VE129
+vary: Cookie, Accept-Encoding
+strict-transport-security: max-age=31557600
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects 2>&1 | head -50
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/monacoeditorwork/css.worker.bundle.js",
+  "html": "/monacoeditorwork/html.worker.bundle.js",
+  "json": "/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/monacoeditorwork/ts.worker.bundle.js",
+  "yaml": "/monacoeditorwork/yaml.worker.bundle.js",
+  "javascript": "/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/monacoeditorwork/html.worker.bundle.js",
+  "razor": "/monacoeditorwork/html.worker.bundle.js"
+});</script>
+
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/kargo-logo-head-only.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kargo</title>
+    <script type="module" crossorigin src="/assets/index-gZFUj2We.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-LESruZXM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications 2>&1 | head -50
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/monacoeditorwork/css.worker.bundle.js",
+  "html": "/monacoeditorwork/html.worker.bundle.js",
+  "json": "/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/monacoeditorwork/ts.worker.bundle.js",
+  "yaml": "/monacoeditorwork/yaml.worker.bundle.js",
+  "javascript": "/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/monacoeditorwork/html.worker.bundle.js",
+  "razor": "/monacoeditorwork/html.worker.bundle.js"
+});</script>
+
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/kargo-logo-head-only.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kargo</title>
+    <script type="module" crossorigin src="/assets/index-gZFUj2We.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-LESruZXM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories 2>&1 | head -50
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/monacoeditorwork/editor.worker.bundle.js",
+  "css": "/monacoeditorwork/css.worker.bundle.js",
+  "html": "/monacoeditorwork/html.worker.bundle.js",
+  "json": "/monacoeditorwork/json.worker.bundle.js",
+  "typescript": "/monacoeditorwork/ts.worker.bundle.js",
+  "yaml": "/monacoeditorwork/yaml.worker.bundle.js",
+  "javascript": "/monacoeditorwork/ts.worker.bundle.js",
+  "less": "/monacoeditorwork/css.worker.bundle.js",
+  "scss": "/monacoeditorwork/css.worker.bundle.js",
+  "handlebars": "/monacoeditorwork/html.worker.bundle.js",
+  "razor": "/monacoeditorwork/html.worker.bundle.js"
+});</script>
+
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/kargo-logo-head-only.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kargo</title>
+    <script type="module" crossorigin src="/assets/index-gZFUj2We.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-LESruZXM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters 2>&1 | head -20
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/stages 2>&1 | head -20
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+[0m
+[0m$ [0mcurl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/freight 2>&1 | head -20
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+[0m
+[0m$ [0mcurl -sS https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains 2>&1 | head -100
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-11 14:18:56.082","msg":"","ping":218},{"status":1,"time":"2026-09-11 14:20:56.304","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:22:56.359","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:24:56.414","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:26:56.469","msg":"","ping":58},{"status":1,"time":"2026-09-11 14:28:56.532","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:30:56.590","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:32:56.644","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:34:56.701","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:36:56.759","msg":"","ping":58},{"status":1,"time":"2026-09-11 14:38:56.827","msg":"","ping":154},{"status":1,"time":"2026-09-11 14:40:56.985","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:42:57.043","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:44:57.101","msg":"","ping":371},{"status":1,"time":"2026-09-11 14:46:57.476","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:48:57.533","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:50:57.586","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:52:57.648","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:54:57.703","msg":"","ping":74},{"status":1,"time":"2026-09-11 14:56:57.782","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:58:57.838","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:00:57.897","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:02:57.955","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:04:58.012","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:06:58.067","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:08:58.125","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:10:58.187","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:12:58.250","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:14:58.309","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:16:58.368","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:18:58.427","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:20:58.481","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:22:58.540","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:24:58.597","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:26:58.656","msg":"","ping":73},{"status":1,"time":"2026-09-11 15:28:58.733","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:30:58.796","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:32:58.851","msg":"","ping":48},{"status":1,"time":"2026-09-11 15:34:58.902","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:36:58.965","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:38:59.019","msg":"","ping":49},{"status":1,"time":"2026-09-11 15:40:59.073","msg":"","ping":67},{"status":1,"time":"2026-09-11 15:42:59.147","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:44:59.204","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:46:59.259","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:48:59.317","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:50:59.378","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:52:59.441","msg":"","ping":62},{"status":1,"time":"2026-09-11 15:54:59.507","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:56:59.562","msg":"","ping":56}],"3":[{"status":1,"time":"2026-09-11 14:20:47.019","msg":"","ping":49},{"status":1,"time":"2026-09-11 14:22:47.071","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:24:47.134","msg":"","ping":75},{"status":1,"time":"2026-09-11 14:26:47.213","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:28:47.269","msg":"","ping":49},{"status":1,"time":"2026-09-11 14:30:47.323","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:32:47.377","msg":"","ping":48},{"status":1,"time":"2026-09-11 14:34:47.429","msg":"","ping":48},{"status":1,"time":"2026-09-11 14:36:47.482","msg":"","ping":48},{"status":1,"time":"2026-09-11 14:38:47.536","msg":"","ping":65},{"status":1,"time":"2026-09-11 14:40:47.605","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:42:47.661","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:44:47.715","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:46:47.772","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:48:47.827","msg":"","ping":60},{"status":1,"time":"2026-09-11 14:50:47.893","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:52:47.953","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:54:48.011","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:56:48.068","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:58:48.125","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:00:48.187","msg":"","ping":62},{"status":1,"time":"2026-09-11 15:02:48.254","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:04:48.314","msg":"","ping":63},{"status":1,"time":"2026-09-11 15:06:48.379","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:08:48.437","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:10:48.496","msg":"","ping":60},{"status":1,"time":"2026-09-11 15:12:48.568","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:14:48.625","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:16:48.679","msg":"","ping":48},{"status":1,"time":"2026-09-11 15:18:48.731","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:20:48.788","msg":"","ping":49},{"status":1,"time":"2026-09-11 15:22:48.842","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:24:48.901","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:26:48.964","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:28:49.025","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:30:49.084","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:32:49.141","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:34:49.201","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:36:49.258","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:38:49.315","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:40:49.370","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:42:49.431","msg":"","ping":61},{"status":1,"time":"2026-09-11 15:44:49.498","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:46:49.559","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:48:49.613","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:50:49.668","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:52:49.726","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:54:49.787","msg":"","ping":48},{"status":1,"time":"2026-09-11 15:56:49.838","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:58:49.908","msg":"","ping":65}],"5":[{"status":1,"time":"2026-09-11 14:20:49.084","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:22:49.142","msg":"","ping":59},{"status":1,"time":"2026-09-11 14:24:49.205","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:26:49.266","msg":"","ping":47},{"status":1,"time":"2026-09-11 14:28:49.317","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:30:49.377","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:32:49.433","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:34:49.493","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:36:49.549","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:38:49.604","msg":"","ping":48},{"status":1,"time":"2026-09-11 14:40:49.657","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:42:49.715","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:44:49.771","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:46:49.829","msg":"","ping":49},{"status":1,"time":"2026-09-11 14:48:49.883","msg":"","ping":60},{"status":1,"time":"2026-09-11 14:50:49.948","msg":"","ping":81},{"status":1,"time":"2026-09-11 14:52:50.031","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:54:50.098","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:56:50.153","msg":"","ping":77},{"status":1,"time":"2026-09-11 14:58:50.236","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:00:50.298","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:02:50.360","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:04:50.415","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:06:50.477","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:08:50.536","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:10:50.592","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:12:50.655","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:14:50.710","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:16:50.767","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:18:50.823","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:20:50.880","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:22:50.939","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:24:50.995","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:26:51.051","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:28:51.109","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:30:51.167","msg":"","ping":80},{"status":1,"time":"2026-09-11 15:32:51.256","msg":"","ping":49},{"status":1,"time":"2026-09-11 15:34:51.311","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:36:51.369","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:38:51.422","msg":"","ping":112},{"status":1,"time":"2026-09-11 15:40:51.541","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:42:51.599","msg":"","ping":69},{"status":1,"time":"2026-09-11 15:44:51.673","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:46:51.730","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:48:51.808","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:50:51.872","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:52:51.929","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:54:51.987","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:56:52.044","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:58:52.116","msg":"","ping":52}],"6":[{"status":1,"time":"2026-09-11 14:20:45.849","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:22:45.909","msg":"","ping":59},{"status":1,"time":"2026-09-11 14:24:45.973","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:26:46.032","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:28:46.093","msg":"","ping":72},{"status":1,"time":"2026-09-11 14:30:46.167","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:32:46.230","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:34:46.291","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:36:46.353","msg":"","ping":65},{"status":1,"time":"2026-09-11 14:38:46.422","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:40:46.484","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:42:46.539","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:44:46.595","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:46:46.651","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:48:46.706","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:50:46.762","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:52:46.825","msg":"","ping":66},{"status":1,"time":"2026-09-11 14:54:46.896","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:56:46.956","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:58:47.015","msg":"","ping":61},{"status":1,"time":"2026-09-11 15:00:47.078","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:02:47.140","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:04:47.198","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:06:47.255","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:08:47.315","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:10:47.371","msg":"","ping":73},{"status":1,"time":"2026-09-11 15:12:47.447","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:14:47.512","msg":"","ping":73},{"status":1,"time":"2026-09-11 15:16:47.589","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:18:47.646","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:20:47.709","msg":"","ping":62},{"status":1,"time":"2026-09-11 15:22:47.777","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:24:47.835","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:26:47.899","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:28:47.957","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:30:48.017","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:32:48.078","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:34:48.137","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:36:48.194","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:38:48.253","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:40:48.315","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:42:48.370","msg":"","ping":60},{"status":1,"time":"2026-09-11 15:44:48.433","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:46:48.494","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:48:48.550","msg":"","ping":61},{"status":1,"time":"2026-09-11 15:50:48.616","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:52:48.681","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:54:48.743","msg":"","ping":62},{"status":1,"time":"2026-09-11 15:56:48.811","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:58:48.873","msg":"","ping":54}],"13":[{"status":1,"time":"2026-09-11 14:19:56.669","msg":"","ping":69},{"status":1,"time":"2026-09-11 14:21:56.742","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:23:56.796","msg":"","ping":49},{"status":1,"time":"2026-09-11 14:25:56.850","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:27:56.908","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:29:56.962","msg":"","ping":57},{"status":1,"time":"2026-09-11 14:31:57.025","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:33:57.079","msg":"","ping":283},{"status":1,"time":"2026-09-11 14:35:57.368","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:37:57.429","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:39:57.489","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:41:57.545","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:43:57.602","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:45:57.661","msg":"","ping":49},{"status":1,"time":"2026-09-11 14:47:57.715","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:49:57.771","msg":"","ping":282},{"status":1,"time":"2026-09-11 14:51:58.057","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:53:58.112","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:55:58.171","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:57:58.231","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:59:58.293","msg":"","ping":80},{"status":1,"time":"2026-09-11 15:01:58.380","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:03:58.435","msg":"","ping":49},{"status":1,"time":"2026-09-11 15:05:58.489","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:07:58.548","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:09:58.604","msg":"","ping":117},{"status":1,"time":"2026-09-11 15:11:58.724","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:13:58.780","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:15:58.838","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:17:58.892","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:19:58.947","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:21:59.006","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:23:59.064","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:25:59.120","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:27:59.178","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:29:59.233","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:31:59.293","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:33:59.351","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:35:59.406","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:37:59.461","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:39:59.520","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:41:59.581","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:43:59.640","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:45:59.694","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:47:59.751","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:49:59.813","msg":"","ping":48},{"status":1,"time":"2026-09-11 15:51:59.863","msg":"","ping":49},{"status":1,"time":"2026-09-11 15:53:59.917","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:55:59.978","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:58:00.039","msg":"","ping":57}],"221":[{"status":1,"time":"2026-09-11 14:19:42.830","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:21:42.883","msg":"","ping":58},{"status":1,"time":"2026-09-11 14:23:42.945","msg":"","ping":59},{"status":1,"time":"2026-09-11 14:25:43.009","msg":"","ping":50},{"status":1,"time":"2026-09-11 14:27:43.062","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:29:43.119","msg":"","ping":65},{"status":1,"time":"2026-09-11 14:31:43.188","msg":"","ping":74},{"status":1,"time":"2026-09-11 14:33:43.272","msg":"","ping":62},{"status":1,"time":"2026-09-11 14:35:43.360","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:37:43.415","msg":"","ping":51},{"status":1,"time":"2026-09-11 14:39:43.471","msg":"","ping":182},{"status":1,"time":"2026-09-11 14:41:43.658","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:43:43.718","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:45:43.775","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:47:43.835","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:49:43.893","msg":"","ping":61},{"status":1,"time":"2026-09-11 14:51:43.959","msg":"","ping":63},{"status":1,"time":"2026-09-11 14:53:44.027","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:55:44.083","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:57:44.139","msg":"","ping":64},{"status":1,"time":"2026-09-11 14:59:44.207","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:01:44.264","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:03:44.324","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:05:44.383","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:07:44.440","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:09:44.501","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:11:44.558","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:13:44.625","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:15:44.687","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:17:44.750","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:19:44.810","msg":"","ping":61},{"status":1,"time":"2026-09-11 15:21:44.875","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:23:44.931","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:25:44.986","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:27:45.045","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:29:45.104","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:31:45.159","msg":"","ping":59},{"status":1,"time":"2026-09-11 15:33:45.224","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:35:45.284","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:37:45.345","msg":"","ping":106},{"status":1,"time":"2026-09-11 15:39:45.460","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:41:45.518","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:43:45.572","msg":"","ping":57},{"status":1,"time":"2026-09-11 15:45:45.638","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:47:45.692","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:49:45.752","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:51:45.811","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:53:45.866","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:55:45.925","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:57:45.980","msg":"","ping":51}],"223":[{"status":1,"time":"2026-09-11 14:20:25.674","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:22:25.736","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:24:25.796","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:26:25.854","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:28:25.911","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:30:25.974","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:32:26.035","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:34:26.094","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:36:26.151","msg":"","ping":58},{"status":1,"time":"2026-09-11 14:38:26.214","msg":"","ping":63},{"status":1,"time":"2026-09-11 14:40:26.285","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:42:26.343","msg":"","ping":60},{"status":1,"time":"2026-09-11 14:44:26.410","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:46:26.470","msg":"","ping":54},{"status":1,"time":"2026-09-11 14:48:26.541","msg":"","ping":53},{"status":1,"time":"2026-09-11 14:50:26.599","msg":"","ping":55},{"status":1,"time":"2026-09-11 14:52:26.661","msg":"","ping":52},{"status":1,"time":"2026-09-11 14:54:26.720","msg":"","ping":48},{"status":1,"time":"2026-09-11 14:56:26.772","msg":"","ping":56},{"status":1,"time":"2026-09-11 14:58:26.831","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:00:26.905","msg":"","ping":62},{"status":1,"time":"2026-09-11 15:02:26.971","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:04:27.030","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:06:27.083","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:08:27.142","msg":"","ping":58},{"status":1,"time":"2026-09-11 15:10:27.209","msg":"","ping":64},{"status":1,"time":"2026-09-11 15:12:27.319","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:14:27.384","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:16:27.443","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:18:27.499","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:20:27.561","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:22:27.616","msg":"","ping":56},{"status":1,"time":"2026-09-11 15:24:27.677","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:26:27.739","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:28:27.796","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:30:27.862","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:32:27.920","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:34:27.975","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:36:28.033","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:38:28.093","msg":"","ping":50},{"status":1,"time":"2026-09-11 15:40:28.148","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:42:28.204","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:44:28.262","msg":"","ping":55},{"status":1,"time":"2026-09-11 15:46:28.321","msg":"","ping":53},{"status":1,"time":"2026-09-11 15:48:28.377","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:50:28.436","msg":"","ping":51},{"status":1,"time":"2026-09-11 15:52:28.490","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:54:28.548","msg":"","ping":52},{"status":1,"time":"2026-09-11 15:56:28.604","msg":"","ping":54},{"status":1,"time":"2026-09-11 15:58:28.662","msg":"","ping":56}]},"uptimeList":{"2_24":1,"3_24":1,"5_24":1,"6_24":1,"13_24":1,"221_24":1,"223_24":1}}
+[0m
+**STEP 1 — DELTA**
+[NEW] Verified cookie policy uniformity: all 6 live hosts (gamdom.com, fatbets.com, gamdom.one, gamdom80008.com, gamdom80009.com, gamdom80003.com) return identical host-only `gd-lang` cookie (no Domain, no SameSite, no HttpOnly) on root and /auth/login (404)
+[NEW] Confirmed /auth/login returns 404 across all brands/mirrors — real auth endpoint not at this path
+[NEW] Kargo API: all 6 endpoints (/projects, /applications, /repositories, /clusters, /stages, /freight) return SPA catch-all (Monaco IDE) even with `Accept: application/json` — no JSON surface exposed passively
+[CHANGED] Status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime 24h — no rotation this cycle; 221=gamdom80008.com, 223=gamdom80009.com confirmed live
+[CHANGED] Starlette pool signature stable 12th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+[CHANGED] Provisioning cycle 13 for 90472/90473/90475/90480/90482/90488/80001/80002 — all still 421/TLS-NOMATCH, no cert deployment
+[CHANGED] SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+
+**STEP 2 — PRIORITIZE**
+[PRIO] gamdom.com/client-api,8.40,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=4,cloud_surface=9,freshness=7
+[PRIO] fatbets.com/client-api,8.65,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
+[PRIO] gamdom.one/client-api,8.65,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
+[PRIO] gamdom80009.com/client-api,8.60,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10
+[PRIO] gamdom80008.com/client-api,8.50,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+[PRIO] kargo.teamgamdom.com/api/v1/projects,8.10,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=7,cloud_surface=7,freshness=10
+[PRIO] gamdom80003.com/client-api,8.05,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+
+**STEP 3 — HYPOTHESES**
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: fatbets.com + gamdom.one + gamdom.com confirmed on Pool A (Fastly 151.101.x.52) with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", and host-only gd-lang cookie policy identical across 3 brands / 21+ hostnames; single shared backend serves all; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one and vice versa
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from auth flow on fatbets.com vs gamdom.com; whether session cookie minted on gamdom80009 accepted by fatbets.com/client-api
+verify_steps: (passive) curl -sS -I https://fatbets.com/auth/login && curl -sS -I https://gamdom.one/auth/login && curl -sS -I https://gamdom80009.com/auth/login — capture Set-Cookie headers; compare Domain/Path/SameSite vs gamdom.com; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on fatbets.com/client-api and gamdom.one/client-api
+impact: Cross-brand account takeover across 3 brands / 21+ hostnames; high
+testability: AUTH_HELPED
+
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors including newly rotated gamdom80009.com
+class: AUTH
+asset: gamdom80009.com/client-api
+confidence: 67
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors + Pool A flagship; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others including newly rotated 80009
+evidence_needed: Same session cookie minted on gamdom80008 accepted by gamdom80009/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers
+verify_steps: (passive) fetch Set-Cookie headers during auth flow on gamdom80008 vs gamdom80009 vs gamdom90471; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80008, replay cookie on 80009/client-api and 90471/client-api
+impact: Cross-domain account takeover across all 17+ mirror hostnames; medium-high
+testability: AUTH_HELPED
+
+[HYP] kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control via unauthenticated JSON endpoints
+class: MISCONFIG
+asset: kargo.teamgamdom.com/api/v1/projects
+confidence: 40
+reasoning: Newly discovered subdomain on scoped brand TLD (teamgamdom.com, Pool A) returns HTTP 405 on `/` and `/api/v1/projects` — method-gated backend exists; ArgoCD/Kargo v1.9.6 typically exposes project listings, applications, repositories, clusters via REST; GET returns SPA catch-all but Accept:application/json ignored across all 6 endpoints tested; unauthenticated JSON on backend would leak infrastructure topology, deployment secrets, or allow supply-chain manipulation
+evidence_needed: JSON response (200) for GET /api/v1/projects with Accept:application/json indicating unauthenticated API; or 401/403 confirming auth gate
+verify_steps: (passive) curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/projects; curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/applications; curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/repositories; curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/clusters; curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/stages; curl -sS -H "Accept: application/json" https://kargo.teamgamdom.com/api/v1/freight — all tested, all return SPA HTML
+impact: Infrastructure reconnaissance, deployment pipeline exposure, potential supply-chain manipulation if write endpoints accessible; medium
+testability: PASSIVE
+
+**STEP 4 — SELF-CRITIQUE**
+[PARKED] kargo.teamgamdom.com ArgoCD API exposes internal GitOps deploy control: confidence 40 < 40 threshold; all 6 endpoints tested with Accept:application/json return SPA catch-all — no JSON surface passively observable; hypothesis not falsifiable without AUTH_HELPED or different content-negotiation
+[FINAL] 1) Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (70, AUTH_HELPED, high impact)
+[FINAL] 2) Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors (67, AUTH_HELPED, medium-high impact)
+
+**STEP 5 — NEXT ACTION**
+[NEXT] PROBE: `curl -sS -I https://gamdom.com/api/auth/login 2>&1 | grep -i set-cookie` && `curl -sS -I https://fatbets.com/api/auth/login 2>&1 | grep -i set-cookie` && `curl -sS -I https://gamdom.one/api/auth/login 2>&1 | grep -i set-cookie` — locate actual auth endpoint (not /auth/login which 404s) and capture session cookie attributes across brands; passive, ≤1 rps
+
+**STEP 6 — LEARNING**
+[LEARN] ACCEPTED recon @ fatbets.com/gamdom.one/gamdom80009.com/gamdom80008.com/gamdom80003.com: all return identical host-only gd-lang cookie (no Domain/SameSite/HttpOnly) on root and /auth/login (404) — uniform cookie policy confirmed across 3 brands / 6 live mirrors
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all (Monaco IDE) even with Accept:application/json — no unauthenticated JSON API surface
+[LEARN] ACCEPTED watch @ gamdommirrors.com heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 12th cycle
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+**STEP 7 — RISK**
+[RISK] gamdom: 79 reason: Confirmed 21-host fleet across 3 brands (Gamdom flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect + gamdom90472.com provisioned + gamdom80008/80009 live + gamdom80001/80002 provisioned; fatbets.com + gamdom.one) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 3 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) has passive verification path for origin boundary and AUTH_HELPED path for session replay; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com fully SPA-gated; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints

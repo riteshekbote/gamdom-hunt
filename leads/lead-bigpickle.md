@@ -2244,3 +2244,40 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
 [LEARN] ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.
 [RISK] gamdom: 73 — No delta. Cross-brand cookie replay (confidence 70) remains the only critical path, strictly AUTH_HELPED-gated, now with 13-cycle byte-identical origin evidence. Split-pipeline misbinding holds (13th cycle, 8 aliases 421 vs 2 rotations live). Fleet + provisioning stable. Risk steady at 73.
+## 2026-09-11 15:51:44 UTC [target] (model bigpickle)
+[PRIO] fatbets.com/client-api,7.6,9,10,7,4,6,6
+[PRIO] gamdom90488.com→shreeram fleet,6.6,6,8,5,7,8,5
+[PRIO] kargo.teamgamdom.com,6.7,6,8,6,6,7,7
+[PRIO] gamdommirrors.com Kuma JSON,4.75,3,4,4,8,6,6
+class: AUTH
+asset: gamdom.com/client-api (serves gamdom + fatbets + gamdom.one)
+confidence: 70
+reasoning: /client-api md5 7e3a161d byte-identical across all 6 live hosts (gamdom.com/80008/80009/80003/fatbets/gamdom.one), 13th continuous cycle; single Starlette identity/wallet backend; server-set same-origin cookie auth (from client bundle); CORS ACAO absent → browser replay blocked, backend acceptance untested
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another brand with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: same shared origin as gamdom.com; byte-identical /client-api md5 7e3a161d; cookie auth transport; CORS blocks browser replay but backend may accept cross-origin cookies
+evidence_needed: authenticated Set-Cookie from fatbets.com + replay POST to gamdom.com with same cookie
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 90472/90473/90475/90480/90482/80001/80002
+confidence: 50
+reasoning: 13th cycle all 8 aliases 421 while 80008/80009 rotations landed certs on Starlette origin in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-gated nginx test backend; shreeram gate still 401 fixture-wide
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression to non-401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api` + `curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate-scope regression
+testability: PASSIVE + monitoring
+[FINAL] Cross-brand cookie replay via shared /client-api origin: confidence 70 — survives critique; 13 consecutive cycles byte-identical across 3 brands / 21+ hosts; fleet churn with static origin; gated by AUTH_HELPED only; no REJECTED class; impact critical.
+[FINAL] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one: confidence 70 — same origin, same evidence, same AUTH_HELPED gate.
+[FINAL] Provisioned alias cert lands with gate-scope regression: confidence 50 — survives critique; 13 cycles of 421 persistence vs 2 live rotations proving split pipeline; PASSIVE verification available; no REJECTED class; impact medium-high.
+[LEARN] ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (13th cycle).
+[LEARN] ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
+[LEARN] ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.

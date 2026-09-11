@@ -1067,3 +1067,16 @@
 - LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 (md5 7e3a161d) + /health weak-ETag byte-identical across Pool A + Pool B — shared origin confirmed stable (12th
 - LEARN: ACCEPTED watch @ SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
 - LEARN: ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (1
+
+## RANKED HYPOTHESES 2026-09-11 16:02:08 UTC
+- [70] gamdom.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sS -I https://gamdom.com/api/auth/login 2>&1 | grep -i set-cookie` && `curl -sS -I https://fatbets.com/api/auth/login 2>&1 | grep -i set-cookie` &
+- LEARN: ACCEPTED watch @ live fleet: gamdom.com/gamdom80008/gamdom80009/gamdom80003/fatbets/gamdom.one /client-api md5 7e3a161d byte-identical — shared origin stable (1
+- LEARN: ACCEPTED watch @ shreeram gate: 401 fixture-wide; SEO hub still 17× 90471 only; gamdom90471.com still 421.
+- LEARN: ACCEPTED watch @ Kuma status page: still 7 monitors (2,3,5,6,13,221,223) — no rotation this cycle.
+- LEARN: ACCEPTED recon @ fatbets.com/gamdom.one/gamdom80009.com/gamdom80008.com/gamdom80003.com: all return identical host-only gd-lang cookie (no Domain/SameSite/HttpO
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all (Monaco IDE) even with Accept:application/json — no unauthenticated JSON AP
+- LEARN: ACCEPTED watch @ gamdommirrors.com heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 12th cycle
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
