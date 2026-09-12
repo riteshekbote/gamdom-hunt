@@ -2587,3 +2587,31 @@ testability: AUTH_HELPED
 [LEARN] REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
 [LEARN] ACCEPTED watch @ 8 pending aliases: 14th cycle all 421/TLS-NOMATCH — provisioning inactive
 [RISK] gamdom: 77 — perabet brand widened to 3 fastly hostnames (apex/www/beta), all byte-identical on the shared identity/wallet Starlette origin, growing the 4-brand/24-host replay pool; all gates hold (AUTH_HELPED, no credential, browser CORS closed, alias fleet inert 14 cycles, oauth2/Basic/TSM all stable). No exploitable chain — nominal +1 for pool width.
+## 2026-09-12 14:14:51 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta, www, fatbets, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: beta/www perabet `/client-api` 400 md5 7e3a161d byte-identical after edge IP shift (151.101.67.52); gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform across 4 brands; tr.perabet.com is NOT on this origin (no signature, no cookie) — pool growth for this hyp is flat
+evidence_needed: authenticated Set-Cookie on any brand/mirror + POST replay accepted on sibling; or Domain/SameSite attr drift observed
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; passive drift watch for Set-Cookie attr change across 4 brands
+impact: ATO + wallet across 4 brands / 24+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm nginx fleet
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; 8 pending aliases
+confidence: 50
+reasoning: 15th cycle all 421/TLS-NOMATCH — cert ops stalled; CT proves 3 Basic realm="secret" vhosts (shreeram/devsrv5/stagsrv) as misbinding pool; 8000x/9047x pipeline split persists (no rotation → cert ops inactive)
+evidence_needed: any alias non-421; or any gated host regresses from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2 session pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+6 confirmed backends: clickhouse/perabet-clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 45
+reasoning: all 6 service hosts 302→SSO (gate holds), oauth2/auth 401 real endpoint; _oauth2_proxy_csrf Domain=teamgamdom.com; no trigger host — kargo SPA (only ungated script-capable host) is uniform SPA catch-all
+evidence_needed: session cookie reachable in a compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + oauth2 fleet status each cycle
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED

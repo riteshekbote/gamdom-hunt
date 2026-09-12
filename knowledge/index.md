@@ -258,3 +258,9 @@
 - 2026-09-12 ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
 - 2026-09-12 REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
 - 2026-09-12 ACCEPTED watch @ 8 pending aliases: 14th cycle all 421/TLS-NOMATCH — provisioning inactive
+- 2026-09-12 ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-12 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-12 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
