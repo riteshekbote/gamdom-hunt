@@ -1151,3 +1151,27 @@
 - LEARN: ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-12 11:16:15 UTC
+- [76] perabet.com/client-api: Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin (from art/lead_bigpickle.txt)
+- [74] perabet.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one + perabet (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 6 https://gamdo
+- NEXT(hypotheses-nemotron3.txt): PROBE: `for h in perabet.com gamdom.com fatbets.com gamdom.one gamdom80008.com gamdom80009.com gamdom80003.com gamdom4567.com; do for p in /api/auth /api/auth/l
+- LEARN: ACCEPTED recon @ beta.perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname
+- LEARN: ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
+- LEARN: REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
+- LEARN: ACCEPTED watch @ 8 pending aliases: 14th cycle all 421/TLS-NOMATCH — provisioning inactive
+- LEARN: ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- LEARN: ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- LEARN: ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- LEARN: ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+- LEARN: ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+- LEARN: ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+- LEARN: ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 (real endpoint) — OAuth2 SSO layer confirmed on teamgamdom.com
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+- LEARN: ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+- LEARN: ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- LEARN: ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- LEARN: ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

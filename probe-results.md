@@ -286,3 +286,8 @@ https://gamdom.com/api/auth -> HTTP 404
 https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
 https://devsrv5.teamgamdom.com/` -> HTTP 400
 https://tableau-admin.teamgamdom.com/vib/api/` -> HTTP 401
+
+## 2026-09-12 11:16:19 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://$c.teamgamdom.com/ -> ERR <urlopen error [Errno -2] Name or service not know

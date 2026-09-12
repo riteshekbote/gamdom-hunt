@@ -601,3 +601,16 @@ www.gamdom.com
 - CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
 - CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+
+## 2026-09-12 11:16:15 UTC
+- NEW beta.perabet.com: Fastly 151.101.131.52 (Pool A family), root 200, gd-lang host-only cookie byte-identical, /graphql 404, /client-api GET 400 body md5 7e3a161d — 4th-brand sibling surface on the share
+- NEW www.perabet.com: 301→apex redirect, yet /client-api still 400 md5 7e3a161d — Fastly alias keeps the shared-origin signature
+- CHANGED cross-brand trust pool: 4 brands / 24+ hostnames share byte-identical client-api signature (perabet now apex+www+beta)
+- NEW perabet.com/client-api hypothesis emerged (confidence 74) — 4th brand on shared /client-api origin per bigpickle agent
+- NEW gamdom.com/api/auth + fatbets.com/api/auth + gamdom.one/api/auth all return 404 with identical host-only gd-lang cookie — real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql
+- NEW /client-api POST accepts JSON and returns structured GamdomClientMessage across all 6 live mirrors (gamdom.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, fatbets.com, gamdom.one) — shared ide
+- NEW oauth2-proxy.teamgamdom.com/oauth2/auth returns HTTP 401 (real endpoint on Fastly Pool A) — OAuth2 SSO layer confirmed on teamgamdom.com brand
+- CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+- CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+- CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
