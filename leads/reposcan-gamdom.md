@@ -157,3 +157,26 @@ verify_steps: |
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
 ## REPOSCAN 2026-09-12 00:36:30 UTC
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
+## REPOSCAN 2026-09-12 05:01:03 UTC
+[HYP] Third-Party API Wrapper Hardcodes Gmail Credentials & Sends Plaintext Passwords
+class: SECRET
+asset: novahexchang/gamdomApi/server.js
+confidence: 85
+reasoning: |
+impact: Medium - credential exposure if deployed; phishing/credential harvesting vector
+verify_steps: |
+[HYP] Third-Party QA Repo Exposes Atlassian Jira API Token
+class: SECRET
+asset: quality-antech-gamdom/tests/utils/testData.ts
+confidence: 80
+reasoning: |
+impact: High - if demogm.atlassian.net is Gamdom's Jira, this token grants API access
+verify_steps: |
+[HYP] No Official Gamdom GitHub Organization Exists
+class: OTHER
+asset: N/A
+confidence: 98
+reasoning: |
+impact: None - no in-scope codebase exists for source-code auditing
+verify_steps: |
+TARGET_ORG not configured for gamdom; skipping public-org deep scan.
