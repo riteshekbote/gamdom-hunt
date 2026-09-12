@@ -2763,3 +2763,31 @@ evidence_needed: session cookie in compromiseable subdomain context, XSS on karg
 verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + fleet status; flag non-Google callback on /oauth2/start
 impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
 testability: AUTH_HELPED
+## 2026-09-12 23:20:10 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin equals ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, 6 mirrors)
+confidence: 76
+reasoning: /client-api md5 7e3a161d byte-identical across all 8 sampled hosts (Pool A+B) + 4 brands this cycle; gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform; origin gamdom4567.com serves identical signature; perabet standard subdomain breadth now exhausted (all NXDOMAIN) — pool breadth closed, vector stays backend-origin.
+evidence_needed: authenticated Set-Cookie on any brand/mirror whose POST replay is accepted on sibling; or Domain/SameSite attribute drift observed
+verify_steps: AUTH_HELPED only — keep /client-api GET=400 drift-watch; OPTIONS/Origin ACAO sweep per brand (see NEXT) closes browser-side branch; Set-Cookie attribute diff across brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Domain-wide oauth2 session pivot via *.teamgamdom.com host (redirect_uri/state abuse)
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + 6 gated backends
+confidence: 46
+reasoning: _oauth2_proxy_csrf set with Domain=teamgamdom.com; HttpOnly; Secure on /oauth2/start → Google OAuth; /oauth2/auth 401 real endpoint; all 6 backends 302→SSO; only ungated script-capable host kargo is uniform SPA catch-all (no XSS surface); redirect_uri exchange needs authenticated consent flow, not observable pre-auth.
+evidence_needed: session cookie reachable in compromiseable subdomain context, XSS on kargo SPA, or redirect_uri validation anomaly in HUMAN-orchestrated flow
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + /oauth2/start callback domain; flag non-Google callback
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com (8 pending aliases)
+confidence: 52
+reasoning: 15th cycle all 8 aliases 421 — cert ops stalled not cancelled (prior 80007→80008, 80006→80009 rotations prove pipeline live); this cycle confirmed the 401 realm="secret" fixture serves BOTH stagsrv.teamgamdom.com and stagsrv.perabet.com (2 brand TLDs); no vhost regression observed.
+evidence_needed: any pending alias non-421; or any secret-realm vhost drops from 401; or a brand host serves the 172B fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring

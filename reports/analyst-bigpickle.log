@@ -18618,3 +18618,103 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] gamdom: 76 — perabet-brand breadth probe returned all-negative (family closed at 3 hosts), gd-lang policy uniform (no Domain drift), secret-realm gate holds 401×3, 8 aliases still dormant 421 (15th cycle), Kuma 7 monitors + SEO hub 17×90471 unchanged, pool signature byte-identical across Pool A+B. No exploitable chain; residual driver remains the 76-confidence cross-brand cookie-replay hypothesis over a 4-brand / 25+-host shared identity origin (no passive falsifier), plus a persistent un-mitigated cert pipeline parked over a live misbinding fixture.
+===== ANALYST bigpickle 2026-09-12 23:21:25 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "gamdom%s.com: %s\n" "$a" "$(curl -sSk --max-time 5 -o /dev/null -w "%{http_code}" https://gamdom$a.com/client-api 2>/dev/null)"; done; printf "stagsrv.perabet.com root: %s\n" "$(curl -sSk --max-time 5 -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/ 2>/dev/null)"; printf "stagsrv.teamgamdom.com root: %s\n" "$(curl -sSk --max-time 5 -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/ 2>/dev/null)"
+gamdom80001.com: 421
+gamdom80002.com: 421
+gamdom90472.com: 421
+gamdom90473.com: 421
+gamdom90475.com: 421
+gamdom90480.com: 421
+gamdom90482.com: 421
+gamdom90488.com: 421
+stagsrv.perabet.com root: 401
+stagsrv.teamgamdom.com root: 401
+[0m
+[0m$ [0mfor h in petagiri.com perabetgiris.com giris.perabet.com api.perabet.com login.perabet.com app.perabet.com my.perabet.com secure.perabet.com play.petagiri.com; do d=$(dig +short "$h" 2>/dev/null | tr '\n' ' ' | head -c 40); md=$(curl -sS -k --max-time 5 "https://$h/client-api" 2>/dev/null | md5sum | cut -d' ' -f1); printf "%s DNS=%s md5=%s\n" "$h" "${d:-none}" "$md"; done
+petagiri.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+perabetgiris.com DNS=179.43.146.91  md5=5f1b56779131b9517f44adb3768f41e5
+giris.perabet.com DNS=217.23.12.109  md5=9241a1d08e785373f618cf0f99fb03f8
+api.perabet.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+login.perabet.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+app.perabet.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+my.perabet.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+secure.perabet.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+play.petagiri.com DNS=none md5=d41d8cd98f00b204e9800998ecf8427e
+[0m
+[0m$ [0mprintf "perabetgiris.com: "; curl -sSk --max-time 5 -o /dev/null -w "code=%{http_code} server=%header{server} loc=%{redirect_url}\n" https://perabetgiris.com/ 2>/dev/null; printf "giris.perabet.com: "; curl -sSk --max-time 5 -o /dev/null -w "code=%{http_code} server=%header{server} loc=%{redirect_url}\n" https://giris.perabet.com/ 2>/dev/null
+perabetgiris.com: code=200 server= loc=
+giris.perabet.com: code=200 server=nginx loc=
+[0m
+[0m$ [0mfor h in gamdom.com fatbets.com gamdom.one perabet.com gamdom80008.com gamdom80009.com gamdom80003.com gamdom4567.com; do c=$(curl -sSk --max-time 5 "https://$h/client-api" 2>/dev/null | md5sum | cut -d' ' -f1); e=$(curl -sSk --max-time 5 -D - -o /dev/null "https://$h/health" 2>/dev/null | grep -i '^etag' | tr -d '\r' | head -c 60); printf "%s ca=%s %s\n" "$h" "$c" "$e"; done
+gamdom.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+fatbets.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.one ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+perabet.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80008.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80009.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80003.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom4567.com ca=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+STEP 1 — DELTA
+- [NEW] perabet/petagiri breadth probe: petagiri.com, api/login/app/my/secure.perabet.com all NXDOMAIN; perabetgiris.com (179.43.146.91) + giris.perabet.com (217.23.12.109, nginx) serve 200 but NO `/client-api` 7e3a161d signature (bodies md5 5f1b5.../9241a1...) → third-party landings, not shared-origin carriers; pool breadth closed on standard guesses.
+- [NEW] stagsrv.perabet.com root=401 AND stagsrv.teamgamdom.com root=401 — secret-realm nginx fixture confirmed serving both brand TLDs (pending confirmation now resolved).
+- [CHANGED] Fleet signature stable 14th consecutive cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0..." byte-identical across all 8 hosts / 4 brands.
+- [CHANGED] 8 pending aliases (80001/80002/90472/90473/90475/90480/90482/90488) still 421/TLS-NOMATCH — 15th provisioning cycle, no cert deployment.
+
+STEP 2 — PRIORITIZE
+- [PRIO] perabet.com/client-api (shared origin, 4 brands), 7.45, a9+b9+t6+g7+c5+f5
+- [PRIO] oauth2-proxy.teamgamdom.com fleet, 6.10, a5+b8+t7+g4+c6+f6
+- [PRIO] stagsrv.* secret-realm fixture (2 TLDs), 5.75, a5+b7+t5+g4+c6+f8
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin equals ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, 6 mirrors)
+confidence: 76
+reasoning: /client-api md5 7e3a161d byte-identical across all 8 sampled hosts (Pool A+B) + 4 brands this cycle; gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform; origin gamdom4567.com serves identical signature; perabet standard subdomain breadth now exhausted (all NXDOMAIN) — pool breadth closed, vector stays backend-origin.
+evidence_needed: authenticated Set-Cookie on any brand/mirror whose POST replay is accepted on sibling; or Domain/SameSite attribute drift observed
+verify_steps: AUTH_HELPED only — keep /client-api GET=400 drift-watch; OPTIONS/Origin ACAO sweep per brand (see NEXT) closes browser-side branch; Set-Cookie attribute diff across brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+[HYP] Domain-wide oauth2 session pivot via *.teamgamdom.com host (redirect_uri/state abuse)
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + 6 gated backends
+confidence: 46
+reasoning: _oauth2_proxy_csrf set with Domain=teamgamdom.com; HttpOnly; Secure on /oauth2/start → Google OAuth; /oauth2/auth 401 real endpoint; all 6 backends 302→SSO; only ungated script-capable host kargo is uniform SPA catch-all (no XSS surface); redirect_uri exchange needs authenticated consent flow, not observable pre-auth.
+evidence_needed: session cookie reachable in compromiseable subdomain context, XSS on kargo SPA, or redirect_uri validation anomaly in HUMAN-orchestrated flow
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + /oauth2/start callback domain; flag non-Google callback
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com (8 pending aliases)
+confidence: 52
+reasoning: 15th cycle all 8 aliases 421 — cert ops stalled not cancelled (prior 80007→80008, 80006→80009 rotations prove pipeline live); this cycle confirmed the 401 realm="secret" fixture serves BOTH stagsrv.teamgamdom.com and stagsrv.perabet.com (2 brand TLDs); no vhost regression observed.
+evidence_needed: any pending alias non-421; or any secret-realm vhost drops from 401; or a brand host serves the 172B fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] none below 40 this cycle; all three survivors retain passive-or-monitored falsifiers.
+- [FINAL] 1) AUTH replay conf 76 — unchanged, breadth now provably closed; 2) MISCONFIG alias→secret-realm conf 52 — strengthened by 2-TLD fixture confirmation; 3) OATH oauth2 pivot conf 46 — held, no new surface.
+
+STEP 5 — NEXT ACTION
+- [NEXT] PROBE: per-brand OPTIONS/Origin ACAO sweep on /client-api — `for h in gamdom.com fatbets.com gamdom.one perabet.com gamdom80003.com; do curl -sS -X OPTIONS --max-time 5 -D - -o /dev/null -H "Origin: https://evil.example" -H "Access-Control-Request-Method: POST" https://$h/client-api; done` — any brand returning Access-Control-Allow-Origin/Allow-Credentials reopens the browser-side credentialed cross-origin replay branch; all-absent closes it per-brand (falsifier for top hypothesis, ~5 read-only requests).
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ perabetgiris.com: 179.43.146.91, 200, no /client-api 7e3a161d signature → third-party landing (gamdomgiris.link class), watchlist only.
+- [LEARN] ACCEPTED recon @ giris.perabet.com: 217.23.12.109 (nginx), 200, /client-api body md5 9241a1d... ≠ shared origin → affiliate-style host, not in-scope brand origin.
+- [LEARN] ACCEPTED recon @ api/login/app/my/secure.perabet.com + petagiri.com/play.petagiri.com: all NXDOMAIN → perabet carrier breadth closed on standard names.
+- [LEARN] ACCEPTED recon @ stagsrv.perabet.com + stagsrv.teamgamdom.com: both root HTTP 401 → secret-realm fixture confirmed serving both brand TLDs, gate holds.
+- [LEARN] ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical across 8 hosts / 4 brands — 14th cycle stable.
+- [LEARN] ACCEPTED watch @ 8 pending aliases: 15th cycle all 421/TLS-NOMATCH — no cert deployment.
+
+STEP 7 — RISK
+- [RISK] gamdom: 77 — unchanged; fleet stable 14th cycle, all gates hold (421×8, secret-realm 401×2 TLDs, oauth2 401, md5 7e3a161d uniform), perabet breadth closure removes further pool-expansion; residual risk remains the 4-brand/25+-host shared identity origin where the 76-confidence replay hypothesis has no passive falsifier, plus 8 dormant aliases parked over a live misbinding fixture and domain-scoped oauth2 SSO; no exploitable chain this cycle.
