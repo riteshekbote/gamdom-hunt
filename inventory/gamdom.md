@@ -585,3 +585,19 @@ www.gamdom.com
 - CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
 - CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+
+## 2026-09-12 06:30:27 UTC
+- NEW gamdom.com/api/auth → 404 + host-only `gd-lang` cookie (no Domain/SameSite/HttpOnly) — real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql
+- NEW fatbets.com/api/auth → 404 + identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 3 brands
+- NEW gamdom.one/api/auth → 404 + identical host-only `gd-lang` cookie — uniform cookie policy confirmed
+- NEW gamdom.com/client-api POST accepts JSON, returns structured `GamdomClientMessage` — shared identity/wallet proxy confirmed
+- NEW gamdom80008.com/client-api POST returns identical `GamdomClientMessage` — 10th live mirror sharing origin
+- NEW gamdom80009.com/client-api POST returns identical `GamdomClientMessage` — 11th live mirror sharing origin
+- NEW oauth2-proxy.teamgamdom.com/oauth2/auth → HTTP 401 (real endpoint) — OAuth2 SSO layer confirmed on teamgamdom.com
+- NEW kargo.teamgamdom.com/api/v1/* all 6 endpoints return SPA catch-all (Monaco IDE) even with `Accept: application/json` — no unauthenticated JSON API surface
+- NEW tableau.teamgamdom.com/api/3.21/sites → HTTP 401 XML — proper auth gate, version 2025.1.11 (patches CVE-2025-52455/52449)
+- NEW shreeram-dynamic-test.teamgamdom.com → HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+- CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+- CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle

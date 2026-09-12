@@ -2513,3 +2513,33 @@ evidence_needed: session cookie in compromiseable subdomain context, or XSS on k
 verify_steps: AUTH_HELPED only — watch kargo hash + /oauth2/auth 401 each cycle
 impact: credentialed-request relay to Vault+observability+ClickHouse; critical if triggered
 testability: AUTH_HELPED
+## 2026-09-12 06:30:16 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api yields ATO across Gamdom+fatbets+gamdom.one+perabet
+class: AUTH
+asset: perabet.com/client-api (+3 brands)
+confidence: 74
+reasoning: perabet.com now CONFIRMED byte-identical on shared origin (GET 400 md5 7e3a161d, POST GamdomClientMessage md5 d377f..., /health ETag identical, gd-lang host-only cookie) — 4 brands on one Starlette identity/wallet backend; cookie host-only (no Domain) so cookie-scope rotation is backend-agnostic
+evidence_needed: authenticated Set-Cookie on one brand + POST replay accepted on another
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://perabet.com/client-api` stays 400; watch for Set-Cookie Domain attr drift on any brand
+impact: ATO across 4 brands / 23+ hostnames; wallet + identity; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm gated fleet
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 8 pending
+confidence: 50
+reasoning: 14th cycle all 8 aliases 421/TLS-NOMATCH — no cert deployment; CT proves 3 Basic realm="secret" nginx vhosts (shreeram/devsrv5/stagsrv) as misbinding pool; 8000x/9047x pipeline split persists (no rotation -> cert ops stalled)
+evidence_needed: any alias returns non-421; or any gated host regresses from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] TSM console manage surface ungated on an alternate path or after config drift
+class: AUTH
+asset: tableau-admin.teamgamdom.com
+confidence: 40
+reasoning: /vib/api 401, /vib /vib/relics /vib/admin /vibsession /config /version 403 at edge; root 200 TSM login not behind oauth2; serverInfo pinned 2025.1.11 (CVE-2025-52449/52455 patched); no version in login JS
+evidence_needed: any /vib/api/* or /api/v0 path drifting from 403/401, or pre-auth CVE on 2025.1.11
+verify_steps: PASSIVE drift watch — `curl -sS -o /dev/null -w "%{http_code}" https://tableau-admin.teamgamdom.com/vib/api/`
+impact: TSM governs Tableau cluster config/secrets; node compromise if ungated
+testability: AUTH_HELPED
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; for s in www api auth app my beta test admin dashboard status; do printf "%s:%s " "$s" "$(dig +short A $s.perabet.com | head -1)"; done` — poll alias cert-landing falsifier + passive perabet subdomain sweep for 4th-brand sibling surfaces.
+[RISK] gamdom: 76 — perabet.com hard-confirmed as 4th brand on the shared identity/wallet origin (byte-identical signature + cookie policy), widening the replay pool to 23+ hostnames; still AUTH_HELPED-gated (no credential to replay) and browser cross-origin branching is closed; alias fleet stalled 14 cycles (no surprising mutation); TSM/oauth2/Basic gates all hold. No exploitable chain — steady at 76.
