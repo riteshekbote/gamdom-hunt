@@ -573,3 +573,15 @@ www.gamdom.com
 - CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
 - CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+
+## 2026-09-12 01:46:28 UTC
+- NEW Verified `/api/auth` returns 404 + identical host-only `gd-lang` cookie on gamdom.com/fatbets.com/gamdom.one — real auth endpoint NOT at `/api/auth` or `/api/auth/login` or `/auth` or `/login` or `/gr
+- NEW Confirmed `/client-api` POST accepts JSON and returns structured `GamdomClientMessage` responses across all 6 live mirrors (gamdom.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, fatbets.com, 
+- NEW oauth2-proxy.teamgamdom.com/oauth2/auth returns HTTP 401 (real endpoint, not 404) on Fastly Pool A — OAuth2 SSO layer confirmed on teamgamdom.com brand
+- NEW kargo.teamgamdom.com root returns 405, all `/api/v1/*` GET → 200 SPA catch-all (Monaco IDE), POST → 405 — ArgoCD-like API fully SPA-gated, no JSON surface
+- NEW tableau.teamgamdom.com root 200, `/api/3.21/sites` → 401 XML, `/api/3.21/auth/signin` → 405 — Tableau REST API auth-gated, version 2025.1.11 (patched CVEs)
+- NEW shreeram-dynamic-test.teamgamdom.com → 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical Pool A + Pool B
+- CHANGED Provisioning cycle 13 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+- CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle

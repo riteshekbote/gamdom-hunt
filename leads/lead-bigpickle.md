@@ -2371,3 +2371,145 @@ impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate reg
 testability: PASSIVE + monitoring
 [NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth 2>/dev/null | grep -i HTTP; curl -sS -I "https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email" 2>/dev/null | grep -iE "HTTP|location"` — poll alias cert-landing (falsifier for MISCONFIG), oauth2 gate integrity, and fingerprint the public Google consent screen (app display name / org) as new passive lead.
 [RISK] gamdom: 74 — No new exploitable chain. Cross-brand replay (70) unchanged and AUTH_HELPED-gated; oauth2 stack proven airtight at edge (no unauthenticated health/metrics surface, rd sanitized) so rear-secrets exposure risk eases while the domain-scoped-cookie pivot still hinges on an unproven subdomain trigger (kargo SPA). Pending-alias misbinding (50) persists 14th cycle. Leverage unknown without a live credential or an XSS trigger; risk steady at 74.
+## 2026-09-12 01:35:32 UTC [target] (model bigpickle)
+asset: oauth2-proxy.teamgamdom.com + grafana/prometheus/vault/alertmanager
+reasoning: `_oauth2_proxy_csrf` scoped `Domain=teamgamdom.com; Path=/` reaches every subdomain incl. direct-origin kargo (77.42.9.222); authenticated `_oauth2_proxy_*` session cookie will share that scope; Vault/Grafana/Prometheus/Alertmanager are high-value; but edge gate is uniform 302+401, OAuth state target cannot be tampered via XFH/XFP, no XSS host found on domain yet
+impact: session pivot to internal Vault+observability stack; critical if triggered
+[NEXT] PROBE: extended oauth2-proxy surface watch — add `curl -sS -o /dev/null -w "%{http_code}" https://oauth2-proxy.teamgamdom.com/oauth2/auth` + `vault|grafana|prometheus|alertmanager.teamgamdom.com/` to the cycle watchlist; the falsification points are any non-302/non-401 response on the protected vhosts (auth_request bypass) and any pending alias (80001/80002/90472/90473/90475/90480/90482/90488) going non-421.
+[RISK] gamdom: 73 — No delta on the flagship: cross-brand replay (70) unchanged, AUTH_HELPED-gated, 14-cycle origin integrity. Discovery of oauth2-proxy (Vault/Grafana/Prometheus/Alertmanager) on teamgamdom raises latent infosec value but gate is currently airtight at edge and header-tamper-proof — watch-subject only. Split-pipeline misbinding (50) persists 14th cycle. Risk steady at 73.
+asset: oauth2-proxy.teamgamdom.com (+ vault/grafana/prometheus/alertmanager)
+impact: session pivot to Vault+observability stack; critical when combined with any subdomain XSS/takeover; exercised session cookie (HttpOnly) limits to credentialed-request relay
+[RISK] gamdom: 74 — No delta on flagship (cross-brand replay 70, 14-cycle origin integrity; AUTH_HELPED). teamgamdom lateral: discovered live Vault/Grafana/Prometheus/Alertmanager behind a single functional oauth2-proxy whose session cookie is domain-scoped (HttpOnly prevents direct theft but any subdomain XSS/takeover becomes a pivot for credentialed-request relay); kargo stands ungated but data-less. No working exploit chain; risk +1 for the new rear-secrets exposure surface.
+impact: credentialed-request relay to Vault+Grafana+Prometheus+Alertmanager; critical if triggered
+[HYP] Domain-wide oauth2-proxy session cookie pivots across every *.teamgamdom.com service on auth
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+ vault/grafana/prometheus/alertmanager)
+confidence: 45
+reasoning: `_oauth2_proxy_csrf` observed Domain=teamgamdom.com Path=/ HttpOnly Secure → session cookie `_oauth2_proxy_*` will share that scope and be sent to all subdomains incl. direct-origin kargo; gate endpoints functional (401 auth_request, 302 OAuth, sanitized rd); 5 gated vhosts; no script-capable host or takeover candidate found on domain yet
+evidence_needed: valid `_oauth2_proxy` session cookie reachable from a compromiseable subdomain; or any XSS on *.teamgamdom.com
+verify_steps: AUTH_HELPED only — `curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth` stays 401; watch all 5 vhosts + kargo SPA for gate-scope change
+impact: session pivot to Vault+observability stack; critical when combined with any subdomain XSS/takeover; exercised session cookie (HttpOnly) limits to credentialed-request relay
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: /api/auth/login and /auth/login verified 404 with only host-only gd-lang on both brands this cycle; /client-api md5 7e3a161d byte-identical across 80008/80009/fatbets re-verified; single Starlette identity/wallet backend; site-bound cookies unobservable pre-auth
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 90472 re-checked 421 this cycle; 15th cycle all 8 aliases 421 while 80008/80009 rotations went live in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-auth nginx test backend (shreeram confirmed 401)
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth | grep -iE "HTTP/|www-authenticate"` — poll alias cert-landing (falsifier for MISCONFIG) + oauth2 gate integrity each cycle.
+[RISK] gamdom: 74 — No delta on flagship (cross-brand replay 70, 14-cycle origin integrity; AUTH_HELPED). teamgamdom lateral: discovered live Vault/Grafana/Prometheus/Alertmanager behind a single functional oauth2-proxy whose session cookie is domain-scoped (HttpOnly prevents direct theft but any subdomain XSS/takeover becomes a pivot for credentialed-request relay); kargo stands ungated but data-less. No working exploit chain; risk +1 for the new rear-secrets exposure surface.
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one
+class: AUTH
+asset: fatbets.com/client-api
+confidence: 70
+reasoning: /client-api md5 7e3a161d byte-identical across all 6 live hosts this cycle (re-verified 4 hosts); single Starlette identity/wallet backend; only host-only gd-lang observable pre-auth
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://fatbets.com/client-api` stayed 400
+impact: ATO across 3 brands / 21+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Domain-wide oauth2-proxy session cookie pivots via any *.teamgamdom.com host, incl. fully-ungated kargo Monaco SPA
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+kargo.teamgamdom.com as trigger host)
+confidence: 45
+reasoning: _oauth2_proxy_csrf Domain=teamgamdom.com; session _oauth2_proxy cookie will share scope; gate uniform 302 across all probed backend paths (incl. health/metrics) so no unauthenticated backend data; kargo is 200-ungated JS-heavy Monaco SPA — a script-capable host on the same cookie domain is the only realistic trigger
+evidence_needed: valid _oauth2_proxy session cookie observed from any subdomain context; or any XSS/taint on kargo SPA
+verify_steps: AUTH_HELPED only — watch kargo SPA hash + oauth2 /oauth2/auth 401 each cycle
+impact: credentialed-request relay to Vault+Grafana+Prometheus+Alertmanager; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding to shreeram Basic-gated backend
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 14th+ cycle all 8 aliases 421 while 80008/80009 rotations landed certs in 48h — split 8000x vs 9047x pipeline persists; 90488 uniquely pins to Basic-auth nginx test backend
+evidence_needed: any pending alias returns non-421; or shreeram gate-scope regression
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://shreeram-dynamic-test.teamgamdom.com/`
+impact: brand DNS → internal Basic-auth nginx backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth 2>/dev/null | grep -i HTTP; curl -sS -I "https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email" 2>/dev/null | grep -iE "HTTP|location"` — poll alias cert-landing (falsifier for MISCONFIG), oauth2 gate integrity, and fingerprint the public Google consent screen (app display name / org) as new passive lead.
+[RISK] gamdom: 74 — No new exploitable chain. Cross-brand replay (70) unchanged and AUTH_HELPED-gated; oauth2 stack proven airtight at edge (no unauthenticated health/metrics surface, rd sanitized) so rear-secrets exposure risk eases while the domain-scoped-cookie pivot still hinges on an unproven subdomain trigger (kargo SPA). Pending-alias misbinding (50) persists 14th cycle. Leverage unknown without a live credential or an XSS trigger; risk steady at 74.
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one + perabet
+class: AUTH
+asset: perabet.com/client-api
+confidence: 72
+reasoning: perabet.com on Fastly Pool A (151.101.x.52); /client-api 400 body md5 7e3a161d byte-identical to gamdom/fatbets/gamdom.one this cycle; /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" identical; root sets identical host-only gd-lang cookie; seed = CT discovery of perabet-clickhouse.teamgamdom.com — 4th brand on single Starlette identity/wallet backend
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://perabet.com/client-api` stayed 400
+impact: ATO across 4 brands / 22+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Tableau Services Manager console (tableau-admin) exposes unauthenticated manage surface
+class: AUTH
+asset: tableau-admin.teamgamdom.com
+confidence: 40
+reasoning: root 200 "Login - Tableau Services Manager" (TSM) served NOT behind oauth2 (Fastly, X-Frame-Options DENY); /vib/api 401, /vib /vib/relics /vib/admin /vibsession /config /version 403 at edge; JS lib versions only (react 16.13.1), Tableau version not directly leaked; tableau.teamgamdom.com serverInfo already pinned 2025.1.11 (patched CVE-2025-52449/52455)
+evidence_needed: any TSM API path responding 200/404-variant vs 403 (edge allow-list regress), or CVE applicable to 2025.1.11 TSM with pre-auth reach
+verify_steps: PASSIVE — watch /vib/api/* and /api/v0 status drift; version-banner now derive-on-auth only
+impact: TSM governs Tableau Server cluster config/secrets; node takeover if manage API ever ungated
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm gated fleet (shreeram-dynamic-test/devsrv5/stagsrv)
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 16th cycle all 8 aliases 421; CT proves additional nginx Basic realm="secret" vhosts devsrv5 + stagsrv (401 identical, server: nginx) — misbinding pool widened beyond shreeram; 8000x vs 9047x pipeline split persists
+evidence_needed: any pending alias returns non-421; or any of the 3 gated hosts regresses from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2-proxy session cookie pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+clickhouse/perabet-clickhouse/inteligance newly confirmed behind same gate)
+confidence: 45
+reasoning: _oauth2_proxy_csrf Domain=teamgamdom.com; vault/grafana/prometheus/alertmanager/inteligance/clickhouse/perabet-clickhouse all 302→same Google client 696342781525 (redirect_uri oauth2-proxy.teamgamdom.com/oauth2/callback); no trigger host (XSS/takeover) found; kargo SPA remains only ungated script-capable host
+evidence_needed: valid session cookie in a compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED only — watch kargo SPA hash + oauth2 /oauth2/auth 401 each cycle
+impact: credentialed-request relay to Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " https://gamdom$a.com/client-api; done; echo; curl -sS -o /dev/null -w "%{http_code}" https://tableau-admin.teamgamdom.com/vib/api/; curl -sS -o /dev/null -w "%{http_code}" https://perabet.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/` — poll alias cert-landing (falsifier for MISCONFIG), TSM gate stability, perabet origin signature, and secret-realm fleet integrity.
+[RISK] gamdom: 74 — 4th brand (perabet) confirmed on shared identity/wallet origin → cross-brand replay pool widens, confidence 70→72 but still AUTH_HELPED-gated (no credential to replay). All newly CT-derived teamgamdom vhosts are gated (oauth2 302 or Basic 401 or inert placeholder); tableau-admin TSM is a self-gated login, inventory only. No working exploit chain; risk steady at 74.
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across Gamdom + fatbets + gamdom.one + perabet
+class: AUTH
+asset: perabet.com/client-api
+confidence: 72
+reasoning: perabet.com on Pool A; /client-api 400 body md5 7e3a161d byte-identical; /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" identical; root sets identical host-only gd-lang; seeded by CT-hit perabet-clickhouse.teamgamdom.com — 4th brand on single Starlette identity/wallet backend
+evidence_needed: authenticated Set-Cookie from one brand + replay POST to another
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://perabet.com/client-api` stayed 400
+impact: ATO across 4 brands / 22+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Tableau Services Manager console unrestricted manage surface
+class: AUTH
+asset: tableau-admin.teamgamdom.com
+confidence: 40
+reasoning: root 200 TSM login NOT behind oauth2; /vib/api 401, /vib /vib/relics /vib/admin /vibsession /config /version 403 at edge; serverInfo pinned 2025.1.11 (CVE-2025-52449/52455 patched); no version in login bundle beyond JS libs
+evidence_needed: any TSM path drifting from 403/401, or pre-auth CVE reachable on 2025.1.11
+verify_steps: PASSIVE drift watch on /vib/api/* and /api/v0
+impact: TSM governs Tableau cluster config/secrets; node compromise if ungated
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm gated fleet
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; fleet 80001/80002/90472/90473/90475/90480/90482
+confidence: 50
+reasoning: 16th cycle all 421; CT proves 2 more Basic realm="secret" nginx vhosts (devsrv5, stagsrv) — misbinding pool widened; 8000x/9047x pipeline split persists
+evidence_needed: any alias non-421; or any of the 3 gated hosts regressing from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2-proxy session cookie pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+clickhouse/perabet-clickhouse/inteligance behind same gate)
+confidence: 45
+reasoning: 7 gated vhosts all 302→same Google client with redirect_uri oauth2-proxy.teamgamdom.com/oauth2/callback; _oauth2_proxy_csrf Domain=teamgamdom.com; no trigger host (kargo SPA only ungated script-capable host)
+evidence_needed: session cookie in compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED only — watch kargo hash + /oauth2/auth 401 each cycle
+impact: credentialed-request relay to Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED

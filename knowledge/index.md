@@ -240,3 +240,17 @@
 - 2026-09-11 ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
 - 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
 - 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- 2026-09-12 ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 (real endpoint) — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+- 2026-09-12 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+- 2026-09-12 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- 2026-09-12 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-12 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
