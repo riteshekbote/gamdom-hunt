@@ -18526,3 +18526,95 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 77 — unchanged fleet + all gates hold (421×8, secret-realm 401×3, oauth2 401, md5 7e3a161d stable, no rotation) marginally lowers realized risk from 78; residual driver remains the 4-brand/24+-host shared identity origin where the 76-confidence cookie-replay hypothesis has no passive falsifier, plus 8 dormant aliases parked over a live misbinding fixture; no exploitable chain this cycle.
+===== ANALYST bigpickle 2026-09-12 21:43:07 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 8 https://gamdom$a.com/client-api)"; done; echo; printf "shreeram:%s stagsrv.t:%s stagsrv.p:%s\n" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://shreeram-dynamic-test.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://stagsrv.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://stagsrv.perabet.com/)"
+80001:421 80002:421 90472:421 90473:421 90475:421 90480:421 90482:421 90488:421 
+shreeram:401 stagsrv.t:401 stagsrv.p:401
+[0m
+[0m$ [0mfor h in petagiri.com perabetgiris.com giris.perabet.com api.perabet.com login.perabet.com app.perabet.com my.perabet.com secure.perabet.com play.petagiri.com; do ip=$(dig +short $h | head -1); code=$(curl -sS -k -o /tmp/bod -w '%{http_code}' --max-time 6 https://$h/client-api 2>/dev/null); md5=$(md5sum < /tmp/bod 2>/dev/null | cut -d' ' -f1); printf "%s:%s:%s:%s\n" "$h" "$ip" "$code" "$md5"; done
+/bin/bash: line 1: /tmp/bod: No such file or directory
+petagiri.com::000:
+perabetgiris.com:179.43.146.91:404:5f1b56779131b9517f44adb3768f41e5
+giris.perabet.com:217.23.12.109:404:9241a1d08e785373f618cf0f99fb03f8
+api.perabet.com::000:9241a1d08e785373f618cf0f99fb03f8
+login.perabet.com::000:9241a1d08e785373f618cf0f99fb03f8
+app.perabet.com::000:9241a1d08e785373f618cf0f99fb03f8
+my.perabet.com::000:9241a1d08e785373f618cf0f99fb03f8
+secure.perabet.com::000:9241a1d08e785373f618cf0f99fb03f8
+play.petagiri.com::000:9241a1d08e785373f618cf0f99fb03f8
+[0m
+[0m$ [0mcurl -sS --max-time 12 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | python3 -c "import sys,json;d=json.load(sys.stdin);print(sorted(d['heartbeatList'].keys()))" 2>/dev/null; echo "---hub---"; curl -sS --max-time 12 https://gamdom-girisi.com 2>/dev/null | grep -io "gamdom[0-9]*\.com" | sort | uniq -c
+['13', '2', '221', '223', '3', '5', '6']
+---hub---
+     17 gamdom90471.com
+[0m
+[0m$ [0mfor h in gamdom.com perabet.com gamdom80008.com gamdom80009.com gamdom80003.com; do printf "%s:%s " "$h" "$(curl -sS -k --max-time 8 https://$h/client-api | md5sum | cut -d' ' -f1)"; done; echo; printf "gd-lang drift check perabet:"; curl -sSI --max-time 8 https://perabet.com/ | grep -i set-cookie; printf "gamdom80009:"; curl -sSI --max-time 8 https://gamdom80009.com/ | grep -i set-cookie
+gamdom.com:7e3a161d6cde2700fcdc0f6be4520745 perabet.com:7e3a161d6cde2700fcdc0f6be4520745 gamdom80008.com:7e3a161d6cde2700fcdc0f6be4520745 gamdom80009.com:7e3a161d6cde2700fcdc0f6be4520745 gamdom80003.com:7e3a161d6cde2700fcdc0f6be4520745 
+gd-lang drift check perabet:set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 21:37:02 GMT
+gamdom80009:set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 21:37:03 GMT
+[0m
+[0m$ [0mprintf "petagiri:"; dig +short petagiri.com | head -1; for h in perabetgiris.com giris.perabet.com; do ip=$(dig +short $h | head -1); printf "%s ip=%s " "$h" "$ip"; curl -sS -k --max-time 6 https://$h/ | md5sum | cut -d' ' -f1; printf " body-md5(root-clientapi):"; curl -sS -k --max-time 6 https://$h/client-api | md5sum | cut -d' ' -f1; echo " clientsig?"; done
+petagiri:perabetgiris.com ip=179.43.146.91 6d0b50944b9535d787575f687cfa743c
+ body-md5(root-clientapi):5f1b56779131b9517f44adb3768f41e5
+ clientsig?
+giris.perabet.com ip=217.23.12.109 79edf2d8c160471cfffb7f2c97d425fd
+ body-md5(root-clientapi):9241a1d08e785373f618cf0f99fb03f8
+ clientsig?
+[0m
+NO_DELTA on all monitored surfaces. See findings below.
+
+STEP 1 — DELTA
+- [CHANGED] Perabet family breadth probed: giris.perabet.com + perabetgiris.com resolve to non-Fastly IPs (217.23.12.109, 179.43.146.91) serving distinct 404 bodies (md5 5f1b.../9241a...) — NOT shared-origin carriers; family pool closed at apex/www/beta.
+- [ADDED] All other monitored surfaces byte-identical to last cycle: 8 aliases 421, secret-realm gate 401×3, Kuma 7 monitors, SEO hub 17×90471, /client-api md5 7e3a161d×5, gd-lang cookie attributes uniform (no Domain attr drift).
+
+STEP 2 — PRIORITIZE
+- [PRIO] perabet.com/client-api,9.0,shared identity/wallet origin across 4 brands (attack_surface=9,business=10,tech=8,gate=9,cloud=9,fresh=9)
+- [PRIO] stagsrv.perabet.com+shreeram secret-realm fixture,7.6,live test-backend vhosts over 2 brand TLDs (a=8,b=7,t=7,g=8,c=7,f=8)
+- [PRIO] oauth2-proxy.teamgamdom.com,6.9,domain-scoped SSO over 6 gated backends (a=6,b=8,t=8,g=6,c=6,f=7)
+
+STEP 3 — HYPOTHESES
+- [HYP] Provisioned alias cert lands with origin misbinding onto secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com (8 pending aliases)
+confidence: 52
+reasoning: 15th consecutive cycle all 8 aliases 421/TLS-NOMATCH — cert ops stalled not cancelled (prior 80007→80008, 80006→80009 rotations prove pipeline live); secret-realm fixture confirmed serving uniform 401 on 3 vhosts / 2 TLDs this cycle incl. perabet; no vhost regression observed.
+evidence_needed: any pending alias non-421; or any secret-realm vhost drops from 401; or a brand host serves the 172B fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+- [HYP] Cross-brand auth cookie replay yields ATO via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: /client-api md5 7e3a161d byte-identical this cycle on all 5 sampled hosts across Pool A+B; gd-lang host-only cookie (no Domain, no SameSite/HttpOnly) attributes uniform this cycle; no Set-Cookie Domain drift observed → backend-origin replay stays the only vector, unchanged.
+evidence_needed: authenticated Set-Cookie on any brand/mirror with POST replay accepted on sibling; or Domain/SameSite attr drift observed
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; drift-watch Set-Cookie attrs across brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+- [HYP] Domain-wide oauth2 session pivot via *.teamgamdom.com (redirect_uri/state abuse)
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + 6 gated backends (clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 46
+reasoning: _oauth2_proxy_csrf Domain=teamgamdom.com; HttpOnly; Secure confirms domain-scoped SSO; /oauth2/auth 401 real; all 6 backends 302→SSO; only script-capable ungated host kargo is uniform SPA catch-all (no XSS surface); jq-TOKEN redirect_uri exchange needs authenticated flow.
+evidence_needed: session cookie in compromiseable subdomain context, XSS on kargo SPA, or redirect_uri validation anomaly in HUMAN-orchestrated consent flow
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + fleet status; flag non-Google callback on /oauth2/start
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] alias-misbinding-on-secret-realm: no cert movement for 15 cycles; passive falsifier runs every cycle, confidence stable at 52 — wait-for-condition, not promotable.
+- [PARKED] oauth2 redirect_uri pivot: requires authenticated gated flow; no passive signal this cycle — downgrade to watch.
+- [FINAL] cross-brand cookie replay (76, AUTH_HELPED) — highest-value, no passive falsifier, risk bearer.
+- [FINAL] alias cert misbinding (52, PASSIVE) — the only actively-monitored falsifiable chain.
+
+STEP 5 — NEXT ACTION
+- [NEXT] PROBE: cert-landing + fixture-gate + rotation in one passive batch — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 8 https://gamdom$a.com/client-api)"; done; printf "shreeram:%s stagsrv.t:%s stagsrv.p:%s " "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://shreeram-dynamic-test.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://stagsrv.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://stagsrv.perabet.com/)"; curl -sS --max-time 12 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | python3 -c "import sys,json;print(sorted(json.load(sys.stdin)['heartbeatList'].keys()))"` — 16th-cycle falsifier for the only actively-trending chain.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ giris.perabet.com/perabetgiris.com: custom 404 bodies (md5 5f1b.../9241a...) on non-Fastly IPs 217.23.12.109/179.43.146.91 — NOT shared-origin carriers; perabet brand breadth closes at apex/www/beta (4-brand / 25+ host pool unchanged).
+
+STEP 7 — RISK
+- [RISK] gamdom: 76 — perabet-brand breadth probe returned all-negative (family closed at 3 hosts), gd-lang policy uniform (no Domain drift), secret-realm gate holds 401×3, 8 aliases still dormant 421 (15th cycle), Kuma 7 monitors + SEO hub 17×90471 unchanged, pool signature byte-identical across Pool A+B. No exploitable chain; residual driver remains the 76-confidence cross-brand cookie-replay hypothesis over a 4-brand / 25+-host shared identity origin (no passive falsifier), plus a persistent un-mitigated cert pipeline parked over a live misbinding fixture.
