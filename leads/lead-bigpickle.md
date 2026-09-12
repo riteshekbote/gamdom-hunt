@@ -2699,3 +2699,42 @@ impact: credentialed relay into Vault+observability+ClickHouse; critical if trig
 testability: AUTH_HELPED
 [NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 6 https://gamdom$a.com/client-api)"; done; printf "shreeram:%s stagsrv.t:%s stagsrv.p:%s " "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://shreeram-dynamic-test.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://stagsrv.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://stagsrv.perabet.com/)"; curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | python3 -c "import sys,json;print(sorted(json.load(sys.stdin)['heartbeatList'].keys()))"` — poll alias cert-landing falsifier + secret-realm gate + Kuma rotation in one pass.
 [RISK] gamdom: 78 — stagsrv.perabet.com proves the internal "secret"-realm nginx fixture completes TLS and serves publicly on Pool A across 2 brand TLDs, materially widening the real (not hypothetical) alias-misbinding pool and adding a live test-backend asset to the 4-brand fleet; cross-brand cookie replay pool stable, all gates hold (AUTH_HELPED credential replay, 15th 421 cycle, oauth2/Basic/TSM intact). No exploitable chain — nominal +1 for widened live misbinding surface.
+## 2026-09-12 19:27:38 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: /client-api md5 7e3a161d byte-identical this cycle on gamdom.com/perabet.com/gamdom80009.com; gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform across 4 brands; oauth2/auth 401 confirms brand-adjacent SSO exists as separate realm — replay vector is backend origin, unchanged.
+evidence_needed: authenticated Set-Cookie on any brand/mirror with POST replay accepted on sibling; or Domain/SameSite attr drift observed
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; drift-watch Set-Cookie attrs across 4 brands each cycle
+impact: ATO + wallet across 4 brands / 24+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Brand alias cert lands misbound onto live "secret"-realm nginx test-backend fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com (8 pending aliases)
+confidence: 52
+reasoning: 15th cycle all 8 aliases 421 — cert ops stalled, not cancelled (prior 8000x rotations prove pipeline live); secret-realm fixture now confirmed serving 401 on 3 vhosts / 2 TLDs incl. perabet; CT shows the Basic 5049a8.../"secret" vhosts as the misbinding pool; no observable regression this cycle.
+evidence_needed: any pending alias non-421; or any secret-realm vhost regresses from 401; or a brand host serves the 172B fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2 session pivots via any *.teamgamdom.com host (OAuth redirect_uri/state abuse)
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + 6 gated backends (clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 46
+reasoning: oauth2/auth 401 (real endpoint) + _oauth2_proxy_csrf Domain=teamgamdom.com; HttpOnly; Secure observed on /oauth2/start → Google OAuth; all 6 backends 302→SSO; only ungated script-capable host kargo is uniform SPA catch-all (no XSS surface); passive evidence for redirect_uri jq-TOKEN man-in-middle pattern requires authenticated flow + consent timing, not observable pre-auth.
+evidence_needed: session cookie reachable in compromiseable subdomain context, or XSS on kargo SPA, or redirect_uri validation anomaly under a HUMAN-orchestrated consent flow
+verify_steps: AUTH_HELPED — watch kargo bundle hash + oauth2/auth 401 + oauth2 fleet status each cycle; flag any /oauth2/start response for non-Google callback
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto Starlette pool via Host-not-HN mismatch
+class: MISCONFIG
+asset: gamdom80001.com/gamdom80002.com (Pool B DNS, 421)
+confidence: 40
+reasoning: same CNAME→gamdom4567.com class as live mirrors; once cert lands, only SNI binding distinguishes from live fleet; Fastly 421 on forced-resolve shows MHL — server Name → required SNI validated, closing naive mismatch; reward limited (host would simply join live origin).
+evidence_needed: alias non-421 with /client-api signature differing from gamdom4567; or gd-lang bypass
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom80001.com/client-api` non-421
+impact: low (duplicate of live origin if correctly bound)
+testability: PASSIVE
+[NEXT] PROBE: perabet subdomain breadth for further shared-origin carriers + refresh cadence — `for h in petagiri.com perabetgiris.com giris.perabet.com api.perabet.com login.perabet.com app.perabet.com my.perabet.com secure.perabet.com play.petagiri.com; do printf "%s:%s:%s " "$h" "$(dig +short $h | head -1)" "$(curl -sS -k --max-time 5 https://$h/client-api | md5sum | cut -d' ' -f1)"; done` — any md5 7e3a161d hit widens the 4-brand trust pool (top AUTH asset) passively; all-empty = pool breadth closed, refocus on cadence falsifier.
+[RISK] gamdom: 77 — unchanged fleet + all gates hold (421×8, secret-realm 401×3, oauth2 401, md5 7e3a161d stable, no rotation) marginally lowers realized risk from 78; residual driver remains the 4-brand/24+-host shared identity origin where the 76-confidence cookie-replay hypothesis has no passive falsifier, plus 8 dormant aliases parked over a live misbinding fixture; no exploitable chain this cycle.

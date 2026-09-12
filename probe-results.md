@@ -302,3 +302,7 @@ https://devsrv5.teamgamdom.com/` -> HTTP 400
 https://stagsrv.teamgamdom.com/` -> ERR <urlopen error [Errno 104] Connection reset by pee
 https://shreeram-dynamic-test.teamgamdom.com/ -> HTTP 401
 https://stagsrv.teamgamdom.com/ -> HTTP 401
+
+## 2026-09-12 19:27:59 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
+https://stagsrv.teamgamdom.com/` -> HTTP 400

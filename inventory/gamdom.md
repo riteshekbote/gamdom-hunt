@@ -634,3 +634,13 @@ www.gamdom.com
 - CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
 - CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+
+## 2026-09-12 19:27:56 UTC
+- NEW perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) — byte-identical `/client-api` md5 7e3a161d, `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", host-only 
+- NEW `/client-api` POST returns identical `GamdomClientMessage` across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com)
+- NEW oauth2-proxy.teamgamdom.com `/oauth2/start` issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — Google OAuth SSO layer confirmed; session cookie likely domain-scoped enablin
+- CHANGED Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames via byte-identical `/client-api` signature
+- CHANGED Provisioning cycle 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only
+- CHANGED Kuma status page heartbeat: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
