@@ -17217,3 +17217,1232 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 - [RISK] gamdom: 76 — perabet brand stayed flat (tr.perabet.com is marketing front-end, NOT on shared origin → no pool growth); oauth2 fleet breadth confirmed but uniformly gated; alias fleet inert 15 cycles; beta/www/beta signature stable post-IP-shift. No exploitable chain — steady at 76.
+===== ANALYST bigpickle 2026-09-12 17:23:02 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && cat scope.yml 2>/dev/null | head -50
+total 372
+drwxr-xr-x 12 runner runner   4096 Sep 12 17:14 .
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:14 ..
+drwxr-xr-x  7 runner runner   4096 Sep 12 17:14 .git
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:14 .github
+-rw-r--r--  1 runner runner   1691 Sep 12 17:14 README.md
+-rw-r--r--  1 runner runner     32 Sep 12 17:14 analyst-out.txt
+-rw-r--r--  1 runner runner 140214 Sep 12 17:14 analyst-prompt.txt
+-rw-r--r--  1 runner runner 136433 Sep 12 17:14 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 leads
+-rw-r--r--  1 runner runner   9420 Sep 12 17:14 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 reports
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 12 17:14 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 scripts
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 triage
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+[0m$ [0mls art/ 2>/dev/null | head -30; echo "---"; cat art/lead_bigpickle.txt 2>/dev/null | head -40
+---
+[0m
+[0m$ [0mcat probe-results.md | tail -60; echo "===LEADS==="; ls leads/; echo "==="; cat leads/*.txt 2>/dev/null | tail -30
+https://kargo.teamgamdom.com/api/v1/clusters` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight` -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-11 16:02:20 UTC
+https://kargo.teamgamdom.com/api/v1/projects -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight -> HTTP 405
+https://gamdom.com/api/auth/login -> HTTP 404
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-11 19:03:24 UTC
+https://gamdom.com/api/auth/login -> HTTP 404
+https://kargo.teamgamdom.com/api/v1/projects -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+
+## 2026-09-11 21:56:36 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+
+## 2026-09-11 23:39:22 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email -> 200 len=?
+
+## 2026-09-12 01:46:39 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email -> 200 len=?
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://tableau-admin.teamgamdom.com/vib/api/ -> HTTP 401
+
+## 2026-09-12 06:30:33 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://tableau-admin.teamgamdom.com/vib/api/` -> HTTP 401
+
+## 2026-09-12 11:16:19 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://$c.teamgamdom.com/ -> ERR <urlopen error [Errno -2] Name or service not know
+
+## 2026-09-12 14:25:30 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+===LEADS===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+===
+[0m
+[0m$ [0mls knowledge/ recon-notes/ triage/ reports/ inventory/ scripts/; echo "==="; cat state_bigpickle.json
+inventory/:
+gamdom.md
+
+knowledge/:
+index.md
+
+recon-notes/:
+DEDICATED-DEEP.md
+
+reports/:
+analyst-bigpickle.log
+analyst-laguna.log
+analyst-ling3.log
+analyst-longcat.log
+analyst-nemotron3.log
+hypotheses-bigpickle.txt
+hypotheses-laguna.txt
+hypotheses-ling3.txt
+hypotheses-longcat.txt
+hypotheses-nemotron3.txt
+hypotheses.md
+valid-bugs.md
+
+scripts/:
+sync-issues.py
+
+triage/:
+run-2026-09-02-21-51.md
+run-2026-09-02-23-43.md
+run-2026-09-03-02-16.md
+run-2026-09-03-07-14.md
+run-2026-09-03-12-07.md
+run-2026-09-03-16-28.md
+run-2026-09-03-19-24.md
+run-2026-09-03-21-53.md
+run-2026-09-03-23-43.md
+run-2026-09-04-02-12.md
+run-2026-09-04-07-16.md
+run-2026-09-04-12-09.md
+run-2026-09-04-16-24.md
+run-2026-09-04-19-21.md
+run-2026-09-04-21-31.md
+run-2026-09-04-23-15.md
+run-2026-09-05-01-00.md
+run-2026-09-05-05-24.md
+run-2026-09-05-09-18.md
+run-2026-09-05-12-47.md
+run-2026-09-05-15-43.md
+run-2026-09-05-17-50.md
+run-2026-09-05-19-45.md
+run-2026-09-05-21-49.md
+run-2026-09-05-23-28.md
+run-2026-09-06-01-18.md
+run-2026-09-06-06-02.md
+run-2026-09-06-11-00.md
+run-2026-09-06-14-12.md
+run-2026-09-06-17-07.md
+run-2026-09-06-19-13.md
+run-2026-09-06-21-23.md
+run-2026-09-06-23-05.md
+run-2026-09-07-01-03.md
+run-2026-09-07-06-08.md
+run-2026-09-07-12-38.md
+run-2026-09-07-17-54.md
+run-2026-09-07-20-56.md
+run-2026-09-07-23-15.md
+run-2026-09-08-01-13.md
+run-2026-09-08-05-59.md
+run-2026-09-08-10-54.md
+run-2026-09-08-14-50.md
+run-2026-09-08-18-13.md
+run-2026-09-08-21-11.md
+run-2026-09-08-23-25.md
+run-2026-09-09-01-29.md
+run-2026-09-09-06-38.md
+run-2026-09-09-11-49.md
+run-2026-09-09-15-39.md
+run-2026-09-09-18-50.md
+run-2026-09-09-21-24.md
+run-2026-09-09-23-29.md
+run-2026-09-10-01-25.md
+run-2026-09-10-06-37.md
+run-2026-09-10-11-46.md
+run-2026-09-10-15-34.md
+run-2026-09-10-18-40.md
+run-2026-09-10-21-12.md
+run-2026-09-10-23-12.md
+run-2026-09-11-01-08.md
+run-2026-09-11-06-02.md
+run-2026-09-11-11-25.md
+run-2026-09-11-15-11.md
+run-2026-09-11-18-35.md
+run-2026-09-11-21-14.md
+run-2026-09-11-23-17.md
+run-2026-09-12-01-12.md
+run-2026-09-12-01-46.md
+run-2026-09-12-05-52.md
+run-2026-09-12-09-51.md
+run-2026-09-12-13-18.md
+run-2026-09-12-16-21.md
+===
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcat knowledge/index.md | tail -30; echo "===RECON==="; tail -50 recon-notes/DEDICATED-DEEP.md
+- 2026-09-11 ACCEPTED recon @ fatbets.com/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.one/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.com/socket.io: HTTP 403 "Forbidden: Invalid Origin" — Origin validation enforced
+- 2026-09-11 ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- 2026-09-12 ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 (real endpoint) — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+- 2026-09-12 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+- 2026-09-12 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- 2026-09-12 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-12 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-12 ACCEPTED recon @ beta.perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-12 ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
+- 2026-09-12 REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
+- 2026-09-12 ACCEPTED watch @ 8 pending aliases: 14th cycle all 421/TLS-NOMATCH — provisioning inactive
+- 2026-09-12 ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-12 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-12 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
+===RECON===
+# Dedicated deep surface (wildcard-filtered) 2026-09-03
+
+**Target:** `gamdom`
+**Root zones:** `gamdom.com`
+
+## Wildcard analysis
+
+- Total resolving hostnames in zone: 0
+- After shared/wildcard IP filtering: **0 genuinely dedicated hosts**
+- Reason: all resolving hostnames use shared/CDN/wildcard IP signatures
+
+## Honest conclusion
+
+This target's subdomain space is wildcard-dominated. No genuinely dedicated
+subdomain surface was recovered from passive brute + subfinder enumeration.
+The surface either (a) uses wildcard DNS records, (b) all CNAME records
+point to shared CDN/Cloudflare/CloudFront/AWS IPs, or (c) has no
+subdomain program at all. This is the honest exhaustive result.
+
+---
+_Honest framing: passive DNS enumeration + shared-IP wildcard filtering. No finding claimed. No active testing performed._
+[0m
+[0m$ [0mcat triage/run-2026-09-12-16-21.md 2>/dev/null | tail -40; echo "===NEXT==="; cat reports/hypotheses-bigpickle.txt 2>/dev/null | tail -30
+===== TRIAGE 2026-09-12 16:21:27 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+I see the LEADS section is empty. Please provide the probe results/leads you want me to evaluate against the 7-Question Gate, or let me know if there are lead files in the workspace I should examine.
+===NEXT===
+## 2026-09-12 14:14:51 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta, www, fatbets, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: beta/www perabet `/client-api` 400 md5 7e3a161d byte-identical after edge IP shift (151.101.67.52); gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform across 4 brands; tr.perabet.com is NOT on this origin (no signature, no cookie) — pool growth for this hyp is flat
+evidence_needed: authenticated Set-Cookie on any brand/mirror + POST replay accepted on sibling; or Domain/SameSite attr drift observed
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; passive drift watch for Set-Cookie attr change across 4 brands
+impact: ATO + wallet across 4 brands / 24+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm nginx fleet
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; 8 pending aliases
+confidence: 50
+reasoning: 15th cycle all 421/TLS-NOMATCH — cert ops stalled; CT proves 3 Basic realm="secret" vhosts (shreeram/devsrv5/stagsrv) as misbinding pool; 8000x/9047x pipeline split persists (no rotation → cert ops inactive)
+evidence_needed: any alias non-421; or any gated host regresses from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2 session pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+6 confirmed backends: clickhouse/perabet-clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 45
+reasoning: all 6 service hosts 302→SSO (gate holds), oauth2/auth 401 real endpoint; _oauth2_proxy_csrf Domain=teamgamdom.com; no trigger host — kargo SPA (only ungated script-capable host) is uniform SPA catch-all
+evidence_needed: session cookie reachable in a compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + oauth2 fleet status each cycle
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[0m
+[0m$ [0mcat > /tmp/opencode/probe.sh <<'EOF'
+#!/bin/bash
+probe() { curl -sS -o /dev/null -w "%{http_code}" --max-time 8 "$1" 2>&1; }
+echo "== aliases (421=TLS-NOMATCH, non-421=falsifier) =="
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  printf "%s:%s " "$a" "$(probe "https://gamdom$a.com/client-api")"; sleep 1
+done
+echo; echo "== perabet subdomain breadth =="
+for s in www beta api auth app my m tr blog; do
+  printf "%s:%s " "$s" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 --resolve $s.perabet.com:443:151.101.131.52 "https://$s.perabet.com/" 2>&1)"; sleep 1
+done
+echo
+EOF
+bash /tmp/opencode/probe.sh
+== aliases (421=TLS-NOMATCH, non-421=falsifier) ==
+80001:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80001.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 80002:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80002.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90472:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90473:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90473.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90475:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90475.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90480:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90480.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90482:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90482.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90488:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 
+== perabet subdomain breadth ==
+www:301 beta:200 api:500 auth:500 app:500 my:500 m:500 tr:500 blog:500
+[0m
+[0m$ [0mcat > /tmp/opencode/probe2.sh <<'EOF'
+#!/bin/bash
+# aliases with -k to distinguish 421 vs live
+echo "== aliases (-k) =="
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 8 "https://gamdom$a.com/client-api" 2>&1)"; sleep 1
+done
+echo; echo "== perabet natural DNS =="
+for s in perabet tr.perabet beta www; do
+  ip=$(dig +short A $s 2>/dev/null | head -1); printf "%s(%s):" "$s" "${ip:-NX}"; sleep 1
+done
+echo; echo "== oauth2 fleet breadth =="
+for c in clickhouse perabet-clickhouse inteligance grafana vault prometheus tableau-admin kargo oauth2-proxy; do
+  printf "%s:%s " "$c" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 "https://$c.teamgamdom.com/" 2>&1)"; sleep 1
+done
+echo; echo "== Kuma heartbeat =="
+curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | head -c 400
+echo
+EOF
+bash /tmp/opencode/probe2.sh
+== aliases (-k) ==
+80001:421 80002:421 90472:421 90473:421 90475:421 90480:421 90482:421 90488:421 
+== perabet natural DNS ==
+perabet(NX):tr.perabet(NX):beta(NX):www(NX):
+== oauth2 fleet breadth ==
+clickhouse:302 perabet-clickhouse:302 inteligance:302 grafana:302 vault:302 prometheus:302 tableau-admin:200 kargo:200 oauth2-proxy:302 
+== Kuma heartbeat ==
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-12 15:35:56.870","msg":"","ping":54},{"status":1,"time":"2026-09-12 15:37:56.929","msg":"","ping":55},{"status":1,"time":"2026-09-12 15:39:56.988","msg":"","ping":55},{"status":1,"time":"2026-09-12 15:41:57.047","msg":"","ping":51},{"status":1,"time":"2026-09-12 15:43:57.102","msg":"","ping":53},{"status":1,"time":"2026-09-12 15:45:57.160","msg":"
+[0m
+[0m$ [0mwhich dig curl; echo "---perabet apex---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://perabet.com/ 2>&1; echo "---beta---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://beta.perabet.com/ 2>&1; echo "---tr---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://tr.perabet.com/ 2>&1; echo "---client-api sig perabet---"; curl -sS --max-time 8 https://perabet.com/client-api -D - -o /tmp/opencode/perabet_client.txt 2>&1 | grep -iE "HTTP/|set-cookie" ; head -c 120 /tmp/opencode/perabet_client.txt; echo; echo "---client-api sig beta---"; curl -sS --max-time 8 https://beta.perabet.com/client-api -D - -o /dev/null 2>&1 | grep -iE "HTTP/|set-cookie"
+/usr/bin/dig
+/usr/bin/curl
+---perabet apex---
+code:200
+---beta---
+code:200
+---tr---
+code:200
+---client-api sig perabet---
+HTTP/2 400 
+Invalid request, only POST
+---client-api sig beta---
+HTTP/2 400
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | python3 -c "import sys,json; d=json.load(sys.stdin); hl=d['heartbeatList']; print('monitors:', {k: v[-1]['status'] for k,v in hl.items() if v}); print('count:', len(hl))" 2>&1; echo "---SEO hub---"; curl -sS --max-time 10 https://gamdom-girisi.com/ 2>&1 | grep -o 'gamdom9047[0-9]\.com' | sort | uniq -c
+monitors: {'2': 1, '3': 1, '5': 1, '6': 1, '13': 1, '221': 1, '223': 1}
+count: 7
+---SEO hub---
+     17 gamdom90471.com
+[0m
+[0m$ [0mecho "---tr client-api---"; curl -sS --max-time 8 https://tr.perabet.com/client-api -o /dev/null -w "code:%{http_code}\n" 2>&1; echo "---tr Set-Cookie (root)---"; curl -sS --max-time 8 https://tr.perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie|server|content-type" ; echo "---perabet apex Set-Cookie---"; curl -sS --max-time 8 https://perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie|content-type"; echo "---beta Set-Cookie---"; curl -sS --max-time 8 https://beta.perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie"; echo "---dig---"; dig +short perabet.com CNAME; dig +short beta.perabet.com CNAME; dig +short perabet.com A; dig +short beta.perabet.com A
+---tr client-api---
+code:404
+---tr Set-Cookie (root)---
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+---perabet apex Set-Cookie---
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 17:16:20 GMT
+---beta Set-Cookie---
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 17:16:20 GMT
+---dig---
+151.101.131.52
+151.101.195.52
+151.101.3.52
+151.101.67.52
+151.101.131.52
+151.101.195.52
+151.101.3.52
+151.101.67.52
+[0m
+[0m$ [0mecho "---gamdom.com client-api md5---"; curl -sS --max-time 8 https://gamdom.com/client-api -o /tmp/opencode/g.txt 2>/dev/null; md5sum /tmp/opencode/g.txt; echo "---perabet client-api md5---"; curl -sS --max-time 8 https://perabet.com/client-api -o /tmp/opencode/p.txt 2>/dev/null; md5sum /tmp/opencode/p.txt; echo "---diff---"; diff /tmp/opencode/g.txt /tmp/opencode/p.txt && echo IDENTICAL; echo "---health etag---"; for h in gamdom.com perabet.com beta.perabet.com; do printf "%s: " "$h"; curl -sSI --max-time 8 https://$h/health 2>/dev/null | grep -i etag; done
+---gamdom.com client-api md5---
+7e3a161d6cde2700fcdc0f6be4520745  /tmp/opencode/g.txt
+---perabet client-api md5---
+7e3a161d6cde2700fcdc0f6be4520745  /tmp/opencode/p.txt
+---diff---
+IDENTICAL
+---health etag---
+gamdom.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+perabet.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+beta.perabet.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sS --max-time 15 https://perabet.com/ -o /tmp/opencode/perabet_home.html 2>/dev/null; ls -la /tmp/opencode/perabet_home.html; grep -oE 'src="[^"]+\.js"' /tmp/opencode/perabet_home.html | head -5; grep -oE 'https://[a-z0-9.-]+\.(com|net|org|win|vip|io|eu|one|link|giris\.com)' /tmp/opencode/perabet_home.html | sort -u | head -40
+-rw-r--r-- 1 runner runner 47327 Sep 12 17:16 /tmp/opencode/perabet_home.html
+src="https://cdn.livechatinc.com/tracking.js"
+https://cdn.livechatinc.com
+https://perabet.com
+https://schema.org
+https://www.livechat.com
+https://www.youtube.com
+https://x.com
+[0m
+[0m$ [0mcat analyst-out.txt; echo "---git log---"; git log --oneline -3
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && cat scope.yml 2>/dev/null | head -50
+total 372
+drwxr-xr-x 12 runner runner   4096 Sep 12 17:14 .
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:14 ..
+drwxr-xr-x  7 runner runner   4096 Sep 12 17:14 .git
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:14 .github
+-rw-r--r--  1 runner runner   1691 Sep 12 17:14 README.md
+-rw-r--r--  1 runner runner     32 Sep 12 17:14 analyst-out.txt
+-rw-r--r--  1 runner runner 140214 Sep 12 17:14 analyst-prompt.txt
+-rw-r--r--  1 runner runner 136433 Sep 12 17:14 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 leads
+-rw-r--r--  1 runner runner   9420 Sep 12 17:14 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 reports
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 12 17:14 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 scripts
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:14 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:14 triage
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+[0m$ [0mls art/ 2>/dev/null | head -30; echo "---"; cat art/lead_bigpickle.txt 2>/dev/null | head -40
+---
+[0m
+[0m$ [0mcat probe-results.md | tail -60; echo "===LEADS==="; ls leads/; echo "==="; cat leads/*.txt 2>/dev/null | tail -30
+https://kargo.teamgamdom.com/api/v1/clusters` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages` -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight` -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-11 16:02:20 UTC
+https://kargo.teamgamdom.com/api/v1/projects -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight -> HTTP 405
+https://gamdom.com/api/auth/login -> HTTP 404
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-11 19:03:24 UTC
+https://gamdom.com/api/auth/login -> HTTP 404
+https://kargo.teamgamdom.com/api/v1/projects -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/applications -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/repositories -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/clusters -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/stages -> HTTP 405
+https://kargo.teamgamdom.com/api/v1/freight -> HTTP 405
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+
+## 2026-09-11 21:56:36 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+
+## 2026-09-11 23:39:22 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email -> 200 len=?
+
+## 2026-09-12 01:46:39 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://oauth2-proxy.teamgamdom.com/oauth2/auth` -> HTTP 400
+https://shreeram-dynamic-test.teamgamdom.com/` -> HTTP 400
+https://accounts.google.com/o/oauth2/v2/auth?client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https://oauth2-proxy.teamgamdom.com/oauth2/callback&response_type=code&scope=profile+email -> 200 len=?
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://tableau-admin.teamgamdom.com/vib/api/ -> HTTP 401
+
+## 2026-09-12 06:30:33 UTC
+https://gamdom.com/api/auth -> HTTP 404
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://tableau-admin.teamgamdom.com/vib/api/` -> HTTP 401
+
+## 2026-09-12 11:16:19 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+https://$c.teamgamdom.com/ -> ERR <urlopen error [Errno -2] Name or service not know
+
+## 2026-09-12 14:25:30 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
+https://devsrv5.teamgamdom.com/` -> HTTP 400
+===LEADS===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+===
+[0m
+[0m$ [0mls knowledge/ recon-notes/ triage/ reports/ inventory/ scripts/; echo "==="; cat state_bigpickle.json
+inventory/:
+gamdom.md
+
+knowledge/:
+index.md
+
+recon-notes/:
+DEDICATED-DEEP.md
+
+reports/:
+analyst-bigpickle.log
+analyst-laguna.log
+analyst-ling3.log
+analyst-longcat.log
+analyst-nemotron3.log
+hypotheses-bigpickle.txt
+hypotheses-laguna.txt
+hypotheses-ling3.txt
+hypotheses-longcat.txt
+hypotheses-nemotron3.txt
+hypotheses.md
+valid-bugs.md
+
+scripts/:
+sync-issues.py
+
+triage/:
+run-2026-09-02-21-51.md
+run-2026-09-02-23-43.md
+run-2026-09-03-02-16.md
+run-2026-09-03-07-14.md
+run-2026-09-03-12-07.md
+run-2026-09-03-16-28.md
+run-2026-09-03-19-24.md
+run-2026-09-03-21-53.md
+run-2026-09-03-23-43.md
+run-2026-09-04-02-12.md
+run-2026-09-04-07-16.md
+run-2026-09-04-12-09.md
+run-2026-09-04-16-24.md
+run-2026-09-04-19-21.md
+run-2026-09-04-21-31.md
+run-2026-09-04-23-15.md
+run-2026-09-05-01-00.md
+run-2026-09-05-05-24.md
+run-2026-09-05-09-18.md
+run-2026-09-05-12-47.md
+run-2026-09-05-15-43.md
+run-2026-09-05-17-50.md
+run-2026-09-05-19-45.md
+run-2026-09-05-21-49.md
+run-2026-09-05-23-28.md
+run-2026-09-06-01-18.md
+run-2026-09-06-06-02.md
+run-2026-09-06-11-00.md
+run-2026-09-06-14-12.md
+run-2026-09-06-17-07.md
+run-2026-09-06-19-13.md
+run-2026-09-06-21-23.md
+run-2026-09-06-23-05.md
+run-2026-09-07-01-03.md
+run-2026-09-07-06-08.md
+run-2026-09-07-12-38.md
+run-2026-09-07-17-54.md
+run-2026-09-07-20-56.md
+run-2026-09-07-23-15.md
+run-2026-09-08-01-13.md
+run-2026-09-08-05-59.md
+run-2026-09-08-10-54.md
+run-2026-09-08-14-50.md
+run-2026-09-08-18-13.md
+run-2026-09-08-21-11.md
+run-2026-09-08-23-25.md
+run-2026-09-09-01-29.md
+run-2026-09-09-06-38.md
+run-2026-09-09-11-49.md
+run-2026-09-09-15-39.md
+run-2026-09-09-18-50.md
+run-2026-09-09-21-24.md
+run-2026-09-09-23-29.md
+run-2026-09-10-01-25.md
+run-2026-09-10-06-37.md
+run-2026-09-10-11-46.md
+run-2026-09-10-15-34.md
+run-2026-09-10-18-40.md
+run-2026-09-10-21-12.md
+run-2026-09-10-23-12.md
+run-2026-09-11-01-08.md
+run-2026-09-11-06-02.md
+run-2026-09-11-11-25.md
+run-2026-09-11-15-11.md
+run-2026-09-11-18-35.md
+run-2026-09-11-21-14.md
+run-2026-09-11-23-17.md
+run-2026-09-12-01-12.md
+run-2026-09-12-01-46.md
+run-2026-09-12-05-52.md
+run-2026-09-12-09-51.md
+run-2026-09-12-13-18.md
+run-2026-09-12-16-21.md
+===
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcat knowledge/index.md | tail -30; echo "===RECON==="; tail -50 recon-notes/DEDICATED-DEEP.md
+- 2026-09-11 ACCEPTED recon @ fatbets.com/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.one/api/auth/login: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-11 ACCEPTED recon @ gamdom.com/socket.io: HTTP 403 "Forbidden: Invalid Origin" — Origin validation enforced
+- 2026-09-11 ACCEPTED recon @ gamdommirrors.com/socket.io: HTTP 200, SID issued with websocket upgrade — public status page socket accessible
+- 2026-09-11 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-11 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- 2026-09-12 ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+- 2026-09-12 ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 (real endpoint) — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+- 2026-09-12 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+- 2026-09-12 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- 2026-09-12 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 13th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-12 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-12 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-12 ACCEPTED recon @ beta.perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-12 ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
+- 2026-09-12 REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
+- 2026-09-12 ACCEPTED watch @ 8 pending aliases: 14th cycle all 421/TLS-NOMATCH — provisioning inactive
+- 2026-09-12 ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-12 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-12 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin
+- 2026-09-12 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
+- 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
+===RECON===
+# Dedicated deep surface (wildcard-filtered) 2026-09-03
+
+**Target:** `gamdom`
+**Root zones:** `gamdom.com`
+
+## Wildcard analysis
+
+- Total resolving hostnames in zone: 0
+- After shared/wildcard IP filtering: **0 genuinely dedicated hosts**
+- Reason: all resolving hostnames use shared/CDN/wildcard IP signatures
+
+## Honest conclusion
+
+This target's subdomain space is wildcard-dominated. No genuinely dedicated
+subdomain surface was recovered from passive brute + subfinder enumeration.
+The surface either (a) uses wildcard DNS records, (b) all CNAME records
+point to shared CDN/Cloudflare/CloudFront/AWS IPs, or (c) has no
+subdomain program at all. This is the honest exhaustive result.
+
+---
+_Honest framing: passive DNS enumeration + shared-IP wildcard filtering. No finding claimed. No active testing performed._
+[0m
+[0m$ [0mcat triage/run-2026-09-12-16-21.md 2>/dev/null | tail -40; echo "===NEXT==="; cat reports/hypotheses-bigpickle.txt 2>/dev/null | tail -30
+===== TRIAGE 2026-09-12 16:21:27 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+I see the LEADS section is empty. Please provide the probe results/leads you want me to evaluate against the 7-Question Gate, or let me know if there are lead files in the workspace I should examine.
+===NEXT===
+## 2026-09-12 14:14:51 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta, www, fatbets, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: beta/www perabet `/client-api` 400 md5 7e3a161d byte-identical after edge IP shift (151.101.67.52); gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform across 4 brands; tr.perabet.com is NOT on this origin (no signature, no cookie) — pool growth for this hyp is flat
+evidence_needed: authenticated Set-Cookie on any brand/mirror + POST replay accepted on sibling; or Domain/SameSite attr drift observed
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; passive drift watch for Set-Cookie attr change across 4 brands
+impact: ATO + wallet across 4 brands / 24+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands with origin misbinding onto "secret"-realm nginx fleet
+class: MISCONFIG
+asset: gamdom90488.com → shreeram-dynamic-test.teamgamdom.com; 8 pending aliases
+confidence: 50
+reasoning: 15th cycle all 421/TLS-NOMATCH — cert ops stalled; CT proves 3 Basic realm="secret" vhosts (shreeram/devsrv5/stagsrv) as misbinding pool; 8000x/9047x pipeline split persists (no rotation → cert ops inactive)
+evidence_needed: any alias non-421; or any gated host regresses from 401
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://devsrv5.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2 session pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+6 confirmed backends: clickhouse/perabet-clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 45
+reasoning: all 6 service hosts 302→SSO (gate holds), oauth2/auth 401 real endpoint; _oauth2_proxy_csrf Domain=teamgamdom.com; no trigger host — kargo SPA (only ungated script-capable host) is uniform SPA catch-all
+evidence_needed: session cookie reachable in a compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + oauth2 fleet status each cycle
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[0m
+[0m$ [0mcat > /tmp/opencode/probe.sh <<'EOF'
+#!/bin/bash
+probe() { curl -sS -o /dev/null -w "%{http_code}" --max-time 8 "$1" 2>&1; }
+echo "== aliases (421=TLS-NOMATCH, non-421=falsifier) =="
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  printf "%s:%s " "$a" "$(probe "https://gamdom$a.com/client-api")"; sleep 1
+done
+echo; echo "== perabet subdomain breadth =="
+for s in www beta api auth app my m tr blog; do
+  printf "%s:%s " "$s" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 --resolve $s.perabet.com:443:151.101.131.52 "https://$s.perabet.com/" 2>&1)"; sleep 1
+done
+echo
+EOF
+bash /tmp/opencode/probe.sh
+== aliases (421=TLS-NOMATCH, non-421=falsifier) ==
+80001:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80001.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 80002:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom80002.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90472:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90472.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90473:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90473.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90475:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90475.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90480:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90480.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90482:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90482.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 90488:curl: (60) SSL: no alternative certificate subject name matches target host name 'gamdom90488.com'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 
+== perabet subdomain breadth ==
+www:301 beta:200 api:500 auth:500 app:500 my:500 m:500 tr:500 blog:500
+[0m
+[0m$ [0mcat > /tmp/opencode/probe2.sh <<'EOF'
+#!/bin/bash
+# aliases with -k to distinguish 421 vs live
+echo "== aliases (-k) =="
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 8 "https://gamdom$a.com/client-api" 2>&1)"; sleep 1
+done
+echo; echo "== perabet natural DNS =="
+for s in perabet tr.perabet beta www; do
+  ip=$(dig +short A $s 2>/dev/null | head -1); printf "%s(%s):" "$s" "${ip:-NX}"; sleep 1
+done
+echo; echo "== oauth2 fleet breadth =="
+for c in clickhouse perabet-clickhouse inteligance grafana vault prometheus tableau-admin kargo oauth2-proxy; do
+  printf "%s:%s " "$c" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 "https://$c.teamgamdom.com/" 2>&1)"; sleep 1
+done
+echo; echo "== Kuma heartbeat =="
+curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | head -c 400
+echo
+EOF
+bash /tmp/opencode/probe2.sh
+== aliases (-k) ==
+80001:421 80002:421 90472:421 90473:421 90475:421 90480:421 90482:421 90488:421 
+== perabet natural DNS ==
+perabet(NX):tr.perabet(NX):beta(NX):www(NX):
+== oauth2 fleet breadth ==
+clickhouse:302 perabet-clickhouse:302 inteligance:302 grafana:302 vault:302 prometheus:302 tableau-admin:200 kargo:200 oauth2-proxy:302 
+== Kuma heartbeat ==
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-12 15:35:56.870","msg":"","ping":54},{"status":1,"time":"2026-09-12 15:37:56.929","msg":"","ping":55},{"status":1,"time":"2026-09-12 15:39:56.988","msg":"","ping":55},{"status":1,"time":"2026-09-12 15:41:57.047","msg":"","ping":51},{"status":1,"time":"2026-09-12 15:43:57.102","msg":"","ping":53},{"status":1,"time":"2026-09-12 15:45:57.160","msg":"
+[0m
+[0m$ [0mwhich dig curl; echo "---perabet apex---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://perabet.com/ 2>&1; echo "---beta---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://beta.perabet.com/ 2>&1; echo "---tr---"; curl -sS -o /dev/null -w "code:%{http_code}\n" --max-time 8 https://tr.perabet.com/ 2>&1; echo "---client-api sig perabet---"; curl -sS --max-time 8 https://perabet.com/client-api -D - -o /tmp/opencode/perabet_client.txt 2>&1 | grep -iE "HTTP/|set-cookie" ; head -c 120 /tmp/opencode/perabet_client.txt; echo; echo "---client-api sig beta---"; curl -sS --max-time 8 https://beta.perabet.com/client-api -D - -o /dev/null 2>&1 | grep -iE "HTTP/|set-cookie"
+/usr/bin/dig
+/usr/bin/curl
+---perabet apex---
+code:200
+---beta---
+code:200
+---tr---
+code:200
+---client-api sig perabet---
+HTTP/2 400 
+Invalid request, only POST
+---client-api sig beta---
+HTTP/2 400
+[0m
+[0m$ [0mcurl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | python3 -c "import sys,json; d=json.load(sys.stdin); hl=d['heartbeatList']; print('monitors:', {k: v[-1]['status'] for k,v in hl.items() if v}); print('count:', len(hl))" 2>&1; echo "---SEO hub---"; curl -sS --max-time 10 https://gamdom-girisi.com/ 2>&1 | grep -o 'gamdom9047[0-9]\.com' | sort | uniq -c
+monitors: {'2': 1, '3': 1, '5': 1, '6': 1, '13': 1, '221': 1, '223': 1}
+count: 7
+---SEO hub---
+     17 gamdom90471.com
+[0m
+[0m$ [0mecho "---tr client-api---"; curl -sS --max-time 8 https://tr.perabet.com/client-api -o /dev/null -w "code:%{http_code}\n" 2>&1; echo "---tr Set-Cookie (root)---"; curl -sS --max-time 8 https://tr.perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie|server|content-type" ; echo "---perabet apex Set-Cookie---"; curl -sS --max-time 8 https://perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie|content-type"; echo "---beta Set-Cookie---"; curl -sS --max-time 8 https://beta.perabet.com/ -D - -o /dev/null 2>&1 | grep -iE "set-cookie"; echo "---dig---"; dig +short perabet.com CNAME; dig +short beta.perabet.com CNAME; dig +short perabet.com A; dig +short beta.perabet.com A
+---tr client-api---
+code:404
+---tr Set-Cookie (root)---
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+---perabet apex Set-Cookie---
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 17:16:20 GMT
+---beta Set-Cookie---
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sun, 12 Sep 2027 17:16:20 GMT
+---dig---
+151.101.131.52
+151.101.195.52
+151.101.3.52
+151.101.67.52
+151.101.131.52
+151.101.195.52
+151.101.3.52
+151.101.67.52
+[0m
+[0m$ [0mecho "---gamdom.com client-api md5---"; curl -sS --max-time 8 https://gamdom.com/client-api -o /tmp/opencode/g.txt 2>/dev/null; md5sum /tmp/opencode/g.txt; echo "---perabet client-api md5---"; curl -sS --max-time 8 https://perabet.com/client-api -o /tmp/opencode/p.txt 2>/dev/null; md5sum /tmp/opencode/p.txt; echo "---diff---"; diff /tmp/opencode/g.txt /tmp/opencode/p.txt && echo IDENTICAL; echo "---health etag---"; for h in gamdom.com perabet.com beta.perabet.com; do printf "%s: " "$h"; curl -sSI --max-time 8 https://$h/health 2>/dev/null | grep -i etag; done
+---gamdom.com client-api md5---
+7e3a161d6cde2700fcdc0f6be4520745  /tmp/opencode/g.txt
+---perabet client-api md5---
+7e3a161d6cde2700fcdc0f6be4520745  /tmp/opencode/p.txt
+---diff---
+IDENTICAL
+---health etag---
+gamdom.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+perabet.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+beta.perabet.com: etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sS --max-time 15 https://perabet.com/ -o /tmp/opencode/perabet_home.html 2>/dev/null; ls -la /tmp/opencode/perabet_home.html; grep -oE 'src="[^"]+\.js"' /tmp/opencode/perabet_home.html | head -5; grep -oE 'https://[a-z0-9.-]+\.(com|net|org|win|vip|io|eu|one|link|giris\.com)' /tmp/opencode/perabet_home.html | sort -u | head -40
+-rw-r--r-- 1 runner runner 47327 Sep 12 17:16 /tmp/opencode/perabet_home.html
+src="https://cdn.livechatinc.com/tracking.js"
+https://cdn.livechatinc.com
+https://perabet.com
+https://schema.org
+https://www.livechat.com
+https://www.youtube.com
+https://x.com
+[0m
+---git log---
+7f0c068 triage 2026-09-12-16-21
+[0m
+[0m$ [0mcurl -sS --max-time 20 "https://crt.sh/?q=%25.perabet.com&output=json" 2>/dev/null | python3 -c "
+import sys,json
+try:
+  d=json.load(sys.stdin)
+except Exception as e:
+  print('crt.sh parse fail:', e); sys.exit()
+names=set()
+for e in d:
+  for n in e.get('name_value','').split('\n'):
+    n=n.strip().lower()
+    if n.endswith('.perabet.com'): names.add(n)
+for n in sorted(names): print(n)
+print('total:', len(names))
+" 2>&1 | tail -40
+*.perabet.com
+giris.perabet.com
+m.perabet.com
+stagsrv.perabet.com
+tr.perabet.com
+unsubscribe.perabet.com
+www.perabet.com
+total: 7
+[0m
+[0m$ [0mfor h in giris.perabet.com stagsrv.perabet.com m.perabet.com unsubscribe.perabet.com; do
+  echo "=== $h ==="
+  curl -sS --max-time 8 https://$h/ -D - -o /tmp/opencode/h.txt 2>&1 | grep -iE "^HTTP/|^server:|^set-cookie:|^location:|^content-type:" | head -5
+  echo "  client-api: $(curl -sS --max-time 8 https://$h/client-api -o /dev/null -w '%{http_code}' 2>/dev/null)  body: $(curl -sS --max-time 8 https://$h/client-api 2>/dev/null | head -c 90)"
+  echo "  CNAME: $(dig +short $h CNAME | head -1)"
+  sleep 1
+done
+=== giris.perabet.com ===
+  client-api: 000  body: 
+  CNAME: 
+=== stagsrv.perabet.com ===
+HTTP/2 401 
+server: nginx
+content-type: text/html
+  client-api: 401  body: <html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Au
+  CNAME: 
+=== m.perabet.com ===
+HTTP/2 500 
+server: Varnish
+content-type: text/html
+  client-api: 500  body: 
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p
+  CNAME: perabet.com.
+=== unsubscribe.perabet.com ===
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+  client-api: 404  body: <!doctype html>
+<html data-n-head-ssr lang="en" data-n-head="%7B%22lang%22:%7B%22ssr%22:%2
+  CNAME: a20b1e98e1a2a4dc49a4e5504c0a47cf-560468924.eu-west-1.elb.amazonaws.com.
+[0m
+[0m$ [0m# stagsrv comparisons
+echo "--- DNS ---"
+dig +short stagsrv.perabet.com A
+dig +short stagsrv.teamgamdom.com A
+dig +short devsrv5.teamgamdom.com A
+echo "--- gateway realm ---"
+curl -sS --max-time 8 https://stagsrv.perabet.com/ -D - -o /dev/null 2>&1 | grep -i "WWW-Authenticate"
+echo "--- root body size ---"
+curl -sS --max-time 8 https://stagsrv.perabet.com/ 2>/dev/null | wc -c
+echo "--- giris DNS ---"
+dig +short giris.perabet.com A
+dig +short giris.perabet.com CNAME
+echo "--- domain scope: gamdommirrors official list ---"
+curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | python3 -c "import sys,json; d=json.load(sys.stdin); hl=d['heartbeatList']; print('monitor_ids:', sorted(hl.keys()))"
+--- DNS ---
+151.101.3.52
+151.101.131.52
+151.101.195.52
+151.101.67.52
+151.101.67.52
+151.101.3.52
+151.101.195.52
+151.101.131.52
+151.101.67.52
+151.101.131.52
+151.101.195.52
+151.101.3.52
+--- gateway realm ---
+www-authenticate: Basic realm="secret"
+--- root body size ---
+172
+--- giris DNS ---
+217.23.12.109
+--- domain scope: gamdommirrors official list ---
+monitor_ids: ['13', '2', '221', '223', '3', '5', '6']
+[0m
+[0m$ [0m# Compare secret bodies
+echo "=== body diff ==="
+curl -sS --max-time 8 https://shreeram-dynamic-test.teamgamdom.com/ -o /tmp/opencode/shreeram.txt 2>/dev/null
+curl -sS --max-time 8 https://stagsrv.perabet.com/ -o /tmp/opencode/stagsrv.txt 2>/dev/null
+md5sum /tmp/opencode/shreeram.txt /tmp/opencode/stagsrv.txt
+diff /tmp/opencode/shreeram.txt /tmp/opencode/stagsrv.txt
+echo "--- shreeram W-A ---"
+curl -sS --max-time 8 https://shreeram-dynamic-test.teamgamdom.com/ -D - -o /dev/null 2>&1 | grep -i "WWW-Authenticate"
+echo "=== giris.perabet.com ==="
+curl -sS --max-time 8 https://giris.perabet.com/ -D - -o /tmp/opencode/giris.txt 2>&1 | grep -iE "^HTTP/|^server:|^set-cookie:|^location:|^content-type:" | head -5
+echo "  status: $(curl -sS -o /dev/null -w '%{http_code}' --max-time 8 https://giris.perabet.com/ 2>/dev/null)"
+echo "  body size: $(wc -c < /tmp/opencode/giris.txt)"
+curl -sS --max-time 8 https://giris.perabet.com/ 2>/dev/null | grep -oE 'gamdom9047[0-9]+\.com|perabet[a-z0-9]*\.com' | sort -u | head -20
+echo "--- giris DNS ---"
+dig +short giris.perabet.com A
+echo "--- summary pool A reachability ---"
+echo "Pool A hosts with Basic realm='secret':"
+echo "  shreeram-dynamic-test.teamgamdom.com"
+echo "  stagsrv.teamgamdom.com"
+echo "  stagsrv.perabet.com (NEW)"
+=== body diff ===
+28c5f434e4ab2e2a682400cb005fb08b  /tmp/opencode/shreeram.txt
+28c5f434e4ab2e2a682400cb005fb08b  /tmp/opencode/stagsrv.txt
+--- shreeram W-A ---
+www-authenticate: Basic realm="secret"
+=== giris.perabet.com ===
+  status: 000
+/bin/bash: line 12: /tmp/opencode/giris.txt: No such file or directory
+  body size: 
+--- giris DNS ---
+217.23.12.109
+--- summary pool A reachability ---
+Pool A hosts with Basic realm='secret':
+  shreeram-dynamic-test.teamgamdom.com
+  stagsrv.teamgamdom.com
+  stagsrv.perabet.com (NEW)
+[0m
+[0m$ [0mecho "--- giris port 80 ---"
+curl -sS --max-time 8 "http://giris.perabet.com/" -D - -o /tmp/opencode/giris80.txt 2>&1 | grep -iE "^HTTP/|^server:|^set-cookie:|^location:|^content-type:" | head -6
+echo "  body: $(wc -c < /tmp/opencode/giris80.txt 2>/dev/null)"
+grep -oE 'gamdom9047[0-9]+\.com|perabet[a-z0-9]*\.(com|net)|tr\.perabet\.com' /tmp/opencode/giris80.txt 2>/dev/null | sort | uniq -c | head
+echo "--- mississippi: numbered perabet aliases probe ---"
+for n in 80008 90471; do printf "p$n:%s " "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://perabet$n.com/ 2>/dev/null)"; sleep 1; done; echo
+--- giris port 80 ---
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+Location: https://giris.perabet.com/
+  body: 0
+--- mississippi: numbered perabet aliases probe ---
+p80008:000 p90471:000
+[0m
+STEP 1 — DELTA
+- NEW stagsrv.perabet.com: Fastly Pool A, nginx `401 Basic realm="secret"`, body md5 `28c5f434e4ab2e2a682400cb005fb08b` — byte-identical to shreeram-dynamic-test.teamgamdom.com (172B fixture) → internal nginx test-backend vhost publicly TLS-bound on a 4th-brand zone.
+- NEW m.perabet.com: wildcard CNAME→perabet.com but Fastly `500 "unknown domain"` — edge vhost not configured (watchlist, not yet served).
+- NEW giris.perabet.com: nginx 301→HTTPS with dead TLS (000) — Turkish entry-host in proto-state; no numbered perabet aliases exist (80008/90471 NX).
+- CHANGED tr.perabet.com definitively out of trust pool: root 200 `Server: nginx`, no gd-lang Set-Cookie, `/client-api` 404.
+- NO_CHANGE: 8 pending aliases still 421 (15th cycle); Kuma 7 monitors all up (2,3,5,6,13,221,223); SEO hub 17×gamdom90471; oauth2 fleet 302-gated ×6; perabet apex/www/beta `/client-api` md5 `7e3a161d` + `/health` ETag `W/"2-eoX..."` byte-identical.
+
+STEP 2 — PRIORITIZE
+- [PRIO] perabet.com/client-api shared-origin pool, 7.0, attack_surface=8/business_value=10/tech_exposure=6/gate_ease=2/cloud=5/freshness=8
+- [PRIO] stagsrv.perabet.com test-backend vhost, 5.6, attack_surface=5/business_value=6/tech_exposure=6/gate_ease=2/cloud=6/freshness=10
+- [PRIO] pending-alias misbinding pool (now incl. stagsrv.perabet.com), 6.0, attack_surface=6/business_value=5/tech_exposure=6/gate_ease=5/cloud=6/freshness=10
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay yields ATO across 4 brands via shared identity/wallet origin
+class: AUTH
+asset: perabet.com/client-api (+beta, www, fatbets, gamdom.one, 6 live mirrors)
+confidence: 76
+reasoning: perabet apex/www/beta all serve byte-identical `/client-api` md5 7e3a161d + `/health` ETag + host-only gd-lang (no Domain/SameSite/HttpOnly) on Pool A; tr/m/unsubscribe/giris.perabet.com carry no signature → pool grown this cycle by breadth-scan only, not by new carriers
+evidence_needed: authenticated Set-Cookie on any brand host + POST replay accepted on sibling; or Set-Cookie Domain/SameSite attr drift
+verify_steps: AUTH_HELPED only — `curl -sS -o /dev/null -w "%{http_code}" https://beta.perabet.com/client-api` stays 400; drift-watch Set-Cookie across 4 brands
+impact: ATO + wallet across 4 brands / 24+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Brand alias cert lands misbound onto live "secret"-realm nginx test-backend fixture
+class: MISCONFIG
+asset: stagsrv.perabet.com + shreeram-dynamic-test.teamgamdom.com + gamdom90488.com (8 pending aliases)
+confidence: 55
+reasoning: stagsrv.perabet.com proves the "secret"-realm fixture (md5 28c5f434, 172B, Pool A TLS) completes cert+serving on the same Pool A the brand aliases use; prior alias gamdom90488.com CNAME→shreeram-dynamic-test.teamgamdom.com shows this misbinding pattern is real; 8 pending aliases still 421 = cert ops stalled, not cancelled
+evidence_needed: any pending alias non-421; or any "secret"-realm vhost regresses from 401; or a branded host serves the 172B fixture
+verify_steps: PASSIVE — `curl -sSk -o /dev/null -w "%{http_code}" https://gamdom90488.com/client-api; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Domain-wide oauth2 session pivots via any *.teamgamdom.com host
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com (+6 gated backends)
+confidence: 45
+reasoning: clickhouse/perabet-clickhouse/inteligance/grafana/vault/prometheus all still 302→SSO; oauth2/auth 401; _oauth2_proxy_csrf Domain=teamgamdom.com; only ungated script-capable host kargo is uniform SPA catch-all
+evidence_needed: session cookie in compromiseable subdomain context, or XSS on kargo SPA
+verify_steps: AUTH_HELPED — watch kargo bundle hash + /oauth2/auth 401 + oauth2 fleet status
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] perabet numbered-alias pipeline: 80008/90471-style probes NX/000, CT shows no numbered perabet zone aliases — hypothesis has no evidentiary basis yet.
+- [FINAL] cross-brand cookie replay [76] — 4-brand pcandidate stable, no drift, AUTH_HELPED-gated
+- [FINAL] alias cert misbinding [55] — raised from 50: stagsrv.perabet.com proves the secret-realm fixture is live on Pool A TLS and reachable; 15th 421 cycle on the 8 aliases, passive watch only
+- [FINAL] oauth2-proxy session pivot [45] — gates hold, no trigger host
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "%s:%s " "$a" "$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 6 https://gamdom$a.com/client-api)"; done; printf "shreeram:%s stagsrv.t:%s stagsrv.p:%s " "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://shreeram-dynamic-test.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://stagsrv.teamgamdom.com/)" "$(curl -sS -o /dev/null -w '%{http_code}' --max-time 6 https://stagsrv.perabet.com/)"; curl -sS --max-time 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | python3 -c "import sys,json;print(sorted(json.load(sys.stdin)['heartbeatList'].keys()))"` — poll alias cert-landing falsifier + secret-realm gate + Kuma rotation in one pass.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ stagsrv.perabet.com: Fastly Pool A, nginx 401 Basic realm="secret", 172B body md5 28c5f434 identical to shreeram-dynamic-test.teamgamdom.com — internal test-backend fixture publicly served on 4th-brand zone; gate holds fixture-wide (inventory only).
+- [LEARN] ACCEPTED recon @ m.perabet.com: wildcard CNAME→perabet.com but Fastly 500 "unknown domain" — edge vhost gap, watchlist (not an active finding).
+- [LEARN] ACCEPTED recon @ giris.perabet.com: nginx 301→HTTPS with dead TLS (000) — proto-state Turkish entry host on perabet zone, watchlist.
+- [LEARN] REJECTED out-of-scope @ unsubscribe.perabet.com: AWS ELB (a20b1e98….elb.amazonaws.com) Nuxt SSR site, non-Fastly 3rd-party infra — not shared-origin surface.
+- [LEARN] ACCEPTED watch @ 8 pending aliases: 15th cycle all 421/TLS-NOMATCH; perabet apex/www/beta + gamdom/fatbets/one signature byte-identical (md5 7e3a161d), no drift.
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — stagsrv.perabet.com proves the internal "secret"-realm nginx fixture completes TLS and serves publicly on Pool A across 2 brand TLDs, materially widening the real (not hypothetical) alias-misbinding pool and adding a live test-backend asset to the 4-brand fleet; cross-brand cookie replay pool stable, all gates hold (AUTH_HELPED credential replay, 15th 421 cycle, oauth2/Basic/TSM intact). No exploitable chain — nominal +1 for widened live misbinding surface.
