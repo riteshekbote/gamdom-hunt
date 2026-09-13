@@ -19003,3 +19003,411 @@ testability: PASSIVE + monitoring
 ## STEP 7 — RISK
 
 [RISK] gamdom: 76 — 16th consecutive static cycle: shared /client-api origin byte-identical across 12 hosts/4 brands/25+ hostnames where the 76-confidence cookie-replay ATO has no passive falsifier and stays HUMAN-gated; 8 dormant aliases still parked over a live 401 secret-realm fixture serving 2 brand TLDs; no exploitable chain this cycle (all gates hold, no rotation, transient edge resets benign). Residual driver unchanged: the single identity/wallet origin plus the stalled cert pipeline — risk persists but is not rising.
+===== ANALYST bigpickle 2026-09-13 12:19:11 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  c=$(curl -sSk --max-time 8 -o /dev/null -w "%{http_code}" https://gamdom$a.com/client-api)
+  echo "gamdom$a.com $c"
+  sleep 1
+done
+gamdom80001.com 421
+gamdom80002.com 421
+gamdom90472.com 421
+gamdom90473.com 421
+gamdom90475.com 421
+gamdom90480.com 421
+gamdom90482.com 421
+gamdom90488.com 421
+[0m
+[0m$ [0mfor h in gamdom.com fatbets.com gamdom.one perabet.com gamdom80008.com gamdom80009.com gamdom80003.com; do
+  bc=$(curl -sSk --max-time 8 -o /tmp/gd_bd -w "%{http_code}" https://$h/client-api)
+  m=$(md5sum /tmp/gd_bd | cut -d' ' -f1)
+  ck=$(curl -sSk --max-time 8 -D - -o /dev/null https://$h/ | grep -i '^set-cookie' | head -1)
+  echo "$h client-api=$bc md5=$m | $ck"
+  sleep 1
+done
+gamdom.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:13 GMT
+fatbets.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:15 GMT
+gamdom.one client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:16 GMT
+perabet.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:18 GMT
+gamdom80008.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:20 GMT
+gamdom80009.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:21 GMT
+gamdom80003.com client-api=400 md5=7e3a161d6cde2700fcdc0f6be4520745 | set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Mon, 13 Sep 2027 12:01:23 GMT
+[0m
+[0m$ [0mb=$(curl -sSk --max-time 10 https://gamdom.com/ | grep -oE '/assets/client\.[a-f0-9]+\.js' | head -1); echo "bundle=$b"
+curl -sSk --max-time 25 -o /tmp/gd_b.js https://gamdom.com$b
+echo "len=$(wc -c </tmp/gd_b.js)"
+echo "sha256=$(sha256sum /tmp/gd_b.js | cut -d' ' -f1)"
+echo "staffRefill=$(grep -oE 'staffRefillConfig' /tmp/gd_b.js | wc -l)"
+echo "perabet=$(grep -ioE 'perabet[a-z0-9.]*' /tmp/gd_b.js | sort -u | head -8)"
+echo "trMirror=$(grep -oE 'trMirrorDomain[:=][\"'"'"'][^\"'"'"']+' /tmp/gd_b.js | head -2)"
+echo "mirrors=$(grep -oE 'gamdom(8000[0-9]|9047[0-9]|4567)\.[a-z]+' /tmp/gd_b.js | sort -u | tr '\n' ' ')"
+sleep 1
+k=$(curl -sSk --max-time 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains); echo "kuma_ids=$(echo "$k" | grep -oE '\"monitorID\":[0-9]+' | sort -u | tr '\n' ' ')"
+sleep 1
+seo=$(curl -sSk --max-time 8 https://gamdom-girisi.com/); echo "seo_90471_count=$(echo "$seo" | grep -c '90471')"
+bundle=
+len=62565
+sha256=2b7f27ec765a101147fde2f7bf68d4571f263b92b077a5fd2be918bbbfbc5be9
+staffRefill=0
+perabet=
+trMirror=
+mirrors=gamdom80004.com 
+kuma_ids=
+seo_90471_count=17
+[0m
+[0m$ [0mfor h in oauth2-proxy.teamgamdom.com/oauth2/auth shreeram-dynamic-test.teamgamdom.com/ stagsrv.teamgamdom.com/ stagsrv.perabet.com/ tableau.teamgamdom.com/api/3.21/sites kargo.teamgamdom.com/api/v1/projects clickhouse.teamgamdom.com grafana.teamgamdom.com vault.teamgamdom.com inteligance.teamgamdom.com prometheus.teamgamdom.com; do
+  c=$(curl -sSk --max-time 8 -o /tmp/gd_g -w "%{http_code}" https://$h)
+  sz=$(wc -c </tmp/gd_g)
+  echo "$h $c ${sz}B"
+  sleep 1
+done
+oauth2-proxy.teamgamdom.com/oauth2/auth 401 13B
+shreeram-dynamic-test.teamgamdom.com/ 401 172B
+stagsrv.teamgamdom.com/ 401 172B
+stagsrv.perabet.com/ 401 172B
+tableau.teamgamdom.com/api/3.21/sites 401 384B
+kargo.teamgamdom.com/api/v1/projects 200 1994B
+clickhouse.teamgamdom.com 302 440B
+grafana.teamgamdom.com 302 419B
+vault.teamgamdom.com 302 417B
+inteligance.teamgamdom.com 302 441B
+prometheus.teamgamdom.com 302 422B
+[0m
+Two follow-ups: the bundle URL regex missed (fetched HTML instead), and Kuma heartbeat returned nothing. Re-probing properly.
+[0m$ [0mecho "--- script/src refs in index ---"
+curl -sSk --max-time 10 https://gamdom.com/ | grep -oE 'src="[^"]+\.js[^"]*"' | head -10
+echo "--- Kuma heartbeat raw ---"
+curl -sSk --max-time 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains | head -c 400
+echo ""
+echo "--- badge endpoint ---"
+curl -sSk --max-time 8 -o /dev/null -w "%{http_code} %{content_type}\n" https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains
+--- script/src refs in index ---
+src="https://www.googletagmanager.com/gtm.js?id="
+src="/build/client.1609510edc0b6169f4c0.js#1789300883612"
+--- Kuma heartbeat raw ---
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-13 10:22:31.940","msg":"","ping":56},{"status":1,"time":"2026-09-13 10:24:32.000","msg":"","ping":53},{"status":1,"time":"2026-09-13 10:26:32.059","msg":"","ping":50},{"status":1,"time":"2026-09-13 10:28:32.113","msg":"","ping":54},{"status":1,"time":"2026-09-13 10:30:32.171","msg":"","ping":52},{"status":1,"time":"2026-09-13 10:32:32.227","msg":"
+--- badge endpoint ---
+200 application/json; charset=utf-8
+[0m
+Bundle located: `/build/client.1609510edc0b6169f4c0.js`. Fetching for drift markers, and extracting Kuma monitor id-set.
+[0m$ [0mcurl -sSk --max-time 30 -o /tmp/gd_c.js "https://gamdom.com/build/client.1609510edc0b6169f4c0.js"
+echo "len=$(wc -c </tmp/gd_c.js)"
+echo "sha256=$(sha256sum /tmp/gd_c.js | cut -d' ' -f1)"
+echo "staffRefill=$(grep -oE 'staffRefillConfig' /tmp/gd_c.js | wc -l)"
+echo "trMirror=$(grep -oE 'trMirrorDomain[^,;]{0,40}' /tmp/gd_c.js | head -2)"
+echo "mirror_refs=$(grep -oE 'gamdom(8000[0-9]|8001[0-9]|9047[0-9]|4567)\.[a-z]+' /tmp/gd_c.js | sort | uniq -c)"
+echo "tld_refs=$(grep -oE '(gamdom|fatbets|perabet|petagiri)\.(com|eu|io|vip|win|one|gg|tips)' /tmp/gd_c.js | sort | uniq -c | sort -rn | head -15)"
+sleep 1
+echo "kuma_monitor_ids=$(curl -sSk --max-time 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains | grep -oE '"[0-9]+":\[' | tr -d '":[' | tr '\n' ' ')"
+len=596312
+sha256=3c9dca56ede9fe14282ad904fbee7568adf39c4c19b361d08e0fb7d177a368cf
+staffRefill=2
+trMirror=trMirrorDomain:"gamdom80004.com"
+trMirrorDomain:"gamdom.com"
+mirror_refs=      1 gamdom80004.com
+tld_refs=     37 gamdom.com
+      6 gamdom.io
+      4 gamdom.win
+      4 gamdom.vip
+      4 gamdom.eu
+      2 gamdom.one
+      1 fatbets.com
+kuma_monitor_ids=2 3 5 6 13 221 223
+[0m
+All stable. Capturing Location headers on the 5 newly-confirmed SSO backends to ground the OATH hypothesis.
+[0m$ [0mfor h in clickhouse grafana vault inteligance prometheus; do
+  loc=$(curl -sSk --max-time 8 -D - -o /dev/null https://$h.teamgamdom.com/ | grep -i '^location')
+  echo "$h: $loc"
+  sleep 1
+done
+echo "--- oauth2-proxy callback---"
+curl -sSk --max-time 8 -D - -o /dev/null https://oauth2-proxy.teamgamdom.com/oauth2/auth | grep -iE '^(HTTP|location|set-cookie)'
+clickhouse: location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=Puvx3dMd4-drQtbm6CYbn0bDGZexrTwsJpP8cGBX0-w%3Ahttps%3A%2F%2Fclickhouse.teamgamdom.com%2F
+grafana: location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=xT-YDtBGH-6-bucie3vZUMALGWf4sI6g2fJW0bDNzjw%3Ahttps%3A%2F%2Fgrafana.teamgamdom.com%2F
+vault: location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=JRN56xjnLsJWUOfEdMXI0kr709De6KZCv7-nBzrDcx0%3Ahttps%3A%2F%2Fvault.teamgamdom.com%2F
+inteligance: location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=3CwzFSZk2eISxSHgiTGr4iA1IZ2zbV4xgoLXk3JvNgw%3Ahttps%3A%2F%2Finteligance.teamgamdom.com%2F
+prometheus: location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=qqzWkfrLsU6KhLwEPMrCeJWZOsNQ-rFku7J50zNzpLw%3Ahttps%3A%2F%2Fprometheus.teamgamdom.com%2F
+--- oauth2-proxy callback---
+HTTP/2 401
+[0m
+New finding: two distinct OAuth callback hostnames — `oauth2-proxy.teamgamdom.com` (grafana/vault/prometheus) vs **`oauth2-proxy-prod-google-group.teamgamdom.com`** (clickhouse/inteligance) — the latter is new to inventory. Probing DNS + both instances.
+[0m$ [0mecho "--- DNS ---"
+dig +short oauth2-proxy-prod-google-group.teamgamdom.com A; dig +short oauth2-proxy-prod-google-group.teamgamdom.com CNAME
+echo "--- prod-google-group /oauth2/auth ---"
+curl -sSk --max-time 8 -D - -o /dev/null https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth | grep -iE '^(HTTP|location|set-cookie|server)'
+echo "--- prod-google-group /oauth2/start ---"
+curl -sSk --max-time 8 -D - -o /dev/null "https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/start?rd=/x" | grep -iE '^(HTTP|location|set-cookie)'
+sleep 1
+echo "--- oauth2-proxy /oauth2/start (compare) ---"
+curl -sSk --max-time 8 -D - -o /dev/null "https://oauth2-proxy.teamgamdom.com/oauth2/start?rd=/x" | grep -iE '^(HTTP|location|set-cookie)'
+--- DNS ---
+57.128.164.155
+--- prod-google-group /oauth2/auth ---
+HTTP/2 401 
+--- prod-google-group /oauth2/start ---
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=6H9HTxh9F7WLpFvGOkcQCjBEhNLwvD9YKqwty-u4LNw%3A%2Fx
+set-cookie: _oauth2_proxy_csrf=kYoSDAOYI2QkfRA29CLWQf930ZTcnWCH4fYY3wH2xQw9-idhcO20XYPZxD8pUiNssMVq2M3W_eiy87sJsty07QGKy5cV-4SwyI_ynyoGPgBDYbltHqltlj4=|1789300982|STy92KGl2S1p5nd2ajSGN18T4AP0nnpdiVhzkyy5di0=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+--- oauth2-proxy /oauth2/start (compare) ---
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=vEZ6MfhzhKhXMIk1o8EKkauuHmYZIkx9ehXd9WCsY68%3A%2Fx
+set-cookie: _oauth2_proxy_csrf=WCRZQVpWWGGzTBQG2nwR8QTLvspUjVO1_HN-pz6tg0jcF-MMtKtZ1kzOYmKmlZMHr5OlLB_Tbq65gwAJ8EP6JLFy7KM60Z-nYzofM9FO94D0UZgxHbL6ono=|1789300983|WNUZCrzj4phGiIvG3dWcYZM08mPWor0zHmJs9QPAT48=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+[0m
+Major delta: `oauth2-proxy-prod-google-group.teamgamdom.com` resolves to **57.128.164.155** (OVH — a second direct-origin oauth2-proxy deployment, NOT Fastly). Fingerprinting the direct host and mapping what else lives there.
+[0m$ [0mecho "--- PTR ---"; dig +short -x 57.128.164.155
+echo "--- backend DNS ---"
+for h in clickhouse grafana vault inteligance prometheus oauth2-proxy; do
+  dig +short $h.teamgamdom.com | tr '\n' ' '; echo "  <- $h"
+done
+echo "--- direct-origin fingerprint (Host: prod-google-group) ---"
+curl -sSk --max-time 8 -D - https://oauth2-proxy-prod-google-group.teamgamdom.com/ | grep -iE '^(HTTP|server|content-type|www-authenticate)'
+echo "--- /oauth2/health, /ping, /sign_in on direct origin ---"
+for p in ping healthz oauth2/health oauth2/ping oauth2/sign_in oauth2/callback; do
+  c=$(curl -sSk --max-time 8 -o /dev/null -w "%{http_code} %{size_download}B %{content_type}" https://oauth2-proxy-prod-google-group.teamgamdom.com/$p)
+  echo "$p -> $c"
+  sleep 1
+done
+--- PTR ---
+--- backend DNS ---
+57.129.130.53   <- clickhouse
+151.101.67.52 151.101.131.52 151.101.195.52 151.101.3.52   <- grafana
+151.101.3.52 151.101.67.52 151.101.131.52 151.101.195.52   <- vault
+151.101.3.52 151.101.195.52 151.101.67.52 151.101.131.52   <- inteligance
+151.101.195.52 151.101.3.52 151.101.67.52 151.101.131.52   <- prometheus
+151.101.3.52 151.101.131.52 151.101.67.52 151.101.195.52   <- oauth2-proxy
+--- direct-origin fingerprint (Host: prod-google-group) ---
+HTTP/2 302 
+content-type: text/html; charset=utf-8
+--- /oauth2/health, /ping, /sign_in on direct origin ---
+ping -> 200 2B text/plain; charset=utf-8
+healthz -> 302 408B text/html; charset=utf-8
+oauth2/health -> 302 401B text/html; charset=utf-8
+oauth2/ping -> 302 401B text/html; charset=utf-8
+oauth2/sign_in -> 302 401B text/html; charset=utf-8
+oauth2/callback -> 500 2772B text/html; charset=utf-8
+[0m
+`/oauth2/callback` GET returns **500** with a 2772B HTML body on the direct-origin instance — fetching it (read-only GET) to fingerprint version/stack. Also noting clickhouse sits on a separate direct origin (57.129.130.53).
+[0m$ [0mecho "--- /oauth2/callback body ---"
+curl -sSk --max-time 8 https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/callback | head -c 1500
+echo ""
+echo "--- /ping body ---"
+curl -sSk --max-time 8 https://oauth2-proxy-prod-google-group.teamgamdom.com/ping
+--- /oauth2/callback body ---
+
+<!DOCTYPE html>
+<html lang="en" charset="utf-8">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>500 Internal Server Error</title>
+<link rel="stylesheet" href="/oauth2/static/css/bulma.min.css">
+<link rel="stylesheet" href="/oauth2/static/css/all.min.css">
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    let cardToggles = document.getElementsByClassName('card-toggle');
+    for (let i = 0; i < cardToggles.length; i++) {
+      cardToggles[i].addEventListener('click', e => {
+        e.currentTarget.parentElement.parentElement.childNodes[3].classList.toggle('is-hidden');
+      });
+    }
+  });
+</script>
+
+<style>
+  body {
+    height: 100vh;
+  }
+  .error-box {
+    margin: 1.25rem auto;
+    max-width: 600px;
+  }
+  .status-code {
+    font-size: 12rem;
+    font-weight: 600;
+  }
+  #more-info.card {
+    border: 1px solid #f0f0f0;
+  }
+  footer a {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body class="has-background-light">
+<section class="section">
+  <div class="box block error-box has-text-centered">
+    <div class="status-code">500</div>
+    <div class="block">
+      <h1 class="subtitle is-1">Internal Server Error</h1>
+    </div>
+
+    
+    <div id="more-info" class="block card is-fullwidth is-shadowless">
+      <header class="card-header is-shadowless">
+        <p class="card-header-title">More Info</p>
+        <a class="card-header
+--- /ping body ---
+OK
+[0m
+Cookie/DNS mapping is solid. One more passive fingerprint set: checking whether the direct-origin ClickHouse (57.129.130.53) exposes its HTTP interface outside the oauth gate (banner-only, no query execution).
+[0m$ [0mecho "--- clickhouse.teamgamdom.com root/80/8123 (banner-only, no queries) ---"
+for t in "https://clickhouse.teamgamdom.com/ping" "https://clickhouse.teamgamdom.com:8123/ping" "http://clickhouse.teamgamdom.com/ping" "https://clickhouse.teamgamdom.com/" "http://clickhouse.teamgamdom.com/"; do
+  c=$(curl -sSk --max-time 6 -o /tmp/ck -w "%{http_code} %{size_download}B %{content_type}" "$t")
+  echo "$t -> $c | $(head -c 80 /tmp/ck | tr -d '\n')"
+  sleep 1
+done
+echo "--- direct-origin oauth2-proxy error page server header (root 302 target) ---"
+curl -sSk --max-time 8 -D - -o /dev/null https://oauth2-proxy-prod-google-group.teamgamdom.com/ | grep -iE '^(HTTP|location|server|set-cookie)'
+--- clickhouse.teamgamdom.com root/80/8123 (banner-only, no queries) ---
+https://clickhouse.teamgamdom.com/ping -> 302 444B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_type=offline&amp;appro
+curl: (7) Failed to connect to clickhouse.teamgamdom.com port 8123 after 155 ms: Couldn't connect to server
+https://clickhouse.teamgamdom.com:8123/ping -> 000 0B  | <a href="https://accounts.google.com/o/oauth2/auth?access_type=offline&amp;appro
+http://clickhouse.teamgamdom.com/ping -> 301 169B text/html | <html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>3
+https://clickhouse.teamgamdom.com/ -> 302 440B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_type=offline&amp;appro
+http://clickhouse.teamgamdom.com/ -> 301 169B text/html | <html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>3
+--- direct-origin oauth2-proxy error page server header (root 302 target) ---
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=nFsaL9Y31zV4UUvBsEGKoOHqw2f1fxAqwt6iNPYwYoc%3A%2F
+set-cookie: _oauth2_proxy_csrf=yHfMTa2EwWzasqbNG0vqy2vvx06ZvQ5JuP9qQ6CminsiTQpn5HeGI1-cHrb_LowPZiPcz2E1WM88I_hZpLY-yfxo12dwaXjngmI-lRUdbKJ23ewH5A0iH8k=|1789301076|Zc6X_n4ZTA3ZqXygH1bvib_Vv4zOZ0JCBbpS4_VJT4M=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+[0m
+New direct-origin surface found. Running the queued endpoint sweep on the fresh OVH box (read-only GETs only).
+[0m$ [0mfor p in "oauth2/static/js/" "oauth2/static/css/bulma.min.css" "oauth2/robots.txt" "oauth2/.well-known/openid-configuration" "metrics" "debug/pprof/" "nginx_status" "nv/" "oauth2/sign_out" "oauth2/skip" "oauth2/start?rd=https%3A%2F%2Fperabet.com%2F"; do
+  c=$(curl -sSk --max-time 6 -o /tmp/op -w "%{http_code} %{size_download}B %{content_type}" "https://oauth2-proxy-prod-google-group.teamgamdom.com/$p")
+  echo "$p -> $c | $(head -c 60 /tmp/op | tr -d '\n')"
+  sleep 1
+done
+oauth2/static/js/ -> 404 19B text/plain; charset=utf-8 | 404 page not found
+oauth2/static/css/bulma.min.css -> 200 207302B text/css; charset=utf-8 | /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma 
+oauth2/robots.txt -> 302 401B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+oauth2/.well-known/openid-configuration -> 302 401B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+metrics -> 302 408B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+debug/pprof/ -> 302 417B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+nginx_status -> 302 413B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+nv/ -> 302 406B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+oauth2/sign_out -> 302 24B text/html; charset=utf-8 | <a href="/">Found</a>.
+oauth2/skip -> 302 401B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+oauth2/start?rd=https%3A%2F%2Fperabet.com%2F -> 302 401B text/html; charset=utf-8 | <a href="https://accounts.google.com/o/oauth2/auth?access_ty
+[0m
+Sweep complete. New surface confirmed: `oauth2-proxy-prod-google-group.teamgamdom.com` (OVH direct, non-Fastly, Bulma 0.9.4), all paths gated, `/oauth2/sign_out` accessible without auth. Now probing for session cookie domain disclosure via sign_out on both instances.
+[0m$ [0mecho "--- sign_out on prod-google-group (direct-origin) ---"
+curl -sSk --max-time 8 -D - -o /dev/null https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/sign_out
+echo "--- sign_out on oauth2-proxy (Fastly) ---"
+curl -sSk --max-time 8 -D - -o /dev/null https://oauth2-proxy.teamgamdom.com/oauth2/sign_out
+--- sign_out on prod-google-group (direct-origin) ---
+HTTP/2 302 
+cache-control: no-cache, no-store, must-revalidate, max-age=0
+content-type: text/html; charset=utf-8
+date: Sun, 13 Sep 2026 12:07:33 GMT
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+location: /
+x-accel-expires: 0
+content-length: 24
+
+--- sign_out on oauth2-proxy (Fastly) ---
+HTTP/2 302 
+expires: Thu, 01 Jan 1970 00:00:00 UTC
+cache-control: no-cache, no-store, must-revalidate, max-age=0
+content-type: text/html; charset=utf-8
+location: /
+x-accel-expires: 0
+accept-ranges: bytes
+date: Sun, 13 Sep 2026 12:07:34 GMT
+via: 1.1 varnish
+x-served-by: cache-pao-kpao1770047-PAO, cache-pao-kpao1770023-PAO
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1789301254.704520,VS0,VE960
+x-dbg-vcl2: bong_ke
+strict-transport-security: max-age=31557600
+content-length: 24
+[0m
+Direct-origin vhost check on the new OVH host — read-only.
+[0m$ [0mecho "--- raw IP direct, default SNI ---"
+curl -sk --max-time 8 -D - -o /dev/null https://57.128.164.155/ | grep -iE '^(HTTP|server|location)'
+echo "--- Host: clickhouse.teamgamdom.com on 57.128.164.155 ---"
+curl -sk --max-time 8 -H "Host: clickhouse.teamgamdom.com" -D - -o /dev/null https://57.128.164.155/ | grep -iE '^(HTTP|server|location)'
+echo "--- Host: oauth2-proxy.teamgamdom.com on 57.128.164.155 ---"
+curl -sk --max-time 8 -H "Host: oauth2-proxy.teamgamdom.com" -D - -o /dev/null https://57.128.164.155/ | grep -iE '^(HTTP|server|location)'
+echo "--- dig other teamgamdom hosts on 57.128/57.129 ---"
+for h in devsrv5 staging tableau-admin admin dev stagsrv api grafana vault; do
+  ip=$(dig +short $h.teamgamdom.com | grep -E '^(57\.128|57\.129)' | head -1)
+  [ -n "$ip" ] && echo "$h -> $ip"
+done
+echo "done"
+--- raw IP direct, default SNI ---
+HTTP/2 404 
+--- Host: clickhouse.teamgamdom.com on 57.128.164.155 ---
+HTTP/2 404 
+--- Host: oauth2-proxy.teamgamdom.com on 57.128.164.155 ---
+HTTP/2 404 
+--- dig other teamgamdom hosts on 57.128/57.129 ---
+done
+[0m
+STEP 1 — DELTA
+- [NEW] oauth2-proxy-prod-google-group.teamgamdom.com — 2nd oauth2-proxy instance, DIRECT OVH origin 57.128.164.155 (non-Fastly, no CDN), signature oauth2-proxy 7.x (Bulma 0.9.4 error page, /ping→200 "OK", /oauth2/callback GET→500); gates clickhouse+inteligance (redirect_uri pinned to itself); same Google client_id 696342781525-...; vhost-pinned (foreign Host headers → 404). NOT in prior inventory.
+- [NEW] clickhouse.teamgamdom.com → 57.129.130.53 OVH sibling direct origin; :8123 refused; / + /ping gated 302→Google — no unauth ClickHouse query surface.
+- [NEW] Two oauth2-proxy instances (Fastly + direct OVH) BOTH issue `_oauth2_proxy_csrf; Domain=teamgamdom.com` — shared parent-domain cookie namespace; split responsibility (grafana/vault/prometheus→Fastly instance; clickhouse/inteligance→direct instance).
+- [CHANGED] flagship bundle rebuilt: /build/client.1609510edc0b6169f4c0.js (596312B, sha256 3c9dca56…) vs recorded client.41b06529…(~597KB); markers unchanged (staffRefillConfig×2, trMirrorDomain:80004+gamdom.com, fatbets×1).
+- NO_DELTA: /client-api md5=7e3a161d ×7 hosts; 8 aliases 421 (16th cycle); gates hold (shreeram/stagsrv×2/tableau/oauth2-proxy 401, kargo 200 SPA); Kuma ids 2,3,5,6,13,221,223; SEO hub 17×90471.
+
+STEP 2 — PRIORITIZE
+- [PRIO] oauth2-proxy-prod-google-group.teamgamdom.com, 5.2, [surface=4, value=6(clickhouse/inteligance), tech=7(OAuth2/Go/nginx), gate=1, cloud=5(non-CDN direct OVH), fresh=10]
+- [PRIO] clickhouse.teamgamdom.com, 4.8, [surface=3, value=7(data), tech=5, gate=1, cloud=5(direct), fresh=9]
+- [PRIO] perabet.com/client-api shared origin, 7.1, [surface=8, value=9, tech=8, gate=1, cloud=8, fresh=7]
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-instance OAuth state/CSRF collision across two oauth2-proxy deployments sharing Domain=teamgamdom.com cookie bucket
+class: OATH
+asset: oauth2-proxy-prod-google-group.teamgamdom.com + oauth2-proxy.teamgamdom.com (6 gated backends)
+confidence: 50
+reasoning: Both instances issue identical `_oauth2_proxy_csrf` with Domain=teamgamdom.com; same Google client_id; /oauth2/start on direct instance echoes rd (perabet.com) into state unvalidated; inter-instance cookie collision observable pre-auth; direct origin bypasses Fastly VCL/WAF shielding.
+evidence_needed: authenticated session cookie reachable in one instance's context reused at other; or redirect_uri/state validation anomaly in HUMAN consent flow
+verify_steps: PASSIVE — watch /oauth2/auth 401 + /oauth2/start Set-Cookie attrs both instances each cycle; diff bundle cache-buster; only AUTH_HELPED replay can confirm state acceptance
+impact: credentialed relay into ClickHouse/Vault/prometheus/observability stack; critical if triggered
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, gamdom80008/80009/80003, gamdom4567.com)
+confidence: 76
+reasoning: 16th cycle /client-api md5=7e3a161d byte-identical on 7 sampled hosts Pool A+B; gd-lang host-only uniform (no Domain/SameSite/HttpOnly); flagship bundle rebuilt this cycle but markers identical — no config drift observable passively; browser branch closed (no ACAO).
+evidence_needed: authenticated Set-Cookie on any brand/mirror whose POST is re-accepted on a sibling; Domain/SameSite drift observed
+verify_steps: AUTH_HELPED — keep GET /client-api=400 drift-watch + Set-Cookie attr diff across brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test; stagsrv.teamgamdom/perabet (8 pending)
+confidence: 52
+reasoning: 16th cycle all 8 aliases 421; secret-realm 401 fixture (172B) serves both stagsrv.teamgamdom+stagsrv.perabet this cycle; no vhost regression; rotation pipeline proven live (80007→80008, 80006→80009) so cert ops stalled-not-cancelled.
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] direct ClickHouse HTTP exposure: :8123 refused, / and /ping gate 302 — no unauth query surface; drop from active set.
+- [PARKED] raw-IP vhost hopping on 57.128.164.155: foreign Host headers → 404, no virtual-host leak.
+- [FINAL] survivors ranked: AUTH replay 76 > MISCONFIG misbind 52 > OATH cross-instance 50.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: divergence-watch the two oauth2-proxy instances + bundle cache-buster — `for h in oauth2-proxy-prod-google-group oauth2-proxy; do printf "%s auth=%s start=%s ping=%s\n" "$h" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/auth)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/start?rd=/)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/ping)"; done; curl -sSk https://gamdom.com/ | grep -oE 'client\.[a-f0-9]+\.js#?[0-9]*'` — bundle `#<epoch>` cache-buster is a redeploy drift-trigger (current #1789300883612 = 2026-09-13); any change flags new build before /client-api ever moves.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ oauth2-proxy-prod-google-group.teamgamdom.com: 2nd oauth2-proxy deployment on direct non-CDN OVH origin 57.128.164.155; oauth2-proxy 7.x signature; gates clickhouse/inteligance; /ping 200, callback GET 500, /metrics /debug/pprof /well-known all oauth-gated 302; no unauth surface.
+- [LEARN] ACCEPTED recon @ clickhouse.teamgamdom.com: direct OVH 57.129.130.53, :8123 refused, /+/ping oauth-gated — no unauth ClickHouse query exposure (banner-only probes).
+- [LEARN] ACCEPTED watch @ flagship bundle: rebuilt → client.1609510edc0b6169f4c0 (596312B sha256 3c9dca56…) — pre-existing markers unchanged (staffRefillConfig×2, trMirrorDomain 80004+com); no config drift observable.
+- [LEARN] ACCEPTED watch @ fleet+gates+aliases: 16th cycle all stable — /client-api md5 7e3a161d×7, gates 401/200, 8 aliases 421, Kuma ids 2,3,5,6,13,221,223, SEO 17×90471.
+- [LEARN] ACCEPTED watch @ oauth redirect_uri split: grafana/vault/prometheus→oauth2-proxy.teamgamdom.com; clickhouse/inteligance→oauth2-proxy-prod-google-group.teamgamdom.com — two independent OAuth trust anchors under one Domain cookie namespace.
+
+STEP 7 — RISK
+[RISK] gamdom: 77 — 16th static cycle for the core fleet (md5 7e3a161d stable, 8 aliases 421, all gates hold), but this cycle exposed a NEW direct non-CDN OAuth origin (57.128.164.155 OVH) and a direct ClickHouse origin (57.129.130.53) — external surface now reachable past the Fastly shield, sharing a Domain=teamgamdom.com CSRF bucket with the CDN-fronted instance (50-conf OATH cross-instance pivot, AUTH_HELPED). Residual drivers unchanged: 76-conf cross-brand cookie replay with no passive falsifier on a 4-brand/25+-host identity origin, plus stalled cert pipeline parked over a live 401 secret-realm fixture. Risk persists, nudged up on expanded non-CDN attack surface.

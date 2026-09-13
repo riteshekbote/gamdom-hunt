@@ -4140,3 +4140,71 @@ testability: AUTH_HELPED
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 [RISK] gamdom: 84 reason: Confirmed 25-host fleet across 4 brands (Gamdom flagship + 4 regional TLDs + 9 live mirrors + gamdom4567.com origin + gamdom90471.com provisioned + gamdom80004.com redirect alias + gamdom90472.com provisioned + gamdom80008/80009 live + gamdom80001/80002 provisioned + fatbets.com + gamdom.one + perabet.com apex/www/beta) sharing single POST-only `/client-api` identity/wallet proxy with byte-identical signature (md5 7e3a161d) and weak-ETag; origin trust boundary verified (gamdom4567.com = backend for Pool B); brand-wide trust pool extended to 4 brands via byte-identical /client-api signature; top hypothesis (cross-brand ATO via session sharing) confidence raised to 76 with perabet addition; auth transport confirmed as server-set same-origin cookie (no localStorage/bearer); client-side bundle leaks privileged config (staffRefillConfig 30M/75M coins, moderator tip cap, trMirrorDomain); mirror rotation accelerating (2 events in 24h); new ArgoCD-like API surface on kargo.teamgamdom.com fully SPA-gated; oauth2-proxy.teamgamdom.com confirms OAuth2 SSO layer on teamgamdom.com with Domain=teamgamdom.com CSRF cookie; no confirmed HIGH-class vuln yet — best leads require authorized authenticated testing against scoped identity endpoints
+## 2026-09-13 12:18:59 UTC [target] (model nemotron3)
+[PRIO] perabet.com/client-api,8.35,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10  
+[PRIO] gamdom.com/client-api,8.20,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9  
+[PRIO] fatbets.com/client-api,7.85,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8  
+[PRIO] gamdom.one/client-api,7.85,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8  
+[PRIO] gamdom80009.com/client-api,7.80,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10  
+[PRIO] gamdom80008.com/client-api,7.80,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9  
+[PRIO] gamdom80003.com/client-api,7.75,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9  
+[PRIO] gamdom4567.com/client-api,7.70,attack_surface=9,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9  
+[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,7.55,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=7,cloud_surface=7,freshness=10  
+[PRIO] kargo.teamgamdom.com/api/v1/projects,6.90,attack_surface=7,business_value=7,tech_exposure=8,gate_ease=6,cloud_surface=6,freshness=9  
+[PRIO] tableau.teamgamdom.com/api/3.21/serverInfo,5.85,attack_surface=6,business_value=5,tech_exposure=7,gate_ease=8,cloud_surface=5,freshness=8  
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands  
+class: AUTH  
+asset: perabet.com/client-api  
+confidence: 76  
+reasoning: perabet.com confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api signature (md5 7e3a161d), /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", and host-only gd-lang cookie policy identical across 4 brands / 25+ hostnames; single shared backend serves all; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one/perabet and vice versa  
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from actual auth flow on perabet.com vs gamdom.com vs fatbets.com vs gamdom.one; whether session cookie minted on gamdom80009 accepted by perabet.com/client-api  
+verify_steps: (passive) curl -sS -I https://perabet.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/api/auth/login 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/auth 2>&1 | grep -i set-cookie — locate real auth endpoint and capture session cookie attributes; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on perabet.com/client-api and fatbets.com/client-api and gamdom.one/client-api  
+impact: Cross-brand account takeover across 4 brands / 25+ hostnames; high  
+testability: AUTH_HELPED  
+[HYP] Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors including newly rotated gamdom80009.com  
+class: AUTH  
+asset: gamdom80009.com/client-api  
+confidence: 67  
+reasoning: Single shared backend (gamdom4567.com) proven via byte-identical /client-api headers + weak-ETag on /health across 9 live Pool B mirrors + Pool A flagship; auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) from passive bundle analysis; cookie Domain attribute is host-only (no Domain=) per gd-lang cookie observation; if backend validates cookie host-agnostically, session from any mirror works on all others including newly rotated 80009  
+evidence_needed: Same session cookie minted on gamdom80008 accepted by gamdom80009/client-api (or gamdom4567.com/client-api); cookie Domain attribute scope from auth flow Set-Cookie headers  
+verify_steps: (passive) curl -sS -I https://gamdom80008.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://gamdom80009.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://gamdom4567.com/api/auth 2>&1 | grep -i set-cookie — capture Set-Cookie headers during auth flow on 80008 vs 80009 vs 4567; compare Domain/Path/SameSite attributes; (AUTH_HELPED) authenticate on 80008, replay cookie on 80009/client-api and 90471/client-api  
+impact: Cross-domain account takeover across all 17+ mirror hostnames; medium-high  
+testability: AUTH_HELPED  
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture  
+class: MISCONFIG  
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com (8 pending aliases)  
+confidence: 52  
+reasoning: 16th consecutive cycle all 8 aliases 421/TLS-NOMATCH — cert ops stalled not cancelled (prior 80007→80008, 80006→80009 rotations prove pipeline live); secret-realm 401 fixture confirmed serving BOTH stagsrv.teamgamdom + stagsrv.perabet (2 brand TLDs) this cycle; parked 8001x/9049x on registrar ranges confirms brand holds wide numbered namespace but none promoted to Fastly CNAME yet  
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401; a brand host serves the 172B fixture  
+verify_steps: PASSIVE `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`  
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses  
+testability: PASSIVE + monitoring  
+[PARKED] oauth2-proxy teamgamdom domain-wide session cookie permits cross-service pivot: confidence 55 < threshold for HIGH; requires AUTH_HELPED (full Google OAuth flow) to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth  
+[PARKED] Domain-wide oauth2 session pivot via *.teamgamdom.com host (redirect_uri/state abuse): confidence 46; requires XSS on kargo SPA or HUMAN-orchestrated consent flow — no passive falsifier  
+[PARKED] Cross-brand auth cookie replay: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth  
+[PARKED] Cross-mirror auth cookie replay: confidence 67 but testability AUTH_HELPED only; same constraint — session cookie scope requires live auth  
+[FINAL] 1) perabet.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (76, AUTH_HELPED, high impact)  
+[FINAL] 2) gamdom80009.com/client-api: Cross-mirror auth cookie replay via shared /client-api origin yields ATO across all Pool B mirrors (67, AUTH_HELPED, medium-high impact)  
+[FINAL] 3) gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com: Provisioned alias cert lands misbound onto live secret-realm nginx fixture (52, PASSIVE + monitoring, medium-high if gate regresses)  
+[NEXT] PROBE: `for h in gamdom.com fatbets.com gamdom.one perabet.com gamdom80008.com gamdom80009.com gamdom80003.com gamdom4567.com; do for p in /api/v2/auth /auth/v1 /auth/v2 /sso /oauth /oidc /api/session /api/me /api/user /api/profile /api/account; do curl -sS -I "https://$h$p" 2>&1 | grep -i "set-cookie\|location" | head -1; done; echo "--- $h ---"; done` — systematically test remaining common auth endpoint paths across all 8 live hosts to locate real authentication endpoint and capture session cookie attributes; passive, ≤1 rps  
+[LEARN] ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin  
+[LEARN] ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers  
+[LEARN] REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)  
+[LEARN] ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path  
+[LEARN] ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed  
+[LEARN] ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed  
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands  
+[LEARN] ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed  
+[LEARN] ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin  
+[LEARN] ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin  
+[LEARN] ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin  
+[LEARN] ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed  
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com  
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface  
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449  
+[LEARN] ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds  
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle  
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment  
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)  
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains  
+[RISK] gamdom: 76 — 16th consecutive static cycle: shared /client-api origin byte-identical across 12 hosts/4 brands/25+ hostnames where the 76-confidence cookie-replay ATO has no passive falsifier and stays HUMAN-gated; 8 dormant aliases still parked over a live 401 secret-realm fixture serving 2 brand TLDs (stagsrv.teamgamdom.com + stagsrv.perabet.com); no exploitable chain this cycle (all gates hold, no rotation, transient edge resets benign). Residual driver unchanged: the single identity/wallet origin plus the stalled cert pipeline — risk persists but is not rising.

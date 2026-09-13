@@ -682,3 +682,5 @@ www.gamdom.com
 - CHANGED Provisioning cycle advanced to 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
 - CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
 - CHANGED Real auth endpoint NOT at `/api/auth`, `/api/auth/login`, `/auth`, `/login`, `/graphql` across all 4 Pool A brands (all 404 with identical host-only `gd-lang` cookie)
+
+## 2026-09-13 12:19:11 UTC

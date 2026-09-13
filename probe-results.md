@@ -323,3 +323,10 @@ https://stagsrv.teamgamdom.com/` -> HTTP 400
 https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
 https://stagsrv.teamgamdom.com/` -> HTTP 400
 https://gamdom.com/ -> 200 len=?
+
+## 2026-09-13 12:19:16 UTC
+https://stagsrv.teamgamdom.com/` -> HTTP 400
+https://$h.teamgamdom.com/oauth2/auth -> ERR <urlopen error [Errno -2] Name or service not know
+https://$h.teamgamdom.com/oauth2/start?rd=/ -> ERR <urlopen error [Errno -2] Name or service not know
+https://$h.teamgamdom.com/ping -> ERR <urlopen error [Errno -2] Name or service not know
+https://gamdom.com/ -> 200 len=?
