@@ -19411,3 +19411,294 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 77 — 16th static cycle for the core fleet (md5 7e3a161d stable, 8 aliases 421, all gates hold), but this cycle exposed a NEW direct non-CDN OAuth origin (57.128.164.155 OVH) and a direct ClickHouse origin (57.129.130.53) — external surface now reachable past the Fastly shield, sharing a Domain=teamgamdom.com CSRF bucket with the CDN-fronted instance (50-conf OATH cross-instance pivot, AUTH_HELPED). Residual drivers unchanged: 76-conf cross-brand cookie replay with no passive falsifier on a 4-brand/25+-host identity origin, plus stalled cert pipeline parked over a live 401 secret-realm fixture. Risk persists, nudged up on expanded non-CDN attack surface.
+===== ANALYST bigpickle 2026-09-13 16:40:09 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mecho "=== STEP 1: DELTA — last leads vs current ==="
+echo "Last leads: [2026-09-13 12:10:02 UTC]"
+echo "Core fleet: 16th static cycle /client-api md5 7e3a161d"
+echo "--- Checking live fleet /client-api drift ---"
+for h in gamdom.com fatbets.com gamdom.one perabet.com gamdom80008.com gamdom80009.com gamdom80003.com gamdom4567.com; do
+  code=$(curl -sSk -o /tmp/gd_$h -w '%{http_code}' "https://$h/client-api" 2>/dev/null)
+  md5=$(md5sum /tmp/gd_$h 2>/dev/null | awk '{print $1}')
+  echo "$h -> HTTP $code md5=$md5"
+done
+echo "--- Checking pending aliases ---"
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do
+  code=$(curl -sSk -o /dev/null -w '%{http_code}' "https://gamdom${a}.com/client-api" 2>/dev/null)
+  echo "gamdom${a}.com -> HTTP $code"
+done
+echo "--- Checking two oauth2-proxy instances ---"
+for h in oauth2-proxy-prod-google-group oauth2-proxy; do
+  printf "%s auth=%s start=%s ping=%s\n" "$h" \
+    "$(curl -sSk -o /dev/null -w '%{http_code}' "https://${h}.teamgamdom.com/oauth2/auth" 2>/dev/null)" \
+    "$(curl -sSk -o /dev/null -w '%{http_code}' "https://${h}.teamgamdom.com/oauth2/start?rd=/" 2>/dev/null)" \
+    "$(curl -sSk -o /dev/null -w '%{http_code}' "https://${h}.teamgamdom.com/ping" 2>/dev/null)"
+done
+echo "--- Checking /health ETag drift ---"
+for h in gamdom.com gamdom80008.com gamdom80009.com fatbets.com perabet.com gamdom.one; do
+  etag=$(curl -sSk -I "https://$h/health" 2>/dev/null | grep -i '^etag:' | tr -d '\r')
+  echo "$h -> $etag"
+done
+echo "--- Bundle cache-buster check ---"
+curl -sSk https://gamdom.com/ 2>/dev/null | grep -oE 'client\.[a-f0-9]+\.js(#[0-9]+)?' | head -3
+echo "--- status page heartbeat ---"
+curl -sSk "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); [print(f'id={m[\"id\"]} name={m[\"name\"]} uptime={m.get(\"uptime\",\"?\")}') for m in d.get('heartbeatList',d.get('result',[]))]" 2>/dev/null || echo "(heartbeat parse failed)"
+echo "--- stagsrv.brand TLDs ---"
+for t in teamgamdom.com perabet.com gamdom.com fatbets.com; do
+  code=$(curl -sSk -o /dev/null -w '%{http_code}' "https://stagsrv.$t/" 2>/dev/null)
+  echo "stagsrv.$t -> HTTP $code"
+done
+=== STEP 1: DELTA — last leads vs current ===
+Last leads: [2026-09-13 12:10:02 UTC]
+Core fleet: 16th static cycle /client-api md5 7e3a161d
+--- Checking live fleet /client-api drift ---
+gamdom.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+fatbets.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+gamdom.one -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+perabet.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+gamdom80008.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+gamdom80003.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+gamdom4567.com -> HTTP 400 md5=7e3a161d6cde2700fcdc0f6be4520745
+--- Checking pending aliases ---
+gamdom80001.com -> HTTP 421
+gamdom80002.com -> HTTP 421
+gamdom90472.com -> HTTP 421
+gamdom90473.com -> HTTP 421
+gamdom90475.com -> HTTP 421
+gamdom90480.com -> HTTP 421
+gamdom90482.com -> HTTP 421
+gamdom90488.com -> HTTP 421
+--- Checking two oauth2-proxy instances ---
+oauth2-proxy-prod-google-group auth=401 start=302 ping=200
+oauth2-proxy auth=401 start=302 ping=200
+--- Checking /health ETag drift ---
+gamdom.com -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80008.com -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80009.com -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+fatbets.com -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+perabet.com -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.one -> etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+--- Bundle cache-buster check ---
+client.1609510edc0b6169f4c0.js#1789316717895
+--- status page heartbeat ---
+(heartbeat parse failed)
+--- stagsrv.brand TLDs ---
+stagsrv.teamgamdom.com -> HTTP 401
+stagsrv.perabet.com -> HTTP 401
+stagsrv.gamdom.com -> HTTP 000
+stagsrv.fatbets.com -> HTTP 000
+[0m
+[0m$ [0mecho "=== Retry heartbeat raw ==="
+curl -sSk "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | head -c 600
+echo; echo "=== Bundle marker extraction ==="
+curl -sSk "https://gamdom.com/assets/client.1609510edc0b6169f4c0.js#1789316717895" -o /tmp/gd_bundle.js 2>/dev/null
+sz=$(wc -c < /tmp/gd_bundle.js); echo "bundle size: $sz bytes"
+echo "--- trMirrorDomain ---"
+grep -oE 'trMirrorDomain[^,"}]*' /tmp/gd_bundle.js | sort -u | head -5
+echo "--- staffRefillConfig ---"
+grep -oE 'staffRefillConfig[^,]{0,120}' /tmp/gd_bundle.js | sort -u | head -3
+echo "--- brand/mirror domain strings (numbered aliases + perabet family) ---"
+grep -oE 'gamdom[0-9]{4,5}\.com' /tmp/gd_bundle.js | sort -u
+echo "--- perabet-family ---"
+grep -oE '(perabet|fatbets)[a-z0-9.-]*\.(com|net|org|giris|link)' /tmp/gd_bundle.js | sort -u | head -20
+echo "--- subdomain keys ---"
+grep -oE 'gamdom\.(eu|io|vip|win|gg|com|one|me)' /tmp/gd_bundle.js | sort -u | head -20
+=== Retry heartbeat raw ===
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-13 14:46:39.811","msg":"","ping":68},{"status":1,"time":"2026-09-13 14:48:39.882","msg":"","ping":54},{"status":1,"time":"2026-09-13 14:50:39.941","msg":"","ping":52},{"status":1,"time":"2026-09-13 14:52:40.009","msg":"","ping":55},{"status":1,"time":"2026-09-13 14:54:40.073","msg":"","ping":52},{"status":1,"time":"2026-09-13 14:56:40.128","msg":"","ping":55},{"status":1,"time":"2026-09-13 14:58:40.187","msg":"","ping":55},{"status":1,"time":"2026-09-13 15:00:40.245","msg":"","ping":53},{"status":1,"time":"2026-09-13 15:02:40.301","msg":"","pi
+=== Bundle marker extraction ===
+bundle size: 32639 bytes
+--- trMirrorDomain ---
+--- staffRefillConfig ---
+--- brand/mirror domain strings (numbered aliases + perabet family) ---
+gamdom80004.com
+--- perabet-family ---
+--- subdomain keys ---
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.vip
+gamdom.win
+[0m
+[0m$ [0mecho "=== real index.html asset paths ==="
+curl -sSk "https://gamdom.com/" -o /tmp/gd_index.html 2>/dev/null
+grep -oE '(src|href)="[^"]*(client|app|main|vendor)[^"]*\.js[^"]*"' /tmp/gd_index.html | head -10
+echo "--- any chunks? ---"
+grep -oE 'assets/[a-zA-Z0-9._-]+\.(js|css)' /tmp/gd_index.html | sort -u | head -20
+echo "=== full client bundle size from a chunked fetch ==="
+bundle=$(grep -oE 'assets/[a-zA-Z0-9._-]+\.js' /tmp/gd_index.html | sort -u | head -1)
+echo "candidate: $bundle"
+[ -n "$bundle" ] && curl -sSk "https://gamdom.com/$bundle" -o /tmp/gd_bundle2.js 2>/dev/null && echo "size: $(wc -c < /tmp/gd_bundle2.js)"
+echo "--- markers in real bundle ---"
+grep -oE 'trMirrorDomain[^,}"]{0,30}' /tmp/gd_bundle2.js | sort -u | head -5
+grep -oE 'gamdom[0-9]{4,5}\.com' /tmp/gd_bundle2.js | sort -u | head
+grep -oE 'perabet[a-z0-9.-]*' /tmp/gd_bundle2.js | sort -u | head -15
+echo "--- heartbeat monitor ids present ---"
+curl -sSk "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print('monitor ids:', sorted(int(k) for k in d.get('heartbeatList',{}).keys()))"
+=== real index.html asset paths ===
+src="/build/client.1609510edc0b6169f4c0.js#1789316777896"
+--- any chunks? ---
+=== full client bundle size from a chunked fetch ===
+candidate: 
+--- markers in real bundle ---
+grep: /tmp/gd_bundle2.js: No such file or directory
+grep: /tmp/gd_bundle2.js: No such file or directory
+grep: /tmp/gd_bundle2.js: No such file or directory
+--- heartbeat monitor ids present ---
+monitor ids: [2, 3, 5, 6, 13, 221, 223]
+[0m
+[0m$ [0mecho "=== fetch /build/client bundle ==="
+curl -sSk "https://gamdom.com/build/client.1609510edc0b6169f4c0.js" -o /tmp/gd_client.js 2>/dev/null
+echo "size: $(wc -c < /tmp/gd_client.js) bytes"
+echo "--- trMirrorDomain ---"; grep -oE 'trMirrorDomain[^,"}]{0,40}' /tmp/gd_client.js | sort -u | head -5
+echo "--- staffRefillConfig ---"; grep -oE 'staffRefillConfig[^,]{0,140}' /tmp/gd_client.js | sort -u | head -4
+echo "--- numbered aliases ---"; grep -oE 'gamdom[0-9]{4,5}\.com' /tmp/gd_client.js | sort -u | head -20
+echo "--- perabet family ---"; grep -oE 'perabet[a-zA-Z0-9.-]*\.(com|net|org|cc|giris)' /tmp/gd_client.js | sort -u | head -20
+echo "--- regional tlds ---"; grep -oE 'gamdom\.(eu|io|vip|win|gg|one|me|com)' /tmp/gd_client.js | sort -u | head -20
+echo "--- BRANDED_SUBDOMAINS / encrypted tld keys nearby ---"; grep -oE 'B[A-Z_]{3,40}SUBDOM[A-Z_]{0,20}[^,}]{0,160}' /tmp/gd_client.js | sort -u | head -8
+=== fetch /build/client bundle ===
+size: 596312 bytes
+--- trMirrorDomain ---
+trMirrorDomain:
+--- staffRefillConfig ---
+staffRefillConfig:{amountCoins:3e7
+staffRefillConfig:{amountCoins:75e6
+--- numbered aliases ---
+gamdom80004.com
+--- perabet family ---
+--- regional tlds ---
+gamdom.com
+gamdom.eu
+gamdom.io
+gamdom.one
+gamdom.vip
+gamdom.win
+--- BRANDED_SUBDOMAINS / encrypted tld keys nearby ---
+BRANDED_SUBDOMAINS)||void 0===e?void 0:e.fatbets)
+BRANDED_SUBDOMAINS:{fatbets:"EXAMPLE_fatbets.gamdom.com"
+BRANDED_SUBDOMAINS:{fatbets:"fatbets.com"
+[0m
+[0m$ [0mecho "=== oauth2 callback GET divergence (bogus params, read-only) ==="
+for h in oauth2-proxy-prod-google-group oauth2-proxy; do
+  r=$(curl -sSk -o /dev/null -w '%{http_code}|%{redirect_url}' -D /tmp/h_$h "https://${h}.teamgamdom.com/oauth2/callback?code=a1b2c3&state=e4f5g6" 2>/dev/null)
+  echo "$h -> $r"
+  echo "  set-cookie: $(grep -i '^set-cookie' /tmp/h_$h | tr -d '\r' | head -c 200)"
+done
+echo "=== quick breadth: teamgamdom subdomain set ==="
+for s in grafana prometheus vault clickhouse loki tempo bitwarden jenkins gitlab argocd kafka redis mongo postgres kibana elastic minio s3 sentry jaeger; do
+  code=$(curl -sSk --connect-timeout 4 -o /dev/null -w '%{http_code}' "https://$s.teamgamdom.com/" 2>/dev/null)
+  echo "$s.teamgamdom.com -> $code"
+done
+=== oauth2 callback GET divergence (bogus params, read-only) ===
+oauth2-proxy-prod-google-group -> 500|
+  set-cookie: 
+oauth2-proxy -> 503|
+  set-cookie: 
+=== quick breadth: teamgamdom subdomain set ===
+grafana.teamgamdom.com -> 302
+prometheus.teamgamdom.com -> 302
+vault.teamgamdom.com -> 302
+clickhouse.teamgamdom.com -> 302
+loki.teamgamdom.com -> 404
+tempo.teamgamdom.com -> 404
+bitwarden.teamgamdom.com -> 404
+jenkins.teamgamdom.com -> 404
+gitlab.teamgamdom.com -> 404
+argocd.teamgamdom.com -> 404
+kafka.teamgamdom.com -> 404
+redis.teamgamdom.com -> 404
+mongo.teamgamdom.com -> 404
+postgres.teamgamdom.com -> 404
+kibana.teamgamdom.com -> 404
+elastic.teamgamdom.com -> 404
+minio.teamgamdom.com -> 404
+s3.teamgamdom.com -> 404
+sentry.teamgamdom.com -> 404
+jaeger.teamgamdom.com -> 404
+[0m
+[0m$ [0mecho "=== confirm redirect targets (302) ==="
+for s in grafana prometheus vault clickhouse; do
+  loc=$(curl -sSk -o /dev/null -w '%{redirect_url}' "https://$s.teamgamdom.com/" 2>/dev/null)
+  echo "$s.teamgamdom.com -> $loc"
+done
+echo "=== which oauth2 instance handles these? check ping + auth on one ==="
+for s in grafana.vault clickhouse; do :; done
+locg=$(curl -sSk -o /dev/null -w '%{redirect_url}' "https://grafana.teamgamdom.com/login?redirect_to=/" 2>/dev/null)
+echo "grafana /login -> $locg"
+ping=$(curl -sSk -o /dev/null -w '%{http_code}' "https://vault.teamgamdom.com/v1/sys/health" 2>/dev/null)
+echo "vault /v1/sys/health -> $ping"
+# check whether these are oauth2-proxy 302 (redirect_url ends with oauth2/start) vs service-native redirect
+for s in prometheus clickhouse; do
+  loc=$(curl -sSk -o /dev/null -w '%{redirect_url}' "https://$s.teamgamdom.com/" 2>/dev/null)
+  echo "$s -> $loc"
+done
+=== confirm redirect targets (302) ===
+grafana.teamgamdom.com -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=S9Nc1iWc8gqQ6plO6mbJNqIGeDyb3xHm8o5wzQalpgI%3Ahttps%3A%2F%2Fgrafana.teamgamdom.com%2F
+prometheus.teamgamdom.com -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=7Z2oG2d7PY2CNkUkx8OMCbTTTGS1GXpAjA-JDZryLoc%3Ahttps%3A%2F%2Fprometheus.teamgamdom.com%2F
+vault.teamgamdom.com -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=mumtxfic5mltCxN0hqgEK1lzCtagtmO07ys0XrPyplo%3Ahttps%3A%2F%2Fvault.teamgamdom.com%2F
+clickhouse.teamgamdom.com -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=rdK-ygXHut8GQpsNMgTyyIhm-X99mt__gqkyrfFHanI%3Ahttps%3A%2F%2Fclickhouse.teamgamdom.com%2F
+=== which oauth2 instance handles these? check ping + auth on one ===
+grafana /login -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=zRTbC82B7MqhZO1EpoWHOGlSCDLYeqxlCAwZsztF6vc%3Ahttps%3A%2F%2Fgrafana.teamgamdom.com%2Flogin%3Fredirect_to%3D%2F
+vault /v1/sys/health -> 302
+prometheus -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=QU-q7893eLHgJMDbhFNiXXlrW2nRNDRoHS_3D0cFwC0%3Ahttps%3A%2F%2Fprometheus.teamgamdom.com%2F
+clickhouse -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=VckQVmd5YeP-1UnQQj6gnZsGcLv3Vl0PZ5RzPGKlhV4%3Ahttps%3A%2F%2Fclickhouse.teamgamdom.com%2F
+[0m
+## STEP 1 — DELTA
+- [NEW] grafana|prometheus|vault.teamgamdom.com confirmed live behind `oauth2-proxy.teamgamdom.com` (302 → Google OAuth, `redirect_uri=oauth2-proxy.teamgamdom.com/oauth2/callback`, `client_id=696342781525-…`, `state=<csrf>:<rd>`)
+- [NEW] clickhouse.teamgamdom.com confirmed live behind `oauth2-proxy-prod-google-group.teamgamdom.com` (`redirect_uri=…prod-google-group…/oauth2/callback`) — proves BOTH oauth2 instances serve production traffic and share the `Domain=teamgamdom.com` cookie bucket
+- [CHANGED] bundle cache-buster epoch `#1789300883612 → #1789316717895` with identical content (`/build/client.1609510edc0b6169f4c0.js`, 596312B, staffRefillConfig 30M/75M, BRANDED_SUBDOMAINS fatbets.com, trMirrorDomain=gamdom80004) → redeploy, no config drift
+- NO_DELTA: `/client-api` md5 7e3a161d × 8 hosts (17th cycle); `/health` weak-ETag × 6; 8 aliases 421 (17th); Kuma ids {2,3,5,6,13,221,223} no rotation; stagsrv.{teamgamdom,perabet} 401
+
+## STEP 2 — PRIORITIZE
+- [PRIO] oauth2-proxy instances (grafana/prometheus/vault/clickhouse.teamgamdom.com), 6.35, SSO-gate-observability (a=6,b=8,t=10,g=2,c=3,f=2)
+- [PRIO] /client-api shared identity/wallet proxy (4 brands/25+ hosts), 7.25, auth-lottery
+- [PRIO] pending aliases (8× 421 → nginx secret-realm), 4.50, misconfig-certs
+
+## STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets, gamdom.one, 80008/80009/80003, gamdom4567.com)
+confidence: 76
+reasoning: 17th cycle /client-api md5 7e3a161d byte-identical across 8 sampled hosts Pool A+B; gd-lang host-only uniform; bundle redeployed but markers identical; no passive falsifier exists (CORS-absent closes browser branch; cookie-Domain confusion only observable post-auth)
+evidence_needed: authenticated Set-Cookie on any member host re-accepted by a sibling via POST replay; or Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — continue GET /client-api=400 drift-watch + Set-Cookie attr diff across 4 brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] OAuth state-token replay / cross-instance cookie-bucket pivot across the two oauth2-proxy deployments
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com (grafana/prometheus/vault/clickhouse)
+confidence: 58
+reasoning: Both instances forward same Google client_id and issue Domain=teamgamdom.com;HttpOnly;Secure CSRF; this cycle proved BOTH serve live prod vhosts (grafana/prometheus/vault via instance A, clickhouse via instance B) → the domain-wide cookie bucket now demonstrably spans Vault (secrets) + ClickHouse (analytics); callback w/ bogus code → 500 (direct) vs 503 (Fastly) — divergent error synthesis, no state acceptance observed unauth; direct origin 57.128.164.155 bypasses Fastly VCL/WAF
+evidence_needed: authenticated session cookie issued on instance A accepted on instance B's /oauth2 paths; state/rd validation anomaly in HUMAN flow
+verify_steps: PASSIVE — per-cycle diff /oauth2/auth 401 + /oauth2/start + /oauth2/callback{code,state} status/redirect on both instances and all 4 vhosts; watch rd reflect; only AUTH_HELPED replay confirms state acceptance
+impact: credentialed relay into Vault/ClickHouse/observability stack; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.{teamgamdom,perabet} (8 pending)
+confidence: 52
+reasoning: 17th cycle all 8 aliases 421 — cert ops still parked; stagsrv 401 secret-realm holds on 2 brand TLDs; rotation pipeline proven live (80007→80008, 80006→80009) so stalled-not-cancelled; no vhost regression observed
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done; curl -sSk -o /dev/null -w '%{http_code}\n' https://stagsrv.perabet.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] MISCONFIG pending-alias misbind (52): 17 cycles with zero cert movement and no gate regression — reduced to standing monitor, not a fresh lead.
+- [PARKED] game-service breadth (perabetgiris/giris/play.perabet all non-Fastly): OUT-OF-SCOPE-adjacent pool edges, closed prior cycles.
+- [FINAL] AUTH cross-brand replay 76 — no passive falsifier, highest business value, retained top.
+- [FINAL] OATH cross-instance cookie-bucket pivot 58 — RISING this cycle: production grounding just established (Vault + ClickHouse behind two instances sharing one domain-wide bucket).
+- [FINAL] MISCONFIG cert misbind 52 — retained as the only live-passive falsifiable vector.
+
+## STEP 5 — NEXT ACTION
+[NEXT] PROBE: divergence-watch the 4 new gated vhosts for oauth2-proxy path-bypass + both instances — `for s in grafana prometheus vault clickhouse; do for p in /api/health /metrics /v1/sys/health /robots.txt /.well-known/openid-configuration; do printf "%s%s=%s\n" "$s" "$p" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$s.teamgamdom.com$p)"; done; done; for h in oauth2-proxy oauth2-proxy-prod-google-group; do printf "%s auth=%s cb500=%s\n" "$h" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/auth)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/callback?code=x&state=y)"; done` — 200≠302 on any path = SSO bypass into Vault/Grafana/ClickHouse.
+
+## STEP 6 — LEARNING
+[LEARN] ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (Same client_id 696342781525, state=`<csrf>:<rd>`) — live SSO-gated observability vhosts; no anonymous path exposed this cycle.
+[LEARN] ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second instance actively serving production, proving both halves of the Domain=teamgamdom.com cookie bucket are in live traffic.
+[LEARN] ACCEPTED recon @ gamdom.com/build/client.1609510edc0b6169f4c0.js#1789316717895: epoch-bumped redeploy of byte-identical-content bundle (596312B; markers stable) — deploy pipeline active, no config drift observable passively.
+
+## STEP 7 — RISK
+[RISK] gamdom: 78 — First non-static cycle in 17: confirmed live SSO-gated Vault/Grafana/Prometheus/ClickHouse vhosts behind TWO oauth2-proxy instances sharing a domain-wide `Domain=teamgamdom.com` cookie bucket (58 OATH pivot, AUTH_HELPED), extending reach toward secrets + analytics. Core drivers unchanged but pulled upward by the newly established production topology: 76-conf cross-brand cookie-replay ATO on a 4-brand/25+-host identity origin with no passive falsifier, plus the stalled cert pipeline parked over a live 401 secret-realm fixture (cycle 17). Risk persists and ticks up on newly-firmed SSO attack surface.

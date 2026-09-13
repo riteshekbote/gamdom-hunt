@@ -2884,3 +2884,36 @@ impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-hi
 testability: PASSIVE + monitoring
 [NEXT] PROBE: divergence-watch the two oauth2-proxy instances + bundle cache-buster — `for h in oauth2-proxy-prod-google-group oauth2-proxy; do printf "%s auth=%s start=%s ping=%s\n" "$h" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/auth)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/start?rd=/)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/ping)"; done; curl -sSk https://gamdom.com/ | grep -oE 'client\.[a-f0-9]+\.js#?[0-9]*'` — bundle `#<epoch>` cache-buster is a redeploy drift-trigger (current #1789300883612 = 2026-09-13); any change flags new build before /client-api ever moves.
 [RISK] gamdom: 77 — 16th static cycle for the core fleet (md5 7e3a161d stable, 8 aliases 421, all gates hold), but this cycle exposed a NEW direct non-CDN OAuth origin (57.128.164.155 OVH) and a direct ClickHouse origin (57.129.130.53) — external surface now reachable past the Fastly shield, sharing a Domain=teamgamdom.com CSRF bucket with the CDN-fronted instance (50-conf OATH cross-instance pivot, AUTH_HELPED). Residual drivers unchanged: 76-conf cross-brand cookie replay with no passive falsifier on a 4-brand/25+-host identity origin, plus stalled cert pipeline parked over a live 401 secret-realm fixture. Risk persists, nudged up on expanded non-CDN attack surface.
+## 2026-09-13 16:28:29 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets, gamdom.one, 80008/80009/80003, gamdom4567.com)
+confidence: 76
+reasoning: 17th cycle /client-api md5 7e3a161d byte-identical across 8 sampled hosts Pool A+B; gd-lang host-only uniform; bundle redeployed but markers identical; no passive falsifier exists (CORS-absent closes browser branch; cookie-Domain confusion only observable post-auth)
+evidence_needed: authenticated Set-Cookie on any member host re-accepted by a sibling via POST replay; or Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — continue GET /client-api=400 drift-watch + Set-Cookie attr diff across 4 brands each cycle
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] OAuth state-token replay / cross-instance cookie-bucket pivot across the two oauth2-proxy deployments
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com (grafana/prometheus/vault/clickhouse)
+confidence: 58
+reasoning: Both instances forward same Google client_id and issue Domain=teamgamdom.com;HttpOnly;Secure CSRF; this cycle proved BOTH serve live prod vhosts (grafana/prometheus/vault via instance A, clickhouse via instance B) → the domain-wide cookie bucket now demonstrably spans Vault (secrets) + ClickHouse (analytics); callback w/ bogus code → 500 (direct) vs 503 (Fastly) — divergent error synthesis, no state acceptance observed unauth; direct origin 57.128.164.155 bypasses Fastly VCL/WAF
+evidence_needed: authenticated session cookie issued on instance A accepted on instance B's /oauth2 paths; state/rd validation anomaly in HUMAN flow
+verify_steps: PASSIVE — per-cycle diff /oauth2/auth 401 + /oauth2/start + /oauth2/callback{code,state} status/redirect on both instances and all 4 vhosts; watch rd reflect; only AUTH_HELPED replay confirms state acceptance
+impact: credentialed relay into Vault/ClickHouse/observability stack; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.{teamgamdom,perabet} (8 pending)
+confidence: 52
+reasoning: 17th cycle all 8 aliases 421 — cert ops still parked; stagsrv 401 secret-realm holds on 2 brand TLDs; rotation pipeline proven live (80007→80008, 80006→80009) so stalled-not-cancelled; no vhost regression observed
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done; curl -sSk -o /dev/null -w '%{http_code}\n' https://stagsrv.perabet.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: divergence-watch the 4 new gated vhosts for oauth2-proxy path-bypass + both instances — `for s in grafana prometheus vault clickhouse; do for p in /api/health /metrics /v1/sys/health /robots.txt /.well-known/openid-configuration; do printf "%s%s=%s\n" "$s" "$p" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$s.teamgamdom.com$p)"; done; done; for h in oauth2-proxy oauth2-proxy-prod-google-group; do printf "%s auth=%s cb500=%s\n" "$h" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/auth)" "$(curl -sSk -o /dev/null -w '%{http_code}' https://$h.teamgamdom.com/oauth2/callback?code=x&state=y)"; done` — 200≠302 on any path = SSO bypass into Vault/Grafana/ClickHouse.
+[LEARN] ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (Same client_id 696342781525, state=`<csrf>:<rd>`) — live SSO-gated observability vhosts; no anonymous path exposed this cycle.
+[LEARN] ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second instance actively serving production, proving both halves of the Domain=teamgamdom.com cookie bucket are in live traffic.
+[LEARN] ACCEPTED recon @ gamdom.com/build/client.1609510edc0b6169f4c0.js#1789316717895: epoch-bumped redeploy of byte-identical-content bundle (596312B; markers stable) — deploy pipeline active, no config drift observable passively.
+[RISK] gamdom: 78 — First non-static cycle in 17: confirmed live SSO-gated Vault/Grafana/Prometheus/ClickHouse vhosts behind TWO oauth2-proxy instances sharing a domain-wide `Domain=teamgamdom.com` cookie bucket (58 OATH pivot, AUTH_HELPED), extending reach toward secrets + analytics. Core drivers unchanged but pulled upward by the newly established production topology: 76-conf cross-brand cookie-replay ATO on a 4-brand/25+-host identity origin with no passive falsifier, plus the stalled cert pipeline parked over a live 401 secret-realm fixture (cycle 17). Risk persists and ticks up on newly-firmed SSO attack surface.

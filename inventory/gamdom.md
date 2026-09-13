@@ -684,3 +684,5 @@ www.gamdom.com
 - CHANGED Real auth endpoint NOT at `/api/auth`, `/api/auth/login`, `/auth`, `/login`, `/graphql` across all 4 Pool A brands (all 404 with identical host-only `gd-lang` cookie)
 
 ## 2026-09-13 12:19:11 UTC
+
+## 2026-09-13 16:40:09 UTC

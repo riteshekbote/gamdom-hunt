@@ -330,3 +330,9 @@ https://$h.teamgamdom.com/oauth2/auth -> ERR <urlopen error [Errno -2] Name or s
 https://$h.teamgamdom.com/oauth2/start?rd=/ -> ERR <urlopen error [Errno -2] Name or service not know
 https://$h.teamgamdom.com/ping -> ERR <urlopen error [Errno -2] Name or service not know
 https://gamdom.com/ -> 200 len=?
+
+## 2026-09-13 16:40:13 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://$s.teamgamdom.com$p -> ERR <urlopen error [Errno -2] Name or service not know
+https://$h.teamgamdom.com/oauth2/auth -> ERR <urlopen error [Errno -2] Name or service not know
+https://$h.teamgamdom.com/oauth2/callback?code=x&state=y -> ERR <urlopen error [Errno -2] Name or service not know

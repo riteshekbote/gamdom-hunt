@@ -287,3 +287,9 @@
 - 2026-09-13 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - 2026-09-13 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-13 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-13 ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (Same client_id 696342781525, state=`<csrf>:<rd>`) — live SSO-gated observability vhosts; no anonymous path exposed this cycle.
+- 2026-09-13 ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second instance actively serving production, proving both halves of the Domain=teamgamdom.com cookie bucket are in live traffic.
+- 2026-09-13 ACCEPTED recon @ gamdom.com/build/client.1609510edc0b6169f4c0.js#1789316717895: epoch-bumped redeploy of byte-identical-content bundle (596312B; markers stable) — deploy pipeline active, no config drift observable passively.
+- 2026-09-13 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 400 (was 401) — gate regression on internal test backend, new surface
+- 2026-09-13 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 400 — new internal dev subdomain
+- 2026-09-13 ACCEPTED recon @ tableau-admin.teamgamdom.com: HTTP 401 — new Tableau admin subdomain
