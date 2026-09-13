@@ -2973,3 +2973,4 @@ evidence_needed: any pending alias non-421; any secret-realm vhost drops from 40
 verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done; curl -sSk -o /dev/null -w '%{http_code}\n' https://stagsrv.perabet.com/`
 impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
 testability: PASSIVE + monitoring
+## 2026-09-13 23:13:25 UTC [target] (model bigpickle)

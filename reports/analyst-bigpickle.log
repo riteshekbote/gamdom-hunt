@@ -20037,3 +20037,101 @@ testability: PASSIVE + monitoring
 
 **STEP 7 — RISK**
 - [RISK] gamdom: 76 — Slight down from 78: the high-value stagsrv gate-regression driver self-nullified (400→401), and TSM admin console turned out same-patched-build with all API gated. Remaining drivers: standing 76-conf cross-brand cookie-replay ATO on 4-brand/25+-host identity origin (no passive falsifier, 18th cycle), and the 58-conf onward SSO stack where two oauth2-proxy instances share a Domain-wide cookie bucket now fronting Vault+ClickHouse+observability, with `sign_out?rd` validation the last untested branch. Rotation pipeline + stalled cert fleet over a live 401 secret-realm fixture keeps the misconfig watch alive.
+===== ANALYST bigpickle 2026-09-13 23:16:16 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "$a:%{http_code} " --max-time 20 https://gamdom$a.com/client-api 2>/dev/null; done; echo; curl -sSk -o /dev/null -w "stagsrv:%{http_code} " --max-time 20 https://stagsrv.teamgamdom.com/ 2>/dev/null; curl -sSk -o /dev/null -w "devsrv5:%{http_code} " --max-time 20 https://devsrv5.teamgamdom.com/ 2>/dev/null; curl -sSk -o /dev/null -w "tableau-admin:%{http_code}\n" --max-time 20 https://tableau-admin.teamgamdom.com/ 2>/dev/null
+80001:421 80002:421 90472:421 90473:421 90475:421 90480:421 90482:421 90488:421 
+stagsrv:401 devsrv5:401 tableau-admin:200
+[0m
+Deltas: tableau-admin went 401→200; stagsrv/devsrv5 wobble back to 401. Probing tableau-admin deeper.
+[0m$ [0mecho "=== tableau-admin root ==="; curl -sSk -D - --max-time 20 https://tableau-admin.teamgamdom.com/ -o /tmp/ta_root.html | head -30; echo "=== body head ==="; head -c 800 /tmp/ta_root.html; echo; echo "=== /api/3.21/serverInfo ==="; curl -sSk -D - --max-time 20 "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" -o /tmp/ta_si.xml | head -15; echo "=== serverInfo body ==="; head -c 600 /tmp/ta_si.xml
+=== tableau-admin root ===
+HTTP/2 200 
+content-language: en-US
+last-modified: Thu, 11 Dec 2025 04:44:00 GMT
+cache-control: no-store
+content-type: text/html
+accept-ranges: bytes
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+x-frame-options: DENY
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none';
+date: Sun, 13 Sep 2026 23:13:04 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000124-IAD
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1789341184.154867,VS0,VE266
+vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Accept-Encoding
+strict-transport-security: max-age=300
+content-length: 1989
+
+=== body head ===
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charSet="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="meta-locale" content="en_US" />
+    <title>Login - Tableau Services Manager</title>
+    <style>
+        @font-face {
+            font-family: 'Benton Sans';
+            src: url(../assets/fonts/benton/BentonSans-Book.woff) format('woff');
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: 'Benton Sans';
+            src: url(../assets/fonts/benton/BentonSans-Book_Italic.woff) format('woff');
+            font-style: italic;
+            font-weight
+=== /api/3.21/serverInfo ===
+HTTP/2 200 
+content-type: application/json
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: 0
+x-frame-options: DENY
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none';
+accept-ranges: bytes
+date: Sun, 13 Sep 2026 23:13:05 GMT
+via: 1.1 varnish
+x-served-by: cache-iad-kcgs7200175-IAD
+x-cache: MISS
+x-cache-hits: 0
+=== serverInfo body ===
+{"serverInfo":{"operatingSystem":"Linux","initializationState":"Initialized","daysLeftForMaintenanceExpiring":235,"serverVersion":"20251.25.1210.1815","productVersion":"2025.1.11","containerDeploymentType":""},"fulfillmentIds":[]}
+[0m
+tableau-admin is now the Tableau **Services Manager (TSM)** admin plane — exposed on Fastly without oauth2-proxy gate. Checking TSM API exposure + stagsrv/devsrv5 gate state.
+[0m$ [0mfor p in /auth/login /auth /api/config /api/server /api/backups /api/licensing /api/maintenance /api/users /api/logout; do echo "== $p"; curl -sSk --max-time 15 -o /tmp/tsm_$(echo $p | tr '/' '_').out -w "%{http_code} %{size_download}B ct=%{content_type}\n" "https://tableau-admin.teamgamdom.com$p"; done
+== /auth/login
+403 81B ct=application/json
+== /auth
+403 75B ct=application/json
+== /api/config
+401 84B ct=application/json
+== /api/server
+401 84B ct=application/json
+== /api/backups
+401 85B ct=application/json
+== /api/licensing
+401 87B ct=application/json
+== /api/maintenance
+401 89B ct=application/json
+== /api/users
+401 83B ct=application/json
+== /api/logout
+401 84B ct=application/json
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mecho "== tsm /api/config body"; cat /tmp/tsm__api_config.out; echo; echo "== tsm /auth/login body"; cat /tmp/tsm__auth_login.out; echo; echo "== stagsrv headers"; curl -sSk -D - --max-time 15 https://stagsrv.teamgamdom.com/ -o /tmp/stag.out | grep -iE "HTTP/|www-auth|content-type|server:|via" ; echo "-- body"; head -c 300 /tmp/stag.out; echo; echo "== devsrv5 headers"; curl -sSk -D - --max-time 15 https://devsrv5.teamgamdom.com/ -o /tmp/dev.out | grep -iE "HTTP/|www-auth|content-type|server:|via" ; echo "-- body"; head -c 300 /tmp/dev.out failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.

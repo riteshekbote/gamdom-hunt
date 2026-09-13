@@ -293,3 +293,12 @@
 - 2026-09-13 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 400 (was 401) — gate regression on internal test backend, new surface
 - 2026-09-13 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 400 — new internal dev subdomain
 - 2026-09-13 ACCEPTED recon @ tableau-admin.teamgamdom.com: HTTP 401 — new Tableau admin subdomain
+- 2026-09-13 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" (not 400) — gate holds, internal test backend still protected
+- 2026-09-13 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
+- 2026-09-13 ACCEPTED recon @ tableau-admin.teamgamdom.com: HTTP 200 Tableau login page (CSP, no-store) — new Tableau admin subdomain
+- 2026-09-13 ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observability vhosts
+- 2026-09-13 ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving production
+- 2026-09-13 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-13 ACCEPTED recon @ oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth: HTTP 401 — second OAuth2 proxy instance confirmed
+- 2026-09-13 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 405 — ArgoCD-like API method-gated, SPA catch-all on GET
+- 2026-09-13 ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand sharing origin backend

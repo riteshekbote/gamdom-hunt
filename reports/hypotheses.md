@@ -1472,3 +1472,21 @@
 - LEARN: ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-13 23:16:16 UTC
+- [70] oauth2-proxy.teamgamdom.com/oauth2/auth: OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot to grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5 (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: `for p in /api/3.21/serverInfo /api/3.21/sites /api/3.21/auth/signin /api/3.21/projects /api/3.21/users /api/3.21/groups /api/3.21/datasources /api/3.21/
+- LEARN: ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" (not 400) — gate holds, internal test backend still protected
+- LEARN: ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com: HTTP 200 Tableau login page (CSP, no-store) — new Tableau admin subdomain
+- LEARN: ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observ
+- LEARN: ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving p
+- LEARN: ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/auth: HTTP 401 — OAuth2 SSO layer confirmed on teamgamdom.com
+- LEARN: ACCEPTED recon @ oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth: HTTP 401 — second OAuth2 proxy instance confirmed
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 405 — ArgoCD-like API method-gated, SPA catch-all on GET
+- LEARN: ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname conf
+- LEARN: ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand sharing origin backend
+- LEARN: ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- LEARN: ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
