@@ -318,3 +318,8 @@ https://stagsrv.teamgamdom.com/` -> HTTP 400
 ## 2026-09-13 01:14:07 UTC
 https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
 https://stagsrv.teamgamdom.com/` -> HTTP 400
+
+## 2026-09-13 06:21:49 UTC
+https://oauth2-proxy.teamgamdom.com/oauth2/start -> 200 len=?
+https://stagsrv.teamgamdom.com/` -> HTTP 400
+https://gamdom.com/ -> 200 len=?
