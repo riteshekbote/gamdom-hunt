@@ -2945,3 +2945,31 @@ evidence_needed: any pending alias non-421; any secret-realm vhost drops from 40
 verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done; curl -sSk -o /dev/null -w '%{http_code}' https://stagsrv.perabet.com/`
 impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
 testability: PASSIVE + monitoring
+## 2026-09-13 21:17:54 UTC [target] (model bigpickle)
+[HYP] oauth2-proxy cross-instance session/path relay with relocated-ping defaults
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com (grafana/prometheus/vault/clickhouse)
+confidence: 58
+reasoning: both instances share Google client_id 696342781525 + Domain=teamgamdom.com;HttpOnly;Secure CSRF; /ping 200 unauth both (vanilla v7, ping relocated); callback bogus-code synthesis divergent 503 vs 500 (two distinct backends, direct origin 57.128.164.155 past Fastly); state rd is server-reconstructed absolute URL, not client-injectable; all 16 vhost paths still 302-gated
+evidence_needed: cookie issued by instance A accepted on B (session-store/cookie-secret shared?); rd/state allowlist anomaly in HUMAN flow
+verify_steps: PASSIVE per-cycle diff /oauth2/{auth,start,callback,sign_out,ping}; then GET /oauth2/sign_out?rd=.. external to characterize redirect validation
+impact: credentialed relay into Vault/ClickHouse/Grafana observability stack; critical if triggerable
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets, gamdom.one, 80008/80009/80003, gamdom4567)
+confidence: 76
+reasoning: md5 7e3a161d /client-api byte-identical across 8 hosts Pool A+B (re-confirmed this cycle); gd-lang host-only uniform; no passive falsifier remains (CORS-absent closes browser branch; cookie-Domain confusion only observable post-auth); deploy pipeline active but markers stable
+evidence_needed: authenticated Set-Cookie on one member host re-accepted by a sibling via POST replay; or Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — retain GET /client-api=400 + Set-Cookie attr drift-watch across all 4 brands
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488/gamdom90471→shreeram-dynamic-test; 8 pending aliases (80001/80002/90472/90473/90475/90480/90482/90488)
+confidence: 52
+reasoning: 15th cycle all 421-TLS-NOMATCH (cert ops stalled); rotation pipeline proven live (80007→80008, 80006→80009, 80004→80008 flattened); secret-realm 401 holds on 2 brand TLDs; stagsrv/devsrv5 regression wobble reverted but proves gate not static
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done; curl -sSk -o /dev/null -w '%{http_code}\n' https://stagsrv.perabet.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring

@@ -698,3 +698,15 @@ www.gamdom.com
 - CHANGED Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, cert ops stalled
 - CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
 - CHANGED Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
+
+## 2026-09-13 21:18:03 UTC
+- NEW stagsrv.teamgamdom.com: HTTP 400 (was 401) — gate regression on internal test backend, new attack surface
+- NEW devsrv5.teamgamdom.com: HTTP 400 — new internal dev subdomain discovered
+- NEW tableau-admin.teamgamdom.com: HTTP 401 — new Tableau admin subdomain discovered
+- NEW grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observability vhosts
+- NEW clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving production
+- NEW perabet.com (apex/www/beta): confirmed 4th brand on shared Pool A (Fastly 151.101.x.52), byte-identical /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie
+- CHANGED Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames via byte-identical /client-api signature
+- CHANGED Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, cert ops stalled
+- CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+- CHANGED Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)

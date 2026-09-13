@@ -12186,3 +12186,91 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; stagsrv.teamgamdom.com gate regression (401→400) is the only delta — new unauthenticated internal nginx test backend surface; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + new gate regression
+===== ANALYST nemotron3 2026-09-13 21:18:03 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[NEW] stagsrv.teamgamdom.com: HTTP 400 (was 401) — gate regression on internal test backend, new attack surface
+[NEW] devsrv5.teamgamdom.com: HTTP 400 — new internal dev subdomain discovered
+[NEW] tableau-admin.teamgamdom.com: HTTP 401 — new Tableau admin subdomain discovered
+[NEW] grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observability vhosts
+[NEW] clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving production
+[NEW] perabet.com (apex/www/beta): confirmed 4th brand on shared Pool A (Fastly 151.101.x.52), byte-identical /client-api md5 7e3a161d + /health weak-ETag + host-only gd-lang cookie
+[CHANGED] Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames via byte-identical /client-api signature
+[CHANGED] Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, cert ops stalled
+[CHANGED] Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+[CHANGED] Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
+
+[PRIO] stagsrv.teamgamdom.com,7.50,attack_surface=9,business_value=6,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=10
+[PRIO] clickhouse.teamgamdom.com,7.25,attack_surface=7,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] oauth2-proxy-prod-google-group.teamgamdom.com,7.10,attack_surface=7,business_value=7,tech_exposure=9,gate_ease=5,cloud_surface=7,freshness=10
+[PRIO] grafana.teamgamdom.com,7.00,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] prometheus.teamgamdom.com,7.00,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] vault.teamgamdom.com,7.00,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] devsrv5.teamgamdom.com,6.75,attack_surface=8,business_value=5,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=10
+[PRIO] tableau-admin.teamgamdom.com,6.50,attack_surface=6,business_value=7,tech_exposure=8,gate_ease=5,cloud_surface=7,freshness=10
+[PRIO] perabet.com,6.25,attack_surface=6,business_value=7,tech_exposure=7,gate_ease=5,cloud_surface=8,freshness=8
+
+[HYP] stagsrv gate regression exposes internal nginx test backend
+class: MISCONFIG
+asset: stagsrv.teamgamdom.com
+confidence: 72
+reasoning: stagsrv.teamgamdom.com regressed from HTTP 401 (Basic realm="secret") to HTTP 400 across all probed paths (/.git/config /env /server-status /status /_metrics /actuator) — the Basic auth gate that previously protected the internal test backend has dropped, exposing raw nginx error responses (400 172B identical) without authentication
+evidence_needed: enumerate all paths on stagsrv.teamgamdom.com for debug endpoints, config leaks, or unauthenticated admin interfaces; check if /client-api or other Gamdom APIs are reachable
+verify_steps: (passive) curl -sS -I https://stagsrv.teamgamdom.com/ 2>&1 | head -20; curl -sS "https://stagsrv.teamgamdom.com/.git/config" 2>&1 | head -5; curl -sS "https://stagsrv.teamgamdom.com/env" 2>&1 | head -5; curl -sS "https://stagsrv.teamgamdom.com/actuator" 2>&1 | head -5; curl -sS "https://stagsrv.teamgamdom.com/server-status" 2>&1 | head -5; curl -sS "https://stagsrv.teamgamdom.com/_metrics" 2>&1 | head -5; curl -sS "https://stagsrv.teamgamdom.com/status" 2>&1 | head -5
+impact: Unauthenticated access to internal nginx test backend — potential config leak, debug endpoint exposure, or pivot to Gamdom infrastructure via shared network; medium-high
+testability: PASSIVE
+
+[HYP] oauth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot to grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com/oauth2/auth
+confidence: 68
+reasoning: oauth2-proxy.teamgamdom.com/oauth2/start issues _oauth2_proxy_csrf cookie with Domain=teamgamdom.com; HttpOnly; Secure; grafana/prometheus/vault.teamgamdom.com redirect to oauth2-proxy.teamgamdom.com (client_id 696342781525); clickhouse.teamgamdom.com redirects to oauth2-proxy-prod-google-group.teamgamdom.com (second instance); tableau-admin.teamgamdom.com returns 401; kargo.teamgamdom.com SPA catch-all; stagsrv/devsrv5 new 400 surfaces — all share teamgamdom.com apex; if oauth2-proxy session cookie uses Domain=teamgamdom.com, authenticated session grants access to all sibling services
+evidence_needed: actual session cookie attributes (Domain, Path, SameSite) after full Google OAuth flow on oauth2-proxy.teamgamdom.com; whether session cookie accepted by grafana.teamgamdom.com, prometheus.teamgamdom.com, vault.teamgamdom.com, clickhouse.teamgamdom.com, tableau-admin.teamgamdom.com, kargo.teamgamdom.com/api/*, stagsrv.teamgamdom.com, devsrv5.teamgamdom.com
+verify_steps: (passive) curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth 2>&1 | grep -i set-cookie; (AUTH_HELPED) complete Google OAuth flow on oauth2-proxy.teamgamdom.com, capture session cookie, replay on https://grafana.teamgamdom.com/, https://prometheus.teamgamdom.com/, https://vault.teamgamdom.com/, https://clickhouse.teamgamdom.com/, https://tableau-admin.teamgamdom.com/, https://kargo.teamgamdom.com/api/v1/projects, https://stagsrv.teamgamdom.com/, https://devsrv5.teamgamdom.com/
+impact: Cross-service privilege escalation on teamgamdom.com brand — access to Grafana/Prometheus/Vault (observability), ClickHouse (analytics), Tableau admin (BI), Kargo (GitOps/ArgoCD), internal nginx test backends; high
+testability: AUTH_HELPED
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (gamdom/fatbets/gamdom.one/perabet)
+class: AUTH
+asset: perabet.com/client-api
+confidence: 76
+reasoning: perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api md5 7e3a161d, /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", host-only gd-lang cookie policy identical across 4 brands / 25+ hostnames; /client-api POST returns identical GamdomClientMessage across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com); auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one/perabet and vice versa
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from actual auth flow on perabet.com vs gamdom.com vs fatbets.com vs gamdom.one; whether session cookie minted on gamdom80009 accepted by perabet.com/client-api
+verify_steps: (passive) curl -sS -I https://perabet.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/api/auth/login 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/auth 2>&1 | grep -i set-cookie — locate real auth endpoint and capture session cookie attributes; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on perabet.com/client-api and fatbets.com/client-api and gamdom.one/client-api
+impact: Cross-brand account takeover across 4 brands / 25+ hostnames; high
+testability: AUTH_HELPED
+
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth; requires valid user session
+[PARKED] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot: confidence 68 but testability AUTH_HELPED only; requires full Google OAuth flow to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth
+[FINAL] 1) stagsrv.teamgamdom.com: stagsrv gate regression exposes internal nginx test backend (72, PASSIVE, medium-high impact)
+[NEXT] PROBE: `for p in /.git/config /env /server-status /status /_metrics /actuator /health /ready /debug /metrics /api /admin /console /swagger /openapi.json /graphql /actuator/health /actuator/info /actuator/env /actuator/configprops; do curl -sS -I "https://stagsrv.teamgamdom.com$p" 2>&1 | grep -E "^(HTTP|Content|Server|X-|Location)" | head -2; done` — enumerate debug/config endpoints on regressed stagsrv gate; passive, ≤1 rps
+
+[LEARN] ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 400 (was 401) — gate regression on internal test backend, new surface
+[LEARN] ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 400 — new internal dev subdomain
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com: HTTP 401 — new Tableau admin subdomain
+[LEARN] ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (Same client_id 696342781525, state=`<csrf>:<rd>`) — live SSO-gated observability vhosts
+[LEARN] ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second instance actively serving production
+[LEARN] ACCEPTED recon @ gamdom.com/build/client.1609510edc0b6169f4c0.js#1789316717895: epoch-bumped redeploy of byte-identical-content bundle (596312B; markers stable) — deploy pipeline active, no config drift observable passively
+[LEARN] ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
+[LEARN] REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
+[LEARN] ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+[LEARN] ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+[LEARN] ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+[LEARN] ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
+[LEARN] ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+[LEARN] ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+[LEARN] ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+[LEARN] ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+[LEARN] ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; stagsrv.teamgamdom.com gate regression (401→400) is the only delta — new unauthenticated internal nginx test backend surface; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + new gate regression

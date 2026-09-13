@@ -350,3 +350,17 @@ https://grafana.teamgamdom.com/ -> 200 len=?
 https://prometheus.teamgamdom.com/ -> 200 len=?
 https://vault.teamgamdom.com/ -> 200 len=?
 https://clickhouse.teamgamdom.com/ -> 200 len=?
+
+## 2026-09-13 21:18:22 UTC
+https://stagsrv.teamgamdom.com/ -> HTTP 401
+https://stagsrv.teamgamdom.com/.git/config -> HTTP 401
+https://stagsrv.teamgamdom.com/env -> HTTP 401
+https://stagsrv.teamgamdom.com/actuator -> HTTP 401
+https://stagsrv.teamgamdom.com/server-status -> HTTP 401
+https://stagsrv.teamgamdom.com/_metrics -> HTTP 401
+https://stagsrv.teamgamdom.com/status -> HTTP 401
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://grafana.teamgamdom.com/ -> 200 len=?
+https://prometheus.teamgamdom.com/ -> 200 len=?
+https://vault.teamgamdom.com/ -> 200 len=?
+https://clickhouse.teamgamdom.com/ -> 200 len=?
