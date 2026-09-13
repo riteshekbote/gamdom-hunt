@@ -662,3 +662,13 @@ www.gamdom.com
 - CHANGED Provisioning cycle advanced to 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH
 - CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
 - CHANGED Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames
+
+## 2026-09-13 01:14:04 UTC
+- NEW perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api md5 7e3a161d, /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", host-only g
+- NEW /client-api POST returns identical GamdomClientMessage across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com) — s
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — Google OAuth SSO layer confirmed; session cookie likely domain-scoped enabling cross
+- NEW devsrv5.teamgamdom.com, stagsrv.teamgamdom.com, tableau-admin.teamgamdom.com discovered as new teamgamdom.com subdomains (400/401 responses)
+- CHANGED Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames
+- CHANGED Provisioning cycle advanced to 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+- CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+- CHANGED Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)

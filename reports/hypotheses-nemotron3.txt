@@ -1,17 +1,22 @@
-## 2026-09-12 23:21:16 UTC [target] (model nemotron3)
-[NEW] perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api md5 7e3a161d, /health weak-ETag, host-only gd-lang cookie
-[NEW] /client-api POST returns identical GamdomClientMessage across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com)
-[NEW] oauth2-proxy.teamgamdom.com/oauth2/start issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — Google OAuth SSO layer confirmed
-[CHANGED] Provisioning cycle advanced to 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH
-[CHANGED] Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+## 2026-09-13 01:13:52 UTC [target] (model nemotron3)
+[NEW] perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api md5 7e3a161d, /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", host-only gd-lang cookie — cross-brand trust pool now 4 brands / 25+ hostnames
+[NEW] /client-api POST returns identical GamdomClientMessage across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com) — single shared identity/wallet backend confirmed
+[NEW] oauth2-proxy.teamgamdom.com/oauth2/start issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — Google OAuth SSO layer confirmed; session cookie likely domain-scoped enabling cross-service pivot
+[NEW] devsrv5.teamgamdom.com, stagsrv.teamgamdom.com, tableau-admin.teamgamdom.com discovered as new teamgamdom.com subdomains (400/401 responses)
 [CHANGED] Cross-brand ATO hypothesis confidence raised to 76 with perabet addition — single shared backend serves 4 brands / 25+ hostnames
+[CHANGED] Provisioning cycle advanced to 14 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, no cert deployment
+[CHANGED] Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+[CHANGED] Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
 [PRIO] perabet.com/client-api,8.60,attack_surface=10,business_value=10,tech_exposure=9,gate_ease=5,cloud_surface=9,freshness=10
-[PRIO] gamdom80009.com/client-api,8.50,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10
 [PRIO] gamdom.com/client-api,8.40,attack_surface=10,business_value=10,tech_exposure=8,gate_ease=4,cloud_surface=9,freshness=8
+[PRIO] gamdom80009.com/client-api,8.35,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=10
 [PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,8.10,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=7,cloud_surface=7,freshness=10
-[PRIO] gamdom80003.com/client-api,8.05,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
 [PRIO] fatbets.com/client-api,7.85,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
 [PRIO] gamdom.one/client-api,7.85,attack_surface=10,business_value=9,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=8
+[PRIO] gamdom80003.com/client-api,7.80,attack_surface=10,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+[PRIO] gamdom4567.com/client-api,7.75,attack_surface=9,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=9,freshness=9
+[PRIO] kargo.teamgamdom.com/api/v1/projects,6.90,attack_surface=7,business_value=7,tech_exposure=8,gate_ease=6,cloud_surface=6,freshness=9
+[PRIO] tableau.teamgamdom.com/api/3.21/serverInfo,5.85,attack_surface=6,business_value=5,tech_exposure=7,gate_ease=8,cloud_surface=5,freshness=8
 [HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
 class: AUTH
 asset: perabet.com/client-api

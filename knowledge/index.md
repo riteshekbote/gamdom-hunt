@@ -264,3 +264,26 @@
 - 2026-09-12 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
 - 2026-09-12 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
 - 2026-09-12 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-13 ACCEPTED recon @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 15th cycle all 421/TLS-NOMATCH — cert ops stalled, no misbind regression, secret-realm fixture still 401 on 2 brand TLDs
+- 2026-09-13 ACCEPTED watch @ live fleet + redirect chains: /client-api md5 7e3a161d byte-identical across 10 hosts/4 brands; 80004→80008, 80007→80008, 80006→80009 — shared origin + retirement-by-redirect stable
+- 2026-09-13 ACCEPTED watch @ gates: oauth2-proxy 401, shreeram 401, stagsrv.teamgamdom/perabet 401, tableau 401, kargo SPA 200 — no new surface
+- 2026-09-13 ACCEPTED recon @ perabet.com: Fastly Pool A sibling on 4th brand, /client-api md5 7e3a161d + gd-lang host-only cookie byte-identical → 5th perabet hostname confirmed on shared identity/wallet origin
+- 2026-09-13 ACCEPTED recon @ www.perabet.com: 301→apex but /client-api still 400 md5 7e3a161d — Fastly alias carries shared-origin signature even while redirecting browsers
+- 2026-09-13 REJECTED out-of-scope @ mail.perabet.com: 83.142.228.186 non-Fastly third-party mail provider (SPF/DKIM class, out of scope)
+- 2026-09-13 ACCEPTED recon @ gamdom.com/api/auth: HTTP 404 with host-only gd-lang cookie (no Domain/SameSite/HttpOnly) — real auth endpoint not at this path
+- 2026-09-13 ACCEPTED recon @ fatbets.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-13 ACCEPTED recon @ gamdom.one/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed
+- 2026-09-13 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-13 ACCEPTED recon @ gamdom.com/client-api: POST accepts JSON, returns structured GamdomClientMessage — shared identity/wallet proxy confirmed
+- 2026-09-13 ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical GamdomClientMessage — 10th live mirror sharing origin
+- 2026-09-13 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical GamdomClientMessage — 11th live mirror sharing origin
+- 2026-09-13 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical GamdomClientMessage — 9th live mirror sharing origin
+- 2026-09-13 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical GamdomClientMessage — origin backend confirmed
+- 2026-09-13 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: HTTP 302 to Google OAuth with _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — OAuth2 SSO layer confirmed on teamgamdom.com
+- 2026-09-13 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/*: all 6 endpoints return SPA catch-all even with Accept:application/json — no unauthenticated JSON API surface
+- 2026-09-13 ACCEPTED recon @ tableau.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate, version 2025.1.11 patches CVE-2025-52455/52449
+- 2026-09-13 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- 2026-09-13 ACCEPTED watch @ Starlette pool: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B — shared origin stable 13th cycle
+- 2026-09-13 ACCEPTED watch @ pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): 14th cycle, all still 421/TLS-NOMATCH — no cert deployment
+- 2026-09-13 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-13 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

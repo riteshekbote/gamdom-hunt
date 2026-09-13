@@ -2791,3 +2791,36 @@ evidence_needed: any pending alias non-421; or any secret-realm vhost drops from
 verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
 impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
 testability: PASSIVE + monitoring
+## 2026-09-13 01:12:30 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+beta/www, fatbets.com, gamdom.one, 80008/80009/80003, gamdom4567.com)
+confidence: 76
+reasoning: /client-api md5 7e3a161d byte-identical on all 10 hosts across Pool A+B this cycle; gd-lang host-only cookie (no Domain/SameSite/HttpOnly) uniform; origin gamdom4567.com serves identical signature; browser-side replay closed (no ACAO) — only backend-origin replays remain, unobservable pre-auth.
+evidence_needed: authenticated Set-Cookie on any brand/mirror whose POST is re-accepted on a sibling; or Domain/SameSite attr drift observed
+verify_steps: PASSIVE — keep `curl -sS -o /dev/null -w "%{http_code}" https://<brand>/client-api` GET=400 drift-watch + Set-Cookie attr diff across brands each cycle (passive-first only)
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Domain-wide oauth2 session pivot via *.teamgamdom.com host (redirect_uri/state abuse)
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + 6 gated backends (clickhouse/inteligance/grafana/vault/prometheus)
+confidence: 46
+reasoning: /oauth2/auth returns 401 (real endpoint); _oauth2_proxy_csrf Domain=teamgamdom.com; HttpOnly; Secure on /oauth2/start; all 6 backends 302→SSO; only script-capable ungated host kargo is uniform SPA catch-all (no XSS surface); redirect_uri exchange needs authenticated consent flow.
+evidence_needed: session cookie reachable in compromiseable subdomain context, XSS on kargo SPA, or redirect_uri validation anomaly in HUMAN-orchestrated consent flow
+verify_steps: PASSIVE — watch kargo bundle hash + /oauth2/auth 401 + flag non-Google callback on /oauth2/start
+impact: credentialed relay into Vault+observability+ClickHouse; critical if triggered
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com/gamdom90471.com → shreeram-dynamic-test.teamgamdom.com; stagsrv.teamgamdom.com/stagsrv.perabet.com
+confidence: 52
+reasoning: 15th consecutive cycle all 8 aliases 421 — cert ops stalled not cancelled (prior 80007→80008, 80006→80009 rotations prove pipeline live); this cycle again confirms 401 realm="secret" fixture serves BOTH stagsrv.teamgamdom.com and stagsrv.perabet.com (2 brand TLDs); no vhost regression.
+evidence_needed: any pending alias non-421; or any secret-realm vhost drops from 401; or a brand host serves the 172B fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; done; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.perabet.com/; curl -sS -o /dev/null -w "%{http_code}" https://stagsrv.teamgamdom.com/`
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: perabet brand-host breadth refresh + cadence falsifier — `for h in gamdom.gg gamdom.tips gamdom.giris perabetgiris.com giris.perabet.com play.perabet.com giris.petagiri.com petagiri.com; do printf "%s:%s:%s " "$h" "$(dig +short $h | head -1)" "$(curl -sSk --max-time 5 https://$h/client-api | md5sum | cut -d' ' -f1)"; done` — any md5 7e3a161d hit widens the 4-brand trust pool passively; all-empty confirms pool breadth closed for another cycle.
+[LEARN] ACCEPTED recon @ pending aliases (80001/80002/90472/90473/90475/90480/90482/90488): 15th cycle all 421/TLS-NOMATCH — cert ops stalled, no misbind regression, secret-realm fixture still 401 on 2 brand TLDs
+[LEARN] ACCEPTED watch @ live fleet + redirect chains: /client-api md5 7e3a161d byte-identical across 10 hosts/4 brands; 80004→80008, 80007→80008, 80006→80009 — shared origin + retirement-by-redirect stable
+[LEARN] ACCEPTED watch @ gates: oauth2-proxy 401, shreeram 401, stagsrv.teamgamdom/perabet 401, tableau 401, kargo SPA 200 — no new surface
+[RISK] gamdom: 77 — unchanged fleet for 15th cycle: all gates hold (421×8, realm 401×4, oauth2 401, tableau 401, md5 7e3a161d stable, no rotation); residual driver stays the 4-brand/25+-host shared identity origin where the 76-confidence cookie-replay hypothesis has no passive falsifier, plus 8 dormant aliases parked over a live misbinding fixture; no exploitable chain this cycle.
