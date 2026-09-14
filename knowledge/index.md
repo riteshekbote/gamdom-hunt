@@ -323,3 +323,8 @@
 - 2026-09-14 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — gate holds, internal test backend still protected
 - 2026-09-14 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — CSRF cookie confirms shared cookie bucket
 - 2026-09-14 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 200 SPA catch-all (Monaco IDE) even with Accept:application/json — no JSON surface exposed passively
+- 2026-09-14 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 — unauthenticated version disclosure on admin vhost; confirmed gated elsewhere (/sites 401, /auth/signin 401)
+- 2026-09-14 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — shared cookie bucket confirmed across 2 oauth2-proxy instances
+- 2026-09-14 ACCEPTED recon @ perabet.com + beta.perabet.com: Fastly Pool A, /client-api md5 7e3a161d, gd-lang host-only — 4th brand confirmed on shared identity/wallet origin
+- 2026-09-14 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — transient 400 wobble resolved, gate holds
+- 2026-09-14 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind Basic auth

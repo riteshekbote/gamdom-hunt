@@ -3034,3 +3034,48 @@ impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-hi
 testability: PASSIVE + monitoring
 [NEXT] PROBE: breadth-pass perabet.com wildcard for unlisted vhosts — `for s in www beta api auth admin dashboard staging test dev stagsrv devsrv5 tableau kargo minio jenkins grafana prometheus vault clickhouse kafka clickhouse monitor superset oauth2-proxy app m portal secure staff; do curl -sk -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done` (1 rps) — classify 404(default Go realm)/302(SSO)/200(open)/401(secret-realm); any non-404 without a gate is fresh unprotected surface.
 [RISK] gamdom: 77 — Cross-brand AUTH (76) unfalsified on 4-brand/25+-host shared identity origin; secret-realm fixture now confirmed across 2 brand TLDs with stalled alias certs overhead; OATH vector trimmed by this cycle's ping/rd closures but SSO fabric unchanged in front of Vault/ClickHouse. Net 77.
+## 2026-09-14 13:20:23 UTC [target] (model bigpickle)
+[PRIO] perabet.com (apex+www+beta+subdomains), 7.5, attack=8 business=7 tech=5 gate=6 cloud=0 freshness=9
+[PRIO] oauth2-proxy.teamgamdom.com, 7.1, attack=7 business=9 tech=8 gate=4 cloud=6 freshness=7
+[PRIO] tableau-admin.teamgamdom.com, 6.5, attack=5 business=8 tech=7 gate=3 cloud=0 freshness=8
+[PRIO] gamdom90488.com→shreeram-dynamic-test, 5.8, attack=6 business=5 tech=6 gate=4 cloud=0 freshness=4
+[PRIO] kargo.teamgamdom.com, 5.4, attack=5 business=6 tech=7 gate=2 cloud=2 freshness=7
+[PRIO] clickhouse.teamgamdom.com, 6.0, attack=4 business=10 tech=6 gate=2 cloud=6 freshness=7
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom.com/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform (no Domain/SameSite/HttpOnly); CORS-absent closes browser branch; deploy pipeline active (epoch bump) yet markers stable; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on a member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay a valid session cookie against a sibling hostname
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] oauth2-proxy cross-instance session acceptance enables relay into Vault/ClickHouse
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com
+confidence: 48
+reasoning: both share Google client_id 696342781525 + Domain=teamgamdom
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED — requires authenticated session on any member hostname for cross-origin replay evidence.
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488.com→shreeram-dynamic-test; 8 pending aliases; stagsrv.{teamgamdom,perabet}
+confidence: 52
+reasoning: 16th cycle all 421/TLS-NOMATCH; rotation pipeline proven live (80007→80008, 80006→80009); stagsrv/devsrv5 400-wobble earlier proves gate not static; gamdom90488 CNAME pins public alias onto Pool A Basic-auth nginx
+evidence_needed: any pending alias !=421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done;` + stagsrv.perabet.com + shreeram each cycle
+impact: brand DNS → internal nginx test backend cross-realm; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[FINAL] Cross-brand auth cookie replay — confidence 76; unfalsified on 4-brand/25+-host shared identity origin; AUTH_HELPED (needs authenticated session); highest business value finding
+[FINAL] oauth2-proxy cross-instance session acceptance — confidence 48; open-redirect branches closed this cycle but shared cookie-secret hypothesis viable; ping/locks relocation shows active reconfig; AUTH_HELPED
+[FINAL] Provisioned alias cert misbound — confidence 52; 16th cycle stalled but proven rotation pipeline + transient gate wobble = latent risk; PASSIVE+monitoring
+[PARKED] perabet.com breadth subdomain scan — not a hypothesis yet, queued NEXT probe; no evidence of unlisted subdomains
+[NEXT] PROBE: breadth-pass perabet.com wildcard for unlisted vhosts — `for s in www beta api auth admin dashboard staging test dev stagsrv devsrv5 tableau tableau-admin kargo grafana prometheus vault clickhouse kafka monitor superset oauth2-proxy app m portal secure staff oauth2-proxy-prod google-group; do curl -sk -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done; sleep 35; for s in mail mailer smtp webmail imap pop3 ftp sftp dev2 dev3 test2 stage qa preprod ci cd jenkins gitlab nexus sonar harbor registry minio redis mysql postgres mongo es elastic kibana grafana-admin prometheus-admin vault-admin clickhouse-admin rabbitmq kafka-ui argocd tekton; do curl -sk -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done` (1 rps) — classify 404(default Go realm)/302(SSO)/200(open)/401(Basic-gated); any non-404 without a gate is fresh unprotected surface on the 4th brand.
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 — unauthenticated version disclosure on admin vhost; confirmed gated elsewhere (/sites 401, /auth/signin 401)
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — shared cookie bucket confirmed across 2 oauth2-proxy instances
+[LEARN] ACCEPTED recon @ perabet.com + beta.perabet.com: Fastly Pool A, /client-api md5 7e3a161d, gd-lang host-only — 4th brand confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — transient 400 wobble resolved, gate holds
+[LEARN] ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind Basic auth
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on a 4-brand/25+-host identity origin; SSO fabric firmed (two live oauth2-proxy instances issuing offline refresh tokens in front of Vault/ClickHouse/observability) but the OATH open-redirect branch newly closed trims that vector; cert pipeline still stalled above a live 401 secret-realm fixture with proven rotation capability. Net 78→77.
