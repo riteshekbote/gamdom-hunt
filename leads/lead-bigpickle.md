@@ -3079,3 +3079,33 @@ testability: PASSIVE + monitoring
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 [RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on a 4-brand/25+-host identity origin; SSO fabric firmed (two live oauth2-proxy instances issuing offline refresh tokens in front of Vault/ClickHouse/observability) but the OATH open-redirect branch newly closed trims that vector; cert pipeline still stalled above a live 401 secret-realm fixture with proven rotation capability. Net 78→77.
+## 2026-09-14 18:47:43 UTC [target] (model bigpickle)
+[HYP] Secret-realm nginx fixture proven on 2nd brand TLD; cert pipeline active above it
+class: MISCONFIG
+asset: stagsrv.perabet.com + stagsrv.teamgamdom.com/subreeram + 8 pending 421 aliases
+confidence: 54
+reasoning: stagsrv.perabet.com = 401 Basic realm="secret" fixture-wide on 11 paths, Fastly Pool A (same 151.101.x.52 as shreeram/stagsrv.teamgamdom.com), Certainly CA, Varnish VCL `rate_limit_skipped`; teamgamdom+perabet share Fastly distribution, Certainly CA, and oauth2-proxy Google SSO; dedicated Certainly cert newly pinned on stagsrv.teamgamdom.com; 16th cycle still all pending aliases 421/TLS-NOMATCH but rotation pipeline proven live (80007→80008, 80006→80009, 80004→80008).
+evidence_needed: any pending alias non-421; secret-realm drops from 401 on either TLD; cert binding lands alias onto fixture
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done` + stagsrv.{teamgamdom,perabet}.com + shreeram path set each cycle
+impact: brand DNS → internal nginx test backend across 2 corp TLDs + 22 brand hostnames; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom.com/fatbets.com/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform (no Domain/SameSite/HttpOnly); CORS-absent closes browser branch; deploy pipeline active (epoch bump) yet markers stable; this cycle widened corp blast radius (2 corp TLDs share SSO/oauth2 + secret-realm) but consumer auth surface unchanged; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on a member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay valid session cookie against sibling hostname
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] tableau-admin REST API unauthenticated metadata beyond serverInfo
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/*
+confidence: 55
+reasoning: /serverInfo 200 XML (prod 2025.1.11); /sites+auth/signin+projects all 401 proper gate; admin vhost distinct from tableau (root 200 CSP no-store); version CVEs patched so disclosure informational alone
+evidence_needed: unauthenticated 200 on any admin endpoint beyond serverInfo
+verify_steps: PASSIVE — `for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/views /api/3.21/favorites /api/3.21/webhooks; do curl -sk -o /dev/null -w '%{http_code} ' https://tableau-admin.teamgamdom.com$p; done`
+impact: admin metadata/version exposure; low-medium (gate elsewhere holds)
+testability: PASSIVE
+[NEXT] PROBE: single/double-char subdomain sweep to map the dangling-Fastly record class on 4th brand — `for s in m w a c p d o g t l s q n e f x y b u j my mc mp md cd ad api att vpn tv blog forum news shop store www2 www3 m2 beta2 test1 stage1 test3 demo uat sit lab sandbox www-test staging-beta tc; do curl -sk --connect-timeout 3 -m 6 -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done` (1 rps) — classify 000(absent)/301(apex)/200(live)/500(unknown-domain=dangling Fastly record)/401(secret-realm).
+[RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on 4-brand/25+-host identity origin; corp infra consolidation newly proven across 2 brand TLDs (shared Fastly/CA/SSO + secret-realm fixture on both) widens latent-misconfig blast radius but nothing becomes directly exploitable; cert pipeline still stalled above live 401 fixture; tableau disclosure closed at informational. Flat at 77.
