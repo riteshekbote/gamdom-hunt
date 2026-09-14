@@ -1,7 +1,7 @@
-## 2026-09-14 18:48:21 UTC [target] (model nemotron3)
-[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML unauthenticated version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815, REST API 3.25, prepConductorVersion 2025.1.0) on new admin vhost
-[NEW] oauth2-proxy.teamgamdom.com/oauth2/start issues `_oauth2_proxy_csrf` cookie Domain=teamgamdom.com; HttpOnly; Secure — confirmed shared cookie bucket across 2 oauth2-proxy instances (client_id 696342781525) spanning grafana/prometheus/vault/clickhouse/tableau-admin
-[NEW] perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52): byte-identical `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" + host-only `gd-lang` cookie; POST returns identical GamdomClientMessage across all 8 live hosts
+## 2026-09-14 22:17:01 UTC [target] (model nemotron3)
+[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML unauthenticated version disclosure (productVersion 2025.1.11, REST API 3.25, prepConductorVersion 2025.1.0) on admin vhost
+[NEW] oauth2-proxy.teamgamdom.com/oauth2/start issues `_oauth2_proxy_csrf` cookie Domain=teamgamdom.com; HttpOnly; Secure — confirmed shared cookie bucket across 2 oauth2-proxy instances (client_id 696342781525)
+[NEW] perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52): byte-identical `/client-api` md5 7e3a161d + `/health` weak-ETag + host-only gd-lang cookie
 [NEW] devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
 [NEW] stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" (transient 400→401 regression resolved) — internal test backend gate holds
 [NEW] grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (client_id 696342781525) — live SSO-gated observability vhosts
@@ -12,11 +12,14 @@
 [CHANGED] Real auth endpoint NOT at `/api/auth`, `/api/auth/login`, `/auth`, `/login`, `/graphql` across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
 [CHANGED] Kuma heartbeat JSON: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle; 221=gamdom80008.com, 223=gamdom80009.com confirmed live
 [CHANGED] SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only — no new alias advertised
-[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,7.25,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=9
-[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,7.00,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=6
+[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,8.00,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=9
+[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,7.25,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=6
 [PRIO] perabet.com/client-api,6.75,attack_surface=7,business_value=7,tech_exposure=7,gate_ease=5,cloud_surface=8,freshness=7
 [PRIO] grafana.teamgamdom.com,6.25,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=6
 [PRIO] kargo.teamgamdom.com/api/v1/projects,6.00,attack_surface=6,business_value=7,tech_exposure=7,gate_ease=5,cloud_surface=6,freshness=7
+[PRIO] clickhouse.teamgamdom.com,5.75,attack_surface=6,business_value=7,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=6
+[PRIO] gamdom80009.com/client-api,5.50,attack_surface=6,business_value=6,tech_exposure=6,gate_ease=5,cloud_surface=7,freshness=8
+[PRIO] gamdom.com/client-api,5.50,attack_surface=6,business_value=6,tech_exposure=6,gate_ease=5,cloud_surface=7,freshness=7
 [HYP] Tableau admin vhost exposes unauthenticated serverInfo with version disclosure
 class: MISCONFIG
 asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo

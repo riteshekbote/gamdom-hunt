@@ -20876,3 +20876,232 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on 4-brand/25+-host identity origin; corp infra consolidation newly proven across 2 brand TLDs (shared Fastly/CA/SSO + secret-realm fixture on both) widens latent-misconfig blast radius but nothing becomes directly exploitable; cert pipeline still stalled above live 401 fixture; tableau disclosure closed at informational. Flat at 77.
+===== ANALYST bigpickle 2026-09-14 22:21:18 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sk -o /dev/null -w "%{http_code} " https://gamdom$a.com/client-api; sleep 1; done; echo
+421 421 421 421 421 421 421 421
+[0m
+[0m$ [0mfor h in stagsrv devsrv5 shreeram-dynamic-test tableau-admin oauth2-proxy oauth2-proxy-prod-google-group kargo; do echo -n "$h: "; curl -sk -o /dev/null -w "%{http_code} " https://$h.teamgamdom.com/; sleep 1; done; echo
+stagsrv: 401 devsrv5: 401 shreeram-dynamic-test: 401 tableau-admin: 200 oauth2-proxy: 302 oauth2-proxy-prod-google-group: 302 kargo: 200
+[0m
+[0m$ [0mfor p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/views /api/3.21/favorites /api/3.21/webhooks /api/3.21/dataconnections; do echo -n "$p: "; curl -sk -o /dev/null -w "%{http_code} " "https://tableau-admin.teamgamdom.com$p"; sleep 1; done; echo
+/api/3.21/datasources: 401 /api/3.21/workbooks: 401 /api/3.21/users: 401 /api/3.21/groups: 401 /api/3.21/tasks: 401 /api/3.21/schedules: 401 /api/3.21/views: 401 /api/3.21/favorites: 401 /api/3.21/webhooks: 401 /api/3.21/dataconnections: 401
+[0m
+[0m$ [0mfor s in m w a c p d o g t l s q n e f x y b u j my mc mp md cd ad api att vpn tv blog forum news shop store www2 www3 m2 beta2 test1 stage1 test3 demo uat sit lab sandbox www-test staging-beta tc; do echo -n "$s: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w "%{http_code} " "https://$s.perabet.com/"; sleep 1; done; echo
+m: 500 w: 000 a: 000 c: 000 p: 000 d: 000 o: 000 g: 000 t: 000 l: 000 s: 000 q: 000 n: 000 e: 000 f: 000 x: 000 y: 000 b: 000 u: 000 j: 000 my: 000 mc: 000 mp: 000 md: 000 cd: 000 ad: 000 api: 000 att: 000 vpn: 000 tv: 000 blog: 000 forum: 000 news: 000 shop: 000 store: 000 www2: 000 www3: 000 m2: 000 beta2: 000 test1: 000 stage1: 000 test3: 000 demo: 000 uat: 000 sit: 000 lab: 000 sandbox: 000 www-test: 000 staging-beta: 000 tc: 000
+[0m
+`m.perabet.com` returned 500 (dangling-Fastly/unlisted-vhost class) while all others were 000. Investigating.
+[0m$ [0mgetent hosts m.perabet.com; echo ---; curl -sk -D - -o /tmp/mperabet.html "https://m.perabet.com/" 2>&1 | head -40; echo ---; wc -c /tmp/mperabet.html; head -c 400 /tmp/mperabet.html
+151.101.131.52  perabet.com m.perabet.com
+151.101.67.52   perabet.com m.perabet.com
+151.101.195.52  perabet.com m.perabet.com
+151.101.3.52    perabet.com m.perabet.com
+---
+HTTP/2 500 
+server: Varnish
+retry-after: 0
+content-type: text/html
+cache-control: private, no-cache
+x-served-by: cache-iad-kiad7000123-IAD
+accept-ranges: bytes
+date: Mon, 14 Sep 2026 22:16:55 GMT
+via: 1.1 varnish
+content-length: 270
+
+---
+270 /tmp/mperabet.html
+
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+<p>Details: cache-iad-kiad7000123-IAD (151.101.67.52)</p></body></html>
+[0m
+[0m$ [0mdig +short m.perabet.com; echo ---; dig +short CNAME m.perabet.com; echo ---; dig +short perabet.com; echo ---; for s in mobile i touch h5 wap app m2; do echo -n "$s: "; curl -sk -o /dev/null -w "%{http_code} " "https://$s.perabet.com/"; sleep 1; done; echo; echo -n "m/client-api: "; curl -sk -o /dev/null -w "%{http_code}" "https://m.perabet.com/client-api"; echo
+perabet.com.
+151.101.67.52
+151.101.131.52
+151.101.195.52
+151.101.3.52
+---
+perabet.com.
+---
+151.101.3.52
+151.101.195.52
+151.101.67.52
+151.101.131.52
+---
+mobile: 000 i: 000 touch: 000 h5: 000 wap: 000 app: 000 m2: 000 
+m/client-api: 500
+[0m
+`m.perabet.com` is a dangling Fastly A-record (same Pool A anycast as perabet.com apex) not attached to any Fastly service → 500 "unknown domain". Checking sibling brands for the same class.
+[0m$ [0mfor d in fatbets.com gamdom.one; do for s in m w a c p d o g t l q n e f x y b u j my cd ad api www2 beta2 demo test; do echo -n "$s.$d: "; curl -sk --connect-timeout 3 -m 5 -o /dev/null -w "%{http_code} " "https://$s.$d/"; sleep 1; done; echo; done
+m.fatbets.com: 000 w.fatbets.com: 000 a.fatbets.com: 000 c.fatbets.com: 000 p.fatbets.com: 000 d.fatbets.com: 000 o.fatbets.com: 000 g.fatbets.com: 000 t.fatbets.com: 000 l.fatbets.com: 000 q.fatbets.com: 000 n.fatbets.com: 000 e.fatbets.com: 000 f.fatbets.com: 000 x.fatbets.com: 000 y.fatbets.com: 000 b.fatbets.com: 000 u.fatbets.com: 000 j.fatbets.com: 000 my.fatbets.com: 000 cd.fatbets.com: 000 ad.fatbets.com: 000 api.fatbets.com: 000 www2.fatbets.com: 000 beta2.fatbets.com: 000 demo.fatbets.com: 000 test.fatbets.com: 000 
+m.gamdom.one: 000 w.gamdom.one: 000 a.gamdom.one: 000 c.gamdom.one: 000 p.gamdom.one: 000 d.gamdom.one: 000 o.gamdom.one: 000 g.gamdom.one: 000 t.gamdom.one: 000 l.gamdom.one: 000 q.gamdom.one: 000 n.gamdom.one: 000 e.gamdom.one: 000 f.gamdom.one: 000 x.gamdom.one: 000 y.gamdom.one: 000 b.gamdom.one: 000 u.gamdom.one: 000 j.gamdom.one: 000 my.gamdom.one: 000 cd.gamdom.one: 000 ad.gamdom.one: 000 api.gamdom.one: 000 www2.gamdom.one: 000 beta2.gamdom.one: 000 demo.gamdom.one: 000 test.gamdom.one: 000
+[0m
+[0m$ [0mfor s in affiliate partner static img cdn api2 tr es de vip promo bonus cashier wallet secure login account staff internal corp metrics lb balancer origin backoffice admin-api gateway; do echo -n "$s: "; curl -sk --connect-timeout 3 -m 5 -o /dev/null -w "%{http_code} " "https://$s.perabet.com/"; sleep 1; done; echo
+affiliate: 000 partner: 000 static: 000 img: 000 cdn: 000 api2: 000 tr: 200 es: 000 de: 000 vip: 000 promo: 000 bonus: 000 cashier: 000 wallet: 000 secure: 000 login: 000 account: 000 staff: 000 internal: 000 corp: 000 metrics: 000 lb: 000 balancer: 000 origin: 000 backoffice: 000 admin-api: 000 gateway: 000
+[0m
+`tr.perabet.com` returns 200 — a live sibling not previously in inventory. Inspecting.
+[0m$ [0mcurl -sk -D /tmp/tr_headers "https://tr.perabet.com/" -o /tmp/tr_body; grep -iE "^(server|via|x-|set-cookie|content-type|fastly|vary|cache)" /tmp/tr_headers; echo ---; wc -c /tmp/tr_body; echo ---; curl -sk -o /dev/null -w "client-api GET: %{http_code}\n" "https://tr.perabet.com/client-api"; sleep 1; curl -sk -D - -o /dev/null "https://tr.perabet.com/health" | grep -iE "^(HTTP|etag|content-type)"
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+X-Powered-By: PHP/5.4.45
+---
+17427 /tmp/tr_body
+---
+client-api GET: 404
+HTTP/1.1 404 Not Found
+Content-Type: text/html; charset=iso-8859-1
+[0m
+[0m$ [0mgetent hosts tr.perabet.com; echo ---; head -c 900 /tmp/tr_body; echo; echo ---; curl -sk -D - "https://tr.perabet.com/" | grep -iE "^(set-cookie|location|x-|server|via|powered)"
+217.23.12.109   tr.perabet.com
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Perabet Giriş - Canlı Bahis, Casino ve Fazlası İçin Güvenilir Adres</title>
+    <meta name="author" content="perabet">
+    <meta name="description" itemprop="description" content="Perabet Türkiye'nin lider bahis sitesi ile canlı bahis,Perabet Giriş,spor bahisleri, canlı casino. Yüksek oranlar, hızlı çekim ve özel bonuslar sizi bekliyor!">
+    <meta name="keywords" itemprop="keywords" content="bahis, spor bahis, futbol bahis, basketbol bahis, Tenis bahis, Voleybol bahis, Hentbol bahis, ragbi bahis, sanal futbol bahis, buz hokeyi bahis, dart bahis, floorball bahis, sutopu bahis, boks bahis, bandy bahis, bowls bahis, badminton bahis, MMA bahis, canlı bahis, canli bahis, spor bet, canlı casino, slot casino, o
+---
+Server: nginx
+X-Powered-By: PHP/5.4.45
+[0m
+[0m$ [0mgrep -oE 'href="[^"]+"' /tmp/tr_body | sort -u | head -40; echo ---; grep -oiE 'action="[^"]*"|src="[^"]*"|window.location[^;]*' /tmp/tr_body | sort -u | head; echo ---; grep -oE 'https?://[a-z0-9.-]+' /tmp/tr_body | sort -u | head
+href="assets/css/core.css"
+href="assets/images/apple-touch-icon.png"
+href="assets/images/favicon-16x16.png"
+href="assets/images/favicon-32x32.png"
+href="https://a.info/pera"
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+href="https://golvar8.com/"
+href="https://perabet-01-ampsites.com"
+href="https://t.me/perabetofficial"
+href="https://tr.perabet.com/"
+href="https://twitter.com/destekperabet"
+href="https://www.instagram.com/perabetdestek"
+---
+src="assets/images/brand-logos-opacity/aninda-havale.png"
+src="assets/images/brand-logos-opacity/astropay.png"
+src="assets/images/brand-logos-opacity/ecoPayz.png"
+src="assets/images/brand-logos-opacity/envoy-hizli-havale.png"
+src="assets/images/brand-logos-opacity/envoy.png"
+src="assets/images/brand-logos-opacity/hizli-qr.png"
+src="assets/images/brand-logos-opacity/papara-poys.png"
+src="assets/images/brand-logos-opacity/papara.png"
+src="assets/images/brand-logos-opacity/paykasa.png"
+src="assets/images/brand-logos-opacity/skrill.png"
+---
+https://a.info
+https://cdn.jsdelivr.net
+https://code.jquery.com
+https://golvar8.com
+https://perabet-01-ampsites.com
+https://t.me
+https://tr.perabet.com
+https://twitter.com
+https://www.instagram.com
+[0m
+The Turkish landing funnels to mirror domains `golvar8.com`, `perabet-01-ampsites.com`, `a.info/pera`. Checking whether they carry the shared-origin `/client-api` signature.
+[0m$ [0mfor h in golvar8.com perabet-01-ampsites.com a.info; do echo "== $h =="; getent hosts $h | head -2; echo -n "client-api: "; curl -sk --connect-timeout 3 -m 6 https://$h/client-api -o /tmp/cabody -w "%{http_code}\n"; md5sum /tmp/cabody 2>/dev/null | awk '{print $1}'; echo -n "root cookie: "; curl -sk -D - -o /dev/null https://$h/ | grep -iE "^set-cookie" | head -1; sleep 1; done
+== golvar8.com ==
+client-api: 000
+root cookie: == perabet-01-ampsites.com ==
+2606:4700:3031::6815:5b31 perabet-01-ampsites.com
+2606:4700:3036::ac43:a6bc perabet-01-ampsites.com
+client-api: 000
+root cookie: == a.info ==
+client-api: 000
+root cookie:
+[0m
+[0m$ [0mcurl -sk "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" -o /tmp/kuma.json; grep -oE '"monitor_id":[0-9]+|"status":[0-9]+' /tmp/kuma.json 2>/dev/null | head; python3 -c "import json;d=json.load(open('/tmp/kuma.json'));print(len(d),'rows; ids:',sorted(set(x['monitor_id'] for x in d)))" 2>/dev/null || echo "unparseable"; echo -n "badge: "; curl -sk -o /dev/null -w "%{http_code}\n" "https://gamdommirrors.com/api/status-page/uptime/gamdom-domains"
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+"status":1
+unparseable
+badge: 200
+[0m
+[0m$ [0mfor h in gamdom.com gamdom.one fatbets.com perabet.com gamdom80008.com gamdom80009.com gamdom80003.com gamdom4567.com; do echo -n "$h: "; curl -sk https://$h/client-api | md5sum | awk '{print $1}'; sleep 1; done
+gamdom.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom.one: 7e3a161d6cde2700fcdc0f6be4520745
+fatbets.com: 7e3a161d6cde2700fcdc0f6be4520745
+perabet.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80008.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80003.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom4567.com: 7e3a161d6cde2700fcdc0f6be4520745
+[0m
+## STEP 1 — DELTA
+- NEW m.perabet.com: A-record to Fastly Pool A anycast (151.101.x.52), **500 "Fastly error: unknown domain"** on every path incl /client-api — unclaimed/dangling host record on the 4th brand, outside the asset list.
+- NEW tr.perabet.com: live Turkish "Perabet Giriş" SEO landing (17 KB, nginx, `X-Powered-By: PHP/5.4.45` EOL) on non-Fastly origin 217.23.12.109; no /client-api, no /health, no gd-lang — distinct user-facing trust domain on perabet brand.
+- NEW funnel outlinks mined from tr.perabet.com: golvar8.com, perabet-01-ampsites.com, a.info/pera — none carry the 7e3a161d Fastly signature (000/no-client-api).
+- CHANGED tableau-admin REST sweep: /datasources /workbooks /users /groups /tasks /schedules /views /favorites /webhooks /dataconnections all **401**; only /serverInfo stays 200 — "unauth metadata beyond serverInfo" branch dead.
+- CHANGED perabet breadth (47 names single/double-char + 26 functional): only m(500) and tr(200) resolve; everything else 000 — dangling-record class is rare on brand 4.
+- WATCH stable: Starlette pool md5 7e3a161d identical on all 8 hosts (15th cycle); 8 pending aliases 16th cycle all 421; gates stagsrv/devsrv5/shreeram 401, oauth2-proxy 302 (SSO live), kargo SPA 200, tableau-admin 200; Kuma 7 monitors status:1, badge 200.
+
+## STEP 2 — PRIORITIZE
+- [PRIO] tr.perabet.com,5.6,0.25·8+0.25·5+0.15·5+0.15·10+0.10·2+0.10·10 — live EOL-PHP app, no auth, non-CDN origin, fresh.
+- [PRIO] m.perabet.com,5.1,0.25·3+0.25·6+0.15·5+0.15·10+0.10·9+0.10·10 — dangling Fastly record, takeover-candidate class, cloud surface high.
+- [PRIO] tableau-admin.teamgamdom.com,3.5,0.25·5+0.25·5+0.15·6+0.15·5+0.10·3+0.10·0 — /serverInfo disclosure only, business value medium, freshness 0 (stale).
+
+## STEP 3 — HYPOTHESES
+[HYP] Dangling Fastly A-record on 4th brand yields host takeover via claimed service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 45
+reasoning: A-record resolves to same 4 anycast IPs as perabet.com apex; Fastly returns 500 "unknown domain" on all paths — DNS points at Fastly but no service claims the hostname (brand proven to rotate/retire hostnames silently: 80007→80008, 80006→80009); "m" = retired mobile host of perabet, left live in DNS.
+evidence_needed: attacker-controlled Fastly service serving m.perabet.com; or CT showing historical perabet SAN coverage on the name.
+verify_steps: PASSIVE — CT/SAN lookup for m.perabet.com (`crt.sh` query); per-cycle `curl -sk -o /dev/null -w "%{http_code}" https://m.perabet.com/client-api` to detect 500→200 flip (record re-claimed by brand or hijacked).
+impact: serve arbitrary content / phishing on a live brand hostname that browsers + email filters still trust; medium if claimable, else inventory.
+testability: PASSIVE (exploit branch HUMAN_ONLY — requires creating a Fastly service)
+[HYP] EOL-PHP Turkish landing exposes old-app debug/config surface on non-CDN trust domain
+class: MISCONFIG
+asset: tr.perabet.com
+confidence: 40
+reasoning: live nginx+PHP/5.4.45 (EOL 2015) origin 217.23.12.109, outside the hardened Fastly/Starlette fleet; bespoke landing not covered by the shared CDN cookie/CORS posture; brand otherwise consolidates on Fastly — this host traces the older, pre-CDN architecture.
+evidence_needed: GET returns non-404 on debug/config paths (phpinfo, server-status, env, backups).
+verify_steps: PASSIVE — GET-only: /robots.txt /server-status /phpinfo.php /info.php /admin /admin/login.php /.env /config.php /backup.sql.zip /old/ /v2/ (1 rps).
+impact: config/source/credential disclosure from unpatched PHP app on brand domain; medium if a path flips non-404, else informational.
+testability: PASSIVE
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 15th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform; CORS-absent closes browser branch; deploy pipeline active yet markers stable; this cycle re-confirmed signature + added 2 non-CDN 4th-brand hosts outside the cookie policy — but shared-origin surface unchanged; no passive falsifier remains.
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted on a sibling POST replay; Domain/SameSite drift post-auth.
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay a valid session cookie against a sibling hostname.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] tableau-admin unauthenticated metadata beyond serverInfo: full REST sweep 401 (10 endpoints), gate holds — branch exhausted, version disclosure informational.
+- [PARKED] a.info / golvar8 / perabet-01-ampsites mirrors: no Fastly origin signature → not in-scope brand origin (watchlist, per gamdomgiris.link precedent).
+- [FINAL] Cross-brand auth cookie replay — 76, unfalsified 4-brand/25+-host shared identity origin; AUTH_HELPED; highest business value.
+- [FINAL] Dangling Fastly record m.perabet.com — 45, fresh unclaimed host on brand 4, passive-monitorable 500→200 flip; takeover needs HUMAN branch.
+- [FINAL] EOL-PHP landing tr.perabet.com — 40, fresh non-CDN surface; probe will firm or kill it this cycle.
+
+## STEP 5 — NEXT ACTION
+[NEXT] PROBE: tr.perabet.com old-app surface, GET-only 1 rps — `for p in /robots.txt /server-status /phpinfo.php /info.php /admin /admin/login.php /.env /config.php /backup.zip /old/; do curl -sk -o /dev/null -w "%{http_code} " "https://tr.perabet.com$p"; sleep 1; done` + re-check m.perabet.com 500→200 flip in same pass; any non-404/non-301/${200 landing} flips = new unprotected surface on the EOL PHP host.
+
+## STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ m.perabet.com: dangling Fastly A-record (Pool A anycast, same 4 IPs as apex) returns 500 "unknown domain" on all paths — unclaimed host record on 4th brand; watch for 500→200 flip or CT SAN coverage.
+- [LEARN] ACCEPTED recon @ tr.perabet.com: live "Perabet Giriş" SEO landing on non-Fastly origin 217.23.12.109 (nginx + PHP/5.4.45 EOL, 17 KB), funnels to golvar8.com / perabet-01-ampsites.com / a.info/pera — none carry the 7e3a161d /client-api signature (out-of-scope watchlist, per gamdomgiris.link precedent).
+- [LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com: /datasources /workbooks /users /groups /tasks /schedules /views /favorites /webhooks /dataconnections all 401 — gate holds beyond serverInfo; unauth-metadata branch closed.
+- [LEARN] ACCEPTED watch @ Starlette pool: /client-api md5 7e3a161d byte-identical 8 hosts (15th cycle); pending aliases 16th cycle all 421; Kuma 7 monitors healthy.
+
+## STEP 7 — RISK
+[RISK] gamdom: 77 — Cross-brand ATO (76) still unfalsified on 4-brand/25+-host identity origin with no new passive falsifier; new inventory (dangling m.perabet.com Fastly record + EOL-PHP tr.perabet.com landing) adds latent misconfig/cert-claim surface but nothing demonstrably exploitable yet; tableau-admin branch exhausted at informational; cert pipeline remains stalled above the live 401 secret-realm fixture. Net flat at 77.

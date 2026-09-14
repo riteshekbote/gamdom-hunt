@@ -434,3 +434,17 @@ https://prometheus.teamgamdom.com/ -> 200 len=?
 https://vault.teamgamdom.com/ -> 200 len=?
 https://clickhouse.teamgamdom.com/ -> 200 len=?
 https://tableau-admin.teamgamdom.com/ -> 200 len=1989
+
+## 2026-09-14 22:21:42 UTC
+https://tableau-admin.teamgamdom.com/api/3.21/datasources -> HTTP 401
+https://tableau-admin.teamgamdom.com/api/3.21/workbooks -> HTTP 401
+https://tableau-admin.teamgamdom.com/api/3.21/users -> HTTP 401
+https://tableau-admin.teamgamdom.com/api/3.21/groups -> HTTP 401
+https://tableau-admin.teamgamdom.com/api/3.21/tasks -> HTTP 401
+https://tableau-admin.teamgamdom.com/api/3.21/schedules -> HTTP 401
+https://oauth2-proxy.teamgamdom.com/oauth2/auth -> HTTP 401
+https://grafana.teamgamdom.com/ -> 200 len=?
+https://prometheus.teamgamdom.com/ -> 200 len=?
+https://vault.teamgamdom.com/ -> 200 len=?
+https://clickhouse.teamgamdom.com/ -> 200 len=?
+https://tableau-admin.teamgamdom.com/ -> 200 len=1989
