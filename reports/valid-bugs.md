@@ -13,3 +13,8 @@
   - | 1 | oauth2-proxy.teamgamdom.com Google OAuth client_id leak | **VALID** | 5.4 Med | Exposed OAuth flow under trusted origin |
   - | 2 | tableau-admin.teamgamdom.com admin panel | **VALID** | 5.3 Med | Admin analytics panel existence + auth gate |
   - | 3 | kargo.teamgamdom.com GitOps API | **VALID** | 8.1 High | Public deployment pipeline API (405 confirms surface) |
+
+- 3 lead(s) marked VALID at 2026-09-14 20:45:01 UTC
+  - [ ] Output triage verdict with proof steps, impact, CVSS, reporting channel for VALID leads
+  - [✓] Output triage verdict with proof steps, impact, CVSS, reporting channel for VALID leads
+  - | Q4 Provable | NO — requires authenticated POST with valid session to test action routing against upstream wallet/auth. Bundle action strings are obfuscated, no endpoint map extractable passively. |
