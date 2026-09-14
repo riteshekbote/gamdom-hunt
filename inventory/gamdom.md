@@ -734,3 +734,12 @@ www.gamdom.com
 - CHANGED Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, cert ops stalled
 - CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
 - CHANGED Real auth endpoint NOT at /api/auth, /api/auth/login, /auth, /login, /graphql across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
+
+## 2026-09-14 06:30:20 UTC
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML (version disclosure) — unauthenticated Tableau REST API endpoint on admin vhost
+- NEW oauth2-proxy CSRF cookie Domain=teamgamdom.com confirmed across grafana/prometheus/vault/clickhouse — shared cookie bucket spans 2 oauth2-proxy instances (client_id 696342781525)
+- NEW stagsrv.teamgamdom.com + devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" (gate holds, no regression)
+- NEW Kuma heartbeat JSON: 7 monitors (2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle
+- CHANGED Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH
+- CHANGED Starlette pool signature stable 13th consecutive cycle: /client-api 400 md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+- CHANGED Cross-brand ATO hypothesis confidence 76 — single shared backend serves 4 brands / 25+ hostnames via byte-identical /client-api

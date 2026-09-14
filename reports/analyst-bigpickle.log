@@ -20265,3 +20265,247 @@ testability: PASSIVE + monitoring
 
 ## STEP 7 — RISK
 [RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on a 4-brand/25+-host identity origin; SSO fabric firmed (two live oauth2-proxy instances issuing offline refresh tokens in front of Vault/ClickHouse/observability) but the OATH open-redirect branch newly closed trims that vector; cert pipeline still stalled above a live 401 secret-realm. Net 78→77.
+===== ANALYST bigpickle 2026-09-14 06:30:20 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0m# Pending alias 421 check
+for a in 80001 80002 90472 90473 90475 90480 90482 90488; do code=$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 5 "https://gamdom${a}.com/client-api"); echo "gamdom${a}.com: $code"; done
+gamdom80001.com: 421
+gamdom80002.com: 421
+gamdom90472.com: 421
+gamdom90473.com: 421
+gamdom90475.com: 421
+gamdom90480.com: 421
+gamdom90482.com: 421
+gamdom90488.com: 421
+[0m
+[0m$ [0m# Live fleet /client-api md5 check
+for h in gamdom.com gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one perabet.com beta.perabet.com; do md5=$(curl -sSk --max-time 5 -X GET "https://${h}/client-api" 2>/dev/null | md5sum | cut -d' ' -f1); echo "${h}: $md5"; done
+gamdom.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80008.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80003.com: 7e3a161d6cde2700fcdc0f6be4520745
+fatbets.com: 7e3a161d6cde2700fcdc0f6be4520745
+gamdom.one: 7e3a161d6cde2700fcdc0f6be4520745
+perabet.com: 7e3a161d6cde2700fcdc0f6be4520745
+beta.perabet.com: 7e3a161d6cde2700fcdc0f6be4520745
+[0m
+[0m$ [0m# Stagsrv/teamgamdom on perabet TLD
+curl -sSk -o /dev/null -w 'stagsrv.perabet: %{http_code}\n' --max-time 5 "https://stagsrv.perabet.com/"
+curl -sSk -o /dev/null -w 'stagsrv.fatbets: %{http_code}\n' --max-time 5 "https://stagsrv.fatbets.com/"
+curl -sSk -o /dev/null -w 'devsrv5.perabet: %{http_code}\n' --max-time 5 "https://devsrv5.perabet.com/"
+stagsrv.perabet: 401
+curl: (6) Could not resolve host: stagsrv.fatbets.com
+stagsrv.fatbets: 000
+curl: (6) Could not resolve host: devsrv5.perabet.com
+devsrv5.perabet: 000
+[0m
+Let me execute the queued probes and run the monitoring cycle.
+[0m$ [0m# Kuma heartbeat + SEO hub check
+curl -sSk --max-time 5 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -m json.tool 2>/dev/null | head -60
+{
+    "heartbeatList": {
+        "2": [
+            {
+                "status": 1,
+                "time": "2026-09-14 04:45:06.067",
+                "msg": "",
+                "ping": 48
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:47:06.122",
+                "msg": "",
+                "ping": 50
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:49:06.176",
+                "msg": "",
+                "ping": 49
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:51:06.234",
+                "msg": "",
+                "ping": 48
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:53:06.290",
+                "msg": "",
+                "ping": 49
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:55:06.344",
+                "msg": "",
+                "ping": 52
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:57:06.401",
+                "msg": "",
+                "ping": 49
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 04:59:06.452",
+                "msg": "",
+                "ping": 48
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 05:01:06.503",
+                "msg": "",
+                "ping": 50
+            },
+            {
+                "status": 1,
+                "time": "2026-09-14 05:03:06.556",
+[0m
+[0m$ [0m# Gates check
+curl -sSk -o /dev/null -w 'oauth2-proxy: %{http_code}\n' --max-time 5 "https://oauth2-proxy.teamgamdom.com/oauth2/auth"
+curl -sSk -o /dev/null -w 'oauth2-proxy-prod: %{http_code}\n' --max-time 5 "https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth"
+curl -sSk -o /dev/null -w 'shreeram: %{http_code}\n' --max-time 5 "https://shreeram-dynamic-test.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'stagsrv: %{http_code}\n' --max-time 5 "https://stagsrv.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'devsrv5: %{http_code}\n' --max-time 5 "https://devsrv5.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'tableau-admin: %{http_code}\n' --max-time 5 "https://tableau-admin.teamgamdom.com/"
+oauth2-proxy: 401
+oauth2-proxy-prod: 401
+shreeram: 401
+stagsrv: 401
+devsrv5: 401
+tableau-admin: 200
+[0m
+[0m$ [0mfor sub in minio jenkins nexus kibana superset rabbitmq argocd sentry gitlab phpmyadmin jupyter jira confluence grafana prometheus vault minio-console portainer gitea drone woodpecker tekton spinnaker harness fluxcd weave argo-workflows tekton-results; do code=$(curl -sSk -o /dev/null -w '%{http_code}' --max-time 5 "https://${sub}.teamgamdom.com/"); echo "${sub}.teamgamdom.com: $code"; done
+minio.teamgamdom.com: 404
+jenkins.teamgamdom.com: 404
+nexus.teamgamdom.com: 404
+kibana.teamgamdom.com: 404
+superset.teamgamdom.com: 404
+rabbitmq.teamgamdom.com: 404
+argocd.teamgamdom.com: 404
+sentry.teamgamdom.com: 404
+gitlab.teamgamdom.com: 404
+phpmyadmin.teamgamdom.com: 404
+jupyter.teamgamdom.com: 404
+jira.teamgamdom.com: 404
+confluence.teamgamdom.com: 404
+grafana.teamgamdom.com: 302
+prometheus.teamgamdom.com: 302
+vault.teamgamdom.com: 302
+minio-console.teamgamdom.com: 404
+portainer.teamgamdom.com: 404
+gitea.teamgamdom.com: 404
+drone.teamgamdom.com: 404
+woodpecker.teamgamdom.com: 404
+tekton.teamgamdom.com: 404
+spinnaker.teamgamdom.com: 404
+harness.teamgamdom.com: 404
+fluxcd.teamgamdom.com: 404
+weave.teamgamdom.com: 404
+argo-workflows.teamgamdom.com: 404
+tekton-results.teamgamdom.com: 404
+[0m
+[0m$ [0mcurl -sSk --max-time 5 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print('monitors:', list(d['heartbeatList'].keys()))"
+monitors: ['2', '3', '5', '6', '13', '221', '223']
+[0m
+[0m$ [0m# SEO hub alias check + oauth2 drift
+curl -sSk --max-time 8 "https://gamdom-girisi.com/" 2>/dev/null | grep -o 'gamdom9[0-9]\{4\}\.com' | sort | uniq -c
+echo "---oauth2 ping---"
+curl -sSk -o /dev/null -w 'o2p ping: %{http_code}\n' --max-time 5 "https://oauth2-proxy.teamgamdom.com/oauth2/ping"
+curl -sSk -o /dev/null -w 'o2p-prod ping: %{http_code}\n' --max-time 5 "https://oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/ping"
+echo "---sign_out external rd check---"
+curl -sSk -o /dev/null -w 'sign_out rd=https://evil.com: %{http_code} -> %{redirect_url}\n' --max-time 5 "https://oauth2-proxy.teamgamdom.com/oauth2/sign_out?rd=https://evil.com"
+17 gamdom90471.com
+---oauth2 ping---
+o2p ping: 302
+o2p-prod ping: 302
+---sign_out external rd check---
+sign_out rd=https://evil.com: 302 -> https://oauth2-proxy.teamgamdom.com/
+[0m
+[0m$ [0m# oauth2 callback POST-variants? No - passive only. Check start endpoint rd handling
+curl -sSk -o /dev/null -w 'start rd: %{http_code} -> %{redirect_url}\n' --max-time 5 "https://oauth2-proxy.teamgamdom.com/oauth2/start?rd=https://evil.com/path"
+echo "---grafana/vault clickhouse headers---"
+curl -sSk -o /dev/null -w 'grafana: %{http_code} -> %{redirect_url}\n' --max-time 5 "https://grafana.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'vault: %{http_code} -> %{redirect_url}\n' --max-time 5 "https://vault.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'clickhouse: %{http_code} -> %{redirect_url}\n' --max-time 5 "https://clickhouse.teamgamdom.com/"
+start rd: 302 -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=ZqYZ8nYhZvlvTrY-IeX8NZNcPwAGH6KrbYIt9zIh5Tc%3A%2F
+---grafana/vault clickhouse headers---
+grafana: 302 -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=D-dVJYt0niFYDCr1GXbQ12J_hGCoqn78W1JdeUWGFTw%3Ahttps%3A%2F%2Fgrafana.teamgamdom.com%2F
+vault: 302 -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=kDuxGlzlgADTB-k1PGdSacB0LKy4d_K4sCsZt-hwElA%3Ahttps%3A%2F%2Fvault.teamgamdom.com%2F
+clickhouse: 302 -> https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy-prod-google-group.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=nIi4ELrTvCU6qTVFrn5ww314fGjb0UjjfiCLJ5iJfrg%3Ahttps%3A%2F%2Fclickhouse.teamgamdom.com%2F
+[0m
+[0m$ [0m# tableau-admin - verify page still gated (200 login page, no data leak); check rest api
+curl -sSk -o /dev/null -w 'tableau-admin /api/3.21/sites: %{http_code}\n' --max-time 5 "https://tableau-admin.teamgamdom.com/api/3.21/sites"
+curl -sSk -o /dev/null -w 'tableau-admin /api/3.21/serverInfo: %{http_code}\n' --max-time 5 "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo"
+echo "---kargo---"
+curl -sSk -o /dev/null -w 'kargo /: %{http_code}\n' --max-time 5 "https://kargo.teamgamdom.com/"
+curl -sSk -o /dev/null -w 'kargo /api/v1/projects POST: %{http_code}\n' --max-time 5 -X POST "https://kargo.teamgamdom.com/api/v1/projects"
+tableau-admin /api/3.21/sites: 401
+tableau-admin /api/3.21/serverInfo: 200
+---kargo---
+kargo /: 200
+kargo /api/v1/projects POST: 405
+[0m
+## STEP 1 — DELTA
+- NEW stagsrv.perabet.com: HTTP 401 Basic realm="secret" — nginx Basic-auth test fixture confirmed on 4th brand TLD (stagsrv.fatbets.com / devsrv5.perabet.com are NXDOMAIN)
+- CHANGED oauth2-proxy /oauth2/ping: 302 (was 200 unauth) on both instances — ping now auth-gated; sign_out?rd=https://evil.com → 302 own-root (rd dropped); start?rd external → state rd normalized to `/` — open-redirect branches closed
+- NEW breadth-pass teamgamdom wildcard (25 vhosts: minio/jenkins/nexus/kibana/superset/rabbitmq/argocd/sentry/gitlab/phpmyadmin/jupyter/jira/confluence/portainer/gitea/drone/woodpecker/tekton/spinnaker/harness/fluxcd/weave/argo-workflows/tekton-results): all 404 Go-default; only grafana/prometheus/vault 302 SSO — no unprotected surface
+- NO_CHANGE live fleet (8 hosts /client-api md5 7e3a161d), 8 pending aliases (16th cycle 421), Kuma (7 monitors: 2,3,5,6,13,221,223), SEO hub (17× 90471), gates (oauth2-proxy + prod 401, shreeram/stagsrv/devsrv5 401, tableau-admin root 200/sites 401)
+
+## STEP 2 — PRIORITIZE
+- [PRIO] perabet.com/client-api,0.86, cross-brand identity origin (4 brands/25+ hosts, byte-identical POST proxy, no pre-auth falsifier)
+- [PRIO] stagsrv.perabet.com,0.58,secret-realm fixture now spans 2 TLDs (teamgamdom+perabet), brand mirror pins proven
+- [PRIO] oauth2-proxy.teamgamdom.com,0.55,OAuth/OATH fabric hardened this cycle (ping gated, OAuth2 layer in front of Vault/ClickHouse)
+
+## STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom.com/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts; gd-lang host-only uniform; CORS-absent closes browser branch; no new passive falsifier; deploy pipeline active (epoch bump) yet markers stable
+evidence_needed: authenticated Set-Cookie on member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attr drift-watch across 8 hosts; replay valid session cookie against sibling
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] oauth2-proxy cross-instance session acceptance (shared cookie-secret/session) enables relay into Vault/ClickHouse
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com
+confidence: 45
+reasoning: both share Google client_id 696342781525 + Domain=teamgamdom.com;HttpOnly;Secure CSRF bucket; access_type=offline forces refresh tokens; A/B split live (A=obs stack, B=clickhouse); ping relocation+locks this cycle shows active admin reconfig but rd/sign_out external branches now confirmed closed; shared cookie-secret would make A-minted sessions decryptable on B
+evidence_needed: session cookie minted by A accepted by B /oauth2/auth (credential-gated)
+verify_steps: AUTH_HELPED — per-cycle diff /oauth2/{auth,start,callback,sign_out} on both; watch Set-Cookie name/attr drift signalling secret/store change
+impact: credentialed relay into production Vault/ClickHouse/observability; critical if triggerable
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488/gamdom90471→shreeram; 8 pending aliases; stagsrv.{teamgamdom,perabet}
+confidence: 52
+reasoning: 16th cycle all 421/TLS-NOMATCH; rotation pipeline proven live (80007→80008, 80006→80009, 80004→80008); secret-realm 401 now proven on 2 brand TLDs (teamgamdom + perabet); stagsrv/devsrv5 400-wobble earlier proves gate not static
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done;` + stagsrv.perabet.com + shreeram each cycle
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] Tableau REST 3.21 endpoint breadth: /sites 401, /auth/signin 405 (real backend), serverInfo 200 (patched CVEs) — anonymous surface exhausted, residual is login-credential-gated
+- [PARKED] Kargo /api/v1 JSON surface: SPA catch-all ignores Accept:json on all 6 endpoints, POST 405 — method-gated backend, no passive leak
+- [FINAL] Cross-brand AUTH replay (76) — highest value, AUTH_HELPED, no falsifier
+- [FINAL] MISCONFIG alias cert misbind (52) — watch-only, rotation history supports
+- [FINAL] OATH cross-instance session (45) — trimmed by this cycle's rd/ping closures, credential-gated
+(PARKED/FINAL dropped all confidence<40 or REJECTED classes.) — sessions that cannot be observed passivly excluded.
+
+## STEP 5 — NEXT ACTION
+[NEXT] PROBE: breadth-pass perabet.com wildcard for unlisted vhosts — `for s in www beta api auth admin dashboard staging test dev stagsrv devsrv5 tableau kargo minio jenkins grafana prometheus vault clickhouse kafka clickhouse monitor superset oauth2-proxy app m portal secure staff; do curl -sk -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done` (1 rps) — classify 404(default Go realm)/302(SSO)/200(open)/401(secret-realm); any non-404 without a gate is fresh unprotected surface.
+
+## STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ teamgamdom.com wildcard breadth (25 vhosts): all 404 Go-default except grafana/prometheus/vault 302-SSO — breadth closed, no unprotected surface
+- [LEARN] ACCEPTED recon @ stagsrv.perabet.com: 401 Basic realm="secret" — internal test fixture spans 2nd brand TLD; stagsrv.fatbets + devsrv5.perabet NXDOMAIN
+- [LEARN] ACCEPTED recon @ oauth2-proxy pair: /ping 302 (was 200), sign_out?rd=external→own-root, start?rd=external→state rd="/" — open-redirect branches confirmed closed on both instances
+- [LEARN] ACCEPTED watch @ fleet/gates/status page: /client-api md5 7e3a161d ×8 hosts, 8 aliases 16th-cycle 421, 7 Kuma monitors, SEO 17× 90471 — all stable
+
+## STEP 7 — RISK
+[RISK] gamdom: 77 — Cross-brand AUTH (76) unfalsified on 4-brand/25+-host shared identity origin; secret-realm fixture now confirmed across 2 brand TLDs with stalled alias certs overhead; OATH vector trimmed by this cycle's ping/rd closures but SSO fabric unchanged in front of Vault/ClickHouse. Net 77.

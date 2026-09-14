@@ -3004,3 +3004,33 @@ impact: brand DNS → internal nginx test backend cross-realm; medium-high if ga
 testability: PASSIVE + monitoring
 [NEXT] PROBE: breadth-pass teamgamdom wildcard for unlisted vhosts (minio/jenkins/nexus/kibana/superset/rabbit/argocd/sentry/gitlab/phpmyadmin/jupyter) — classify each 404(default)/302(SSO-gated)/200(public)/401(Basic-gated) via GET `/`, 1 rps; any non-404 without a gate is a fresh unprotected surface.
 [RISK] gamdom: 77 — Cross-brand AUTH (76) still unfalsified on a 4-brand/25+-host identity origin; SSO fabric firmed (two live oauth2-proxy instances issuing offline refresh tokens in front of Vault/ClickHouse/observability) but the OATH open-redirect branch newly closed trims that vector; cert pipeline still stalled above a live 401 secret-realm. Net 78→77.
+## 2026-09-14 06:25:52 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom.com/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts; gd-lang host-only uniform; CORS-absent closes browser branch; no new passive falsifier; deploy pipeline active (epoch bump) yet markers stable
+evidence_needed: authenticated Set-Cookie on member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attr drift-watch across 8 hosts; replay valid session cookie against sibling
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] oauth2-proxy cross-instance session acceptance (shared cookie-secret/session) enables relay into Vault/ClickHouse
+class: OATH
+asset: oauth2-proxy.teamgamdom.com + oauth2-proxy-prod-google-group.teamgamdom.com
+confidence: 45
+reasoning: both share Google client_id 696342781525 + Domain=teamgamdom.com;HttpOnly;Secure CSRF bucket; access_type=offline forces refresh tokens; A/B split live (A=obs stack, B=clickhouse); ping relocation+locks this cycle shows active admin reconfig but rd/sign_out external branches now confirmed closed; shared cookie-secret would make A-minted sessions decryptable on B
+evidence_needed: session cookie minted by A accepted by B /oauth2/auth (credential-gated)
+verify_steps: AUTH_HELPED — per-cycle diff /oauth2/{auth,start,callback,sign_out} on both; watch Set-Cookie name/attr drift signalling secret/store change
+impact: credentialed relay into production Vault/ClickHouse/observability; critical if triggerable
+testability: AUTH_HELPED
+[HYP] Provisioned alias cert lands misbound onto live secret-realm nginx fixture
+class: MISCONFIG
+asset: gamdom90488/gamdom90471→shreeram; 8 pending aliases; stagsrv.{teamgamdom,perabet}
+confidence: 52
+reasoning: 16th cycle all 421/TLS-NOMATCH; rotation pipeline proven live (80007→80008, 80006→80009, 80004→80008); secret-realm 401 now proven on 2 brand TLDs (teamgamdom + perabet); stagsrv/devsrv5 400-wobble earlier proves gate not static
+evidence_needed: any pending alias non-421; any secret-realm vhost drops from 401
+verify_steps: PASSIVE — `for a in 80001 80002 90472 90473 90475 90480 90482 90488; do curl -sSk -o /dev/null -w '%{http_code} ' https://gamdom$a.com/client-api; done;` + stagsrv.perabet.com + shreeram each cycle
+impact: brand DNS → internal nginx test backend across 2 brand TLDs; medium-high if gate regresses
+testability: PASSIVE + monitoring
+[NEXT] PROBE: breadth-pass perabet.com wildcard for unlisted vhosts — `for s in www beta api auth admin dashboard staging test dev stagsrv devsrv5 tableau kargo minio jenkins grafana prometheus vault clickhouse kafka clickhouse monitor superset oauth2-proxy app m portal secure staff; do curl -sk -o /dev/null -w "%{http_code} " https://$s.perabet.com/; done` (1 rps) — classify 404(default Go realm)/302(SSO)/200(open)/401(secret-realm); any non-404 without a gate is fresh unprotected surface.
+[RISK] gamdom: 77 — Cross-brand AUTH (76) unfalsified on 4-brand/25+-host shared identity origin; secret-realm fixture now confirmed across 2 brand TLDs with stalled alias certs overhead; OATH vector trimmed by this cycle's ping/rd closures but SSO fabric unchanged in front of Vault/ClickHouse. Net 77.

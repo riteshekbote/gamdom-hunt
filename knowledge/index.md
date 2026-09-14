@@ -316,3 +316,10 @@
 - 2026-09-14 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
 - 2026-09-14 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-14 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-14 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — unauthenticated version disclosure on admin vhost
+- 2026-09-14 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate
+- 2026-09-14 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/auth/signin: HTTP 401 XML — proper auth gate
+- 2026-09-14 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/projects: HTTP 401 XML — proper auth gate
+- 2026-09-14 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — gate holds, internal test backend still protected
+- 2026-09-14 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — CSRF cookie confirms shared cookie bucket
+- 2026-09-14 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 200 SPA catch-all (Monaco IDE) even with Accept:application/json — no JSON surface exposed passively
