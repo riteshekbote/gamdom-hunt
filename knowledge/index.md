@@ -354,3 +354,13 @@
 - 2026-09-15 ACCEPTED recon @ tr.perabet.com:8083: 2nd cycle VestaCP + phpMyAdmin live on EOL PHP host; panel API surface still unauthenticated; version fingerprint pending
 - 2026-09-15 ACCEPTED watch @ live fleet + redirect chains + gates: all unchanged — stable cycle
 - 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{sites,auth/signin,projects,datasources,workbooks,users,groups,tasks,schedules}: HTTP 401 XML — proper auth gates on all other endpoints
+- 2026-09-15 ACCEPTED recon @ m.perabet.com: 3rd cycle Varnish 500 — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- 2026-09-15 ACCEPTED recon @ tr.perabet.com:8083: phpMyAdmin now 404 (removed/rotated); VestaCP panel SPA still live; /api/v1/* session-gated (302→/login/); version fingerprint pending from chunk JS
+- 2026-09-15 ACCEPTED recon @ perabet.com: 4th brand confirmed on shared origin backend (POST /client-api identical GamdomClientMessage) — trust pool now 4 brands / 25+ hostnames
+- 2026-09-15 ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- 2026-09-15 ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+- 2026-09-15 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — shared cookie bucket across 2 proxy instances
+- 2026-09-15 ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand confirmed on shared origin backend
+- 2026-09-15 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
