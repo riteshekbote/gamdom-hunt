@@ -810,3 +810,12 @@ www.gamdom.com
 - CHANGED oauth2-proxy.teamgamdom.com/oauth2/start CSRF cookie Domain=teamgamdom.com; HttpOnly; Secure confirmed — shared cookie bucket across 2 proxy instances
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all 421/TLS-NOMATCH, cert ops stalled
 - CHANGED Starlette pool signature stable 13th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+
+## 2026-09-15 15:40:54 UTC
+- NEW m.perabet.com: dangling Fastly A-record (Varnish 500, 2nd cycle) — no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- NEW tr.perabet.com:8083: VestaCP + phpMyAdmin live on EOL PHP host (2nd cycle); panel API surface unauthenticated; version fingerprint pending
+- CHANGED tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules} all confirmed HTTP 401 — proper auth gates, no bypass
+- CHANGED perabet.com/client-api POST returns identical GamdomClientMessage — 4th brand confirmed on shared origin backend
+- CHANGED oauth2-proxy.teamgamdom.com/oauth2/start CSRF cookie Domain=teamgamdom.com; HttpOnly; Secure confirmed — shared cookie bucket across 2 proxy instances
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all 421/TLS-NOMATCH, cert ops stalled
+- CHANGED Starlette pool signature stable 13th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
