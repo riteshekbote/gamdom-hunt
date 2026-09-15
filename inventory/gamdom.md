@@ -831,3 +831,18 @@ www.gamdom.com
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH, cert ops stalled
 - CHANGED Starlette pool signature stable 13th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
 - CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+
+## 2026-09-15 22:31:59 UTC
+- NEW tr.perabet.com:8083/api/v1/login/ returns 200 JSON (`{"token":"c530d8...","panel":{"FNAME":"","LNAME":"",...}}`) — anonymous guest bootstrap only, all panel fields empty; whereas `/api/v1/get/user/` 4
+- NEW tr.perabet.com:8080/8443/2083/2222/9000 all 000 (closed) — no lateral panel services reachable on that origin.
+- CHANGED m.perabet.com 4th consecutive Varnish 500 on `/` and `/client-api` — dangling Fastly A-record still unclaimed, no flip.
+- NEW No version digits in main.57f35a42.chunk.js (only `version`/`vesta_certificate` tokens); PHP header masked (nginx only).
+- NEW m.perabet.com: Fastly "unknown domain" error confirms dangling A-record (no service claims hostname) — subdomain takeover via attacker Fastly service
+- NEW tr.perabet.com:8083: VestaCP React panel (webpack) live; phpMyAdmin 404; /api/ silent — EOL PHP control panel surface
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815)
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — shared cookie bucket across 2 proxy instances
+- NEW perabet.com/client-api POST: returns identical GamdomClientMessage — 4th brand confirmed on shared identity/wallet origin
+- NEW perabet.com/api/auth: HTTP 404 SPA — uniform cookie policy (host-only gd-lang) across 4 brands
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH, cert ops stalled
+- CHANGED Starlette pool signature stable 13th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+- CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation

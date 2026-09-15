@@ -364,3 +364,7 @@
 - 2026-09-15 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — shared cookie bucket across 2 proxy instances
 - 2026-09-15 ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand confirmed on shared origin backend
 - 2026-09-15 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-15 ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` 200 pre-auth JSON (anonymous guest token c530d8... + empty panel defaults); `/get/user/` 404, `/list/backup/` 302 session-gated; ports 8080/8443/2083/2222/9000 closed; no pma.
+- 2026-09-15 ACCEPTED watch @ m.perabet.com: 4th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists with no claim/flip.
+- 2026-09-15 ACCEPTED watch @ fleet: `/client-api` 400 md5 7e3a161d Pool A+B (gamdom.com, gamdom80009.com, perabet.com verified); gd-lang host-only; 90488/80001 still 421; Kuma monitor set {2,3,5,6,13,221,223} — no rotation.
+- 2026-09-15 ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand confirmed on shared identity/wallet origin

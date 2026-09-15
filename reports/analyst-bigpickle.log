@@ -22059,3 +22059,113 @@ All three ≥40, none REJECTED-class, all have verify_steps.
 ```
 [RISK] gamdom: 78 — Cross-brand ATO (76) remains unfalsified on the 4-brand/25+-host identity origin; this cycle is a stable continuation with no new falsifiers; dangling m.perabet.com + live VestaCP panel add latent misconfig exposure but neither directly exploitable yet; tableau-admin branch exhausted at informational. Net flat at 78.
 ```
+===== ANALYST bigpickle 2026-09-15 22:31:59 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk -m 10 'https://tr.perabet.com:8083/' 2>/dev/null | grep -oE '(webpack|chunk|version|main\.[a-f0-9]+\.chunk\.js|static/js/[^"]+)' | sort -u | head -20
+chunk
+static/js/2.5dc90ea3.chunk.js
+static/js/main.57f35a42.chunk.js
+webpack
+[0m
+[0m$ [0mcurl -sk -m 10 -o /dev/null -w 'm.root=%{http_code}\n' 'https://m.perabet.com/'; sleep 1; curl -sk -m 10 -o /dev/null -w 'm.client-api=%{http_code}\n' 'https://m.perabet.com/client-api'
+m.root=500
+m.client-api=500
+[0m
+[0m$ [0mcurl -sk -m 20 'https://tr.perabet.com:8083/static/js/main.57f35a42.chunk.js' 2>/dev/null | grep -oE 'version[^,;]{0,40}|VestaCP[^,;"]{0,30}|vesta[_-][a-z0-9._-]{0,20}' | sort -u | head -20
+version
+version"
+version"]):c.a.createElement("h3"
+vesta_certificate
+[0m
+[0m$ [0mfor p in 8080 8443 2083 2222 9000; do curl -sk --connect-timeout 3 -m 6 -o /dev/null -w "port$p=%{http_code}\n" "https://tr.perabet.com:$p/" 2>/dev/null; sleep 1; done
+port8080=000
+port8443=000
+port2083=000
+port2222=000
+port9000=000
+[0m
+[0m$ [0mcurl -sk -m 10 -D - -o /dev/null 'https://tr.perabet.com:8083/' 2>/dev/null | grep -iE '^(HTTP|x-powered-by|server|set-cookie|location)' | head
+HTTP/1.1 200 OK
+Server: nginx
+[0m
+[0m$ [0mcurl -sk -m 10 -o /dev/null -w 'api-user=%{http_code}\n' 'https://tr.perabet.com:8083/api/v1/get/user/' 2>/dev/null; sleep 1; curl -sk -m 10 -o /dev/null -w 'api-list=%{http_code}\n' 'https://tr.perabet.com:8083/api/v1/list/backup/' 2>/dev/null; sleep 1; curl -sk -m 10 -o /dev/null -w 'api-login=%{http_code}\n' 'https://tr.perabet.com:8083/api/v1/login/' 2>/dev/null
+api-user=404
+api-list=302
+api-login=200
+[0m
+[0m$ [0mcurl -sk -m 10 'https://perabet.com/client-api' 2>/dev/null | md5sum; curl -sk -m 10 -D - -o /dev/null 'https://perabet.com/api/auth' 2>/dev/null | grep -i '^set-cookie' | head -2
+7e3a161d6cde2700fcdc0f6be4520745  -
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Wed, 15 Sep 2027 22:18:41 GMT
+[0m
+[0m$ [0mcurl -sk -m 10 'https://tr.perabet.com:8083/api/v1/login/' 2>/dev/null | head -c 400; echo; curl -sk -m 10 -o /dev/null -w 'login-getflags=%{http_code}\n' 'https://tr.perabet.com:8083/api/v1/login' 2>/dev/null
+{"token":"c530d80acdb5e793dc9dfd7830c53f62","panel":{"":{"FNAME":"","LNAME":"","PACKAGE":"","WEB_TEMPLATE":"","BACKEND_TEMPLATE":"","PROXY_TEMPLATE":"","DNS_TEMPLATE":"","WEB_DOMAINS":"","WEB_ALIASES":"","DNS_DOMAINS":"","DNS_RECORDS":"","MAIL_DOMAINS":"","MAIL_ACCOUNTS":"","DATABASES":"","CRON_JOBS":"","DISK_QUOTA":"","BANDWIDTH":"","HOME":"\/home\/","NS":"","SHELL":"\/bin\/bash","BACKUPS":"","CO
+login-getflags=301
+[0m
+[0m$ [0mcurl -sk -m 10 'https://gamdom.com/client-api' 2>/dev/null | md5sum; sleep 1; curl -sk -m 10 'https://gamdom80009.com/client-api' 2>/dev/null | md5sum; sleep 1; curl -sk -m 10 -o /dev/null -w '90488=%{http_code} ' 'https://gamdom90488.com/client-api' 2>/dev/null; curl -sk -m 10 -o /dev/null -w '80001=%{http_code}\n' 'https://gamdom80001.com/' 2>/dev/null; sleep 1; curl -sk -m 10 'https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains' 2>/dev/null | grep -oE '"(id|monitor_id|status)":[0-9]+' | sort -u | head
+7e3a161d6cde2700fcdc0f6be4520745  -
+7e3a161d6cde2700fcdc0f6be4520745  -
+90488=421 80001=421
+"status":1
+[0m
+[0m$ [0mcurl -sk -m 10 'https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains' 2>/dev/null | python3 -c "import sys,json;d=json.load(sys.stdin);print([h.get('monitor_id') for h in d.get('heartbeatList',[])][:12])" 2>/dev/null || curl -sk -m 10 'https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains' 2>/dev/null | head -c 300
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-15 20:40:23.960","msg":"","ping":59},{"status":1,"time":"2026-09-15 20:42:24.023","msg":"","ping":57},{"status":1,"time":"2026-09-15 20:44:24.085","msg":"","ping":65},{"status":1,"time":"2026-09-15 20:46:24.153","msg":"","ping":56},{"status":1,"time
+[0m
+[0m$ [0mcurl -sk -m 10 'https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains' 2>/dev/null | python3 -c "import sys,json;d=json.load(sys.stdin);print(sorted(map(int,d['heartbeatList'].keys())))" 2>/dev/null
+[2, 3, 5, 6, 13, 221, 223]
+[0m
+STEP 1 — DELTA
+[NEW] tr.perabet.com:8083/api/v1/login/ returns 200 JSON (`{"token":"c530d8...","panel":{"FNAME":"","LNAME":"",...}}`) — anonymous guest bootstrap only, all panel fields empty; whereas `/api/v1/get/user/` 404 and `/api/v1/list/backup/` 302 (session-gated) — login route special-cased pre-auth.
+[NEW] tr.perabet.com:8080/8443/2083/2222/9000 all 000 (closed) — no lateral panel services reachable on that origin.
+[CHANGED] m.perabet.com 4th consecutive Varnish 500 on `/` and `/client-api` — dangling Fastly A-record still unclaimed, no flip.
+[NEW] No version digits in main.57f35a42.chunk.js (only `version`/`vesta_certificate` tokens); PHP header masked (nginx only).
+
+STEP 2 — PRIORITIZE
+[PRIO] m.perabet.com,76,attack_surface:10 business_value:8 tech_exposure:2 gate_ease:9 cloud_surface:6 freshness:8
+[PRIO] perabet.com/client-api (cross-brand),71,attack_surface:9 business_value:10 tech_exposure:6 gate_ease:3 cloud_surface:3 freshness:7
+[PRIO] tr.perabet.com:8083,60,attack_surface:7 business_value:6 tech_exposure:8 gate_ease:5 cloud_surface:2 freshness:6
+
+STEP 3 — HYPOTHESES
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 60
+reasoning: 4th cycle Varnish 500 on `/` + `/client-api`, `x-served-by cache-chi-*`; A-record → Fastly anycast with no backing service config; brand's rotating-mirror ops retire/relieve hostnames silently, so a stale A-record outliving its service is consistent; no crt.sh SAN coverage on the name (no cert was ever minted, weakens prior-ownership but not claimability — Fastly routes by service config)
+evidence_needed: 500→200 transition (re-claimed/hijacked); or Fastly error, e.g. "unknown domain" already observed — record permanently dangling
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/` + `/client-api` to catch flip; crt.sh SAN re-lookup quarterly
+impact: attacker HTTPS site on trusted live-DNS brand hostname (phishing/fake login); medium — requires attacker-controlled Fastly service
+testability: HUMAN_ONLY
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (UNCHANGED, re-queued)
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 18th cycle md5 7e3a161d byte-identical across 8 hosts (Pool A+B); gd-lang host-only uniform; CORS-absent closes browser branch; no passive falsifier remains after 18 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie drift-watch across 8 hosts; replay valid session cookie against sibling hostname
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] VestaCP EOL control-panel on tr.perabet.com:8083 has unauth API or CVE-matchable version
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 45
+reasoning: nginx + PHP/5.4.45 (EOL 2015) direct origin, VestaCP react-control-panel on :8083; `/api/v1/login/` 200 pre-auth (guest token, empty panel defaults = no leak); all other `/api/v1/*` routes session-gated (302/404); phpMyAdmin removed (404); ports 8080/8443/2083/2222/9000 closed; version not yet extractable from chunks
+evidence_needed: version string from vendor chunk to match an applicable CVE; or any unauth 200 route beyond login bootstrap
+verify_steps: PASSIVE — `curl -sk https://tr.perabet.com:8083/static/js/2.5dc90ea3.chunk.js | grep -oE 've[0-9]?\.[0-9]+\.[0-9]+|repoId|BUILD'`; re-check /api/v1/login/ body drift for token→data change
+impact: control-panel + db console on live brand subdomain off-CDN; low-medium unless panel CVE applies
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] tr.perabet.com:8083 panel: `/api/v1/login/` 200 is anonymous guest bootstrap (empty fields), not a leak; no CVE-matching version; blocked until version extracted — drops below actionable threshold but retained as background PASSIVE.
+[FINAL] 1. cross-brand ATO @ perabet.com/client-api (76, AUTH_HELPED) — survivors 2. m.perabet.com takeover (60, HUMAN_ONLY) — 3. tr.perabet.com panel (45, PASSIVE)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `curl -sk https://tr.perabet.com:8083/static/js/2.5dc90ea3.chunk.js | grep -oE 've[0-9]?\.[0-9]+\.[0-9]+' | sort -u` + `curl -sk -o /dev/null -w 'm=%{http_code}' https://m.perabet.com/` flip-watch (1 rps, sleep 1)
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` 200 pre-auth JSON (anonymous guest token c530d8... + empty panel defaults); `/get/user/` 404, `/list/backup/` 302 session-gated; ports 8080/8443/2083/2222/9000 closed; no pma.
+[LEARN] ACCEPTED watch @ m.perabet.com: 4th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists with no claim/flip.
+[LEARN] ACCEPTED watch @ fleet: `/client-api` 400 md5 7e3a161d Pool A+B (gamdom.com, gamdom80009.com, perabet.com verified); gd-lang host-only; 90488/80001 still 421; Kuma monitor set {2,3,5,6,13,221,223} — no rotation.
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — Cross-brand ATO (76) remains the top unfalsified item on the 4-brand/25+-host identity origin; this cycle adds no falsifier and no new money/auth path. m.perabet.com dangling persists (HUMAN_ONLY), tr.perabet.com:8083 login-bootstrap difference is informational only. Net flat at 78.
