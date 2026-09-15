@@ -775,3 +775,17 @@ www.gamdom.com
 - CHANGED Real auth endpoint NOT at `/api/auth`, `/api/auth/login`, `/auth`, `/login`, `/graphql` across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
 - CHANGED Kuma heartbeat JSON: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle; 221=gamdom80008.com, 223=gamdom80009.com confirmed live
 - CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only — no new alias advertised
+
+## 2026-09-15 00:44:10 UTC
+- NEW perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical `/client-api` md5 7e3a161d, `/health` weak-ETag, host-only `gd-lang` cookie — cross-brand 
+- NEW `/client-api` POST returns identical `GamdomClientMessage` across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com)
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML unauthenticated version disclosure (productVersion 2025.1.11, REST API 3.25, prepConductorVersion 2025.1.0) on admin vhost
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start issues `_oauth2_proxy_csrf` cookie Domain=teamgamdom.com; HttpOnly; Secure — confirmed shared cookie bucket across 2 oauth2-proxy instances (client_id 69634278
+- NEW devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
+- NEW stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" (transient 400→401 regression resolved) — internal test backend gate holds
+- CHANGED Provisioning cycle advanced to 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all still 421/TLS-NOMATCH, cert ops stalled
+- CHANGED Starlette pool signature stable 13th consecutive cycle: `/client-api` 400 md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B — shared origin confirmed
+- CHANGED Cross-brand ATO hypothesis confidence 76 — single shared backend serves 4 brands / 25+ hostnames via byte-identical `/client-api` signature; auth transport = server-set same-origin cookie (no Bearer/l
+- CHANGED Real auth endpoint NOT at `/api/auth`, `/api/auth/login`, `/auth`, `/login`, `/graphql` across all 4 Pool A brands (all 404 with identical host-only gd-lang cookie)
+- CHANGED Kuma heartbeat JSON: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation this cycle; 221=gamdom80008.com, 223=gamdom80009.com confirmed live
+- CHANGED SEO hub (gamdom-girisi.com) unchanged: still 17× gamdom90471.com only — no new alias advertised

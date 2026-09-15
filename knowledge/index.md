@@ -328,3 +328,19 @@
 - 2026-09-14 ACCEPTED recon @ perabet.com + beta.perabet.com: Fastly Pool A, /client-api md5 7e3a161d, gd-lang host-only — 4th brand confirmed on shared identity/wallet origin
 - 2026-09-14 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — transient 400 wobble resolved, gate holds
 - 2026-09-14 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind Basic auth
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — unauthenticated version disclosure on admin vhost
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/auth/signin: HTTP 401 XML — proper auth gate
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/projects: HTTP 401 XML — proper auth gate
+- 2026-09-15 ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — gate holds, internal test backend still protected
+- 2026-09-15 ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
+- 2026-09-15 ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observability vhosts
+- 2026-09-15 ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving production
+- 2026-09-15 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — CSRF cookie confirms shared cookie bucket
+- 2026-09-15 ACCEPTED recon @ oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth: HTTP 401 — second OAuth2 proxy instance confirmed
+- 2026-09-15 ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 200 SPA catch-all (Monaco IDE) even with Accept:application/json — no JSON surface exposed passively
+- 2026-09-15 ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand sharing origin backend
+- 2026-09-15 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-15 ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- 2026-09-15 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-15 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

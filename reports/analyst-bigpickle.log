@@ -21105,3 +21105,177 @@ testability: AUTH_HELPED
 
 ## STEP 7 — RISK
 [RISK] gamdom: 77 — Cross-brand ATO (76) still unfalsified on 4-brand/25+-host identity origin with no new passive falsifier; new inventory (dangling m.perabet.com Fastly record + EOL-PHP tr.perabet.com landing) adds latent misconfig/cert-claim surface but nothing demonstrably exploitable yet; tableau-admin branch exhausted at informational; cert pipeline remains stalled above the live 401 secret-realm fixture. Net flat at 77.
+===== ANALYST bigpickle 2026-09-15 00:44:10 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in m.perabet.com tr.perabet.com; do for p in / /client-api /health; do code=$(curl -sk --connect-timeout 3 -m 8 -o /dev/null -w '%{http_code}' "https://$h$p"); echo "$code $h$p"; done; done
+500 m.perabet.com/
+500 m.perabet.com/client-api
+500 m.perabet.com/health
+200 tr.perabet.com/
+404 tr.perabet.com/client-api
+404 tr.perabet.com/health
+[0m
+[0m$ [0mfor p in /robots.txt /server-status /phpinfo.php /info.php /admin /admin/login.php /.env /config.php /backup.zip /old/ /v2/ /phpmyadmin /server-info /status; do code=$(curl -sk --connect-timeout 3 -m 8 -o /dev/null -w '%{http_code}' "https://tr.perabet.com$p"); echo "$code $p"; sleep 1; done
+200 /robots.txt
+403 /server-status
+404 /phpinfo.php
+404 /info.php
+404 /admin
+301 /admin/login.php
+404 /.env
+404 /config.php
+404 /backup.zip
+301 /old/
+301 /v2/
+301 /phpmyadmin
+404 /server-info
+404 /status
+[0m
+[0m$ [0mfor p in /old/ /v2/ /admin/login.php; do echo "== $p"; curl -sk --connect-timeout 3 -m 8 -D - -o /dev/null "https://tr.perabet.com$p" | grep -iE '^(HTTP|location|server|x-|content-type)'; sleep 1; done; echo "== robots"; curl -sk --connect-timeout 3 -m 8 "https://tr.perabet.com/robots.txt" | head -40
+== /old/
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Content-Type: text/html; charset=iso-8859-1
+Location: https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+== /v2/
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Content-Type: text/html; charset=iso-8859-1
+Location: https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+== /admin/login.php
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Content-Type: text/html; charset=iso-8859-1
+Location: https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+== robots
+User-agent: *
+Crawl-delay: 10
+[0m
+[0m$ [0mcurl -sk --connect-timeout 3 -m 10 "https://tr.perabet.com/" | tr -d '\000' | grep -oiE '(generator|hestiacp|vesta|webmaster|copyright|powered by|facebook|instagram|telegram|whatsapp)[^"<>]{0,60}' | sort -u | head -30
+Instagram
+Telegram
+instagram.com/perabetdestek
+instagram.png
+telegram.png
+[0m
+[0m$ [0mp='/home/admin/web/tr.perabet.com/public_html/index.php'; code=$(curl -sk --connect-timeout 3 -m 8 -o /dev/null -w '%{http_code}' "https://tr.perabet.com$p"); echo "$code /home/admin/web/..."; sleep 1; for pp in /home/ /home/admin/ /backup/ /public_html/; do c=$(curl -sk --connect-timeout 3 -m 8 -o /dev/null -w '%{http_code}' "https://tr.perabet.com$pp"); echo "$c $pp"; sleep 1; done
+301 /home/admin/web/...
+301 /home/
+301 /home/admin/
+301 /backup/
+301 /public_html/
+[0m
+[0m$ [0mfor s in m w a c p d o g t l s q n e f x y b u j my mc mp md cd ad api att vpn tv blog forum news shop store www2 www3 m2 beta2 test1 stage1 test3 demo uat sit lab sandbox www-test staging-beta tc; do code=$(curl -sk --connect-timeout 2 -m 5 -o /dev/null -w '%{http_code}' "https://$s.perabet.com/" 2>/dev/null); echo "$code $s"; sleep 1; done
+500 m
+000 w
+000 a
+000 c
+000 p
+000 d
+000 o
+000 g
+000 t
+000 l
+000 s
+000 q
+000 n
+000 e
+000 f
+000 x
+000 y
+000 b
+000 u
+000 j
+000 my
+000 mc
+000 mp
+000 md
+000 cd
+000 ad
+000 api
+000 att
+000 vpn
+000 tv
+000 blog
+000 forum
+000 news
+000 shop
+000 store
+000 www2
+000 www3
+000 m2
+000 beta2
+000 test1
+000 stage1
+000 test3
+000 demo
+000 uat
+000 sit
+000 lab
+000 sandbox
+000 www-test
+000 staging-beta
+000 tc
+[0m
+[0m$ [0mcurl -sk --connect-timeout 10 -m 20 "https://crt.sh/?q=%25.perabet.com&output=json" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+except Exception as e:
+    print('parse-fail',e); sys.exit()
+names={}
+for e in d:
+    for n in e.get('name_value','').split('\n'):
+        n=n.strip()
+        if n.startswith('*.') or n.startswith('"'):
+            continue
+        names[n]=names.get(n,0)+1
+for n,c in sorted(names.items()):
+    print(f'{c:4} {n}')
+" 2>/dev/null | head -60
+/bin/bash: -c: line 15: unexpected EOF while looking for matching `''
+[0m
+[0m$ [0mfor h in gamdom.com gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one perabet.com gamdom4567.com; do code=$(curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://$h/client-api"); echo "$code $h"; done
+400 gamdom.com
+400 gamdom80008.com
+400 gamdom80009.com
+400 gamdom80003.com
+400 fatbets.com
+400 gamdom.one
+400 perabet.com
+400 gamdom4567.com
+[0m
+[0m$ [0mcurl -sk --connect-timeout 10 -m 25 "https://crt.sh/?q=%25.perabet.com&output=json" > /tmp/crt_perabet.json 2>/dev/null; wc -c /tmp/crt_perabet.json; python3 <<'EOF'
+import json
+d=json.load(open('/tmp/crt_perabet.json'))
+names={}
+for e in d:
+    for n in e.get('name_value','').split('\n'):
+        n=n.strip().lower()
+        if n.startswith('*') or n.startswith('"'):
+            continue
+        names[n]=names.get(n,0)+1
+for n,c in sorted(names.items()):
+    print(f'{c:4} {n}')
+EOF
+253 /tmp/crt_perabet.json
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "/usr/lib/python3.12/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/crt_perabet.json; echo; sleep 3; curl -sk --connect-timeout 10 -m 25 "https://crt.sh/?q=m.perabet.com&output=json" > /tmp/crt_m.json 2>/dev/null; cat /tmp/crt_m.json failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
