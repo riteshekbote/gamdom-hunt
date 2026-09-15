@@ -4945,3 +4945,55 @@ testability: AUTH_HELPED
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
+## 2026-09-15 11:03:02 UTC [target] (model nemotron3)
+[CHANGED] tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules} all confirmed HTTP 401 — proper auth gates, no bypass
+[CHANGED] perabet.com/client-api POST returns identical GamdomClientMessage — 4th brand confirmed on shared origin
+[CHANGED] oauth2-proxy.teamgamdom.com/oauth2/start CSRF cookie Domain=teamgamdom.com; HttpOnly; Secure confirmed — shared cookie bucket across 2 proxy instances
+[CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002) — all 421/TLS-NOMATCH, cert ops stalled
+[CHANGED] Starlette pool signature stable 13th cycle: /client-api md5 7e3a161d + /health weak-ETag byte-identical Pool A + Pool B
+[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,7.75,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] perabet.com/client-api,7.25,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,6.75,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=8
+[PRIO] kargo.teamgamdom.com/api/v1/projects,6.50,attack_surface=7,business_value=7,tech_exposure=7,gate_ease=5,cloud_surface=7,freshness=8
+[PRIO] grafana.teamgamdom.com,6.25,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=7
+[PRIO] clickhouse.teamgamdom.com,6.00,attack_surface=6,business_value=7,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=7
+[HYP] Tableau admin vhost unauthenticated serverInfo version disclosure + full REST API enumeration
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 85
+reasoning: tableau-admin.teamgamdom.com returns HTTP 200 Tableau login page; /api/3.21/serverInfo returns HTTP 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0; all other endpoints (/sites, /auth/signin, /projects, /datasources, /workbooks, /users, /groups, /tasks, /schedules) return HTTP 401 XML — admin vhost has unauthenticated version disclosure while main tableau.teamgamdom.com is patched (CVE-2025-52455/52449)
+evidence_needed: confirm no other unauthenticated endpoints on admin vhost; check if admin vhost runs different patch level
+verify_steps: curl -sS "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | head -20; for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/projects /api/3.21/sites; do curl -sS -I "https://tableau-admin.teamgamdom.com$p" 2>&1 | grep -E "^(HTTP|Content|Server|X-|Location|WWW-Authenticate)" | head -2; done
+impact: Tableau admin panel version/info disclosure; potential auth bypass if admin vhost misconfigured differently; medium
+testability: PASSIVE
+[HYP] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot to grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com/oauth2/auth
+confidence: 70
+reasoning: oauth2-proxy.teamgamdom.com/oauth2/start issues _oauth2_proxy_csrf cookie with Domain=teamgamdom.com; HttpOnly; Secure; grafana/prometheus/vault.teamgamdom.com redirect to oauth2-proxy.teamgamdom.com (client_id 696342781525); clickhouse.teamgamdom.com redirects to oauth2-proxy-prod-google-group.teamgamdom.com (second instance); tableau-admin.teamgamdom.com returns 200 Tableau login; kargo.teamgamdom.com SPA catch-all; stagsrv/devsrv5 return 401 Basic — all share teamgamdom.com apex; if oauth2-proxy session cookie uses Domain=teamgamdom.com, authenticated session grants access to all sibling services
+evidence_needed: actual session cookie attributes (Domain, Path, SameSite) after full Google OAuth flow on oauth2-proxy.teamgamdom.com; whether session cookie accepted by grafana.teamgamdom.com, prometheus.teamgamdom.com, vault.teamgamdom.com, clickhouse.teamgamdom.com, tableau-admin.teamgamdom.com, kargo.teamgamdom.com/api/v1/projects, stagsrv.teamgamdom.com, devsrv5.teamgamdom.com
+verify_steps: curl -sS -I https://oauth2-proxy.teamgamdom.com/oauth2/auth 2>&1 | grep -i set-cookie; (AUTH_HELPED) complete Google OAuth flow on oauth2-proxy.teamgamdom.com, capture session cookie, replay on https://grafana.teamgamdom.com/, https://prometheus.teamgamdom.com/, https://vault.teamgamdom.com/, https://clickhouse.teamgamdom.com/, https://tableau-admin.teamgamdom.com/, https://kargo.teamgamdom.com/api/v1/projects, https://stagsrv.teamgamdom.com/, https://devsrv5.teamgamdom.com/
+impact: Cross-service privilege escalation on teamgamdom.com brand — access to Grafana/Prometheus/Vault (observability), ClickHouse (analytics), Tableau admin (BI), Kargo (GitOps/ArgoCD), internal nginx test backends; high
+testability: AUTH_HELPED
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (gamdom/fatbets/gamdom.one/perabet)
+class: AUTH
+asset: perabet.com/client-api
+confidence: 76
+reasoning: perabet.com (apex/www/beta) confirmed as 4th brand on shared Pool A (Fastly 151.101.x.52) with byte-identical /client-api md5 7e3a161d, /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s", host-only gd-lang cookie policy identical across 4 brands / 25+ hostnames; /client-api POST returns identical GamdomClientMessage across all 8 live hosts (gamdom.com, fatbets.com, gamdom.one, perabet.com, gamdom80008.com, gamdom80009.com, gamdom80003.com, gamdom4567.com); auth transport confirmed as server-set same-origin cookie (credentials: same-origin, no Bearer/localStorage) per passive bundle analysis; if backend validates cookie host-agnostically across brands, session from any Gamdom mirror works on fatbets/gamdom.one/perabet and vice versa
+evidence_needed: Set-Cookie Domain/Path/SameSite attributes from actual auth flow on perabet.com vs gamdom.com vs fatbets.com vs gamdom.one; whether session cookie minted on gamdom80009 accepted by perabet.com/client-api
+verify_steps: curl -sS -I https://perabet.com/api/auth 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/api/auth/login 2>&1 | grep -i set-cookie && curl -sS -I https://perabet.com/auth 2>&1 | grep -i set-cookie — locate real auth endpoint and capture session cookie attributes; (AUTH_HELPED) authenticate on gamdom80009, replay cookie on perabet.com/client-api and fatbets.com/client-api and gamdom.one/client-api
+impact: Cross-brand account takeover across 4 brands / 25+ hostnames; high
+testability: AUTH_HELPED
+[PARKED] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot: confidence 70 but testability AUTH_HELPED only; requires full Google OAuth flow to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth; requires valid user session
+[FINAL] 1) tableau-admin.teamgamdom.com/api/3.21/serverInfo: Tableau admin vhost unauthenticated version disclosure + API enumeration (85, PASSIVE, medium impact)
+[NEXT] PROBE: `curl -sS "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | head -20` — confirm unauthenticated version disclosure on Tableau admin vhost; passive, single GET
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prepConductorVersion 2025.1.0 — unauthenticated version disclosure on admin vhost
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{sites,auth/signin,projects,datasources,workbooks,users,groups,tasks,schedules}: HTTP 401 XML — proper auth gates on all other endpoints
+[LEARN] ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand sharing origin backend
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — CSRF cookie confirms shared cookie bucket
+[LEARN] ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket

@@ -350,3 +350,7 @@
 - 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/groups: HTTP 401 XML — proper auth gate
 - 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/tasks: HTTP 401 XML — proper auth gate
 - 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/schedules: HTTP 401 XML — proper auth gate
+- 2026-09-15 ACCEPTED recon @ m.perabet.com: 2nd cycle Varnish 500 — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- 2026-09-15 ACCEPTED recon @ tr.perabet.com:8083: 2nd cycle VestaCP + phpMyAdmin live on EOL PHP host; panel API surface still unauthenticated; version fingerprint pending
+- 2026-09-15 ACCEPTED watch @ live fleet + redirect chains + gates: all unchanged — stable cycle
+- 2026-09-15 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{sites,auth/signin,projects,datasources,workbooks,users,groups,tasks,schedules}: HTTP 401 XML — proper auth gates on all other endpoints
