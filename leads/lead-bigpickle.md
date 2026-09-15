@@ -3140,3 +3140,33 @@ testability: AUTH_HELPED
 [NEXT] PROBE: tr.perabet.com old-app surface, GET-only 1 rps — `for p in /robots.txt /server-status /phpinfo.php /info.php /admin /admin/login.php /.env /config.php /backup.zip /old/; do curl -sk -o /dev/null -w "%{http_code} " "https://tr.perabet.com$p"; sleep 1; done` + re-check m.perabet.com 500→200 flip in same pass; any non-404/non-301/${200 landing} flips = new unprotected surface on the EOL PHP host.
 [RISK] gamdom: 77 — Cross-brand ATO (76) still unfalsified on 4-brand/25+-host identity origin with no new passive falsifier; new inventory (dangling m.perabet.com Fastly record + EOL-PHP tr.perabet.com landing) adds latent misconfig/cert-claim surface but nothing demonstrably exploitable yet; tableau-admin branch exhausted at informational; cert pipeline remains stalled above the live 401 secret-realm fixture. Net flat at 77.
 ## 2026-09-15 00:44:00 UTC [target] (model bigpickle)
+## 2026-09-15 05:51:01 UTC [target] (model bigpickle)
+[HYP] Dangling Fastly record on 4th brand hostname claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 50
+reasoning: A-record resolves to same Fastly anycast family as live perabet.com apex; Varnish 500 with `x-served-by: cache-chi-*` + retry-after:0 = no Fastly service claims the hostname; brand proven to rotate/retire hostnames silently (80007→80008, 80006→80009) and DNS for retired names stays live; documented pattern: adding an unclaimed Fastly-pointing hostname to an attacker service yields automated TLS + content serving.
+evidence_needed: any m.perabet.com response transitions 500→200/(real app); or CT/SAN history showing prior perabet coverage on the name.
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/` + `https://m.perabet.com/client-api` to catch 500→200 flip (record re-claimed or hijacked); crt.sh SAN lookup for m.perabet.com.
+impact: serve phishing/fake-login on trusted, live-DNS brand hostname that funnels login traffic; medium (exploit branch requires owning a Fastly service).
+testability: HUMAN_ONLY
+[HYP] EOL VestaCP host exposes paste-on attack surface outside hardened Fastly fleet
+class: MISCONFIG
+asset: tr.perabet.com:/:8083/phpmyadmin/
+confidence: 45
+reasoning: nginx + PHP/5.4.45 (EOL 2015) direct origin not on Fastly; VestaCP control-panel SPA live on :8083; phpMyAdmin deployed but neutralized (200 PHP-version gate); 301s leak `/home/admin/web/<user>/<domain>/public_html/index.php` (panel login = `admin`); /cgi-bin/ 403, /server-status 403; landing login button → a.info/pera (unreachable).
+evidence_needed: unauthenticated 200 on any panel API/status route beyond the login SPA; or auth-bypass on the VestaCP release once version fingerprinted.
+verify_steps: PASSIVE — `curl -sk https://tr.perabet.com:8083/static/js/main.57f35a42.chunk.js` version-grep next cycle; watch 403→200 on /server-status;/cgi-bin/; monitor a.info/pera reachability.
+impact: control-panel + db-console targets on a live brand subdomain beyond CDN protections; low-medium unless outdated-panel CVE applies.
+testability: PASSIVE
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (UNCHANGED, re-queued)
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform; CORS-absent closes browser branch; this cycle added evidence the corp blast radius (VestaCP panel + SSO on brand TLDs) but consumer auth surface unchanged; no passive falsifier remains.
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth.
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay valid session cookie against a sibling hostname.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[NEXT] PROBE: m.perabet.com flip-watch + tr.perabet.com nonstandard-port scan at 1 rps — `for p in 8080 8443 2083 2222 9000; do curl -sk --connect-timeout 3 -m 6 -o /dev/null -w "%{http_code} " "https://tr.perabet.com:$p/"; sleep 1; done` then `curl -sk -o /dev/null -w 'm.perabet.com root=%{http_code} ' "https://m.perabet.com/"` + `/client-api` to catch 500→200.
+[RISK] gamdom: 78 — Cross-brand ATO (76) remains unfalsified on the 4-brand/25+-host identity origin; this cycle surfaced a genuinely new latent-exposure class (live VestaCP control panel + phpMyAdmin + EOL-PHP host on in-scope tr.perabet.com outside the hardened Fastly fleet, plus persistent dangling m.perabet.com Fastly record), widening the misconfig blast radius even though neither is directly exploitable yet; tableau-admin exhausted. Net +1 from 77.

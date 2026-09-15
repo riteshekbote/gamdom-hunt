@@ -1625,3 +1625,31 @@
 - LEARN: ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-15 05:51:30 UTC
+- [80] tableau-admin.teamgamdom.com/api/3.21/serverInfo: Tableau admin vhost exposes unauthenticated serverInfo with version disclosure + API enumeration (from art/lead_nemotron3.txt)
+- [50] m.perabet.com: Dangling Fastly record on 4th brand hostname claimable via attacker Fastly service (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: m.perabet.com flip-watch + tr.perabet.com nonstandard-port scan at 1 rps — `for p in 8080 8443 2083 2222 9000; do curl -sk --connect-timeout 3 -m 6 -o /d
+- NEXT(hypotheses-nemotron3.txt): PROBE: `for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/projects /api/3.21/sit
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 XML leaking productVersion 2025.1.11 (build 20251.25.1210.1815), REST API 3.25, prep
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/sites: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/auth/signin: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/projects: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/datasources: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/workbooks: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/users: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/groups: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/tasks: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/schedules: HTTP 401 XML — proper auth gate
+- LEARN: ACCEPTED recon @ stagsrv.teamgamdom.com: HTTP 401 Basic realm="secret" — gate holds, internal test backend still protected
+- LEARN: ACCEPTED recon @ devsrv5.teamgamdom.com: HTTP 401 Basic realm="secret" — new internal dev subdomain behind nginx Basic auth
+- LEARN: ACCEPTED recon @ grafana/prometheus/vault.teamgamdom.com: 302→Google OAuth via oauth2-proxy.teamgamdom.com (same client_id 696342781525) — live SSO-gated observ
+- LEARN: ACCEPTED recon @ clickhouse.teamgamdom.com: 302→Google OAuth via oauth2-proxy-prod-google-group.teamgamdom.com — second oauth2-proxy instance actively serving p
+- LEARN: ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues _oauth2_proxy_csrf cookie Domain=teamgamdom.com; HttpOnly; Secure — CSRF cookie confirms share
+- LEARN: ACCEPTED recon @ oauth2-proxy-prod-google-group.teamgamdom.com/oauth2/auth: HTTP 401 — second OAuth2 proxy instance confirmed
+- LEARN: ACCEPTED recon @ kargo.teamgamdom.com/api/v1/projects: HTTP 200 SPA catch-all (Monaco IDE) even with Accept:application/json — no JSON surface exposed passively
+- LEARN: ACCEPTED recon @ perabet.com/client-api: POST returns identical GamdomClientMessage — 4th brand sharing origin backend
+- LEARN: ACCEPTED recon @ perabet.com/api/auth: HTTP 404 with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
+- LEARN: ACCEPTED recon @ shreeram-dynamic-test.teamgamdom.com: HTTP 401 Basic realm="secret" fixture-wide — internal test backend gate holds
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains

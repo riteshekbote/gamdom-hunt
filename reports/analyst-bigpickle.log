@@ -21279,3 +21279,340 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mcat /tmp/crt_perabet.json; echo; sleep 3; curl -sk --connect-timeout 10 -m 25 "https://crt.sh/?q=m.perabet.com&output=json" > /tmp/crt_m.json 2>/dev/null; cat /tmp/crt_m.json failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-15 05:51:30 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mecho "=== CYCLE 16 WATCH: pending aliases ===" && for a in 80001 80002 90472 90473 90475 90480 90482 90488; do printf "gamdom${a}.com: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://gamdom${a}.com/client-api"; echo; sleep 1; done
+=== CYCLE 16 WATCH: pending aliases ===
+gamdom80001.com: 421
+gamdom80002.com: 421
+gamdom90472.com: 421
+gamdom90473.com: 421
+gamdom90475.com: 421
+gamdom90480.com: 421
+gamdom90482.com: 421
+gamdom90488.com: 421
+[0m
+Let me run the next cycle probes first, then produce the structured output.
+[0m$ [0mecho "=== OAUTH2-PROXY CSRF ===" && curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://oauth2-proxy.teamgamdom.com/oauth2/start" 2>/dev/null | grep -i 'set-cookie' && echo "=== PERABET COOKIE ===" && curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://perabet.com/" 2>/dev/null | grep -i 'set-cookie'
+=== OAUTH2-PROXY CSRF ===
+set-cookie: _oauth2_proxy_csrf=YOvx_O6N8k3GbxVEY4omOLEOuhPqsYopERhDUQ_jT9Qzgxklwqy2_Pjz7lJhidsBKVkyfq4HJLP_cGW_lKt_OFDSWNqC6rlmDWOcOgsTBPW41g2esmEVzmY=|1789451240|XSJ6l2tM4b6nr9FKAWb8qdFt_oaMZhR4AD_fnNcejMQ=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== PERABET COOKIE ===
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Wed, 15 Sep 2027 05:47:20 GMT
+[0m
+[0m$ [0mecho "=== TEAMGAMDOM GATES ===" && for h in stagsrv.teamgamdom.com devsrv5.teamgamdom.com shreeram-dynamic-test.teamgamdom.com; do printf "$h: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://$h/"; echo; sleep 1; done && echo "=== TABLEAU-ADMIN ===" && curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>/dev/null | head -5 && echo "=== SEO HUB ===" && curl -sk --connect-timeout 3 -m 6 "https://gamdom-girisi.com/" 2>/dev/null | grep -o 'gamdom[0-9]*\.com' | sort -u && echo "=== STATUS PAGE ===" && curl -sk --connect-timeout 3 -m 6 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print('monitors:',len(d.get('monitorIDs',d.get('result',[]))))" 2>/dev/null || echo "parse failed"
+=== TEAMGAMDOM GATES ===
+stagsrv.teamgamdom.com: 401
+devsrv5.teamgamdom.com: 401
+shreeram-dynamic-test.teamgamdom.com: 401
+=== TABLEAU-ADMIN ===
+HTTP/2 200 
+content-type: application/json
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+=== SEO HUB ===
+gamdom90471.com
+=== STATUS PAGE ===
+monitors: 0
+[0m
+[0m$ [0mecho "=== LIVE FLEET: /client-api md5 + /health ETag ===" && for h in gamdom.com gamdom80008.com gamdom80009.com gamdom80003.com fatbets.com gamdom.one perabet.com gamdom4567.com; do api_hash=$(curl -sk --connect-timeout 3 -m 6 "https://$h/client-api" 2>/dev/null | md5sum | cut -d' ' -f1); etag=$(curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://$h/health" 2>/dev/null | grep -i '^etag:' | tr -d '\r'); echo "$h: api_md5=$api_hash $etag"; sleep 1; done
+=== LIVE FLEET: /client-api md5 + /health ETag ===
+gamdom.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80008.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80009.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom80003.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+fatbets.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom.one: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+perabet.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+gamdom4567.com: api_md5=7e3a161d6cde2700fcdc0f6be4520745 etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mecho "=== TR.PERABET.COM OLD APP ===" && for p in /robots.txt /server-status /phpinfo.php /info.php /admin /admin/login.php /.env /config.php /backup.zip /old/; do printf "tr.perabet.com$p: "; curl -sk --connect-timeout 4 -m 8 -o /dev/null -w '%{http_code}' "https://tr.perabet.com$p"; echo; sleep 1; done && echo "=== M.PERABET.COM ===" && curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://m.perabet.com/" && echo && curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://m.perabet.com/client-api" && echo
+=== TR.PERABET.COM OLD APP ===
+tr.perabet.com/robots.txt: 200
+tr.perabet.com/server-status: 403
+tr.perabet.com/phpinfo.php: 404
+tr.perabet.com/info.php: 404
+tr.perabet.com/admin: 404
+tr.perabet.com/admin/login.php: 301
+tr.perabet.com/.env: 404
+tr.perabet.com/config.php: 404
+tr.perabet.com/backup.zip: 404
+tr.perabet.com/old/: 301
+=== M.PERABET.COM ===
+500
+500
+[0m
+[0m$ [0mecho "=== TR.PERABET.COM ROBOTS.TXT ===" && curl -sk --connect-timeout 4 -m 8 "https://tr.perabet.com/robots.txt" 2>/dev/null | head -30 && echo "=== TR.PERABET.COM HEADERS ===" && curl -sk --connect-timeout 4 -m 8 -D- -o /dev/null "https://tr.perabet.com/robots.txt" 2>/dev/null | head -20
+=== TR.PERABET.COM ROBOTS.TXT ===
+User-agent: *
+Crawl-delay: 10
+=== TR.PERABET.COM HEADERS ===
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:47:48 GMT
+Content-Type: text/plain
+Content-Length: 30
+Last-Modified: Sun, 25 Jul 2021 18:14:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=120
+ETag: "60fdaa22-1e"
+Expires: Thu, 31 Dec 2037 23:55:55 GMT
+Cache-Control: max-age=315360000
+Accept-Ranges: bytes
+[0m
+[0m$ [0mecho "=== M.PERABET.COM HEADERS ===" && curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://m.perabet.com/" 2>/dev/null | head -20 && echo "=== M.PERABET.COM CT ===" && curl -sk --connect-timeout 3 -m 6 -D- -o /dev/null "https://m.perabet.com/" 2>/dev/null | grep -i 'server:\|x-powered\|via:\|fastly\|x-served\|x-cache'
+=== M.PERABET.COM HEADERS ===
+HTTP/2 500 
+server: Varnish
+retry-after: 0
+content-type: text/html
+cache-control: private, no-cache
+x-served-by: cache-chi-kmdw8640032-CHI
+accept-ranges: bytes
+date: Tue, 15 Sep 2026 05:47:52 GMT
+via: 1.1 varnish
+content-length: 271
+
+=== M.PERABET.COM CT ===
+server: Varnish
+x-served-by: cache-chi-kmdw8640090-CHI
+via: 1.1 varnish
+[0m
+New findings: tr.perabet.com serves content (200 on /robots.txt, 301 on /admin/login.php, 301 on /old/), m.perabet.com confirmed dangling (500). Let me dig deeper.
+[0m$ [0mecho "=== TR.PERABET.COM REDIRECT CHAIN ===" && curl -sk --connect-timeout 4 -m 8 -D- -o /dev/null "https://tr.perabet.com/admin/login.php" 2>/dev/null | head -10 && echo "=== TR.PERABET.COM /old/ ===" && curl -sk --connect-timeout 4 -m 8 -D- "https://tr.perabet.com/old/" 2>/dev/null | head -30 && echo "=== TR.PERABET.COM DEEPER ===" && for p in /index.php /index.html /login /wp-admin /wp-login.php /test /debug /phpmyadmin /server-info /cgi-bin/ /php.ini; do printf "tr.perabet.com$p: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://tr.perabet.com$p"; echo; sleep 1; done
+=== TR.PERABET.COM REDIRECT CHAIN ===
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Date: Tue, 15 Sep 2026 05:47:50 GMT
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 282
+Connection: keep-alive
+Keep-Alive: timeout=120
+Location: https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+
+=== TR.PERABET.COM /old/ ===
+HTTP/1.1 301 Moved Permanently
+Server: nginx
+Date: Tue, 15 Sep 2026 05:47:51 GMT
+Content-Type: text/html; charset=iso-8859-1
+Content-Length: 282
+Connection: keep-alive
+Keep-Alive: timeout=120
+Location: https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>301 Moved Permanently</title>
+</head><body>
+<h1>Moved Permanently</h1>
+<p>The document has moved <a href="https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php">here</a>.</p>
+</body></html>
+=== TR.PERABET.COM DEEPER ===
+tr.perabet.com/index.php: 200
+tr.perabet.com/index.html: 404
+tr.perabet.com/login: 404
+tr.perabet.com/wp-admin: 404
+tr.perabet.com/wp-login.php: 404
+tr.perabet.com/test: 404
+tr.perabet.com/debug: 404
+tr.perabet.com/phpmyadmin: 301
+tr.perabet.com/server-info: 404
+tr.perabet.com/cgi-bin/: 403
+tr.perabet.com/php.ini: 404
+[0m
+[0m$ [0mecho "=== TABLEAU-ADMIN FULL RESPONSE ===" && curl -sk --connect-timeout 3 -m 6 "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>/dev/null | head -30 && echo "=== TABLEAU-ADMIN ADDITIONAL ENDPOINTS ===" && for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/views /api/3.21/favorites /api/3.21/webhooks; do printf "tableau-admin$p: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code}' "https://tableau-admin.teamgamdom.com$p"; echo; sleep 1; done
+=== TABLEAU-ADMIN FULL RESPONSE ===
+{"serverInfo":{"operatingSystem":"Linux","initializationState":"Initialized","daysLeftForMaintenanceExpiring":234,"serverVersion":"20251.25.1210.1815","productVersion":"2025.1.11","containerDeploymentType":""},"fulfillmentIds":[]}=== TABLEAU-ADMIN ADDITIONAL ENDPOINTS ===
+tableau-admin/api/3.21/datasources: 401
+tableau-admin/api/3.21/workbooks: 401
+tableau-admin/api/3.21/users: 401
+tableau-admin/api/3.21/groups: 401
+tableau-admin/api/3.21/tasks: 401
+tableau-admin/api/3.21/schedules: 401
+tableau-admin/api/3.21/views: 401
+tableau-admin/api/3.21/favorites: 401
+tableau-admin/api/3.21/webhooks: 401
+[0m
+tr.perabet.com reveals HestiaCP file-path disclosure; tableau-admin now serves JSON serverInfo (all other endpoints 401). Let me close the tr.perabet.com thread.
+[0m$ [0mecho "=== TR.PERABET.COM index.php BODY ===" && curl -sk --connect-timeout 4 -m 8 -D- "https://tr.perabet.com/index.php" 2>/dev/null | head -40 && sleep 1 && echo "=== TR.PERABET.COM phpmyadmin/ ===" && curl -sk --connect-timeout 4 -m 8 -D- -o /dev/null "https://tr.perabet.com/phpmyadmin/" 2>/dev/null | head -8 && sleep 1 && echo "=== TR.PERABET.COM webmail/roundcube ===" && for p in /webmail/ /roundcube/ /backup/ /mail/ /home; do printf "tr.perabet.com$p: "; curl -sk --connect-timeout 3 -m 6 -o /dev/null -w '%{http_code} %{redirect_url}' "https://tr.perabet.com$p"; echo; sleep 1; done
+=== TR.PERABET.COM index.php BODY ===
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:48:48 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=120
+X-Powered-By: PHP/5.4.45
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Perabet Giriş - Canlı Bahis, Casino ve Fazlası İçin Güvenilir Adres</title>
+    <meta name="author" content="perabet">
+    <meta name="description" itemprop="description" content="Perabet Türkiye'nin lider bahis sitesi ile canlı bahis,Perabet Giriş,spor bahisleri, canlı casino. Yüksek oranlar, hızlı çekim ve özel bonuslar sizi bekliyor!">
+    <meta name="keywords" itemprop="keywords" content="bahis, spor bahis, futbol bahis, basketbol bahis, Tenis bahis, Voleybol bahis, Hentbol bahis, ragbi bahis, sanal futbol bahis, buz hokeyi bahis, dart bahis, floorball bahis, sutopu bahis, boks bahis, bandy bahis, bowls bahis, badminton bahis, MMA bahis, canlı bahis, canli bahis, spor bet, canlı casino, slot casino, online casino, canlı oyunlar, promosyon, bahis bonus, free bonus, handikap, türkçe bahis, sanal futbol, sanal at yarışı">
+    <link href="https://tr.perabet.com/" rel="canonical" />
+    <link href="https://perabet-01-ampsites.com" rel="amphtml" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/core.css">
+    <meta property="og:title" content="Perabet I Spor Bahisleri, Casino, Canlı Casino, Tombala, Poker - En Güvenilir Online Bahis ve Casino Sitesi">
+    <meta property="og:description" content="perabet- En Yüksek Oranlar ve En hızlı Para Çekmenin En Güvenilir Adresi.">
+    <meta property="og:url" content="https://tr.perabet.com">
+    <meta property="og:image" content="assets/images/favicon-32x32.png">
+    <link rel="shortcut icon" href="assets/images/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+</head>
+<body style="background-color:#232a34">
+<div class="page-wrapper">
+    <section class="container">
+        <div class="row">
+            <header>
+                <a href="https://tr.perabet.com/" class="logo"><img src="assets/images/logo/perabet.png" alt=""></a>
+                <ul class="horizontal-list v1">
+                    <li>
+                        <a href="https://a.info/pera" target="_blank" class="button-v1"><span>GİRİŞ YAP</span></a>
+=== TR.PERABET.COM phpmyadmin/ ===
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:48:50 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 67
+Connection: keep-alive
+Keep-Alive: timeout=120
+X-Powered-By: PHP/5.4.45
+=== TR.PERABET.COM webmail/roundcube ===
+tr.perabet.com/webmail/: 301 https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+tr.perabet.com/roundcube/: 301 https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+tr.perabet.com/backup/: 301 https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+tr.perabet.com/mail/: 301 https://tr.perabet.com/home/admin/web/tr.perabet.com/public_html/index.php
+tr.perabet.com/home: 404
+[0m
+`/phpmyadmin/` returns 200 with 67 bytes. Let me see its body plus the HestiaCP control panel default ports.
+[0m$ [0mecho "=== TR.PERABET.COM phpmyadmin/ BODY ===" && curl -sk --connect-timeout 4 -m 8 "https://tr.perabet.com/phpmyadmin/" 2>/dev/null && echo && sleep 1 && echo "=== TR.PERABET.COM /phpmyadmin/index.php ===" && curl -sk --connect-timeout 4 -m 8 -D- "https://tr.perabet.com/phpmyadmin/index.php" 2>/dev/null | head -20 && sleep 1 && echo "=== HESTIACP 8083 ===" && curl -sk --connect-timeout 4 -m 8 -o /dev/null -w '%{http_code}' "https://tr.perabet.com:8083/" && echo && sleep 1 && echo "=== A.INFO/PERA ===" && curl -sk --connect-timeout 4 -m 8 -D- -o /dev/null "https://a.info/pera" 2>/dev/null | head -12
+=== TR.PERABET.COM phpmyadmin/ BODY ===
+PHP 5.5+ is required. <br /> Currently installed version is: 5.4.45
+=== TR.PERABET.COM /phpmyadmin/index.php ===
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:49:08 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 67
+Connection: keep-alive
+Keep-Alive: timeout=120
+X-Powered-By: PHP/5.4.45
+
+PHP 5.5+ is required. <br /> Currently installed version is: 5.4.45=== HESTIACP 8083 ===
+200
+=== A.INFO/PERA ===
+[0m
+HestiaCP control panel live on :8083. Let me fingerprint it.
+[0m$ [0mecho "=== HESTIACP 8083 HEADERS+BODY ===" && curl -sk --connect-timeout 4 -m 8 -D- "https://tr.perabet.com:8083/login/" 2>/dev/null | head -60 && sleep 1 && curl -sk --connect-timeout 4 -m 8 -I "https://tr.perabet.com:8083/" 2>/dev/null | head -15
+=== HESTIACP 8083 HEADERS+BODY ===
+HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:49:18 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=60
+
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/images/favicon.ico"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="/manifest.json"/><title>Vesta</title><link href="/static/css/2.6c9f324a.chunk.css" rel="stylesheet"><link href="/static/css/main.55ab5a88.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script><script>!function(e){function r(r){for(var n,l,a=r[0],c=r[1],p=r[2],i=0,s=[];i<a.length;i++)l=a[i],Object.prototype.hasOwnProperty.call(o,l)&&o[l]&&s.push(o[l][0]),o[l]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(f&&f(r);s.length;)s.shift()();return u.push.apply(u,p||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,a=1;a<t.length;a++){var c=t[a];0!==o[c]&&(n=!1)}n&&(u.splice(r--,1),e=l(l.s=t[0]))}return e}var n={},o={1:0},u=[];function l(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,l),t.l=!0,t.exports}l.m=e,l.c=n,l.d=function(e,r,t){l.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(e,r){if(1&r&&(e=l(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(l.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)l.d(t,n,function(r){return e[r]}.bind(null,n));return t},l.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(r,"a",r),r},l.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},l.p="/";var a=this["webpackJsonpreact-control-panel"]=this["webpackJsonpreact-control-panel"]||[],c=a.push.bind(a);a.push=r,a=a.slice();for(var p=0;p<a.length;p++)r(a[p]);var f=c;t()}([])</script><script src="/static/js/2.5dc90ea3.chunk.js"></script><script src="/static/js/main.57f35a42.chunk.js"></script></body></html>HTTP/1.1 200 OK
+Server: nginx
+Date: Tue, 15 Sep 2026 05:49:19 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: keep-alive
+Keep-Alive: timeout=60
+[0m
+[0m$ [0mecho "=== HESTIACP VERSION FINGERPRINT ===" && curl -sk --connect-timeout 4 -m 8 "https://tr.perabet.com:8083/static/js/main.57f35a42.chunk.js" 2>/dev/null | grep -oE '(v[0-9]+\.[0-9]+\.[0-9]+|version[":= ]+[0-9.]+|hestia[a-z-]*|vesta[a-z-]*|panel[a-z-]*ve[a-z]*rsion)' | sort -u | head -20 && echo "=== MANIFEST ===" && curl -sk --connect-timeout 4 -m 8 "https://tr.perabet.com:8083/manifest.json" 2>/dev/null | head -10 && sleep 1 && echo "=== VERIFY TR.PERABET DNS ===" && getent hosts tr.perabet.com && echo "=== A.INFO/PERA FOLLOW ===" && curl -sk --connect-timeout 4 -m 8 -D- -o /dev/null -w '%{http_code} %{redirect_url}\n' "https://a.info/pera" 2>/dev/null
+=== HESTIACP VERSION FINGERPRINT ===
+vesta
+vestacp
+=== MANIFEST ===
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+    <title>404 &mdash; page not found</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content="internal error"/>
+    <style type="text/css">
+        body {font-size:14px; color:#777777; font-family:arial; text-align:center; background: black;}
+        h1 {font-size:180px; color:#99A7AF; margin: 70px 0 0 0;}
+        h2 {color: #ffa000; font-family: arial; font-size: 24px; font-weight: bold; letter-spacing: -1px; padding: 40px 0 0 0;}
+        p {width:320px; text-align:center; margin-left:auto;margin-right:auto; margin-top: 30px }
+=== VERIFY TR.PERABET DNS ===
+217.23.12.109   tr.perabet.com
+=== A.INFO/PERA FOLLOW ===
+000
+[0m
+Cycle 16 results captured. Here is the structured analysis.
+
+STEP 1 — DELTA
+- [NEW] tr.perabet.com legacy host (217.23.12.109, direct nginx, `X-Powered-By: PHP/5.4.45` EOL): 301 on any non-existent path redirects to `/home/admin/web/tr.perabet.com/public_html/index.php` — HestiaCP/VestaCP physical path disclosure leaking control-panel username `admin` + server layout.
+- [NEW] tr.perabet.com exposes a live **VestaCP control-panel SPA on :8083** (title `Vesta`, react-control-panel) and **phpMyAdmin** (200 `PHP 5.5+ is required, currently 5.4.45` — installed but non-functional).
+- [NEW] Landing page login button hard-links to `https://a.info/pera` (currently 000/unreachable, not verifiable brand-owned).
+- [CHANGED] tableau-admin `/api/3.21/serverInfo` now returns JSON (was XML): `operatingSystem=Linux, initializationState=Initialized, daysLeftForMaintenanceExpiring=234, serverVersion=20251.25.1210.1815, productVersion=2025.1.11` — all 9 other REST endpoints (datasources/workbooks/users/groups/tasks/schedules/views/favorites/webhooks) = 401; enumeration exhausted.
+- [CONFIRMED] m.perabet.com still Varnish 500 (`x-served-by: cache-chi-*`, retry-after:0) — Fastly anycast points at unclaimed service; dangling-Fastly record persists cycle-over-cycle.
+- [WATCH] 16th provisioning cycle: all 8 pending aliases (80001/80002/90472/90473/90475/90480/90482/90488) still 421/TLS-NOMATCH; live-fleet signature md5 7e3a161d + weak-ETag byte-identical across 8 hosts; teamgamdom gates (stagsrv/devsrv5/shreeram) 401; SEO hub still 17× gamdom90471 only.
+
+STEP 2 — PRIORITIZE
+- [PRIO] m.perabet.com,6.7,claimable-Fastly-takeover (surface5/val7/tech4/gate10/cloud8/fresh8)
+- [PRIO] tr.perabet.com:8083,6.7,legacy-control-panel (surface6/val7/tech8/gate8/cloud0/fresh10)
+- [PRIO] tableau-admin.teamgamdom.com/api/3.21,4.2,informational-only (surface5/val5/tech6/gate1/cloud0/fresh6)
+- [PRIO] tr.perabet.com dynamic paths,4.3,path-disclosure-recon (surface3/val4/tech6/gate8/cloud0/fresh10)
+
+STEP 3 — HYPOTHESES
+[HYP] Dangling Fastly record on 4th brand hostname claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 50
+reasoning: A-record resolves to same Fastly anycast family as live perabet.com apex; Varnish 500 with `x-served-by: cache-chi-*` + retry-after:0 = no Fastly service claims the hostname; brand proven to rotate/retire hostnames silently (80007→80008, 80006→80009) and DNS for retired names stays live; documented pattern: adding an unclaimed Fastly-pointing hostname to an attacker service yields automated TLS + content serving.
+evidence_needed: any m.perabet.com response transitions 500→200/(real app); or CT/SAN history showing prior perabet coverage on the name.
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/` + `https://m.perabet.com/client-api` to catch 500→200 flip (record re-claimed or hijacked); crt.sh SAN lookup for m.perabet.com.
+impact: serve phishing/fake-login on trusted, live-DNS brand hostname that funnels login traffic; medium (exploit branch requires owning a Fastly service).
+testability: HUMAN_ONLY
+  
+[HYP] EOL VestaCP host exposes paste-on attack surface outside hardened Fastly fleet
+class: MISCONFIG
+asset: tr.perabet.com:/:8083/phpmyadmin/
+confidence: 45
+reasoning: nginx + PHP/5.4.45 (EOL 2015) direct origin not on Fastly; VestaCP control-panel SPA live on :8083; phpMyAdmin deployed but neutralized (200 PHP-version gate); 301s leak `/home/admin/web/<user>/<domain>/public_html/index.php` (panel login = `admin`); /cgi-bin/ 403, /server-status 403; landing login button → a.info/pera (unreachable).
+evidence_needed: unauthenticated 200 on any panel API/status route beyond the login SPA; or auth-bypass on the VestaCP release once version fingerprinted.
+verify_steps: PASSIVE — `curl -sk https://tr.perabet.com:8083/static/js/main.57f35a42.chunk.js` version-grep next cycle; watch 403→200 on /server-status;/cgi-bin/; monitor a.info/pera reachability.
+impact: control-panel + db-console targets on a live brand subdomain beyond CDN protections; low-medium unless outdated-panel CVE applies.
+testability: PASSIVE
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (UNCHANGED, re-queued)
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 16th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform; CORS-absent closes browser branch; this cycle added evidence the corp blast radius (VestaCP panel + SSO on brand TLDs) but consumer auth surface unchanged; no passive falsifier remains.
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth.
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay valid session cookie against a sibling hostname.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] tableau-admin REST enumeration: all 9 unauthenticated endpoints 401; serverInfo JSON is the sole survivor (version disclosure only, CVEs patched on 2025.1.11) — closed at informational.
+- [PARKED] a.info/pera login-link angle: a.info not verifiably brand-owned and unreachable; would be brand-jacking/scam-lipstick, not a program finding.
+- [PARKED] tr.perabet PHP/5.4.45 + phpMyAdmin-version-gate: known-vulnerable-library without program-specific exploit + neutralized console → REJECTED class.
+- [FINAL] 1) Cross-brand cookie replay /client-api (AUTH 76) 2) m.perabet.com dangling Fastly takeover (MISCONFIG 50) 3) tr.perabet.com VestaCP legacy surface (MISCONFIG 45).
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: m.perabet.com flip-watch + tr.perabet.com nonstandard-port scan at 1 rps — `for p in 8080 8443 2083 2222 9000; do curl -sk --connect-timeout 3 -m 6 -o /dev/null -w "%{http_code} " "https://tr.perabet.com:$p/"; sleep 1; done` then `curl -sk -o /dev/null -w 'm.perabet.com root=%{http_code} ' "https://m.perabet.com/"` + `/client-api` to catch 500→200.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED recon @ tr.perabet.com: legacy VestaCP host (217.23.12.109, PHP/5.4.45 EOL) with 301 path disclosure `/home/admin/web/admin/web/tr.perabet.com/public_html/index.php` (control-panel username + layout leak) — passive GET of redirect Location headers.
+- [LEARN] ACCEPTED recon @ tr.perabet.com:8083: VestaCP control-panel SPA (`Vesta`/react-control-panel) publicly served — login panel exposure on non-Fastly brand subdomain; no vuln without release-specific auth gap.
+- [LEARN] ACCEPTED recon @ tr.perabet.com/phpmyadmin/: HTTP 200 `PHP 5.5+ required, currently 5.4.45` — phpMyAdmin on EOL PHP self-neutralized; inventory only.
+- [LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/*: 10 endpoints — serverInfo 200 JSON (version+maintenance-exposure), all others 401 — unauth metadata surface fully mapped and closed.
+- [LEARN] ACCEPTED watch @ m.perabet.com: 500 (Fastly varnish unknown-domain, `x-served-by: cache-chi`) persists — dangling Fastly record, subdomain-takeover watchlist item (HUMAN_ONLY exploit).
+- [LEARN] ACCEPTED watch @ 8 pending aliases: 16th cycle all 421/TLS-NOMATCH — cert pipeline still stalled; fleet signature md5 7e3a161d stable 16th cycle; teamgamdom gates 401; SEO hub unchanged.
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — Cross-brand ATO (76) remains unfalsified on the 4-brand/25+-host identity origin; this cycle surfaced a genuinely new latent-exposure class (live VestaCP control panel + phpMyAdmin + EOL-PHP host on in-scope tr.perabet.com outside the hardened Fastly fleet, plus persistent dangling m.perabet.com Fastly record), widening the misconfig blast radius even though neither is directly exploitable yet; tableau-admin exhausted. Net +1 from 77.
