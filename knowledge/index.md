@@ -396,3 +396,7 @@
 - 2026-09-16 ACCEPTED watch @ m.perabet.com: 6th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists, no claim/flip.
 - 2026-09-16 ACCEPTED watch @ teamgamdom wildcard sweep (grafana2/prometheus2/vault2/oauth2-proxy-2/admin-api/dashboard2/metrics2/stagsrv2/devsrv6): only devsrv6 live (401); 8× 404/000 — no claimable dangling vhost; SSO-cookie weaponization premise unmet this cycle.
 - 2026-09-16 ACCEPTED watch @ fleet: perabet.com + gamdom.com `/client-api` GET 400 — md5 `7e3a161d` shared-origin signature stable (20th cycle).
+- 2026-09-16 ACCEPTED watch @ m.perabet.com: 7th cycle Varnish 500 + `Fastly error: unknown domain: m.perabet.com` on root + /client-api — dangling A-record persists, no claim/flip.
+- 2026-09-16 ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (gamdom.com/perabet.com/gamdom80009.com/fatbets.com) — 21st cycle stable; Kuma {2,3,5,6,13,221,223}; aliases 90471/90473/90475/80001/80002 421; gates 401; devsrv6==devsrv5 7-path parity.
+- 2026-09-16 ACCEPTED recon @ static.perabet.com: resolves to 159.255.41.23 (third-party, non-Fastly), TCP 000 on 80/443 — dead A-record; NOT a claimable Fastly dangling host; watchlist only.
+- 2026-09-16 ACCEPTED recon @ dotted-perabet sweep (cdn/static/status/blog/dev/test/staging/vpn/panel/admin/api/app/shop/beta2/v2/wap): only www/beta/m live (301/200/500); rest 000 — subdomain surface closed, m remains lone dangling record.

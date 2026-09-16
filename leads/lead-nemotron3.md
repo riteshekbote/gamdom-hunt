@@ -5286,3 +5286,62 @@ testability: PASSIVE
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
+## 2026-09-16 10:03:06 UTC [target] (model nemotron3)
+[NEW] m.perabet.com: 6th consecutive cycle Varnish 500 "Fastly error: unknown domain" — dangling A-record unclaimed, no service flip
+[NEW] tr.perabet.com:8083/api/v1/login/: rotating guest token (ebcdc4b2...) + full VestaCP config (VERSION=0.9.8, PHP=EOL, all services mapped) — pre-auth API surface persists
+[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) — admin vhost exposes serverInfo
+[NEW] oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances confirmed
+[NEW] devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A) — second internal dev vhost behind same gate
+[CHANGED] Starlette pool signature stable 20th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A (gamdom.com/eu/io/vip/win/fatbets.com/gamdom.one/perabet.com) + Pool B (gamdom80008/80009/80003/4567) — 4 brands / 25+ hostnames
+[CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+[CHANGED] gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+[CHANGED] Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+[PRIO] m.perabet.com,8.83,attack_surface=10,business_value=7,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=9
+[PRIO] tr.perabet.com:8083,8.50,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=9
+[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,7.75,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,6.75,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=8
+[PRIO] perabet.com/client-api,7.25,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] devsrv6.teamgamdom.com,5.25,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=7,freshness=8
+[HYP] Subdomain takeover of m.perabet.com via dangling Fastly A-record
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 85
+reasoning: m.perabet.com resolves to Fastly IPs (151.101.x.52, Pool A) but returns "Fastly error: unknown domain m.perabet.com" — no Gamdom Fastly service claims this hostname; Fastly allows any customer to claim unclaimed CNAME/A records pointing to their shared IPs
+evidence_needed: confirm hostname is unclaimed in Fastly (attempt to add to attacker Fastly service); verify no other Gamdom service serves this hostname
+verify_steps: curl -sS -I https://m.perabet.com/ 2>&1 | head -10; dig +short m.perabet.com; (HUMAN_ONLY) attempt Fastly service claim via API/console
+impact: Full subdomain takeover of 4th-brand hostname on shared Pool A — serve arbitrary content, steal cookies set on perabet.com (no Domain attr), phishing vector; high
+testability: HUMAN_ONLY
+[HYP] Unauthenticated VestaCP panel API on tr.perabet.com:8083 with EOL PHP
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 80
+reasoning: tr.perabet.com:8083 serves VestaCP control panel (React/webpack build) on non-standard port 8083; `/api/v1/login/` returns 200 JSON with guest token and full server config (VERSION=0.9.8, PHP=EOL, nginx/apache/exim/dovecot/mysql/named); VestaCP 0.9.8 has known RCE/auth-bypass CVEs (CVE-2023-31447, CVE-2022-3652); phpMyAdmin 404 but panel loads
+evidence_needed: fingerprint exact VestaCP/PHP versions; confirm unauthenticated API endpoints beyond /login; check for known CVEs matching versions
+verify_steps: curl -sk https://tr.perabet.com:8083/api/v1/login/ 2>&1 | jq .session.VERSION; curl -sk https://tr.perabet.com:8083/api/v1/user/ 2>&1 | head -20; curl -sk https://tr.perabet.com:8083/api/v1/packages/ 2>&1 | head -20
+impact: Server compromise via control panel RCE/auth-bypass; lateral movement to perabet.com infrastructure; critical
+testability: PASSIVE
+[HYP] Tableau admin vhost unauthenticated serverInfo version disclosure + full REST API enumeration
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 85
+reasoning: tableau-admin.teamgamdom.com returns HTTP 200 Tableau login page; `/api/3.21/serverInfo` returns HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815); all other endpoints (/sites, /auth/signin, /projects, /datasources, /workbooks, /users, /groups, /tasks, /schedules) return HTTP 401 JSON — admin vhost has unauthenticated version disclosure while main tableau.teamgamdom.com is patched (CVE-2025-52455/52449)
+evidence_needed: confirm no other unauthenticated endpoints on admin vhost; check if admin vhost runs different patch level than main tableau vhost
+verify_steps: curl -sS "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | jq .; for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/projects /api/3.21/sites; do curl -sS -I "https://tableau-admin.teamgamdom.com$p" 2>&1 | grep -E "^(HTTP|Content|Server|X-|Location|WWW-Authenticate)" | head -2; done
+impact: Tableau admin panel version/info disclosure; potential auth bypass if admin vhost misconfigured differently; medium
+testability: PASSIVE
+[PARKED] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot: confidence 70 but testability AUTH_HELPED only; requires full Google OAuth flow to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth; requires valid user session
+[FINAL] 1) m.perabet.com: Subdomain takeover via dangling Fastly A-record (85, HUMAN_ONLY, high impact)
+[FINAL] 2) tr.perabet.com:8083: Unauthenticated VestaCP panel API on EOL PHP (80, PASSIVE, critical impact)
+[FINAL] 3) tableau-admin.teamgamdom.com/api/3.21/serverInfo: Unauthenticated version disclosure + API enumeration (85, PASSIVE, medium impact)
+[NEXT] PROBE: `curl -sk https://tr.perabet.com:8083/api/v1/user/ 2>&1 | head -30 && curl -sk https://tr.perabet.com:8083/api/v1/packages/ 2>&1 | head -30` — enumerate unauthenticated VestaCP API endpoints beyond /login; passive, single GET to non-standard port
+[LEARN] ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+[LEARN] ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERSION=0.9.8); phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+[LEARN] ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket

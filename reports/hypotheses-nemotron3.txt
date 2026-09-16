@@ -1,22 +1,24 @@
-## 2026-09-16 05:12:57 UTC [target] (model nemotron3)
-[NEW] m.perabet.com: Fastly "unknown domain" error confirmed — dangling A-record (no service claims hostname), claimable via attacker Fastly service (HUMAN_ONLY)
-[NEW] tr.perabet.com:8083/api/v1/login/: unauthenticated GET returns 200 JSON with guest token + full VestaCP config (VERSION=0.9.8, PHP=EOL, panel fields empty) — pre-auth API surface exposed
-[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — version disclosure on admin vhost
-[NEW] oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5)
-[NEW] perabet.com/client-api POST: returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
-[CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH, cert ops stalled
-[CHANGED] Starlette pool signature stable 13th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
+## 2026-09-16 10:03:06 UTC [target] (model nemotron3)
+[NEW] m.perabet.com: 6th consecutive cycle Varnish 500 "Fastly error: unknown domain" — dangling A-record unclaimed, no service flip
+[NEW] tr.perabet.com:8083/api/v1/login/: rotating guest token (ebcdc4b2...) + full VestaCP config (VERSION=0.9.8, PHP=EOL, all services mapped) — pre-auth API surface persists
+[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) — admin vhost exposes serverInfo
+[NEW] oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances confirmed
+[NEW] devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A) — second internal dev vhost behind same gate
+[CHANGED] Starlette pool signature stable 20th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A (gamdom.com/eu/io/vip/win/fatbets.com/gamdom.one/perabet.com) + Pool B (gamdom80008/80009/80003/4567) — 4 brands / 25+ hostnames
+[CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
 [CHANGED] gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+[CHANGED] Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
 [PRIO] m.perabet.com,8.83,attack_surface=10,business_value=7,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=9
 [PRIO] tr.perabet.com:8083,8.50,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=9
 [PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,7.75,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=8
-[PRIO] perabet.com/client-api,7.25,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
 [PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,6.75,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=8
+[PRIO] perabet.com/client-api,7.25,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] devsrv6.teamgamdom.com,5.25,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=7,freshness=8
 [HYP] Subdomain takeover of m.perabet.com via dangling Fastly A-record
 class: MISCONFIG
 asset: m.perabet.com
 confidence: 85
-reasoning: m.perabet.com resolves to Fastly IPs (151.101.x.52) but returns "Fastly error: unknown domain m.perabet.com" — no Gamdom Fastly service claims this hostname; Fastly allows any customer to claim unclaimed CNAME/A records pointing to their shared IPs
+reasoning: m.perabet.com resolves to Fastly IPs (151.101.x.52, Pool A) but returns "Fastly error: unknown domain m.perabet.com" — no Gamdom Fastly service claims this hostname; Fastly allows any customer to claim unclaimed CNAME/A records pointing to their shared IPs
 evidence_needed: confirm hostname is unclaimed in Fastly (attempt to add to attacker Fastly service); verify no other Gamdom service serves this hostname
 verify_steps: curl -sS -I https://m.perabet.com/ 2>&1 | head -10; dig +short m.perabet.com; (HUMAN_ONLY) attempt Fastly service claim via API/console
 impact: Full subdomain takeover of 4th-brand hostname on shared Pool A — serve arbitrary content, steal cookies set on perabet.com (no Domain attr), phishing vector; high
