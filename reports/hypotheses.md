@@ -1816,3 +1816,12 @@
 ## RANKED HYPOTHESES 2026-09-16 19:15:49 UTC
 - [62] m.perabet.com: Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service (from art/lead_bigpickle.txt)
 - NEXT(hypotheses-bigpickle.txt): PROBE: continue passive flip-watch on m.perabet.com — 9th cycle, remains only top MISCONFIG; `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/` logging 
+
+## RANKED HYPOTHESES 2026-09-16 21:57:19 UTC
+- [62] m.perabet.com: Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: continue passive flip-watch on m.perabet.com — 9th cycle, remains only top MISCONFIG; `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/` logging 
+- LEARN: ACCEPTED recon @ giris.perabet.com: new brand-linked host resolve chain — VestaCP pre-auth `VESTA_CERTIFICATE:admin:giris.perabet.com` + cert CN/SAN + same 217.
+- LEARN: REJECTED out-of-scope @ giris.perabet.com/phpmyadmin: 200 but PHP 5.4.45 < 5.5+ requirement → cannot initialize; outdated-software class, no program-specific ex
+- LEARN: ACCEPTED watch @ m.perabet.com: 10th cycle Varnish 500 + `Fastly error: unknown domain m.perabet.com` on root + /client-api — dangling A-record persists, no cla
+- LEARN: ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com); 6 pending aliases 421; oauth2/auth 401; shreeram 
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` token rotation confirmed per-request (dc96649f→…), panel fields empty, guest config unchanged — no drift 
