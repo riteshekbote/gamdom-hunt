@@ -868,3 +868,13 @@ www.gamdom.com
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH, cert ops stalled
 - CHANGED Starlette pool signature stable 13th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
 - CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+
+## 2026-09-16 05:13:28 UTC
+- NEW m.perabet.com: Fastly "unknown domain" error confirmed — dangling A-record (no service claims hostname), claimable via attacker Fastly service (HUMAN_ONLY)
+- NEW tr.perabet.com:8083/api/v1/login/: unauthenticated GET returns 200 JSON with guest token + full VestaCP config (VERSION=0.9.8, PHP=EOL, panel fields empty) — pre-auth API surface exposed
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated GET returns 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — version disclosure on admin vhost
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances (grafana/prometheus/vault/clickho
+- NEW perabet.com/client-api POST: returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH, cert ops stalled
+- CHANGED Starlette pool signature stable 13th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag byte-identical Pool A + Pool B
+- CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation

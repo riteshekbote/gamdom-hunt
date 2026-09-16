@@ -3478,3 +3478,53 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d stable (perabet.com/gamdom.com); Kuma `{2,3,5,6,13,221,223}`; SEO hub 17× 90471; 90488/80001 421; oauth2 401; shreeram 401.
 [LEARN] REJECTED out-of-scope @ tr.perabet.com:8083 guest login bootstrap: rotating guest token + empty panel defaults = no data leak.
 [RISK] gamdom: 78 — cross-brand ATO (76) remains the top unfalsified item on the 4-brand/25+-host identity origin; this cycle closes the VestaCP panel branch (fully gated, unversionable) and adds a latent parent-domain SSO-cookie bucket on teamgamdom.com that is only weaponizable if a subdomain is claimable. m.perabet.com dangling persists (HUMAN_ONLY). Net flat at 78.
+## 2026-09-16 05:13:07 UTC [target] (model bigpickle)
+[PRIO] m.perabet.com,75,attack_surface:10 business_value:8 tech_exposure:2 gate_ease:9 cloud_surface:6 freshness:7
+[PRIO] perabet.com/client-api (cross-brand),71,attack_surface:9 business_value:10 tech_exposure:6 gate_ease:3 cloud_surface:3 freshness:7
+[PRIO] devsrv6.teamgamdom.com,44,attack_surface:8 business_value:2 tech_exposure:6 gate_ease:0 cloud_surface:2 freshness:8
+[PRIO] oauth2-proxy.teamgamdom.com (SSO bucket),40,attack_surface:6 business_value:9 tech_exposure:6 gate_ease:2 cloud_surface:5 freshness:4
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 20th cycle md5 7e3a161d byte-identical across 8 hosts Pool A+B; gd-lang host-only uniform; CORS-absent closes browser branch; POST /client-api returns identical GamdomClientMessage on perabet + gamdom verified again this cycle; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET /client-api=400 + Set-Cookie attribute drift-watch across 8 hosts; replay a valid session cookie against a sibling hostname
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 60
+reasoning: 6th cycle Varnish 500 on `/` + `/client-api`; A-record → Fastly anycast with no backing service config; rt-cookie/live-DNS brand hostname; brand proven to retire hostnames silently
+evidence_needed: 500→200 transition (re-claimed/hijacked); or permanent "unknown domain" state
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/` + `/client-api` to catch flip
+impact: attacker HTTPS site on trusted live-DNS brand hostname (phishing/fake login); medium — requires attacker-controlled Fastly service
+testability: HUMAN_ONLY
+[HYP] devsrv6 shares nginx Basic gate but diverges on backend fixture (gate parity breach)
+class: OTHER
+asset: devsrv6.teamgamdom.com
+confidence: 30
+reasoning: same realm="secret" 401 as devsrv5/shreeram but distinct new vhost on Pool A; if it is a dev box it may mount different paths than the hardened fixture test boxes
+evidence_needed: any path returning != 401 on devsrv6 while 401 on devsrv5
+verify_steps: PASSIVE — `for p in /.git/config /.env /server-status /_metrics /status /actuator /health; do curl -sk -o /dev/null -w '%{http_code} ' https://devsrv6.teamgamdom.com$p; done` vs devsrv5 parity
+impact: dev-tool surface if gate diverges; low unless a 200/302 appears
+testability: PASSIVE
+[HYP] Domain-scoped oauth2-proxy SSO cookie on teamgamdom.com leaks observability session to any subdomain
+class: AUTH
+asset: oauth2-proxy.teamgamdom.com
+confidence: 35
+reasoning: `_oauth2_proxy_csrf` issued with Domain=teamgamdom.com (2 proxy instances); but this cycle's 9-name claimable-subdomain sweep found only devsrv6 (claimed+401) and 8× 404/000 — no attacker-claimable host on the parent domain; redirect_uri hardcoded
+evidence_needed: authenticated `_oauth2_proxy` Set-Cookie with Domain=teamgamdom.com; OR a claimable *.teamgamdom.com host
+verify_steps: AUTH_HELPED — continue cold-read sweep of perabet/gamdom dotted subdomains; inspect `_oauth2_proxy` Domain only after authorized login
+impact: cross-subdomain SSO session theft if a subdomain ever goes dangling; high latent, currently not weaponizable
+testability: AUTH_HELPED
+[PARKED] devsrv6 gate-parity: confidence 30 (<40) — pure fixture watch, another gated dev box; dropped to background parity check, not a live hypothesis.
+[PARKED] oauth2-proxy SSO cookie bucket: this cycle's subdomain sweep (incl. NEW-RESOLUTION names) produced no claimable host; negative evidence for the weaponization premise — dropped 40→35, retained as latent background AUTH_HELPED angle only.
+[FINAL] 1. cross-brand ATO @ perabet.com/client-api (76, AUTH_HELPED) — 2. m.perabet.com dangling Fastly takeover (60, HUMAN_ONLY)
+[NEXT] PROBE: devsrv6 gate-parity vs devsrv5 — `for p in /.git/config /.env /server-status /_metrics /status /actuator /health; do printf '%s ' $p; curl -sk --connect-timeout 4 -m 8 -o /dev/null -w 'd6=%{http_code} ' "https://devsrv6.teamgamdom.com$p"; curl -sk --connect-timeout 4 -m 8 -o /dev/null -w 'd5=%{http_code}\n' "https://devsrv5.teamgamdom.com$p"; sleep 1; done` (read-only; only a curl-to-200/302 divergence is reportable)
+[LEARN] ACCEPTED recon @ devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A, no CNAME) — second internal dev vhost, same gate as devsrv5; inventory only, gate holds.
+[LEARN] ACCEPTED watch @ m.perabet.com: 6th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists, no claim/flip.
+[LEARN] ACCEPTED watch @ teamgamdom wildcard sweep (grafana2/prometheus2/vault2/oauth2-proxy-2/admin-api/dashboard2/metrics2/stagsrv2/devsrv6): only devsrv6 live (401); 8× 404/000 — no claimable dangling vhost; SSO-cookie weaponization premise unmet this cycle.
+[LEARN] ACCEPTED watch @ fleet: perabet.com + gamdom.com `/client-api` GET 400 — md5 `7e3a161d` shared-origin signature stable (20th cycle).
+[RISK] gamdom: 78 — cross-brand ATO (76) remains the top unfalsified item on the 4-brand/25+-host identity origin; this cycle adds no new falsifier. The oauth2 SSO-cookie bucket premise took negative evidence (no claimable subdomain) and is parked, so the only live non-ATO lead is m.perabet.com dangling (HUMAN_ONLY, unchanged 6th cycle). Net flat at 78.

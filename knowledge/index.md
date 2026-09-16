@@ -392,3 +392,7 @@
 - 2026-09-16 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
 - 2026-09-16 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-16 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-16 ACCEPTED recon @ devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A, no CNAME) — second internal dev vhost, same gate as devsrv5; inventory only, gate holds.
+- 2026-09-16 ACCEPTED watch @ m.perabet.com: 6th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists, no claim/flip.
+- 2026-09-16 ACCEPTED watch @ teamgamdom wildcard sweep (grafana2/prometheus2/vault2/oauth2-proxy-2/admin-api/dashboard2/metrics2/stagsrv2/devsrv6): only devsrv6 live (401); 8× 404/000 — no claimable dangling vhost; SSO-cookie weaponization premise unmet this cycle.
+- 2026-09-16 ACCEPTED watch @ fleet: perabet.com + gamdom.com `/client-api` GET 400 — md5 `7e3a161d` shared-origin signature stable (20th cycle).
