@@ -18,3 +18,11 @@
   - [ ] Output triage verdict with proof steps, impact, CVSS, reporting channel for VALID leads
   - [✓] Output triage verdict with proof steps, impact, CVSS, reporting channel for VALID leads
   - | Q4 Provable | NO — requires authenticated POST with valid session to test action routing against upstream wallet/auth. Bundle action strings are obfuscated, no endpoint map extractable passively. |
+
+- 6 lead(s) marked VALID at 2026-09-16 01:00:12 UTC
+  - | **Q6 Not always-rejected** | **Yes** — cross-domain ATO is a valid class; not on always-rejected list |
+  - | **Q6 Not always-rejected** | **Yes** — misconfig of monitoring infra is valid, but mutation against 3rd-party SaaS is REJECTED |
+  - | **Q6 Not always-rejected** | **Yes** — subdomain takeover is valid, but currently not exploitable |
+  - | **Q2 Reachable** | **Partially** — endpoint exists and returns 400 on GET, but POST requires valid session |
+  - | **Q4 Provable** | **No** — requires POST with valid session to test; blind POST to live identity/wallet proxy is REJECTED class |
+  - | **Q6 Not always-rejected** | **Yes** — SSRF/mass-assignment is valid |
