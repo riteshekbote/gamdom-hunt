@@ -262,3 +262,40 @@ TARGET_ORG not configured for gamdom; skipping public-org deep scan.
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
 ## REPOSCAN 2026-09-16 06:41:10 UTC
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
+## REPOSCAN 2026-09-16 12:26:57 UTC
+[HYP] Phishing App Harvests Gamdom Client Credentials via Hardcoded Gmail
+class: SECRET
+asset: novahexchang/gamdomApi/server.js:10-11
+confidence: 95
+reasoning: Hardcoded Gmail creds `techagbadev@gmail.com` / `zimtqbuzrypfmkgk` in plaintext. The server POSTs `{email, password}` from Gamdom login forms directly to this Gmail via nodemailer. Deployed to `gamdom-api-coral.vercel.app` (Vercel). This is a credential-harvesting phishing app impersonating Gamdom's login flow.
+impact: Critical — active phishing tool stealing Gamdom user credentials; deployed on live Vercel endpoint
+verify_steps: 1) `curl https://gamdom-api-coral.vercel.app/` returns 404 (route exists but no GET handler). 2) POST with `{"email":"test@test.com","password":"test"}` to `/` triggers mail delivery. 3) Confirm Gmail app-password is still live by checking if nodemailer transport succeeds.
+[HYP] Hardcoded Gamdom Test Account Credentials
+class: SECRET
+asset: darioCuc/Gamdom/testHelpers.ts:4-7
+confidence: 85
+reasoning: Plaintext credentials `username: 'cuc369'`, `password: 'GramGram!369'` for gamdom.com login. This is a QA automation test account used with Playwright against `https://gamdom.com/`.
+impact: Medium — if this is a real Gamdom user account (not a throwaway test account), it's a credential leak. The `cuc369` username pattern suggests a personal test account.
+verify_steps: 1) Check if `cuc369` is a valid Gamdom username (passive: search for it in breach dumps). 2) Confirm the Playwright config targets production gamdom.com (it does: `baseURL: 'https://gamdom.com/'`).
+[HYP] Gamdom Vault IDs Exposed in Public Repo
+class: MISCONFIG
+asset: suraj-gamdom/show-vaults/vault_ids_to_hide.json
+confidence: 75
+reasoning: File contains ~5,000+ sequential vault IDs (550000-553306) that appear to be Gamdom internal vault identifiers. The companion `server.js` proxies these through a `SOURCE_API_URL` env var, suggesting this data was scraped from Gamdom's vault/show system.
+impact: Medium — internal vault ID enumeration could aid targeted attacks on Gamdom's vault/show feature if IDs map to user-visible content.
+verify_steps: 1) Check if vault IDs are sequential and map to `gamdom.com/vault/{id}` or similar routes. 2) Confirm the upstream `SOURCE_API_URL` is still live.
+[HYP] Hardcoded Phishing Backend URL in Clone App
+class: SSRF
+asset: novahexchang/gamdomApp/src/components/urls.js:1
+confidence: 90
+reasoning: `const BASE_URL = "https://gamdom-api-coral.vercel.app"` hardcoded — this is the backend for the phishing app above. The `Home.jsx` login form POSTs user credentials to this URL via axios.
+impact: High — confirms the frontend is wired to the credential-harvesting backend; this is a complete phishing kit (frontend + backend).
+verify_steps: 1) Confirm `gamdom-api-coral.vercel.app` serves the backend. 2) Check Vercel deployment logs (if accessible) or DNS records.
+[HYP] Atlassian Jira Instance URL for Gamdom
+class: MISCONFIG
+asset: PavelArs/gamdom-qa-automation/.env.example:2
+confidence: 60
+reasoning: `.env.example` references `JIRA_BASE_URL=https://autoapi.atlassian.net` with project key `DEV`. This suggests Gamdom uses Atlassian Jira at this subdomain for development tracking. The actual token is placeholder (`<your-base64-encoded-token>`), no live secret leaked.
+impact: Low — no credential leak, but confirms internal Jira instance name useful for further recon.
+verify_steps: 1) `curl https://autoapi.atlassian.net` to check if it's a live Jira instance. 2) Search for `autoapi.atlassian.net` in breach data.
+TARGET_ORG not configured for gamdom; skipping public-org deep scan.
