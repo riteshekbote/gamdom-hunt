@@ -893,3 +893,14 @@ www.gamdom.com
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
 - CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
 - CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+
+## 2026-09-16 15:06:23 UTC
+- NEW m.perabet.com: 7th consecutive cycle Varnish 500 "Fastly error: unknown domain" — dangling Fastly A-record unclaimed, no service flip
+- NEW tr.perabet.com:8083/api/v1/login/: rotating guest token + full VestaCP config (VERSION=0.9.8, PHP=EOL, all services mapped) — pre-auth API surface persists
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) — admin vhost exposes serverInfo
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances confirmed
+- NEW devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A) — second internal dev vhost behind same gate
+- CHANGED Starlette pool signature stable 20th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A (gamdom.com/eu/io/vip/win/fatbets.com/gamdom
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+- CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+- CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier

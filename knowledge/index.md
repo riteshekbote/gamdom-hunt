@@ -400,3 +400,9 @@
 - 2026-09-16 ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (gamdom.com/perabet.com/gamdom80009.com/fatbets.com) — 21st cycle stable; Kuma {2,3,5,6,13,221,223}; aliases 90471/90473/90475/80001/80002 421; gates 401; devsrv6==devsrv5 7-path parity.
 - 2026-09-16 ACCEPTED recon @ static.perabet.com: resolves to 159.255.41.23 (third-party, non-Fastly), TCP 000 on 80/443 — dead A-record; NOT a claimable Fastly dangling host; watchlist only.
 - 2026-09-16 ACCEPTED recon @ dotted-perabet sweep (cdn/static/status/blog/dev/test/staging/vpn/panel/admin/api/app/shop/beta2/v2/wap): only www/beta/m live (301/200/500); rest 000 — subdomain surface closed, m remains lone dangling record.
+- 2026-09-16 ACCEPTED watch @ m.perabet.com: 8th cycle Varnish 500 + `Fastly error: unknown domain: m.perabet.com` on root + /client-api — dangling A-record persists, no claim/flip.
+- 2026-09-16 ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com) — 22nd cycle stable.
+- 2026-09-16 ACCEPTED recon @ gamdom.one dotted sweep: m/cdn/static/status/blog/api/app/shop all NXDOMAIN — no claimable subdomains.
+- 2026-09-16 ACCEPTED recon @ fatbets.com dotted sweep: m/cdn/static/status/blog/api/app/shop all NXDOMAIN — no claimable subdomains.
+- 2026-09-16 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+- 2026-09-16 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains.
