@@ -299,3 +299,40 @@ reasoning: `.env.example` references `JIRA_BASE_URL=https://autoapi.atlassian.ne
 impact: Low — no credential leak, but confirms internal Jira instance name useful for further recon.
 verify_steps: 1) `curl https://autoapi.atlassian.net` to check if it's a live Jira instance. 2) Search for `autoapi.atlassian.net` in breach data.
 TARGET_ORG not configured for gamdom; skipping public-org deep scan.
+## REPOSCAN 2026-09-16 17:17:14 UTC
+[HYP] Phishing App Harvests Gamdom Credentials via Hardcoded Gmail
+class: SECRET
+asset: novahexchang/gamdomApi/server.js:10-11
+confidence: 95
+reasoning: Hardcoded Gmail creds `techagbadev@gmail.com` / `zimtqbuzrypfmkgk` in plaintext. Server POSTs `{email, password}` from Gamdom login forms to this Gmail via nodemailer. Deployed to `gamdom-api-coral.vercel.app`.
+impact: Critical — active phishing tool stealing Gamdom user credentials on live Vercel endpoint
+verify_steps: POST `{"email":"test@test.com","password":"test"}` to `https://gamdom-api-coral.vercel.app/` and confirm nodemailer transport succeeds.
+[HYP] Hardcoded Phishing Frontend Wired to Credential-Harvesting Backend
+class: SSRF
+asset: novahexchang/gamdomApp/src/components/urls.js:1
+confidence: 90
+reasoning: `const BASE_URL = "https://gamdom-api-coral.vercel.app"` hardcoded — frontend login form POSTs user creds to this phishing backend via axios.
+impact: High — complete phishing kit (frontend + backend) impersonating Gamdom
+verify_steps: Confirm `gamdom-api-coral.vercel.app` serves the backend; check Vercel deployment.
+[HYP] Hardcoded Gamdom Test Account Credentials
+class: SECRET
+asset: darioCuc/Gamdom/testHelpers.ts:4-7
+confidence: 85
+reasoning: Plaintext `username: 'cuc369'`, `password: 'GramGram!369'` targeting `https://gamdom.com/` via Playwright. If this is a real Gamdom account (not throwaway), it's a credential leak.
+impact: Medium — potential account takeover if credentials are valid and not rotated
+verify_steps: Check if `cuc369` is a valid Gamdom username; confirm Playwright config targets production.
+[HYP] Gamdom Vault IDs Enumerated in Public Repo
+class: MISCONFIG
+asset: suraj-gamdom/show-vaults/vault_ids_to_hide.json
+confidence: 75
+reasoning: ~5,000+ sequential vault IDs (550000-553306) scraped from Gamdom's vault/show system. Companion `server.js` proxies through `SOURCE_API_URL` env var.
+impact: Medium — internal vault ID enumeration could aid targeted attacks on vault/show feature
+verify_steps: Check if vault IDs map to `gamdom.com/vault/{id}` routes; confirm upstream API still live.
+[HYP] Atlassian Jira Instance for Gamdom Development
+class: MISCONFIG
+asset: PavelArs/gamdom-qa-automation/.env.example:2
+confidence: 60
+reasoning: `.env.example` references `JIRA_BASE_URL=https://autoapi.atlassian.net` with project key `DEV`. No live secret leaked (placeholder token).
+impact: Low — no credential leak, but confirms internal Jira instance name for further recon
+verify_steps: `curl https://autoapi.atlassian.net` to check if it's a live Jira instance.
+TARGET_ORG not configured for gamdom; skipping public-org deep scan.
