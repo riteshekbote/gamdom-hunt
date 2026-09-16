@@ -1723,3 +1723,33 @@
 - LEARN: ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only gd-lang cookie — uniform cookie policy confirmed across 4 brands
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-16 00:34:30 UTC
+- [85] m.perabet.com: Subdomain takeover of m.perabet.com via dangling Fastly A-record (from art/lead_nemotron3.txt)
+- [76] perabet.com/client-api: EOL PHP+nginx host serving brand panel on tr.perabet.com:8083 exposed only panel login; previous phpMyAdmin surface now removed (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: tr.perabet.com:8083 version fingerprint + nonstandard-port scan — `curl -sk https://tr.perabet.com:8083/static/js/main.57f35a42.chunk.js 2>/dev/null | he
+- NEXT(hypotheses-nemotron3.txt): PROBE: `curl -sk https://tr.perabet.com:8083/api/v1/user/ 2>&1 | head -30 && curl -sk https://tr.perabet.com:8083/api/v1/packages/ 2>&1 | head -30` — enumerate 
+- LEARN: ACCEPTED recon @ m.perabet.com: 2nd cycle Varnish 500 — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: 2nd cycle VestaCP + phpMyAdmin live on EOL PHP host; panel API surface still unauthenticated; version fingerprint pending
+- LEARN: ACCEPTED watch @ live fleet + redirect chains + gates: all unchanged — stable cycle
+- LEARN: ACCEPTED recon @ m.perabet.com: 3rd cycle Varnish 500 — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: phpMyAdmin now 404 (removed/rotated); VestaCP panel SPA still live; /api/v1/* session-gated (302→/login/); version fingerp
+- LEARN: ACCEPTED recon @ perabet.com: 4th brand confirmed on shared origin backend (POST /client-api identical GamdomClientMessage) — trust pool now 4 brands / 25+ host
+- LEARN: ACCEPTED watch @ live fleet + redirect chains + gates: all unchanged — stable cycle
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` 200 pre-auth JSON (anonymous guest token c530d8... + empty panel defaults); `/get/user/` 404, `/list/back
+- LEARN: ACCEPTED watch @ m.perabet.com: 4th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists with no claim/flip.
+- LEARN: ACCEPTED watch @ fleet: `/client-api` 400 md5 7e3a161d Pool A+B (gamdom.com, gamdom80009.com, perabet.com verified); gd-lang host-only; 90488/80001 still 421; K
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: full VestaCP API tree session-gated (302/404); only unauth route is guest `/api/v1/login/`; chunk version = react-dom 16.1
+- LEARN: ACCEPTED recon @ oauth2-proxy.teamgamdom.com: `_oauth2_proxy_csrf` Set-Cookie `Domain=teamgamdom.com` + `redirect_uri` fixed to proxy callback — no redirect_uri
+- LEARN: ACCEPTED watch @ m.perabet.com: 5th cycle Varnish 500 root+`/client-api` — dangling Fastly A-record persists, no claim/flip.
+- LEARN: ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d stable (perabet.com/gamdom.com); Kuma `{2,3,5,6,13,221,223}`; SEO hub 17× 90471; 90488/80001 421; oauth2 401;
+- LEARN: REJECTED out-of-scope @ tr.perabet.com:8083 guest login bootstrap: rotating guest token + empty panel defaults = no data leak.
+- LEARN: ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUM
+- LEARN: ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERS
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated v
+- LEARN: ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on
+- LEARN: ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket a
+- LEARN: ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+- LEARN: ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+- LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
