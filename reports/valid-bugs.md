@@ -26,3 +26,8 @@
   - | **Q2 Reachable** | **Partially** — endpoint exists and returns 400 on GET, but POST requires valid session |
   - | **Q4 Provable** | **No** — requires POST with valid session to test; blind POST to live identity/wallet proxy is REJECTED class |
   - | **Q6 Not always-rejected** | **Yes** — SSRF/mass-assignment is valid |
+
+- 3 lead(s) marked VALID at 2026-09-16 05:33:36 UTC
+  - | Q5 Novel | UNCERTAIN | Need to verify: (a) is token still valid? (b) was it reported? |
+  - **Verdict: HOLD** — Requires verification: (1) Is the token active/valid? (2) Does it grant real API access? (3) Has it been previously reported? If valid and novel → VALID.
+  - **Verdict: HOLD** — Requires verification: (1) Is the token valid/active? (2) What access does it grant? (3) Was it previously reported? If valid and novel → VALID.
