@@ -3617,3 +3617,33 @@ testability: PASSIVE
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains.
 [RISK] gamdom: 78 — flat 22nd cycle: fleet signature, redirect chains, gates, and Kuma set all stable; no new falsifier for cross-brand ATO (76, top item) nor for m.perabet dangling (60, 8th cycle, HUMAN_ONLY). gamdom.one + fatbets.com dotted sweeps negative — m.perabet.com remains sole dangling record across all 4 brands; net flat at 78.
+## 2026-09-16 18:56:52 UTC [target] (model bigpickle)
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 62
+reasoning: 9th consecutive cycle Varnish 500 on `/` + `/client-api` with literal body `Fastly error: unknown domain: m.perabet.com`; DNS still Fastly anycast (151.101.x.52) and brand provably retires subdomains silently; no backing service on this hostname after 9 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed but not exploitable passively)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep for `unknown domain`; catch any flip
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker-controlled Fastly service
+testability: HUMAN_ONLY
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 23rd cycle md5 7e3a161d byte-identical across Pool A + Pool B hosts + /health weak-ETag identical; host-only gd-lang uniform (no Domain/SameSite/HttpOnly); CORS-absent closes browser branch; POST /client-api returns identical GamdomClientMessage — no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — keep GET signature + cookie-attr drift-watch; replay a valid session cookie against a sibling hostname once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] gamdom.one / fatbets.com / perabet dotted subdomains yield no additional dangling records
+class: OTHER
+asset: gamdom.one + fatbets.com + perabet.com
+confidence: 90
+reasoning: dotted sweeps all negative (NXDOMAIN/000) on three brands; only m.perabet.com holds a live-but-unclaimed Fastly A-record; surface closed
+evidence_needed: none (negative result)
+verify_steps: DONE — sweeps complete, no follow-up
+impact: no new attack surface; m.perabet.com remains sole dangling record across the brand fleet
+testability: PASSIVE
+[NEXT] PROBE: continue passive flip-watch on m.perabet.com — 9th cycle, remains only top MISCONFIG; `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/` logging HTTP code + grep for `Fastly error: unknown domain` per cycle; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet signature spot-check unchanged (md5 7e3a161d on perabet.com + gamdom.com).
+[RISK] gamdom: 78 — flat 23rd cycle: fleet signature, redirect chains, gates, pending aliases, and Kuma set all stable; no new falsifier for cross-brand ATO (76, top item) nor for m.perabet dangling (62, 9th cycle, HUMAN_ONLY). All dotted/subdomain sweeps on the 3 non-gamdom brands were negative — surface remains fully enumerated with no passive-progressable branch; net flat at 78.

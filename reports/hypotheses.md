@@ -1812,3 +1812,7 @@
 - LEARN: ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
 - LEARN: REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - LEARN: ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+## RANKED HYPOTHESES 2026-09-16 19:15:49 UTC
+- [62] m.perabet.com: Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: continue passive flip-watch on m.perabet.com — 9th cycle, remains only top MISCONFIG; `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/` logging 
