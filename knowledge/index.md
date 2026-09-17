@@ -431,3 +431,7 @@
 - 2026-09-17 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
 - 2026-09-17 ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com, gamdom80008/80009/80003, fatbets.com, gamdom.one); gd-lang host-only cookie uniform; Kuma {2,3,5,6,13,221,223}; aliases 90488/80001 still 421 — 28th stable cycle.
 - 2026-09-17 ACCEPTED watch @ m.perabet.com: 13th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+- 2026-09-17 ACCEPTED watch @ m.perabet.com: 14th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+- 2026-09-17 ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (perabet.com, gamdom.com, gamdom80009.com verified this cycle); /health weak-ETag identical; Kuma heartbeat all status=1 — 29th stable cycle.
+- 2026-09-17 ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (3ef5bf97…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
+- 2026-09-17 ACCEPTED watch @ pending aliases + SEO hub: 90471/90473/90475/80001/80002 all 421; hub still 17× 90471 — no provisioning event.

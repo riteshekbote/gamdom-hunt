@@ -14813,3 +14813,275 @@ testability: PASSIVE
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
+===== ANALYST nemotron3 2026-09-17 21:45:33 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mcd /home/runner/work/gamdom-hunt/gamdom-hunt && ls -la
+total 528
+drwxr-xr-x 12 runner runner   4096 Sep 17 21:43 .
+drwxr-xr-x  3 runner runner   4096 Sep 17 21:43 ..
+drwxr-xr-x  7 runner runner   4096 Sep 17 21:43 .git
+drwxr-xr-x  3 runner runner   4096 Sep 17 21:43 .github
+-rw-r--r--  1 runner runner   1691 Sep 17 21:43 README.md
+-rw-r--r--  1 runner runner     43 Sep 17 21:43 analyst-out.txt
+-rw-r--r--  1 runner runner 215624 Sep 17 21:43 analyst-prompt.txt
+-rw-r--r--  1 runner runner 211843 Sep 17 21:43 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 leads
+-rw-r--r--  1 runner runner  21555 Sep 17 21:43 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 reports
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 17 21:43 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 scripts
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 17 21:43 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 triage
+[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/gamdom.md
+[0m→ [0mRead analyst-out.txt
+[0m→ [0mRead probe-results.md
+[0m
+[0m$ [0mcd /home/runner/work/gamdom-hunt/gamdom-hunt && ls -la knowledge/ leads/ recon-notes/ triage/
+knowledge/:
+total 88
+drwxr-xr-x  2 runner runner  4096 Sep 17 21:43 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 21:43 ..
+-rw-r--r--  1 runner runner 79441 Sep 17 21:43 index.md
+
+leads/:
+total 1456
+drwxr-xr-x  2 runner runner   4096 Sep 17 21:43 .
+drwxr-xr-x 12 runner runner   4096 Sep 17 21:43 ..
+-rw-r--r--  1 runner runner 492848 Sep 17 21:43 lead-bigpickle.md
+-rw-r--r--  1 runner runner   4998 Sep 17 21:43 lead-laguna.md
+-rw-r--r--  1 runner runner   4900 Sep 17 21:43 lead-ling3.md
+-rw-r--r--  1 runner runner   5096 Sep 17 21:43 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 17 21:43 lead-mimo.md
+-rw-r--r--  1 runner runner 934119 Sep 17 21:43 lead-nemotron3.md
+-rw-r--r--  1 runner runner  20019 Sep 17 21:43 reposcan-gamdom.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 17 21:43 .
+drwxr-xr-x 12 runner runner 4096 Sep 17 21:43 ..
+-rw-r--r--  1 runner runner  815 Sep 17 21:43 DEDICATED-DEEP.md
+
+triage/:
+total 508
+drwxr-xr-x  2 runner runner  4096 Sep 17 21:43 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 21:43 ..
+-rw-r--r--  1 runner runner     0 Sep 17 21:43 .gitkeep
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-02-21-51.md
+-rw-r--r--  1 runner runner   205 Sep 17 21:43 run-2026-09-02-23-43.md
+-rw-r--r--  1 runner runner   198 Sep 17 21:43 run-2026-09-03-02-16.md
+-rw-r--r--  1 runner runner   612 Sep 17 21:43 run-2026-09-03-07-14.md
+-rw-r--r--  1 runner runner   192 Sep 17 21:43 run-2026-09-03-12-07.md
+-rw-r--r--  1 runner runner   633 Sep 17 21:43 run-2026-09-03-16-28.md
+-rw-r--r--  1 runner runner   161 Sep 17 21:43 run-2026-09-03-19-24.md
+-rw-r--r--  1 runner runner   368 Sep 17 21:43 run-2026-09-03-21-53.md
+-rw-r--r--  1 runner runner   334 Sep 17 21:43 run-2026-09-03-23-43.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-04-02-12.md
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-04-07-16.md
+-rw-r--r--  1 runner runner   217 Sep 17 21:43 run-2026-09-04-12-09.md
+-rw-r--r--  1 runner runner   205 Sep 17 21:43 run-2026-09-04-16-24.md
+-rw-r--r--  1 runner runner    80 Sep 17 21:43 run-2026-09-04-19-21.md
+-rw-r--r--  1 runner runner  1299 Sep 17 21:43 run-2026-09-04-21-31.md
+-rw-r--r--  1 runner runner   179 Sep 17 21:43 run-2026-09-04-23-15.md
+-rw-r--r--  1 runner runner  7772 Sep 17 21:43 run-2026-09-05-01-00.md
+-rw-r--r--  1 runner runner  2135 Sep 17 21:43 run-2026-09-05-05-24.md
+-rw-r--r--  1 runner runner   154 Sep 17 21:43 run-2026-09-05-09-18.md
+-rw-r--r--  1 runner runner   238 Sep 17 21:43 run-2026-09-05-12-47.md
+-rw-r--r--  1 runner runner   198 Sep 17 21:43 run-2026-09-05-15-43.md
+-rw-r--r--  1 runner runner   178 Sep 17 21:43 run-2026-09-05-17-50.md
+-rw-r--r--  1 runner runner   236 Sep 17 21:43 run-2026-09-05-19-45.md
+-rw-r--r--  1 runner runner  6820 Sep 17 21:43 run-2026-09-05-21-49.md
+-rw-r--r--  1 runner runner   154 Sep 17 21:43 run-2026-09-05-23-28.md
+-rw-r--r--  1 runner runner   247 Sep 17 21:43 run-2026-09-06-01-18.md
+-rw-r--r--  1 runner runner   255 Sep 17 21:43 run-2026-09-06-06-02.md
+-rw-r--r--  1 runner runner   180 Sep 17 21:43 run-2026-09-06-11-00.md
+-rw-r--r--  1 runner runner   185 Sep 17 21:43 run-2026-09-06-14-12.md
+-rw-r--r--  1 runner runner  8253 Sep 17 21:43 run-2026-09-06-17-07.md
+-rw-r--r--  1 runner runner   222 Sep 17 21:43 run-2026-09-06-19-13.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-06-21-23.md
+-rw-r--r--  1 runner runner   199 Sep 17 21:43 run-2026-09-06-23-05.md
+-rw-r--r--  1 runner runner   246 Sep 17 21:43 run-2026-09-07-01-03.md
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-07-06-08.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-07-12-38.md
+-rw-r--r--  1 runner runner   194 Sep 17 21:43 run-2026-09-07-17-54.md
+-rw-r--r--  1 runner runner   212 Sep 17 21:43 run-2026-09-07-20-56.md
+-rw-r--r--  1 runner runner   208 Sep 17 21:43 run-2026-09-07-23-15.md
+-rw-r--r--  1 runner runner   451 Sep 17 21:43 run-2026-09-08-01-13.md
+-rw-r--r--  1 runner runner   149 Sep 17 21:43 run-2026-09-08-05-59.md
+-rw-r--r--  1 runner runner   175 Sep 17 21:43 run-2026-09-08-10-54.md
+-rw-r--r--  1 runner runner   155 Sep 17 21:43 run-2026-09-08-14-50.md
+-rw-r--r--  1 runner runner   882 Sep 17 21:43 run-2026-09-08-18-13.md
+-rw-r--r--  1 runner runner   179 Sep 17 21:43 run-2026-09-08-21-11.md
+-rw-r--r--  1 runner runner   222 Sep 17 21:43 run-2026-09-08-23-25.md
+-rw-r--r--  1 runner runner   229 Sep 17 21:43 run-2026-09-09-01-29.md
+-rw-r--r--  1 runner runner   172 Sep 17 21:43 run-2026-09-09-06-38.md
+-rw-r--r--  1 runner runner   209 Sep 17 21:43 run-2026-09-09-11-49.md
+-rw-r--r--  1 runner runner   178 Sep 17 21:43 run-2026-09-09-15-39.md
+-rw-r--r--  1 runner runner   159 Sep 17 21:43 run-2026-09-09-18-50.md
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-09-21-24.md
+-rw-r--r--  1 runner runner   247 Sep 17 21:43 run-2026-09-09-23-29.md
+-rw-r--r--  1 runner runner   147 Sep 17 21:43 run-2026-09-10-01-25.md
+-rw-r--r--  1 runner runner   629 Sep 17 21:43 run-2026-09-10-06-37.md
+-rw-r--r--  1 runner runner   141 Sep 17 21:43 run-2026-09-10-11-46.md
+-rw-r--r--  1 runner runner   700 Sep 17 21:43 run-2026-09-10-15-34.md
+-rw-r--r--  1 runner runner  1140 Sep 17 21:43 run-2026-09-10-18-40.md
+-rw-r--r--  1 runner runner   238 Sep 17 21:43 run-2026-09-10-21-12.md
+-rw-r--r--  1 runner runner   721 Sep 17 21:43 run-2026-09-10-23-12.md
+-rw-r--r--  1 runner runner  1758 Sep 17 21:43 run-2026-09-11-01-08.md
+-rw-r--r--  1 runner runner   187 Sep 17 21:43 run-2026-09-11-06-02.md
+-rw-r--r--  1 runner runner   217 Sep 17 21:43 run-2026-09-11-11-25.md
+-rw-r--r--  1 runner runner  1479 Sep 17 21:43 run-2026-09-11-15-11.md
+-rw-r--r--  1 runner runner   249 Sep 17 21:43 run-2026-09-11-18-35.md
+-rw-r--r--  1 runner runner   249 Sep 17 21:43 run-2026-09-11-21-14.md
+-rw-r--r--  1 runner runner   181 Sep 17 21:43 run-2026-09-11-23-17.md
+-rw-r--r--  1 runner runner   190 Sep 17 21:43 run-2026-09-12-01-12.md
+-rw-r--r--  1 runner runner  5411 Sep 17 21:43 run-2026-09-12-01-46.md
+-rw-r--r--  1 runner runner  2010 Sep 17 21:43 run-2026-09-12-05-52.md
+-rw-r--r--  1 runner runner   272 Sep 17 21:43 run-2026-09-12-09-51.md
+-rw-r--r--  1 runner runner 12897 Sep 17 21:43 run-2026-09-12-13-18.md
+-rw-r--r--  1 runner runner   280 Sep 17 21:43 run-2026-09-12-16-21.md
+-rw-r--r--  1 runner runner   278 Sep 17 21:43 run-2026-09-12-18-42.md
+-rw-r--r--  1 runner runner   205 Sep 17 21:43 run-2026-09-12-21-07.md
+-rw-r--r--  1 runner runner 14283 Sep 17 21:43 run-2026-09-12-22-30.md
+-rw-r--r--  1 runner runner  2832 Sep 17 21:43 run-2026-09-12-23-07.md
+-rw-r--r--  1 runner runner   198 Sep 17 21:43 run-2026-09-13-01-03.md
+-rw-r--r--  1 runner runner   212 Sep 17 21:43 run-2026-09-13-06-13.md
+-rw-r--r--  1 runner runner   267 Sep 17 21:43 run-2026-09-13-11-56.md
+-rw-r--r--  1 runner runner   209 Sep 17 21:43 run-2026-09-13-15-31.md
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-13-18-19.md
+-rw-r--r--  1 runner runner   204 Sep 17 21:43 run-2026-09-13-20-56.md
+-rw-r--r--  1 runner runner   193 Sep 17 21:43 run-2026-09-13-22-47.md
+-rw-r--r--  1 runner runner   888 Sep 17 21:43 run-2026-09-14-00-35.md
+-rw-r--r--  1 runner runner   306 Sep 17 21:43 run-2026-09-14-05-23.md
+-rw-r--r--  1 runner runner   143 Sep 17 21:43 run-2026-09-14-10-56.md
+-rw-r--r--  1 runner runner   141 Sep 17 21:43 run-2026-09-14-16-45.md
+-rw-r--r--  1 runner runner 15074 Sep 17 21:43 run-2026-09-14-20-45.md
+-rw-r--r--  1 runner runner   166 Sep 17 21:43 run-2026-09-14-23-37.md
+-rw-r--r--  1 runner runner   118 Sep 17 21:43 run-2026-09-15-01-53.md
+-rw-r--r--  1 runner runner   301 Sep 17 21:43 run-2026-09-15-07-00.md
+-rw-r--r--  1 runner runner   166 Sep 17 21:43 run-2026-09-15-12-33.md
+-rw-r--r--  1 runner runner   343 Sep 17 21:43 run-2026-09-15-17-15.md
+-rw-r--r--  1 runner runner   175 Sep 17 21:43 run-2026-09-15-20-16.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-15-22-55.md
+-rw-r--r--  1 runner runner  9925 Sep 17 21:43 run-2026-09-16-01-00.md
+-rw-r--r--  1 runner runner  4993 Sep 17 21:43 run-2026-09-16-05-33.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-16-10-16.md
+-rw-r--r--  1 runner runner   168 Sep 17 21:43 run-2026-09-16-15-00.md
+-rw-r--r--  1 runner runner   275 Sep 17 21:43 run-2026-09-16-18-46.md
+-rw-r--r--  1 runner runner   146 Sep 17 21:43 run-2026-09-16-21-49.md
+-rw-r--r--  1 runner runner   242 Sep 17 21:43 run-2026-09-16-23-59.md
+-rw-r--r--  1 runner runner   154 Sep 17 21:43 run-2026-09-17-04-02.md
+-rw-r--r--  1 runner runner   174 Sep 17 21:43 run-2026-09-17-09-28.md
+-rw-r--r--  1 runner runner   161 Sep 17 21:43 run-2026-09-17-14-25.md
+-rw-r--r--  1 runner runner   167 Sep 17 21:43 run-2026-09-17-18-30.md
+-rw-r--r--  1 runner runner   159 Sep 17 21:43 run-2026-09-17-21-41.md
+[0m
+Now I have a complete picture. Let me execute the 8-step analysis.
+
+---
+
+### STEP 1 — DELTA
+
+[NEW] m.perabet.com: 13th consecutive cycle Varnish 500 + `Fastly error: unknown domain` on root and `/client-api` — dangling Fastly A-record persists unclaimed (no service flip, HUMAN_ONLY takeover vector)
+[NEW] tr.perabet.com:8083/api/v1/login/: rotating guest token per-request + full VestaCP config (VERSION=0.9.8, PHP=EOL, all services mapped) — pre-auth API surface persists unchanged
+[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) — admin vhost exposes serverInfo; all other REST endpoints 401
+[NEW] oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5) confirmed
+[NEW] perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin (4 brands / 25+ hostnames)
+[CHANGED] Starlette pool signature stable 22nd cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A + Pool B
+[CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+[CHANGED] gamdommirrors.com Kuma status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+[CHANGED] Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+
+---
+
+### STEP 2 — PRIORITIZE
+
+[PRIO] m.perabet.com,8.90,attack_surface=10,business_value=7,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=9
+[PRIO] tr.perabet.com:8083,8.70,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=9
+[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,8.45,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] perabet.com/client-api,7.65,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
+[PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,7.15,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=8
+[PRIO] devsrv6.teamgamdom.com,5.65,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=7,freshness=8
+
+---
+
+### STEP 3 — HYPOTHESES
+
+[HYP] Subdomain takeover of m.perabet.com via dangling Fastly A-record
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 85
+reasoning: m.perabet.com resolves to Fastly IPs (151.101.x.52, Pool A) but returns "Fastly error: unknown domain m.perabet.com" on root and /client-api for 13 consecutive cycles; no Gamdom Fastly service claims this hostname; Fastly allows any customer to claim unclaimed CNAME/A records pointing to their shared anycast IPs
+evidence_needed: confirm hostname is unclaimed in Fastly (attempt to add to attacker Fastly service); verify no other Gamdom service serves this hostname
+verify_steps: curl -sS -I https://m.perabet.com/ 2>&1 | head -10; dig +short m.perabet.com; (HUMAN_ONLY) attempt Fastly service claim via API/console
+impact: Full subdomain takeover of 4th-brand hostname on shared Pool A — serve arbitrary content, steal cookies set on perabet.com (no Domain attr), phishing vector; high
+testability: HUMAN_ONLY
+
+[HYP] Unauthenticated VestaCP panel API on tr.perabet.com:8083 with EOL PHP
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 80
+reasoning: tr.perabet.com:8083 serves VestaCP control panel (React/webpack build) on non-standard port 8083; `/api/v1/login/` returns 200 JSON with guest token and full server config (VERSION=0.9.8, PHP=EOL, nginx/apache/exim/dovecot/mysql/named); VestaCP 0.9.8 has known RCE/auth-bypass CVEs (CVE-2023-31447, CVE-2022-3652); phpMyAdmin 404 but panel loads; `/api/v1/user/` and `/api/v1/packages/` return 404
+evidence_needed: fingerprint exact VestaCP/PHP versions; confirm unauthenticated API endpoints beyond /login; check for known CVEs matching versions
+verify_steps: curl -sk https://tr.perabet.com:8083/api/v1/login/ 2>&1 | jq .session.VERSION; curl -sk https://tr.perabet.com:8083/api/v1/user/ 2>&1 | head -20; curl -sk https://tr.perabet.com:8083/api/v1/packages/ 2>&1 | head -20
+impact: Server compromise via control panel RCE/auth-bypass; lateral movement to perabet.com infrastructure; critical
+testability: PASSIVE
+
+[HYP] Tableau admin vhost unauthenticated serverInfo version disclosure + full REST API enumeration
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 85
+reasoning: tableau-admin.teamgamdom.com returns HTTP 200 Tableau login page; `/api/3.21/serverInfo` returns HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815); all other endpoints (/sites, /auth/signin, /projects, /datasources, /workbooks, /users, /groups, /tasks, /schedules) return HTTP 401 JSON — admin vhost has unauthenticated version disclosure while main tableau.teamgamdom.com is patched (CVE-2025-52455/52449)
+evidence_needed: confirm no other unauthenticated endpoints on admin vhost; check if admin vhost runs different patch level than main tableau vhost
+verify_steps: curl -sS "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | jq .; for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/projects /api/3.21/sites; do curl -sS -I "https://tableau-admin.teamgamdom.com$p" 2>&1 | grep -E "^(HTTP|Content|Server|X-|Location|WWW-Authenticate)" | head -2; done
+impact: Tableau admin panel version/info disclosure; potential auth bypass if admin vhost misconfigured differently; medium
+testability: PASSIVE
+
+---
+
+### STEP 4 — SELF-CRITIQUE
+
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth; requires valid user session
+[PARKED] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot: confidence 70 but testability AUTH_HELPED only; requires full Google OAuth flow to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth
+
+[FINAL] 1) m.perabet.com: Subdomain takeover via dangling Fastly A-record (85, HUMAN_ONLY, high impact)
+[FINAL] 2) tr.perabet.com:8083: Unauthenticated VestaCP panel API on EOL PHP (80, PASSIVE, critical impact)
+[FINAL] 3) tableau-admin.teamgamdom.com/api/3.21/serverInfo: Unauthenticated version disclosure + API enumeration (85, PASSIVE, medium impact)
+
+---
+
+### STEP 5 — NEXT ACTION
+
+[NEXT] PROBE: `curl -sk https://tr.perabet.com:8083/api/v1/login/ 2>&1 | jq .session.VERSION && curl -sk "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | jq .` — confirm VestaCP version + Tableau admin version disclosure; passive, single GET to non-standard port + admin vhost
+
+---
+
+### STEP 6 — LEARNING
+
+[LEARN] ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+[LEARN] ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERSION=0.9.8); phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+[LEARN] ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+
+---
+
+### STEP 7 — RISK
+
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
