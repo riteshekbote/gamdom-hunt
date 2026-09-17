@@ -24541,3 +24541,19 @@ testability: PASSIVE
 **STEP 7 — RISK**
 
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged; fleet signature + Kuma set + gates stable for 28 cycles; no new falsifier or enabler; no new attack surface surfaced.
+===== ANALYST bigpickle 2026-09-17 18:37:04 UTC =====
+[0m
+> build · big-pickle
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcurl -sk --connect-timeout 5 -m 8 -o /tmp/mp_body.txt -w '%{http_code}\n' https://m.perabet.com/client-api; echo "---BODY---"; cat /tmp/mp_body.txt | head -c 500 failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+[0m
+[0m$ [0mcurl -s --connect-timeout 5 -m 8 https://perabet.com/client-api | md5sum; echo "---"; curl -s --connect-timeout 5 -m 8 https://gamdom.com/client-api | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+---
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -s --connect-timeout 5 -m 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains 2>&1 | head -c 600
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-17 16:53:55.434","msg":"","ping":69},{"status":1,"time":"2026-09-17 16:55:55.507","msg":"","ping":73},{"status":1,"time":"2026-09-17 16:57:55.588","msg":"","ping":75},{"status":1,"time":"2026-09-17 16:59:55.678","msg":"","ping":62},{"status":1,"time":"2026-09-17 17:01:55.745","msg":"","ping":59},{"status":1,"time":"2026-09-17 17:03:55.809","msg":"","ping":64},{"status":1,"time":"2026-09-17 17:05:55.877","msg":"","ping":56},{"status":1,"time":"2026-09-17 17:07:55.938","msg":"","ping":57},{"status":1,"time":"2026-09-17 17:09:55.998","msg":"","pi
+[0m

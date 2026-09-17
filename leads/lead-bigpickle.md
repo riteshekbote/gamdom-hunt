@@ -3856,3 +3856,4 @@ testability: PASSIVE
 [LEARN] ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token, empty panel defaults, VERSION=0.9.8 — no drift to live data.
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged; fleet signature + Kuma set + gates stable for 28 cycles; no new falsifier or enabler; no new attack surface surfaced.
+## 2026-09-17 18:33:47 UTC [target] (model bigpickle)
