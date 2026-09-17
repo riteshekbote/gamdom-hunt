@@ -425,3 +425,7 @@
 - 2026-09-17 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
 - 2026-09-17 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-17 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-17 ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com, gamdom80008/80009/80003, fatbets.com, gamdom.one); gd-lang host-only cookie uniform; Kuma {2,3,5,6,13,221,223}; aliases 90488/80001 still 421 — 27th stable cycle.
+- 2026-09-17 ACCEPTED watch @ m.perabet.com: 12th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+- 2026-09-17 ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token, empty panel defaults, VERSION=0.9.8 — no drift to live data.
+- 2026-09-17 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).

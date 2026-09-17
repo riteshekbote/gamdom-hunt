@@ -922,3 +922,15 @@ www.gamdom.com
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
 - CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
 - CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+
+## 2026-09-17 09:58:13 UTC
+- NEW m.perabet.com: 11th cycle Varnish 500 + "Fastly error: unknown domain" on /client-api — dangling Fastly A-record persists, no claim/flip (HUMAN_ONLY)
+- NEW tr.perabet.com:8083/api/v1/login/: rotating guest token + full VestaCP config (VERSION=0.9.8, PHP=EOL, all services mapped) — pre-auth API surface persists; /api/v1/user/ and /api/v1/packages/ return 
+- NEW tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) — admin vhost exposes serverInfo
+- NEW oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances confirmed
+- NEW devsrv6.teamgamdom.com: HTTP 401 Basic realm="secret" (nginx, Fastly Pool A) — second internal dev vhost behind same gate
+- NEW perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+- CHANGED Starlette pool signature stable 20th cycle: `/client-api` md5 7e3a161d + `/health` weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A + Pool B — 4 brands / 25+ hostnames
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+- CHANGED gamdommirrors.com status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+- CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
