@@ -5406,3 +5406,4 @@ testability: PASSIVE
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
 ## 2026-09-16 19:15:39 UTC [target] (model nemotron3)
 ## 2026-09-16 21:53:56 UTC [target] (model nemotron3)
+## 2026-09-17 00:04:37 UTC [target] (model nemotron3)

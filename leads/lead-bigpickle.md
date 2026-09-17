@@ -3711,3 +3711,45 @@ testability: PASSIVE
 [LEARN] ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com); 6 pending aliases 421; oauth2/auth 401; shreeram 401; Kuma heartbeat all status=1; SEO hub 17× 90471 — 24th stable cycle.
 [LEARN] ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` token rotation confirmed per-request (dc96649f→…), panel fields empty, guest config unchanged — no drift to live data.
 [RISK] gamdom: 78 — flat 24th cycle: fleet signature, redirect chains, gates, pending aliases, and Kuma set all stable. One new host surfaced (giris.perabet.com WP doorway) but it is outdated-software-only with a non-functional phpMyAdmin — no exploitable surface, no linkage to the shared identity origin. No new falsifier for cross-brand ATO (76, top item) nor for m.perabet dangling (62, 10th cycle, HUMAN_ONLY). Net flat at 78.
+## 2026-09-17 00:06:27 UTC [target] (model bigpickle)
+[PRIO] giris.perabet.com, 6.05, tech_exposure
+[PRIO] perabet.com/client-api, 6.05, business_value
+[PRIO] m.perabet.com, 4.80, gate_ease
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 25th cycle md5 7e3a161d byte-identical across Pool A + Pool B; /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" identical; host-only gd-lang uniform (no Domain/SameSite/HttpOnly); CORS-absent closes browser branch; POST returns identical GamdomClientMessage — no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + cookie-attr drift-watch on gd-lang/Set-Cookie; replay a valid session cookie against a sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 62
+reasoning: 11th consecutive cycle Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/` + `/client-api`; DNS still Fastly anycast (151.101.131.52); brand provably retires hostnames silently; no backing service after 11 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[HYP] Untrusted CIMD client completes MCP OAuth flow to mint admin-bound token (CVE-2026-15015 analog)
+class: OATH
+asset: giris.perabet.com/oauth/authorize
+confidence: 30
+reasoning: wp-media/mcp-oauth + mcp-adapter present; analogous CVE-2026-15015 abused public DCR + unprotected authorize, but this target's metadata has NO registration_endpoint, authorize returns constant-time 400 "Unknown OAuth client" for every untrusted host, and /oauth/authorize-callback is 401 + /oauth/consent 405 — library enforces allowlist-before-fetch, PKCE S256, consent nonce, exact redirect match
+evidence_needed: a non-allowlisted CIMD that returns a consent/redirect instead of 400, or a reachable DCR endpoint
+verify_steps: COMPLETED — 4 client_id shapes all 400 constant-time; re-check only if discovery metadata adds registration_endpoint
+impact: if it existed, WP-admin-equivalent MCP tool access (content/users/options) on an SEO doorway with no wallet linkage; high blast radius, low asset value
+testability: PASSIVE
+[PARKED] Untrusted CIMD OAuth token mint (giris): confidence 30 < 40 and falsified in-cycle — fail-closed allowlist-before-fetch, no DCR, gates 401/405.
+[PARKED] giris.perabet.com phpMyAdmin (5.4.45) / WP plugin-version surface: outdated-software REJECTED class, no program-specific exploit.
+[PARKED] /wp-json/wp/v2/users exposing id=1 "admin" + gravatar hash: username-enumeration REJECTED class, no PII.
+[FINAL] 1) Cross-brand auth cookie replay → ATO (76, AUTH_HELPED). 2) m.perabet.com dangling Fastly claim (62, HUMAN_ONLY).
+[NEXT] PROBE: passive flip-watch on m.perabet.com — 12th cycle, remains sole top MISCONFIG; run `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/client-api` and grep `Fastly error: unknown domain` per cycle; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check `/client-api` md5 7e3a161d on perabet.com + gamdom.com.
+[LEARN] ACCEPTED recon @ giris.perabet.com: `wp-media/mcp-oauth` OAuth 2.1/CIMD layer + WordPress `mcp-adapter` discovered (`mcp` REST namespace 401, public discovery docs) — new tech surface, all gates hold.
+[LEARN] ACCEPTED recon @ giris.perabet.com/oauth/authorize: any non-allowlisted `client_id` → constant-time 400 "Unknown OAuth client." (no fetch); token 405, consent 405, authorize-callback 401 — fail-closed confirmed.
+[LEARN] REJECTED hypothesis @ giris.perabet.com CIMD SSRF: library validates URL shape + host allowlist before fetch and pins resolved IP; no timing/OOB oracle observed.
+[LEARN] ACCEPTED watch @ m.perabet.com: 11th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + Kuma set {2,3,5,6,13,221,223} stable; giris phpMyAdmin still non-functional (PHP 5.4.45).
+[RISK] gamdom: 79 — flat-operational cycle but +1 for a newly surfaced, fresh-stack (OAuth 2.1/CIMD/MCP) unauthenticated AS on brand host giris.perabet.com; currently fail-closed (CIMD allowlist-before-fetch, PKCE S256, consent nonce, no DCR). Cross-brand ATO (76, top) stays AUTH_HELPED with no passive falsifier; m.perabet dangling (62) unflipped at 11th cycle, HUMAN_ONLY.

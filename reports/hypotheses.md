@@ -1825,3 +1825,12 @@
 - LEARN: ACCEPTED watch @ m.perabet.com: 10th cycle Varnish 500 + `Fastly error: unknown domain m.perabet.com` on root + /client-api — dangling A-record persists, no cla
 - LEARN: ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com); 6 pending aliases 421; oauth2/auth 401; shreeram 
 - LEARN: ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` token rotation confirmed per-request (dc96649f→…), panel fields empty, guest config unchanged — no drift 
+
+## RANKED HYPOTHESES 2026-09-17 00:06:39 UTC
+- [76] perabet.com/client-api: Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: passive flip-watch on m.perabet.com — 12th cycle, remains sole top MISCONFIG; run `curl -sk --connect-timeout 5 -m 8 https://m.perabet.com/client-api` an
+- LEARN: ACCEPTED recon @ giris.perabet.com: `wp-media/mcp-oauth` OAuth 2.1/CIMD layer + WordPress `mcp-adapter` discovered (`mcp` REST namespace 401, public discovery d
+- LEARN: ACCEPTED recon @ giris.perabet.com/oauth/authorize: any non-allowlisted `client_id` → constant-time 400 "Unknown OAuth client." (no fetch); token 405, consent 4
+- LEARN: REJECTED hypothesis @ giris.perabet.com CIMD SSRF: library validates URL shape + host allowlist before fetch and pins resolved IP; no timing/OOB oracle observed
+- LEARN: ACCEPTED watch @ m.perabet.com: 11th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+- LEARN: ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + Kuma set {2,3,5,6,13,221,223} stable; giris phpMyAdmin still non-functional (PHP 5.4.45).

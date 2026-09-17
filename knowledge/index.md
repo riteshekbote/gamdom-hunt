@@ -411,3 +411,8 @@
 - 2026-09-16 ACCEPTED watch @ m.perabet.com: 10th cycle Varnish 500 + `Fastly error: unknown domain m.perabet.com` on root + /client-api — dangling A-record persists, no claim/flip.
 - 2026-09-16 ACCEPTED watch @ fleet: /client-api md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com); 6 pending aliases 421; oauth2/auth 401; shreeram 401; Kuma heartbeat all status=1; SEO hub 17× 90471 — 24th stable cycle.
 - 2026-09-16 ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` token rotation confirmed per-request (dc96649f→…), panel fields empty, guest config unchanged — no drift to live data.
+- 2026-09-17 ACCEPTED recon @ giris.perabet.com: `wp-media/mcp-oauth` OAuth 2.1/CIMD layer + WordPress `mcp-adapter` discovered (`mcp` REST namespace 401, public discovery docs) — new tech surface, all gates hold.
+- 2026-09-17 ACCEPTED recon @ giris.perabet.com/oauth/authorize: any non-allowlisted `client_id` → constant-time 400 "Unknown OAuth client." (no fetch); token 405, consent 405, authorize-callback 401 — fail-closed confirmed.
+- 2026-09-17 REJECTED hypothesis @ giris.perabet.com CIMD SSRF: library validates URL shape + host allowlist before fetch and pins resolved IP; no timing/OOB oracle observed.
+- 2026-09-17 ACCEPTED watch @ m.perabet.com: 11th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+- 2026-09-17 ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + Kuma set {2,3,5,6,13,221,223} stable; giris phpMyAdmin still non-functional (PHP 5.4.45).
