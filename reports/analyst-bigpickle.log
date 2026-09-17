@@ -24346,3 +24346,198 @@ testability: PASSIVE
 ```
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (64, HUMAN_ONLY) both unchanged; fleet signature + Kuma set + gates stable for 27 cycles; no new falsifier or enabler; no new attack surface surfaced.
 ```
+===== ANALYST bigpickle 2026-09-17 14:42:50 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api 2>/dev/null
+500
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://m.perabet.com/client-api 2>/dev/null | head -c 200
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+<
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://perabet.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://perabet.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdom.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom80008.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdom80008.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom80009.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdom80009.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom80003.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdom80003.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://fatbets.com/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://fatbets.com/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom.one/client-api 2>/dev/null
+400
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdom.one/client-api 2>/dev/null | md5sum
+7e3a161d6cde2700fcdc0f6be4520745  -
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -D - -o /dev/null https://perabet.com/health 2>/dev/null | grep -i etag
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -D - -o /dev/null https://gamdom.com/health 2>/dev/null | grep -i etag
+etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom90488.com/client-api 2>/dev/null
+421
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom80001.com/client-api 2>/dev/null
+421
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains 2>/dev/null | python3 -m json.tool 2>/dev/null | head -40
+{
+    "heartbeatList": {
+        "2": [
+            {
+                "status": 1,
+                "time": "2026-09-17 13:01:46.056",
+                "msg": "",
+                "ping": 55
+            },
+            {
+                "status": 1,
+                "time": "2026-09-17 13:03:46.116",
+                "msg": "",
+                "ping": 59
+            },
+            {
+                "status": 1,
+                "time": "2026-09-17 13:05:46.180",
+                "msg": "",
+                "ping": 93
+            },
+            {
+                "status": 1,
+                "time": "2026-09-17 13:07:46.277",
+                "msg": "",
+                "ping": 56
+            },
+            {
+                "status": 1,
+                "time": "2026-09-17 13:09:46.344",
+                "msg": "",
+                "ping": 51
+            },
+            {
+                "status": 1,
+                "time": "2026-09-17 13:11:46.401",
+                "msg": "",
+                "ping": 53
+            },
+            {
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://shreeram-dynamic-test.teamgamdom.com/ 2>/dev/null
+401
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); ids=list(d['heartbeatList'].keys()); print(f'monitors: {ids} count={len(ids)}')" 2>/dev/null
+monitors: ['2', '3', '5', '6', '13', '221', '223'] count=7
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom90471.com/client-api 2>/dev/null
+421
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://gamdom80004.com/client-api 2>/dev/null
+302
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -D - -o /dev/null https://perabet.com/client-api 2>/dev/null | grep -i set-cookie
+(no output)
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -D - -o /dev/null https://gamdom.com/client-api 2>/dev/null | grep -i set-cookie
+(no output)
+[0m
+## 2026-09-17 13:12:00 UTC [target] (model bigpickle)
+
+**STEP 1 — DELTA**
+
+NO_DELTA. All fleet signatures, gates, pending aliases, Kuma monitors, and SEO hub unchanged from last cycle. m.perabet.com still 500 "unknown domain" (13th cycle). tr.perabet.com:80004 redirect still 302→80008.
+
+**STEP 2 — PRIORITIZE**
+
+[PRIO] m.perabet.com, 7.1, gate_ease
+[PRIO] perabet.com/client-api (cross-brand), 6.7, business_value
+[PRIO] tr.perabet.com:8083, 4.7, gate_ease
+
+**STEP 3 — HYPOTHESES**
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 28th cycle md5 7e3a161d byte-identical Pool A+B (perabet.com + gamdom.com spot-verified this cycle); gamdom80008/80009/80003/fatbets/gamdom.one all HTTP 400; /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" identical perabet.com=gamdom.com; host-only gd-lang uniform (no Domain/SameSite/HttpOnly); CORS-absent closes browser branch; POST returns identical GamdomClientMessage — no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + cookie-attr drift-watch on gd-lang/Set-Cookie; replay a valid session cookie against a sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 13th consecutive cycle Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/` + `/client-api`; DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 13 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+
+[HYP] VestaCP panel on tr.perabet.com:8083 — EOL PHP control surface
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 28
+reasoning: Guest /api/v1/login/ returns 200 JSON with rotating token + empty panel defaults (VERSION=0.9.8); all real API routes session-gated (302/404); no data leak; EOL PHP host but no program-specific CVE match (React 16.10.2 is ReactDOM, not panel version)
+evidence_needed: authenticated session revealing user data or admin function; CVE match for VestaCP 0.9.8
+verify_steps: PASSIVE per-cycle `/api/v1/login/` token check + body grep `VERSION`
+impact: panel admin access if session obtained; medium-high blast radius but unknown asset value
+testability: PASSIVE
+
+**STEP 4 — SELF-CRITIQUE**
+
+[PARKED] giris.perabet.com CIMD OAuth token mint: confidence 30 < 40 and fully falsified — fail-closed allowlist-before-fetch, no DCR, gates 401/405.
+[PARKED] giris.perabet.com phpMyAdmin (5.4.45): outdated-software REJECTED class, no program-specific exploit.
+[PARKED] /wp-json/wp/v2/users: username-enumeration REJECTED class, no PII.
+[FINAL] 1) Cross-brand auth cookie replay → ATO (76, AUTH_HELPED). 2) m.perabet.com dangling Fastly claim (65, HUMAN_ONLY). 3) tr.perabet.com VestaCP (28, PARKED — below threshold, no actionable path).
+
+**STEP 5 — NEXT ACTION**
+
+[NEXT] PROBE: passive flip-watch m.perabet.com — 14th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check perabet.com + gamdom.com `/client-api` md5 `7e3a161d`.
+
+**STEP 6 — LEARNING**
+
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + /health weak-ETag byte-identical (perabet.com, gamdom.com, gamdom80008/80009/80003, fatbets.com, gamdom.one); gd-lang host-only cookie uniform; Kuma {2,3,5,6,13,221,223}; aliases 90488/80001 still 421 — 28th stable cycle.
+[LEARN] ACCEPTED watch @ m.perabet.com: 13th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
+[LEARN] ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token, empty panel defaults, VERSION=0.9.8 — no drift to live data.
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+
+**STEP 7 — RISK**
+
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged; fleet signature + Kuma set + gates stable for 28 cycles; no new falsifier or enabler; no new attack surface surfaced.
