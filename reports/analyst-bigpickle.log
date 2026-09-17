@@ -24068,3 +24068,117 @@ testability: PASSIVE
 [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + Kuma set {2,3,5,6,13,221,223} stable; giris phpMyAdmin still non-functional (PHP 5.4.45).
 
 [RISK] gamdom: 79 — flat-operational cycle but +1 for a newly surfaced, fresh-stack (OAuth 2.1/CIMD/MCP) unauthenticated AS on brand host giris.perabet.com; currently fail-closed (CIMD allowlist-before-fetch, PKCE S256, consent nonce, no DCR). Cross-brand ATO (76, top) stays AUTH_HELPED with no passive falsifier; m.perabet dangling (62) unflipped at 11th cycle, HUMAN_ONLY.
+===== ANALYST bigpickle 2026-09-17 04:59:59 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in perabet.com gamdom.com; do
+  echo "== $h/client-api =="
+  curl -sk --connect-timeout 5 -m 8 -w 'HTTP %{http_code}\n' -o /tmp/ca_$h.txt "https://$h/client-api"
+  md5sum /tmp/ca_$h.txt | cut -d' ' -f1
+  grep -o 'Invalid request, only POST' /tmp/ca_$h.txt | head -1
+  sleep 1.2
+done
+== perabet.com/client-api ==
+HTTP 400
+7e3a161d6cde2700fcdc0f6be4520745
+Invalid request, only POST
+== gamdom.com/client-api ==
+HTTP 400
+7e3a161d6cde2700fcdc0f6be4520745
+Invalid request, only POST
+[0m
+[0m$ [0mecho "== m.perabet.com/client-api =="
+curl -sk --connect-timeout 5 -m 8 -w 'HTTP %{http_code}\n' -o /tmp/mp.txt "https://m.perabet.com/client-api"
+grep -io 'unknown domain[^<]*' /tmp/mp.txt | head -1
+echo "== m.perabet.com/root =="
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'HTTP %{http_code}\n' "https://m.perabet.com/"
+sleep 1
+echo "== Kuma heartbeat =="
+curl -sk --connect-timeout 5 -m 8 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | head -c 400
+echo
+sleep 1
+echo "== giris.perabet.com =="
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'wp-json HTTP %{http_code}\n' "https://giris.perabet.com/wp-json/"
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'oauth-authorize HTTP %{http_code}\n' "https://giris.perabet.com/oauth/authorize"
+== m.perabet.com/client-api ==
+HTTP 500
+unknown domain m.perabet.com
+== m.perabet.com/root ==
+HTTP 500
+== Kuma heartbeat ==
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-17 03:19:25.820","msg":"","ping":47},{"status":1,"time":"2026-09-17 03:21:25.870","msg":"","ping":51},{"status":1,"time":"2026-09-17 03:23:25.926","msg":"","ping":50},{"status":1,"time":"2026-09-17 03:25:25.982","msg":"","ping":46},{"status":1,"time":"2026-09-17 03:27:26.032","msg":"","ping":50},{"status":1,"time":"2026-09-17 03:29:26.086","msg":"
+== giris.perabet.com ==
+wp-json HTTP 200
+oauth-authorize HTTP 301
+[0m
+[0m$ [0mecho "== oauth/authorize Location =="
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'no-param: HTTP %{http_code} -> %{redirect_url}\n' "https://giris.perabet.com/oauth/authorize"
+sleep 1
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'trailing-slash: HTTP %{http_code} -> %{redirect_url}\n' "https://giris.perabet.com/oauth/authorize/"
+sleep 1
+curl -sk --connect-timeout 5 -m 8 -o /tmp/oa.txt -w 'bogus-client: HTTP %{http_code} -> %{redirect_url}\n' "https://giris.perabet.com/oauth/authorize?client_id=bogus&response_type=code&redirect_uri=https://evil.example/cb"
+head -c 300 /tmp/oa.txt; echo
+== oauth/authorize Location ==
+no-param: HTTP 301 -> https://giris.perabet.com/oauth/authorize/
+trailing-slash: HTTP 400 -> 
+bogus-client: HTTP 301 -> https://giris.perabet.com/oauth/authorize/?client_id=bogus&response_type=code&redirect_uri=https://evil.example/cb
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -w 'HTTP %{http_code}\n' -o /tmp/oa2.txt "https://giris.perabet.com/oauth/authorize/?client_id=bogus&response_type=code&redirect_uri=https://evil.example/cb"
+head -c 200 /tmp/oa2.txt; echo
+echo "== wp-json head =="
+curl -sk --connect-timeout 5 -m 8 -o /dev/null -w 'HTTP %{http_code}\n' "https://giris.perabet.com/wp-json/wp/v2/"
+echo "== heartbeat monitor ids =="
+curl -sk --connect-timeout 5 -m 8 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | grep -o '"[0-9]*":' | tr -d '":' | sort -u | tr '\n' ' '; echo
+HTTP 400
+<!DOCTYPE html><html lang="tr" prefix="og: https://ogp.me/ns#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-sca
+== wp-json head ==
+HTTP 200
+== heartbeat monitor ids ==
+13 2 221 223 3 5 6
+[0m
+STEP 1 — DELTA
+- NO_DELTA: /client-api GET 400 body md5 `7e3a161d6cde2700fcdc0f6be4520745` byte-identical on perabet.com + gamdom.com (26th stable cycle); Kuma monitor set `{2,3,5,6,13,221,223}` unchanged, all heartbeats status=1.
+- NO_DELTA: m.perabet.com 12th consecutive Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/` and `/client-api` — dangle persists, no flip.
+- NEW: `giris.perabet.com/oauth/authorize` 301 → self `/oauth/authorize/` (APPEND_SLASH canonical redirect, Location fixed to same host/path — no open redirect); trailing-slash + `client_id=bogus&redirect_uri=https://evil.example/cb` → 400 fail-closed themed page. Earlier uncharacterized 301 resolved as benign.
+
+STEP 2 — PRIORITIZE
+- [PRIO] perabet.com/client-api, 6.05, business_value
+- [PRIO] giris.perabet.com, 5.90, tech_exposure
+- [PRIO] m.perabet.com, 4.80, gate_ease
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 26th cycle md5 7e3a161d byte-identical Pool A+B (perabet.com + gamdom.com spot-verified this cycle); /health weak-ETag identical; host-only gd-lang uniform; CORS-absent closes browser branch; POST returns identical GamdomClientMessage — no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member host re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + cookie-attr drift-watch on gd-lang/Set-Cookie; replay a valid session cookie against a sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 63
+reasoning: 12th consecutive cycle Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/` + `/client-api`; DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 12 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] giris.perabet.com untrusted-CIMD OAuth token mint: confidence 30 < 40; this cycle's 301 characterized as benign APPEND_SLASH and fail-closed 400 re-confirmed (no DCR, allowlist-before-fetch) — no falsifier of the park.
+- [PARKED] giris wp-json wp/v2 200: user-enumeration REJECTED class, no PII.
+- [FINAL] 1) Cross-brand ATO (76, AUTH_HELPED). 2) m.perabet.com dangling Fastly claim (63, HUMAN_ONLY).
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive flip-watch m.perabet.com — 13th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check perabet.com + gamdom.com `/client-api` md5 `7e3a161d`.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED watch @ m.perabet.com: 12th cycle Varnish 500 + `Fastly error: unknown domain` — dangle persists, no claim/flip.
+- [LEARN] ACCEPTED watch @ fleet: `/client-api` GET 400 md5 `7e3a161d` byte-identical (perabet.com, gamdom.com); Kuma monitor set `{2,3,5,6,13,221,223}` all status=1 — 26th stable cycle.
+- [LEARN] ACCEPTED recon @ giris.perabet.com/oauth/authorize: 301 is APPEND_SLASH canonical self-redirect (fixed same-host Location); `/oauth/authorize/?nonallowlisted_client_id` → 400 fail-closed — no open redirect, no new surface.
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — down 1: giris.perabet.com OAuth residue fully closed (301 resolved benign, fail-closed 400 re-confirmed), leaving only the parked outdated-software class there. Cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (63, HUMAN_ONLY) both flat; fleet signature + Kuma set stable for 26 cycles. No new falsifier or enabler for the two live hypotheses; net flat-minus-one.

@@ -533,3 +533,7 @@ https://gamdom.com/client-api` -> HTTP 400
 
 ## 2026-09-17 00:06:39 UTC
 
+
+## 2026-09-17 05:00:02 UTC
+https://tableau-admin.teamgamdom.com/api/3.21/serverInfo -> 200 len=?
+https://tableau-admin.teamgamdom.com$p -> ERR <urlopen error [Errno -2] Name or service not know

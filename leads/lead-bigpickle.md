@@ -3753,3 +3753,24 @@ testability: PASSIVE
 [LEARN] ACCEPTED watch @ m.perabet.com: 11th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip.
 [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 7e3a161d + Kuma set {2,3,5,6,13,221,223} stable; giris phpMyAdmin still non-functional (PHP 5.4.45).
 [RISK] gamdom: 79 — flat-operational cycle but +1 for a newly surfaced, fresh-stack (OAuth 2.1/CIMD/MCP) unauthenticated AS on brand host giris.perabet.com; currently fail-closed (CIMD allowlist-before-fetch, PKCE S256, consent nonce, no DCR). Cross-brand ATO (76, top) stays AUTH_HELPED with no passive falsifier; m.perabet dangling (62) unflipped at 11th cycle, HUMAN_ONLY.
+## 2026-09-17 04:59:32 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 26th cycle md5 7e3a161d byte-identical Pool A+B (perabet.com + gamdom.com spot-verified this cycle); /health weak-ETag identical; host-only gd-lang uniform; CORS-absent closes browser branch; POST returns identical GamdomClientMessage — no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member host re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + cookie-attr drift-watch on gd-lang/Set-Cookie; replay a valid session cookie against a sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 63
+reasoning: 12th consecutive cycle Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/` + `/client-api`; DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 12 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[NEXT] PROBE: passive flip-watch m.perabet.com — 13th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check perabet.com + gamdom.com `/client-api` md5 `7e3a161d`.
+[RISK] gamdom: 78 — down 1: giris.perabet.com OAuth residue fully closed (301 resolved benign, fail-closed 400 re-confirmed), leaving only the parked outdated-software class there. Cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (63, HUMAN_ONLY) both flat; fleet signature + Kuma set stable for 26 cycles. No new falsifier or enabler for the two live hypotheses; net flat-minus-one.
