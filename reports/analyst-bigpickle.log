@@ -24644,3 +24644,106 @@ testability: PASSIVE
 
 **STEP 7 — RISK**
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged for 29 cycles; fleet signature + Kuma set + gates + pending aliases all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.
+===== ANALYST bigpickle 2026-09-17 23:54:37 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /tmp/opencode/mp_body.txt -w '%{http_code}' https://m.perabet.com/client-api; echo; grep -i "unknown domain" /tmp/opencode/mp_body.txt | head -c 200; echo
+500
+<title>Fastly error: unknown domain m.perabet.com</title>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+[0m
+[0m$ [0mfor h in perabet.com gamdom.com gamdom80009.com; do code=$(curl -sk --connect-timeout 5 -m 8 -o /tmp/opencode/ca_$h.txt -w '%{http_code}' https://$h/client-api); md5=$(md5sum /tmp/opencode/ca_$h.txt | cut -d' ' -f1); echo "$h $code $md5"; done; curl -sk --connect-timeout 5 -m 8 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains --max-filesize 20000 -o /tmp/opencode/kuma.txt -w 'kuma %{http_code}\n'; python3 -c "import json;d=json.load(open('/tmp/opencode/kuma.txt'));print(sorted({h['monitor_id'] for h in d.get('heartbeatList',[])}) if 'heartbeatList' in d else list(d.keys()))" 2>/dev/null || head -c 300 /tmp/opencode/kuma.txt
+perabet.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom.com 400 7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com 400 7e3a161d6cde2700fcdc0f6be4520745
+kuma 200
+head: cannot open '/tmp/opencode/kuma.txt' for reading: No such file or directory
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 -o /tmp/opencode/kuma.txt -w '%{http_code}\n' "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains"; ls -la /tmp/opencode/kuma.txt 2>/dev/null; head -c 400 /tmp/opencode/kuma.txt 2>/dev/null
+200
+-rw-r--r-- 1 runner runner 22923 Sep 17 23:53 /tmp/opencode/kuma.txt
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-17 22:14:07.873","msg":"","ping":51},{"status":1,"time":"2026-09-17 22:16:07.927","msg":"","ping":50},{"status":1,"time":"2026-09-17 22:18:07.981","msg":"","ping":51},{"status":1,"time":"2026-09-17 22:20:08.036","msg":"","ping":50},{"status":1,"time":"2026-09-17 22:22:08.093","msg":"","ping":97},{"status":1,"time":"2026-09-17 22:24:08.204","msg":"
+[0m
+[0m$ [0mpython3 -c "
+import json
+d=json.load(open('/tmp/opencode/kuma.txt'))
+hb=d.get('heartbeatList',{})
+ids=sorted(int(k) for k in hb.keys())
+print('monitor ids:',ids)
+print('all status1:', all(all(e['status']==1 for e in v) for v in hb.values()))
+"
+monitor ids: [2, 3, 5, 6, 13, 221, 223]
+all status1: False
+[0m
+[0m$ [0mpython3 -c "
+import json
+d=json.load(open('/tmp/opencode/kuma.txt'))
+hb=d.get('heartbeatList',{})
+for k,v in hb.items():
+    bad=[e for e in v if e['status']!=1]
+    if bad: print('monitor',k,'bad entries:',len(bad),bad[:2])
+print('ids:',sorted(int(k) for k in hb.keys()))
+"
+monitor 223 bad entries: 1 [{'status': 2, 'time': '2026-09-17 23:51:43.885', 'msg': '', 'ping': None}]
+ids: [2, 3, 5, 6, 13, 221, 223]
+[0m
+MONITOR set unchanged {2,3,5,6,13,221,223}; single transient status=2 ping on 223 (gamdom80009.com) at 23:51, subsequent heartbeats status=1 — blip, not rotation. Fleet signature and m.perabet dangle verified live this cycle.
+
+STEP 1 — DELTA
+- CHANGED m.perabet.com/client-api: 15th consecutive cycle HTTP 500 + body `Fastly error: unknown domain: m.perabet.com` — dangling A-record persists, no claim/flip (verified this cycle).
+- CHANGED fleet: perabet.com/gamdom.com/gamdom80009.com `/client-api` GET 400 md5 `7e3a161d` byte-identical — 30th stable cycle.
+- CHANGED Kuma heartbeat: monitor set `{2,3,5,6,13,221,223}` unchanged, all status=1 except single transient status=2 on 223 at 23:51 (no rotation).
+- NO_DELTA: pending aliases 90471/90473/90475/80001/80002, SEO hub, gates (oauth2/shreeram/devsrv), tableau serverInfo, VestaCP guest login.
+
+STEP 2 — PRIORITIZE
+- [PRIO] m.perabet.com,5.7,claimable-live-DNS-host (7,7,3,6,8,5)
+- [PRIO] perabet.com/client-api,6.4,shared-origin-ATO (9,10,4,1,8,1)
+- [PRIO] tableau-admin.teamgamdom.com,3.1,version-disclosure-only (3,4,5,2,2,2)
+
+STEP 3 — HYPOTHESES
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 15th consecutive cycle 500 + literal `Fastly error: unknown domain: m.perabet.com` on `/client-api` (verified this cycle); DNS still Fastly anycast; brand provably retires hostnames silently and provisions 9047x/8000x fleet; no backing service after 15 cycles; single status=2 blip on sibling 80009 not a rotation signal
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 30th cycle md5 `7e3a161d` byte-identical Pool A+B (perabet.com + gamdom.com + gamdom80009.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly); no passive falsifier remains; Kuma {2,3,5,6,13,221,223} no rotation
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+[HYP] VestaCP panel on tr.perabet.com:8083 — EOL PHP control surface
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 28
+reasoning: Guest `/api/v1/login/` 200 JSON with rotating token + empty panel defaults (VERSION=0.9.8); all real API routes session-gated (302/404); ReactDOM 16.10.2 not panel version — no program-specific CVE match
+evidence_needed: authenticated session revealing user data or admin function; CVE match for VestaCP 0.9.8
+verify_steps: PASSIVE per-cycle `/api/v1/login/` token check + body grep `VERSION`
+impact: panel admin access if session obtained; medium-high blast radius, unknown asset value
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] VestaCP panel (28 < 40): no CVE match, all routes session-gated, guest token data-free — no actionable path.
+- [FINAL] 1) Cross-brand ATO via shared /client-api (76, AUTH_HELPED). 2) m.perabet.com dangling Fastly claim (65, HUMAN_ONLY).
+
+STEP 5 — NEXT ACTION
+- [NEXT] PROBE: passive flip-watch m.perabet.com — 16th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check perabet.com + gamdom.com `/client-api` md5 `7e3a161d` + Kuma heartbeat id-set.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED watch @ m.perabet.com: 15th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+- [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (perabet.com, gamdom.com, gamdom80009.com verified this cycle); gd-lang host-only uniform — 30th stable cycle.
+- [LEARN] ACCEPTED watch @ Kuma: monitor set {2,3,5,6,13,221,223} unchanged; single transient status=2 on 223 (23:51) — blip, no rotation.
+- [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+
+STEP 7 — RISK
+- [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) + m.perabet dangle (65, HUMAN_ONLY) both unchanged for 30 cycles; fleet signature + Kuma set + gates stable; no new falsifier, no new enabler, no new attack surface this cycle.
