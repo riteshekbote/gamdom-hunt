@@ -48,3 +48,6 @@
   - | Q6 Not always-rejected? | YES — internal service exposure is valid |
   - **Verdict: VALID**
   - | 5 | Internal monitoring stack (grafana/prometheus/vault/clickhouse) | **VALID** | 7.5 | Report now |
+
+- 1 lead(s) marked VALID at 2026-09-18 12:21:59 UTC
+  - | 5 | Internal monitoring stack (grafana/prometheus/vault/clickhouse) | **VALID** | 7.5 |
