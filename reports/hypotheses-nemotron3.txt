@@ -1,9 +1,6 @@
-## 2026-09-18 13:07:25 UTC [target] (model nemotron3)
-[NEW] m.perabet.com: 13th consecutive cycle Varnish 500 "Fastly error: unknown domain" on root + /client-api — dangling Fastly A-record persists unclaimed (HUMAN_ONLY takeover vector)
-[NEW] tr.perabet.com:8083/api/v1/login/: rotating guest token per-request + full VestaCP config (VERSION=0.9.8, PHP=EOL, VESTA_CERTIFICATE=admin:giris.perabet.com) — pre-auth API surface unchanged
-[NEW] tableau-admin.teamgamdom.com/api/3.21/serverInfo: unauthenticated JSON version disclosure (productVersion 2025.1.11, build 20251.25.1210.1815) confirmed over 10+ cycles
-[NEW] oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5) confirmed
-[NEW] perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin (4 brands / 25+ hostnames)
+## 2026-09-18 17:14:11 UTC [target] (model nemotron3)
+[CHANGED] m.perabet.com: 13th consecutive cycle Varnish 500 "Fastly error: unknown domain" on root + /client-api — dangling Fastly A-record persists unclaimed (HUMAN_ONLY takeover vector)
+[CHANGED] tr.perabet.com:8083/api/v1/login/: rotating guest token per-request + full VestaCP config (VERSION=0.9.8, PHP=EOL, VESTA_CERTIFICATE=admin:giris.perabet.com) — pre-auth API surface unchanged
 [CHANGED] Starlette pool signature stable 22nd cycle: /client-api md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A + Pool B — 4 brands / 25+ hostnames
 [CHANGED] Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
 [CHANGED] Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
@@ -11,7 +8,7 @@
 [CHANGED] SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
 [PRIO] m.perabet.com,8.90,attack_surface=10,business_value=7,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=9
 [PRIO] tr.perabet.com:8083,8.70,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=9
-[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,8.45,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=
+[PRIO] tableau-admin.teamgamdom.com/api/3.21/serverInfo,8.45,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=9
 [PRIO] perabet.com/client-api,7.65,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=9
 [PRIO] oauth2-proxy.teamgamdom.com/oauth2/auth,7.15,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=8,freshness=8
 [PRIO] grafana.teamgamdom.com,7.50,attack_surface=8,business_value=9,tech_exposure=8,gate_ease=3,cloud_surface=9,freshness=7
@@ -59,8 +56,4 @@ testability: PASSIVE
 [LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
 [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 [LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
-[LEARN] ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical `GamdomClientMessage` — 10th live mirror sharing origin
-[LEARN] ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical `GamdomClientMessage` — 11th live mirror sharing origin
-[LEARN] ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical `GamdomClientMessage` — 9th live mirror sharing origin
-[LEARN] ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical `GamdomClientMessage` — origin backend confirmed
 [RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
