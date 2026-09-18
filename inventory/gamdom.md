@@ -1029,3 +1029,8 @@ www.gamdom.com
 - CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
 - CHANGED gamdommirrors.com Kuma status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
 - CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+
+## 2026-09-18 22:17:11 UTC
+- NEW gamdom80007.com (7th mirror): same Fastly origin, byte-identical app + POST-only /client-api (verified 200 root / 400 GET /client-api / 400 POST /client-api).
+- NEW gamdom4567.com identified as the real CNAME origin behind both gamdom8000x mirrors (root 404, /client-api 400) — exposes the true upstream behind the clone aliases.
+- CHANGED gamdommirrors.com is Uptime **Kuma** (self-hosted, behind Fastly/Varnish), NOT UptimeRobot; status page slug `gamdom-domains` publishes 7 monitors + 24h heartbeats; incidents REST route in Kuma is han

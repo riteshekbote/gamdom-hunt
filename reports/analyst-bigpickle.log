@@ -25383,3 +25383,443 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 32/18 cycles; fleet signature, Kuma monitor set, gates, pending aliases, SEO hub all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.
+===== ANALYST bigpickle 2026-09-18 22:17:11 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/ 2>/dev/null && echo "---" && ls -la /home/runner/work/gamdom-hunt/gamdom-hunt/art/ 2>/dev/null
+total 552
+drwxr-xr-x 12 runner runner   4096 Sep 18 22:15 .
+drwxr-xr-x  3 runner runner   4096 Sep 18 22:15 ..
+drwxr-xr-x  7 runner runner   4096 Sep 18 22:15 .git
+drwxr-xr-x  3 runner runner   4096 Sep 18 22:15 .github
+-rw-r--r--  1 runner runner   1691 Sep 18 22:15 README.md
+-rw-r--r--  1 runner runner     32 Sep 18 22:15 analyst-out.txt
+-rw-r--r--  1 runner runner 226801 Sep 18 22:15 analyst-prompt.txt
+-rw-r--r--  1 runner runner 223020 Sep 18 22:15 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 leads
+-rw-r--r--  1 runner runner  22920 Sep 18 22:15 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 reports
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 18 22:15 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 scripts
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 triage
+---
+[0m
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/scope.yml; echo "===LEADS==="; ls /home/runner/work/gamdom-hunt/gamdom-hunt/leads/; echo "===SCRIPTS==="; ls /home/runner/work/gamdom-hunt/gamdom-hunt/scripts/
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+===LEADS===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+===SCRIPTS===
+sync-issues.py
+[0m
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/state_bigpickle.json /home/runner/work/gamdom-hunt/gamdom-hunt/analyst-out.txt 2>/dev/null; echo; echo "===LEAD bigpickle==="; head -60 /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-bigpickle.md
+{"phase": "POC", "target": "api"}[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/gamdom-hunt/gamdom-hunt/ 2>/dev/null && echo "---" && ls -la /home/runner/work/gamdom-hunt/gamdom-hunt/art/ 2>/dev/null
+total 552
+drwxr-xr-x 12 runner runner   4096 Sep 18 22:15 .
+drwxr-xr-x  3 runner runner   4096 Sep 18 22:15 ..
+drwxr-xr-x  7 runner runner   4096 Sep 18 22:15 .git
+drwxr-xr-x  3 runner runner   4096 Sep 18 22:15 .github
+-rw-r--r--  1 runner runner   1691 Sep 18 22:15 README.md
+-rw-r--r--  1 runner runner     32 Sep 18 22:15 analyst-out.txt
+-rw-r--r--  1 runner runner 226801 Sep 18 22:15 analyst-prompt.txt
+-rw-r--r--  1 runner runner 223020 Sep 18 22:15 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 leads
+-rw-r--r--  1 runner runner  22920 Sep 18 22:15 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 reports
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 18 22:15 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 scripts
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 18 22:15 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 18 22:15 triage
+---
+[0m
+[0m$ [0mcat /home/runner/work/gamdom-hunt/gamdom-hunt/scope.yml; echo "===LEADS==="; ls /home/runner/work/gamdom-hunt/gamdom-hunt/leads/; echo "===SCRIPTS==="; ls /home/runner/work/gamdom-hunt/gamdom-hunt/scripts/
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+===LEADS===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+===SCRIPTS===
+sync-issues.py
+[0m
+
+===LEAD bigpickle===
+## 2026-09-03 16:43:31 UTC [target] (model bigpickle)
+[HYP] Mirror-domains share wallet/auth/API trust boundary -> cross-domain ATO via client-api
+class: AUTH
+asset: gamdom80006.com /client-api (and gamdom.eu, gamdom.io, gamdom.vip, gamdom.win)
+confidence: 52
+reasoning: All 7 enumerated mirror hosts serve byte-identical casino app, identical CSP (frame-ancestors 'self' https://*.faucetcrypto.com), nginx/Varnish, and identical POST-only `/client-api` proxy (400 "only POST" on every path incl /v1 /v2 /health /graphql). UptimeRobot status page lists them as one "Gamdom Official Domains" account group. Live probes confirm corporate control; sharing implies a single upstream API/identity origin.
+evidence_needed: Two mirrors resolving to distinct upstream; or a POST to one mirror /client-api returning a session/token usable on another mirror; or browser-context CSRF (since frame-ancestors allows faucetcrypto subdomains) reaching /client-api cross-origin.
+verify_steps: Read-only first — GET /client-api and / on all mirrors (done, all 200/400). Requires AUTH_HELPED/HUMAN: authenticate on one mirror, confirm the auth cookie/session is honored by the others' /client-api. Passive only: DNS A/AAAA resolution comparison of mirrors vs main (canonical CDN).
+impact: Cross-domain account/session takeover surface if identity is shared; attacker-controlled persistence for phishing via lookalike mirrors (medium-high).
+testability: HUMAN_ONLY
+[HYP] UptimeRobot status-page product on gamdommirrors.com has write/incident or admin interface reachable without auth
+class: MISCONFIG
+asset: gamdommirrors.com /api/status-page/gamdom-domains (and /api/badge/, /api/status-page/heartbeat/)
+confidence: 40
+reasoning: gamdommirrors.com is a dedicated status subproduct NOT sharing the casino /client-api proxy (root returns SPA, /client-api returns SPA page not the casino 400). It exposes UptimeRobot statuspage REST: /api/status-page/<slug> returns full monitor config JSON; heartbeat endpoints return empty. This is a distinct, thinner attack surface with its own admin/threshold API that may lack auth if exposed.
+evidence_needed: Presence of authless write/mutation endpoints (e.g. POST /api/status-page/.../incidents, POST /api/monitor/, /api/push/) that accept incident text or monitor toggles; or an admin panel hidden path returning 200 with controls.
+verify_steps: Passive GET enumeration of /api/status-page/*, /api/badge/*, /api/doc/* (read-only) to map the public keyspace; confirm no tokens/IDs exposed (heartbeat empty on 13,2). No POST yet (would be mutating third-party UptimeRobot SaaS — REJECTED class risk).
+impact: Would deface the official "Gamdom Official Domains" trust page (brand/SEO/trust impact; users routed to lookalike mirrors); low-med. Mostly inventory/trust value.
+testability: HUMAN_ONLY
+[HYP] /client-api proxy reflects caller with insufficient input validation -> potential injection/SSRF on upstream (money-flow functions)
+class: OTHER
+asset: gamdom.com /client-api
+confidence: 45
+reasoning: /client-api is a catch-all POST proxy (400 "only POST" for all paths incl /v1, /v2, /health, /graphql, /openapi.json). Its request body format is not statically recoverable from the minified bundle; bundle shows an api factory (o.kT with base "/client-api") that calls methods by action name. If the proxy forwards an attacker-controlled subpath/payload to an upstream identity/wallet service, classic SSRF-on-proxy or mass-assignment-by-copy risks emerge.
+evidence_needed: POST to /client-api with a crafted body returning an upstream internal error/stack/truthy status that differs by injected subpath; or the bundle resolving the action->endpoint table.
+verify_steps: Passive: enumerate client-api behavior via status-code differential on GET/OPTIONS variants (done — all 400). No live POST until authorized; the necessary proof is a request that must include a valid session token to reach wallet/auth — REJECTED as no-auth-bypass-against-live-data. Await AUTHORIZED tester.
+impact: If a wallet/deposit_withdrawal/auth endpoint is reachable via /client-api without correct authorization checks -> fund theft or ATO (critical) — but currently unproven.
+testability: HUMAN_ONLY
+[NEXT] PROBE: GET (read-only) `https://gamdommirrors.com/api/status-page/gamdom-domains/incidents` to pull the historical incident object (UptimeRobot status page exposes past incidents; if any reference internal monitoring URLs/tokens/script tags they may leak upstream endpoints not otherwise published).
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POSt to live identity/wallet proxy is prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing.
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
+[LEARN] REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
+[RISK] gamdom: 58 reason: Expanded confirmed operating surface to 7 mirror domains sharing a single POST-only `/client-api` identity/wallet proxy; reliable high-value attack surface but no confirmed HIGH-class vuln this pass — best leads need authenticated, authorized POST testing against a scoped identity endpoint.
+## 2026-09-03 19:31:18 UTC [target] (model bigpickle)
+[NEW] gamdom80007.com (7th mirror): same Fastly origin, byte-identical app + POST-only /client-api (verified 200 root / 400 GET /client-api / 400 POST /client-api).
+[NEW] gamdom4567.com identified as the real CNAME origin behind both gamdom8000x mirrors (root 404, /client-api 400) — exposes the true upstream behind the clone aliases.
+[CHANGED] gamdommirrors.com is Uptime **Kuma** (self-hosted, behind Fastly/Varnish), NOT UptimeRobot; status page slug `gamdom-domains` publishes 7 monitors + 24h heartbeats; incidents REST route in Kuma is handled via SPA fallback (embedded in `/api/status-page/<slug>` which returned `incident:null`).
+[PRIO] gamdom4567.com,6.1,origin-of-mirror-clone-set (tech_exposure: reveals backend behind aliases; business: root of 8000x phishing-persistent surfaces)
+[PRIO] gamdom80007.com,6.0,fresh-7th-casino/mirror-asset (same /client-api surface as 80006)
+[PRIO] gamdommirrors.com,4.5,misconfig-status-admin (thin Kuma surface; mutating = 3rd-party/REJECTED)
+[HYP] Uptime Kuma instance on gamdommirrors.com exposes unauthenticated socket.io admin/mutation events
+class: MISCONFIG
+asset: gamdommirrors.com /socket.io (events login, setup, saveStatusPage, addMonitor, deleteMonitor)
+confidence: 38
+reasoning: Full Kuma frontend served; socket.io EIO=4 issues SID but Fastly load-balancing breaks session persistence so admin events not yet reachable; status page is published (public) and instances frequently leave `getMonitorList`/`saveStatusPage` reachable before auth. No login/setup gating observed in passive reads.
+evidence_needed: A persistent socket session returning non-null for `getMonitorList`/`needSetup`/`login` without valid admin token.
+verify_steps: Re-run socket.io handshake and POST `42["login","",""]` then poll on a single consistent edge (pin Host/SNI), not cross-pool; or websocket upgrade with EIO=4 — read-only authentication-status checks only. No mutation of third-party Kuma data.
+impact: Deface the official "Gamdom Official Domains" trust page / pivot to monitor configs; low-med.
+testability: HUMAN_ONLY
+[HYP] gamdom4567.com is a shadow origin: identical /client-api to gamdom8000x and main mirrors, revealing a shared upstream identity/wallet origin masking per-region clones
+class: OTHER
+asset: gamdom4567.com /client-api (origin behind gamdom80006/80007)
+confidence: 50
+reasoning: gamdom80006 and gamdom80007 both CNAME -> gamdom4567.com -> Fastly (151.101.x.72); gamdom4567 root returns 404 while 8000x return 200 casino app, i.e. 4567 is the shared reverse-proxy/backend for the clone set, not a user-facing host. Identical POST-only /client-api (400) implies shared upstream wallet/identity boundary.
+evidence_needed: Confirming gamdom4567 handles upstream origin requests for both clones (via Host header on 4567 returning app or an X-Forwarded bypass differential); or showing a session/token issued on one mirror is honored on 4567 and vice-versa.
+verify_steps: Passive — DNS comparisons (done: both CNAME to 4567); compare response headers (etag/Vary) between gamdom80006 and gamdom80007 on / to detect identical static/CDN cache keys -> same origin. No auth-bypass testing.
+impact: Establishes single trust boundary across all 7 mirrors (and the real origin), making cross-domain session/CSRF from any mirror valid for all; medium-high surface characterisation.
+testability: HUMAN_ONLY
+[PARKED] Uptime Kuma unauthenticated admin (conf 38): socket.io admin events not reachable through Fastly pool; no mutation allowed on 3rd-party SaaS; below 40 threshold — parked pending a persistent-session HUMAN test.
+[PARKED] gamdom4567.cd shadow-origin SSRF/mass-assignment (conf 50, no verify): proving shared-boundary requires authenticated POST, which is REJECTED class.
+[0m
+Running this cycle's read-only probes (flip-watch + fleet spot-check), consistent with prior cycles.
+[0m$ [0mecho "=== m.perabet.com flip-watch ==="; curl -sk --connect-timeout 5 -m 8 -w 'HTTP:%{http_code}\n' https://m.perabet.com/client-api 2>&1 | head -c 600; echo; echo "=== root ==="; curl -sk --connect-timeout 5 -m 8 -w 'HTTP:%{http_code}\n' https://m.perabet.com/ 2>&1 | head -c 400
+=== m.perabet.com flip-watch ===
+
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+<p>Details: cache-chi-kmdw8640086-CHI (151.101.131.52)</p></body></html>HTTP:500
+
+=== root ===
+
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+<p>Details: cache-chi-kmdw8640060-CHI (151.101.67.52)</p></body></html>HTTP:500
+[0m
+m.perabet.com still dangling (Varnish 500, `unknown domain`, CHI 151.101.x.52). Now fleet + Kuma spot-check:
+[0m$ [0mfor h in gamdom.com perabet.com gamdom80009.com; do body=$(curl -sk --connect-timeout 5 -m 8 "https://$h/client-api" 2>&1); code=$(curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' "https://$h/client-api" 2>&1); echo "$h HTTP:$code md5:$(printf '%s' "$body" | md5sum | cut -d' ' -f1)"; sleep 1; done
+gamdom.com HTTP:400 md5:7e3a161d6cde2700fcdc0f6be4520745
+perabet.com HTTP:400 md5:7e3a161d6cde2700fcdc0f6be4520745
+gamdom80009.com HTTP:400 md5:7e3a161d6cde2700fcdc0f6be4520745
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | head -c 1200; echo; echo "=== SEO hub 90471 count ==="; curl -sk --connect-timeout 5 -m 10 "https://gamdom-girisi.com/" 2>&1 | grep -o "gamdom90471.com" | wc -l
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-18 20:36:53.089","msg":"","ping":58},{"status":1,"time":"2026-09-18 20:38:53.159","msg":"","ping":89},{"status":1,"time":"2026-09-18 20:40:53.255","msg":"","ping":55},{"status":1,"time":"2026-09-18 20:42:53.316","msg":"","ping":62},{"status":1,"time":"2026-09-18 20:44:53.382","msg":"","ping":60},{"status":1,"time":"2026-09-18 20:46:53.448","msg":"","ping":58},{"status":1,"time":"2026-09-18 20:48:53.509","msg":"","ping":70},{"status":1,"time":"2026-09-18 20:50:53.587","msg":"","ping":56},{"status":1,"time":"2026-09-18 20:52:53.647","msg":"","ping":55},{"status":1,"time":"2026-09-18 20:54:53.706","msg":"","ping":68},{"status":1,"time":"2026-09-18 20:56:53.783","msg":"","ping":56},{"status":1,"time":"2026-09-18 20:58:53.844","msg":"","ping":54},{"status":1,"time":"2026-09-18 21:00:53.901","msg":"","ping":54},{"status":1,"time":"2026-09-18 21:02:53.982","msg":"","ping":161},{"status":1,"time":"2026-09-18 21:04:54.255","msg":"","ping":58},{"status":1,"time":"2026-09-18 21:06:54.316","msg":"","ping":59},{"status":1,"time":"2026-09-18 21:08:54.381","msg":"","ping":64},{"status":1,"time":"2026-09-18 21:10:54.453","msg":"","ping":58},{"stat
+=== SEO hub 90471 count ===
+17
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 10 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" 2>&1 | python3 -c "import sys,json; d=json.load(sys.stdin); print('monitor_ids:', sorted(int(k) for k in d['heartbeatList']))"; echo "=== pending aliases ==="; for h in gamdom90488.com gamdom80001.com gamdom90471.com; do code=$(curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' "https://$h/client-api" 2>&1); echo "$h HTTP:$code"; sleep 1; done
+monitor_ids: [2, 3, 5, 6, 13, 221, 223]
+=== pending aliases ===
+gamdom90488.com HTTP:421
+gamdom80001.com HTTP:421
+gamdom90471.com HTTP:421
+[0m
+[0m$ [0mfor f in nemotron3 mimo ling3 longcat laguna; do echo "=== lead-$f (tail) ==="; tail -12 /home/runner/work/gamdom-hunt/gamdom-hunt/leads/lead-$f.md 2>/dev/null; echo; done
+=== lead-nemotron3 (tail) ===
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+[LEARN] ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[LEARN] ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical `GamdomClientMessage` — 10th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical `GamdomClientMessage` — 11th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical `GamdomClientMessage` — 9th live mirror sharing origin
+[LEARN] ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical `GamdomClientMessage` — origin backend confirmed
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
+
+=== lead-mimo (tail) ===
+# Lead log (seed)
+
+=== lead-ling3 (tail) ===
+## 2026-09-17 00:03:27 UTC [target] (model ling3)
+## 2026-09-17 04:58:38 UTC [target] (model ling3)
+## 2026-09-17 09:54:37 UTC [target] (model ling3)
+## 2026-09-17 14:40:07 UTC [target] (model ling3)
+## 2026-09-17 18:33:39 UTC [target] (model ling3)
+## 2026-09-17 21:43:39 UTC [target] (model ling3)
+## 2026-09-17 23:53:39 UTC [target] (model ling3)
+## 2026-09-18 03:06:13 UTC [target] (model ling3)
+## 2026-09-18 08:19:57 UTC [target] (model ling3)
+## 2026-09-18 13:01:23 UTC [target] (model ling3)
+## 2026-09-18 17:06:49 UTC [target] (model ling3)
+## 2026-09-18 19:41:20 UTC [target] (model ling3)
+
+=== lead-longcat (tail) ===
+## 2026-09-17 00:03:26 UTC [target] (model longcat)
+## 2026-09-17 04:58:35 UTC [target] (model longcat)
+## 2026-09-17 09:54:43 UTC [target] (model longcat)
+## 2026-09-17 14:40:06 UTC [target] (model longcat)
+## 2026-09-17 18:33:36 UTC [target] (model longcat)
+## 2026-09-17 21:43:41 UTC [target] (model longcat)
+## 2026-09-17 23:53:39 UTC [target] (model longcat)
+## 2026-09-18 03:06:15 UTC [target] (model longcat)
+## 2026-09-18 08:19:56 UTC [target] (model longcat)
+## 2026-09-18 13:01:19 UTC [target] (model longcat)
+## 2026-09-18 17:06:48 UTC [target] (model longcat)
+## 2026-09-18 19:41:17 UTC [target] (model longcat)
+
+=== lead-laguna (tail) ===
+## 2026-09-17 00:03:27 UTC [target] (model laguna)
+## 2026-09-17 04:58:37 UTC [target] (model laguna)
+## 2026-09-17 09:54:39 UTC [target] (model laguna)
+## 2026-09-17 14:40:05 UTC [target] (model laguna)
+## 2026-09-17 18:33:38 UTC [target] (model laguna)
+## 2026-09-17 21:43:37 UTC [target] (model laguna)
+## 2026-09-17 23:53:36 UTC [target] (model laguna)
+## 2026-09-18 03:06:12 UTC [target] (model laguna)
+## 2026-09-18 08:20:01 UTC [target] (model laguna)
+## 2026-09-18 13:01:27 UTC [target] (model laguna)
+## 2026-09-18 17:06:44 UTC [target] (model laguna)
+## 2026-09-18 19:41:22 UTC [target] (model laguna)
+[0m
+Fleet fully stable this cycle. Checking other agents' latest leads for new surface:
+[0m$ [0mfor h in gamdom80004.com gamdom80007.com gamdom80006.com; do loc=$(curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{redirect_url}' "https://$h/" 2>&1); echo "$h -> $loc"; sleep 1; done
+gamdom80004.com -> https://gamdom80008.com/
+gamdom80007.com -> https://gamdom80008.com/
+gamdom80006.com -> https://gamdom80009.com/
+[0m
+Checking a fresh passive angle — oauth2-proxy `rd` param handling:
+[0m$ [0mecho "=== rd=//evil.test ==="; curl -sk --connect-timeout 5 -m 8 -D - -o /dev/null "https://oauth2-proxy.teamgamdom.com/oauth2/start?rd=//evil.test" 2>&1 | grep -iE 'HTTP/|location|cookie' | head -8; sleep 1; echo "=== rd=/ok-internal ==="; curl -sk --connect-timeout 5 -m 8 -D - -o /dev/null "https://oauth2-proxy.teamgamdom.com/oauth2/start?rd=/profile" 2>&1 | grep -iE 'HTTP/|location|cookie' | head -8
+=== rd=//evil.test ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=0QXu7-OwR7IjE1Vo6tkDVx0-aedGZjgP4y-b856RN1c%3A%2F
+set-cookie: _oauth2_proxy_csrf=QEFaUjqjk6aqPaEj0K541N520cQwB2E_EyjNsqhdNTJX9-3awKdQgaCUYPhMxCmvxxZUlBhqrh72pg_qB2Vs6p4ERbswo5brr0cZ-FH4iA0B-eX4Y9_UQbg=|1789769795|__EgrzkXt5Q-ddvbBvBIjfQUHPU1c5U7XJBnRrEClhg=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+=== rd=/ok-internal ===
+HTTP/2 302 
+location: https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=696342781525-gf1piqd2ocgsgaiqifqbu1vc22khq227.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Foauth2-proxy.teamgamdom.com%2Foauth2%2Fcallback&response_type=code&scope=profile+email&state=_Xl8KIrP4QsfqOAUmktEN2Yo8Y77ZpnLLP0UOEXtUKU%3A%2Fprofile
+set-cookie: _oauth2_proxy_csrf=KIT79KFsH3f6uiyH4ZgL6KU9OTFVIgPow2rH9LmsUb52VolbDHpGg1gcK7FNSdG2po53n98Jc7kdDB0T4md0_1KolOZfqwobiAx4Cs7d03em1BqzSiI9VR4=|1789769796|fs-EobUev_YP4brjSsP26oPtjDuJxdyHVCcHaBq3so0=; Path=/; Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure
+[0m
+All probes complete. Fleet, mirrors, aliases, gates, and the SSO layer all stable. Compiling the structured analysis:
+
+---
+
+STEP 1 — DELTA
+- NO_DELTA fleet: `/client-api` md5 `7e3a161d` byte-identical on gamdom.com + perabet.com + gamdom80009.com (verified); Kuma monitor set `{2,3,5,6,13,221,223}` all status=1; SEO hub 17× gamdom90471; pending aliases 90488/80001/90471 all 421/TLS-NOMATCH; redirect chains 80004→80008, 80007→80008, 80006→80009 intact.
+- [CHANGED] oauth2-proxy.teamgamdom.com `rd` param: `?rd=//evil.test` → state collapses to `:/` (external rd rejected, default `/`); `?rd=/profile` → `:/profile` preserved — SSO open-redirect hypothesis falsified, fail-closed confirmed.
+- [CHANGED] m.perabet.com: 18th consecutive cycle Varnish 500 + literal `Fastly error: unknown domain: m.perabet.com` (edges cache-chi-kmdw8640086-CHI 151.101.131.52 / 151.101.67.52) — still dangling, no claim/flip.
+
+STEP 2 — PRIORITIZE
+- [PRIO] m.perabet.com,6.3,subdomain-takeover-on-live-DNS-brand-host (gate_ease 10, cloud 8 (Fastly), business 8)
+- [PRIO] perabet.com/client-api,5.2,cross-brand-ATO-via-shared-identity-origin (business 8, tech 6 (identity/auth))
+- [PRIO] tableau-admin.teamgamdom.com,5.1,unauth-tableau-version-disclosure (gate_ease 9 on /serverInfo)
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 33rd cycle GET 400 md5 `7e3a161d` byte-identical on gamdom.com + perabet.com + gamdom80009.com (all verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); clone-bundle shows auth transport = server-set same-origin cookie, no Bearer/localStorage; POST returns identical `GamdomClientMessage` on all member hosts; Kuma {2,3,5,6,13,221,223} all status=1; no passive falsifier remains after 33 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attribute drift-watch across member hostnames; once a real session exists (authorized scope), replay that cookie to the sibling host's /client-api and diff the GamdomClientMessage
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 18th consecutive cycle HTTP 500 + literal body `Fastly error: unknown domain: m.perabet.com` (271B, verified this cycle on two CHI edges 151.101.131.52/151.101.67.52); DNS still Fastly anycast; brand provably silences hostnames without de-provisioning DNS; no backing service after 18 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+
+[HYP] Domain-wide SSO cookie bucket on *.teamgamdom.com turns any single subdomain XSS into full SSO-gated service compromise
+class: AUTH
+asset: teamgamdom.com cookie bucket (grafana/prometheus/vault/clickhouse/tableau-admin/kargo behind oauth2-proxy)
+confidence: 48
+reasoning: `_oauth2_proxy_csrf` Set-Cookie `Domain=teamgamdom.com; Path=/; Max-Age=900; HttpOnly; Secure` re-confirmed this cycle on oauth2-proxy.teamgamdom.com (2 instances, same client_id 696342781525); state token = `<csrf>:<rd>` embedded in /oauth2/start 302; rd validation fail-closed (external rd collapses to `/`) so no open-redirect branch; post-auth session cookies land in the same parent-domain bucket readable/sendable by every *.teamgamdom.com host
+evidence_needed: any stored/reflected XSS on ANY *.teamgamdom.com hostname (none found to date across 20+ enumerated vhosts); or a non-HttpOnly session cookie in the bucket
+verify_steps: PASSIVE — continue fixture-wide XSS-sink free check on each teamgamdom vhost (all currently 401/302-gated); watch Set-Cookie attributes for HttpOnly removal post-auth
+impact: full compromise of SSO-gated observability/CI (grafana/vault/kargo/clickhouse/tableau-admin); high but chain-gated; no enabler found yet
+testability: PASSIVE (chain link unproven)
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] oauth2-proxy open-redirect via `rd`: falsified this cycle — external `rd=//evil.test` collapses to `/` in state; only same-host paths preserved; fail-closed.
+- [PARKED] tr.perabet.com:8083 VestaCP 0.9.8 / EOL PHP: REJECTED class (outdated software / known-vulnerable library without program-specific exploit); guest bootstrap all-empty; API tree session-gated.
+- [PARKED] tableau-admin version disclosure (2025.1.11): CVEs already patched on that build; informational only.
+- [FINAL] survivors: AUTH cross-brand replay (76, AUTH_HELPED) > MISCONFIG m.perabet dangle (65, HUMAN_ONLY). Domain-wide SSO cookie bucket (48) held as chain-context, not a standalone report.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive flip-watch m.perabet.com — 19th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223} + oauth2-proxy `rd` fail-closed recheck.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED watch @ m.perabet.com: 18th cycle Varnish 500 + `unknown domain` on both CHI edges — dangling persists, no claim/flip; confidence 65 maintained.
+- [LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: `rd=//evil.test` collapses to `/` in state, `rd=/profile` preserved — redirect destination whitelist fail-closed; SSO open-redirect branch closed.
+- [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com + gamdom80009.com verified); Kuma {2,3,5,6,13,221,223} all status=1; pending aliases 90488/80001/90471 421; SEO hub 17× 90471; redirect chains intact — 33rd stable cycle.
+- [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 18/33 cycles; fleet signature, Kuma monitor set, gates, redirect chains, pending aliases, SEO hub all stable; oauth2-proxy rd fail-closed removed the SSO open-redirect branch this cycle; no new falsifier was expected and none surfaced (restating prior cycle ± 0 given no new attack surface).

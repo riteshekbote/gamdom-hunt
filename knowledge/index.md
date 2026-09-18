@@ -453,3 +453,6 @@
 - 2026-09-18 ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (dfc567d6…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
 - 2026-09-18 ACCEPTED watch @ pending aliases + SEO hub: 90488/80001 still 421; hub still 17× 90471 — no provisioning event.
 - 2026-09-18 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+- 2026-09-18 REJECTED auth-bypass @ gamdom.com/client-api: blind POSt to live identity/wallet proxy is prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing.
+- 2026-09-18 ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
+- 2026-09-18 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
