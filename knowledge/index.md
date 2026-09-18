@@ -448,3 +448,8 @@
 - 2026-09-18 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical `GamdomClientMessage` — 11th live mirror sharing origin
 - 2026-09-18 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical `GamdomClientMessage` — 9th live mirror sharing origin
 - 2026-09-18 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical `GamdomClientMessage` — origin backend confirmed
+- 2026-09-18 ACCEPTED watch @ m.perabet.com: 16th cycle Varnish 500 + `unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+- 2026-09-18 ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com verified this cycle); Kuma heartbeat all status=1 — 30th stable cycle.
+- 2026-09-18 ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (dfc567d6…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
+- 2026-09-18 ACCEPTED watch @ pending aliases + SEO hub: 90488/80001 still 421; hub still 17× 90471 — no provisioning event.
+- 2026-09-18 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).

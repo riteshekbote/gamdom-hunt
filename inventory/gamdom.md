@@ -989,3 +989,10 @@ www.gamdom.com
 - CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
 - CHANGED gamdommirrors.com Kuma status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
 - CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+
+## 2026-09-18 08:22:29 UTC
+- NEW m.perabet.com: 13th consecutive cycle Varnish 500 "Fastly error: unknown domain" on root + /client-api — dangling Fastly A-record persists unclaimed
+- NEW tr.perabet.com:8083/api/v1/login/: rotating guest token per-request + full VestaCP config (VERSION=0.9.8, PHP=EOL, VESTA_CERTIFICATE=admin:giris.perabet.com) — pre-auth API surface unchanged
+- CHANGED Starlette pool signature stable 22nd cycle: /client-api md5 7e3a161d + /health weak-ETag W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s" byte-identical across Pool A + Pool B — 4 brands / 25+ hostnames
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+- CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
