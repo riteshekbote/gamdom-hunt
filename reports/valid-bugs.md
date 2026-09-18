@@ -31,3 +31,20 @@
   - | Q5 Novel | UNCERTAIN | Need to verify: (a) is token still valid? (b) was it reported? |
   - **Verdict: HOLD** — Requires verification: (1) Is the token active/valid? (2) Does it grant real API access? (3) Has it been previously reported? If valid and novel → VALID.
   - **Verdict: HOLD** — Requires verification: (1) Is the token valid/active? (2) What access does it grant? (3) Was it previously reported? If valid and novel → VALID.
+
+- 15 lead(s) marked VALID at 2026-09-18 07:38:55 UTC
+  - | Q2 Reachable? | YES — /client-api publicly reachable, requires valid session cookie to exploit |
+  - | Q6 Not always-rejected? | YES — cross-domain session replay is valid class |
+  - **Verdict: HOLD** — Needs authenticated cookie-replay test (gamdom80006→gamdom80007/client-api). If cross-host acceptance confirmed → VALID CVSS 8.1 High. Report via bugs.olivermaicher.eu.
+  - | Q5 Novel? | LIKELY YES — not previously reported in valid-bugs.md for kargo specifically |
+  - | Q6 Not always-rejected? | YES — internal API surface on scoped brand domain is valid |
+  - | Q7 Reasonable triager accept? | BORDERLINE — 405 alone is weak; needs GET/POST with valid auth to confirm data exposure |
+  - **Verdict: HOLD** — 405 confirms surface but no data leak passively. Needs auth probe to confirm actual data exposure. If authenticated endpoint leaks deployment data → VALID CVSS 5.3 Medium. Report v
+  - | Q5 Novel? | UNCERTAIN — previously marked VALID in valid-bugs.md (2026-09-12) |
+  - | Q6 Not always-rejected? | YES — OAuth misconfig is valid |
+  - | Q7 Reasonable triager accept? | YES — confirmed valid previously |
+  - | Q5 Novel? | UNCERTAIN — previously marked VALID in valid-bugs.md (2026-09-12) |
+  - | Q5 Novel? | LIKELY YES — not previously triaged in valid-bugs.md |
+  - | Q6 Not always-rejected? | YES — internal service exposure is valid |
+  - **Verdict: VALID**
+  - | 5 | Internal monitoring stack (grafana/prometheus/vault/clickhouse) | **VALID** | 7.5 | Report now |
