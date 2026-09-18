@@ -3920,3 +3920,22 @@ evidence_needed: authenticated session revealing user data or admin function; CV
 verify_steps: PASSIVE per-cycle `/api/v1/login/` token check + body grep `VERSION`
 impact: panel admin access if session obtained; medium-high blast radius, unknown asset value
 testability: PASSIVE
+## 2026-09-18 03:06:39 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 30th cycle md5 `7e3a161d` byte-identical Pool A+B (perabet.com + gamdom.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly); POST returns identical `GamdomClientMessage`; Kuma set {2,3,5,6,13,221,223} no rotation; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 16th consecutive cycle 500 + literal `unknown domain m.perabet.com` on `/client-api` (verified this cycle); DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 16 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY

@@ -435,3 +435,16 @@
 - 2026-09-17 ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (perabet.com, gamdom.com, gamdom80009.com verified this cycle); /health weak-ETag identical; Kuma heartbeat all status=1 — 29th stable cycle.
 - 2026-09-17 ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (3ef5bf97…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
 - 2026-09-17 ACCEPTED watch @ pending aliases + SEO hub: 90471/90473/90475/80001/80002 all 421; hub still 17× 90471 — no provisioning event.
+- 2026-09-18 ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- 2026-09-18 ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERSION=0.9.8); phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+- 2026-09-18 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+- 2026-09-18 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+- 2026-09-18 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+- 2026-09-18 ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+- 2026-09-18 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-18 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-18 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-18 ACCEPTED recon @ gamdom80008.com/client-api: POST returns identical `GamdomClientMessage` — 10th live mirror sharing origin
+- 2026-09-18 ACCEPTED recon @ gamdom80009.com/client-api: POST returns identical `GamdomClientMessage` — 11th live mirror sharing origin
+- 2026-09-18 ACCEPTED recon @ gamdom80003.com/client-api: POST returns identical `GamdomClientMessage` — 9th live mirror sharing origin
+- 2026-09-18 ACCEPTED recon @ gamdom4567.com/client-api: POST returns identical `GamdomClientMessage` — origin backend confirmed
