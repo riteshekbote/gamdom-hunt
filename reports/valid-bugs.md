@@ -51,3 +51,6 @@
 
 - 1 lead(s) marked VALID at 2026-09-18 12:21:59 UTC
   - | 5 | Internal monitoring stack (grafana/prometheus/vault/clickhouse) | **VALID** | 7.5 |
+
+- 1 lead(s) marked VALID at 2026-09-18 21:53:04 UTC
+  - **Verdict: HOLD** — Potential subdomain takeover on a Gamdom-operated brand domain. Needs scope confirmation from program: is perabet.com in scope? If yes, this is a valid HIGH finding. Read-only proo
