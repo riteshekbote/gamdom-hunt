@@ -25049,3 +25049,337 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged for 31 cycles; fleet signature, Kuma monitor set, gates, and pending aliases all stable; no new falsifier, enabler, or attack surface surfaced this cycle.
+===== ANALYST bigpickle 2026-09-18 19:44:47 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && cat scope.yml 2>/dev/null | head -50
+total 544
+drwxr-xr-x 12 runner runner   4096 Sep 18 19:41 .
+drwxr-xr-x  3 runner runner   4096 Sep 18 19:41 ..
+drwxr-xr-x  7 runner runner   4096 Sep 18 19:41 .git
+drwxr-xr-x  3 runner runner   4096 Sep 18 19:41 .github
+-rw-r--r--  1 runner runner   1691 Sep 18 19:41 README.md
+-rw-r--r--  1 runner runner     32 Sep 18 19:41 analyst-out.txt
+-rw-r--r--  1 runner runner 224755 Sep 18 19:41 analyst-prompt.txt
+-rw-r--r--  1 runner runner 220974 Sep 18 19:41 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 leads
+-rw-r--r--  1 runner runner  22725 Sep 18 19:41 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 reports
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 18 19:41 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 scripts
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 triage
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+[0m$ [0mcat state_bigpickle.json && echo "---" && cat analyst-out.txt && echo "---" && ls leads/ knowledge/ inventory/
+{"phase": "POC", "target": "api"}---
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && cat scope.yml 2>/dev/null | head -50
+total 544
+drwxr-xr-x 12 runner runner   4096 Sep 18 19:41 .
+drwxr-xr-x  3 runner runner   4096 Sep 18 19:41 ..
+drwxr-xr-x  7 runner runner   4096 Sep 18 19:41 .git
+drwxr-xr-x  3 runner runner   4096 Sep 18 19:41 .github
+-rw-r--r--  1 runner runner   1691 Sep 18 19:41 README.md
+-rw-r--r--  1 runner runner     32 Sep 18 19:41 analyst-out.txt
+-rw-r--r--  1 runner runner 224755 Sep 18 19:41 analyst-prompt.txt
+-rw-r--r--  1 runner runner 220974 Sep 18 19:41 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 leads
+-rw-r--r--  1 runner runner  22725 Sep 18 19:41 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 reports
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 reposcan-raw
+-rw-r--r--  1 runner runner   3194 Sep 18 19:41 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 scripts
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 18 19:41 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 18 19:41 triage
+programs:
+  gamdom:
+    name: Gamdom Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, gaming engines, wallets, APIs, user accounts, web/mobile applications, and domains operated by Gamdom"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+---
+inventory/:
+gamdom.md
+
+knowledge/:
+index.md
+
+leads/:
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-gamdom.md
+[0m
+[0m$ [0mtail -80 leads/lead-bigpickle.md
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+## 2026-09-18 08:21:29 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: GET 400 md5 `7e3a161d` byte-identical on gamdom.com + perabet.com this cycle (30th+); host-only gd-lang uniform (no Domain/SameSite/HttpOnly); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} no rotation
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 16th consecutive cycle 500 + literal `unknown domain m.perabet.com` on `/client-api` (verified this cycle); DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 16 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[HYP] VestaCP panel on tr.perabet.com:8083 — EOL PHP control surface
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 26
+reasoning: Guest `/api/v1/login/` 200 JSON with rotating token (dfc567d6… this cycle) + empty panel defaults (VERSION=0.9.8); all real API routes session-gated (302/404); ReactDOM 16.10.2 not panel version — no program-specific CVE match
+evidence_needed: authenticated session revealing user data or admin function; CVE match for VestaCP 0.9.8
+verify_steps: PASSIVE per-cycle `/api/v1/login/` token check + body grep VERSION
+impact: panel admin access if session obtained; medium-high blast radius, unknown asset value
+testability: PASSIVE
+[NEXT] PROBE: passive flip-watch m.perabet.com — 17th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+[LEARN] ACCEPTED watch @ m.perabet.com: 16th cycle Varnish 500 + `unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com verified this cycle); Kuma heartbeat all status=1 — 30th stable cycle.
+[LEARN] ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (dfc567d6…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
+[LEARN] ACCEPTED watch @ pending aliases + SEO hub: 90488/80001 still 421; hub still 17× 90471 — no provisioning event.
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+[PARKED] VestaCP 0.9.8 CVE match: no program-specific exploit found for 0.9.8; confidence 26 < 40 gate.
+[FINAL] survivors: AUTH cross-brand replay (76, AUTH_HELPED) > MISCONFIG m.perabet dangle (65, HUMAN_ONLY).
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged for 30 cycles; fleet signature + Kuma set + gates + pending aliases all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.
+## 2026-09-18 13:02:15 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 31st cycle GET 400 md5 7e3a161d byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status:1; no passive falsifier remains after 31 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 17th consecutive cycle HTTP 500 + literal body `Fastly error: unknown domain: m.perabet.com` (verified this cycle, edge cache-pao-kpao1770041-PAO 151.101.3.52); DNS still Fastly anycast; brand provably silences hostnames without de-provisioning DNS; no backing service after 17 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[NEXT] PROBE: passive flip-watch m.perabet.com — 18th cycle; `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 31/17 cycles; fleet signature, Kuma monitor set, gates, pending aliases all stable; no new attack surface or falsifier surfaced this cycle.
+## 2026-09-18 17:07:00 UTC [target] (model bigpickle)
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 31st cycle GET 400 md5 `7e3a161d` byte-identical on gamdom.com + perabet.com + gamdom80009.com; host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status 1; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + Set-Cookie attr drift-watch across member hostnames; once a session exists, replay that cookie against sibling host (authorized scope)
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 17th consecutive cycle HTTP 500 + body `Fastly error: unknown domain: m.perabet.com` (edge cache-pao-kpao1770041-PAO 151.101.3.52); DNS still Fastly anycast; brand provably silences hostnames without removing DNS; no backing service after 17 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium
+testability: HUMAN_ONLY
+[0m
+[0m$ [0mCODE=$(curl -sk --connect-timeout 5 -m 8 -o /tmp/mp.txt -w '%{http_code}' https://m.perabet.com/client-api); echo "m.perabet.com/client-api: $CODE"; grep -o 'unknown domain[a-z.: ]*' /tmp/mp.txt | head -1; echo "---body-size---"; wc -c /tmp/mp.txt
+m.perabet.com/client-api: 500
+unknown domain m.perabet.com
+---body-size---
+271 /tmp/mp.txt
+[0m
+[0m$ [0mfor h in gamdom.com perabet.com gamdom80009.com; do body=$(curl -sk --connect-timeout 5 -m 8 -o /tmp/body.$$ -w '%{http_code}' "https://$h/client-api"); md5=$(md5sum /tmp/body.$$ | cut -d' ' -f1); echo "$h/client-api $body md5=$md5 cookie=$(curl -sk --connect-timeout 5 -m 8 -D - -o /dev/null "https://$h/" | grep -i '^set-cookie' | head -1 | cut -c1-90)"; done; rm -f /tmp/body.$$
+gamdom.com/client-api 400 md5=7e3a161d6cde2700fcdc0f6be4520745 cookie=set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 18 Sep 2027 19:41:47 GMT
+perabet.com/client-api 400 md5=7e3a161d6cde2700fcdc0f6be4520745 cookie=set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 18 Sep 2027 19:41:47 GMT
+gamdom80009.com/client-api 400 md5=7e3a161d6cde2700fcdc0f6be4520745 cookie=set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Sat, 18 Sep 2027 19:41:48 GMT
+[0m
+[0m$ [0mecho "--- KUMA heartbeat ---"; curl -sk --connect-timeout 5 -m 8 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | head -c 600; echo; echo "--- pending aliases ---"; for a in gamdom90488.com gamdom80001.com; do echo "$a: $(curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://$a/client-api)"; done; echo "--- SEO hub count ---"; curl -sk --connect-timeout 5 -m 8 "https://gamdom-girisi.com/" | grep -o 'gamdom90471\.com' | wc -l
+--- KUMA heartbeat ---
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-18 18:02:47.669","msg":"","ping":54},{"status":1,"time":"2026-09-18 18:04:47.727","msg":"","ping":52},{"status":1,"time":"2026-09-18 18:06:47.783","msg":"","ping":62},{"status":1,"time":"2026-09-18 18:08:47.850","msg":"","ping":53},{"status":1,"time":"2026-09-18 18:10:47.906","msg":"","ping":57},{"status":1,"time":"2026-09-18 18:12:47.966","msg":"","ping":62},{"status":1,"time":"2026-09-18 18:14:48.044","msg":"","ping":55},{"status":1,"time":"2026-09-18 18:16:48.104","msg":"","ping":54},{"status":1,"time":"2026-09-18 18:18:48.161","msg":"","pi
+--- pending aliases ---
+gamdom90488.com: 421
+gamdom80001.com: 421
+--- SEO hub count ---
+17
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 8 "https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains" | python3 -c "import json,sys; d=json.load(sys.stdin); print('monitor_ids:', sorted(d['heartbeatList'].keys())); print('all_status1:', all(all(h['status']==1 for h in v[-4:]) for v in d['heartbeatList'].values()))"
+monitor_ids: ['13', '2', '221', '223', '3', '5', '6']
+all_status1: True
+[0m
+All probes complete. Every watch item is byte-stable. Analysis follows.
+
+STEP 1 — DELTA
+- NO_DELTA: m.perabet.com still 500 + literal `unknown domain m.perabet.com` on /client-api (18th consecutive cycle, edge 271B body confirmed this cycle)
+- NO_DELTA: fleet `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); gd-lang host-only uniform (no Domain/SameSite/HttpOnly)
+- NO_DELTA: Kuma monitor set exactly {2,3,5,6,13,221,223}, all status=1
+- NO_DELTA: pending aliases 90488/80001 still 421/TLS-NOMATCH; SEO hub still 17× gamdom90471
+
+STEP 2 — PRIORITIZE
+- [PRIO] m.perabet.com,0.72,attack_surface(10)+gate_ease(10)+freshness(10): live-DNS brand hostname serving only a Fastly "unknown domain" error for 18 cycles — takeover condition fully observable, HUMAN_ONLY claim
+- [PRIO] perabet.com/client-api,0.71,business_value(10)+tech_exposure(10)+attack_surface(8): byte-identical shared identity/wallet proxy across 4 brands, single auth transport, no passive falsifier after 31 cycles
+- [PRIO] tableau-admin.teamgamdom.com/serverInfo,0.44,freshness(1): version disclosure only, CVEs patched on 2025.1.11, all other REST endpoints 401-gated
+
+STEP 3 — HYPOTHESES
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 32nd cycle GET 400 md5 `7e3a161d` byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth, Set-Cookie identical this cycle); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status=1; no passive falsifier remains after 32 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + Set-Cookie attr drift-watch across member hostnames; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 18th consecutive cycle HTTP 500 + body `Fastly error: unknown domain: m.perabet.com` (271B verified this cycle); DNS still Fastly anycast (151.101.x); brand provably silences hostnames without de-provisioning DNS; no backing service after 18 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] VestaCP 0.9.8 CVE match on tr.perabet.com:8083: no program-specific exploit; guest login returns empty panel defaults + rotating token only; confidence 26 < 40 gate (unchanged)
+- [PARKED] tableau-admin serverInfo version disclosure: 2025.1.11 patches CVE-2025-52455/52449; informational only
+- [FINAL] survivors ranked: AUTH cross-brand replay (76, AUTH_HELPED) > MISCONFIG m.perabet dangle (65, HUMAN_ONLY)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive flip-watch m.perabet.com — 19th cycle; `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED watch @ m.perabet.com: 18th cycle Varnish 500 + `unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+- [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); gd-lang host-only uniform; Kuma monitor set {2,3,5,6,13,221,223} all status=1 — 32nd stable cycle.
+- [LEARN] ACCEPTED watch @ pending aliases + SEO hub: 90488/80001 still 421; hub still 17× 90471 — no provisioning event.
+- [LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 32/18 cycles; fleet signature, Kuma monitor set, gates, pending aliases, SEO hub all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.

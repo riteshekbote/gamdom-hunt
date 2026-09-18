@@ -4016,3 +4016,101 @@ evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-d
 verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
 impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium
 testability: HUMAN_ONLY
+## 2026-09-18 19:42:13 UTC [target] (model bigpickle)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: GET 400 md5 `7e3a161d` byte-identical on gamdom.com + perabet.com this cycle (30th+); host-only gd-lang uniform (no Domain/SameSite/HttpOnly); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} no rotation
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 16th consecutive cycle 500 + literal `unknown domain m.perabet.com` on `/client-api` (verified this cycle); DNS still Fastly anycast; brand provably retires hostnames silently; no backing service after 16 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain state (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[HYP] VestaCP panel on tr.perabet.com:8083 — EOL PHP control surface
+class: MISCONFIG
+asset: tr.perabet.com:8083
+confidence: 26
+reasoning: Guest `/api/v1/login/` 200 JSON with rotating token (dfc567d6… this cycle) + empty panel defaults (VERSION=0.9.8); all real API routes session-gated (302/404); ReactDOM 16.10.2 not panel version — no program-specific CVE match
+evidence_needed: authenticated session revealing user data or admin function; CVE match for VestaCP 0.9.8
+verify_steps: PASSIVE per-cycle `/api/v1/login/` token check + body grep VERSION
+impact: panel admin access if session obtained; medium-high blast radius, unknown asset value
+testability: PASSIVE
+[NEXT] PROBE: passive flip-watch m.perabet.com — 17th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+[LEARN] ACCEPTED watch @ m.perabet.com: 16th cycle Varnish 500 + `unknown domain` — dangling A-record persists, no claim/flip; confidence 65 maintained.
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com + perabet.com verified this cycle); Kuma heartbeat all status=1 — 30th stable cycle.
+[LEARN] ACCEPTED watch @ tr.perabet.com:8083: guest login 200 JSON, rotating token (dfc567d6…), empty panel defaults, VERSION=0.9.8 — no drift to live data.
+[LEARN] ACCEPTED watch @ pending aliases + SEO hub: 90488/80001 still 421; hub still 17× 90471 — no provisioning event.
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data).
+[PARKED] VestaCP 0.9.8 CVE match: no program-specific exploit found for 0.9.8; confidence 26 < 40 gate.
+[FINAL] survivors: AUTH cross-brand replay (76, AUTH_HELPED) > MISCONFIG m.perabet dangle (65, HUMAN_ONLY).
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged for 30 cycles; fleet signature + Kuma set + gates + pending aliases all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 31st cycle GET 400 md5 7e3a161d byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status:1; no passive falsifier remains after 31 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attr drift-watch; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 17th consecutive cycle HTTP 500 + literal body `Fastly error: unknown domain: m.perabet.com` (verified this cycle, edge cache-pao-kpao1770041-PAO 151.101.3.52); DNS still Fastly anycast; brand provably silences hostnames without de-provisioning DNS; no backing service after 17 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[NEXT] PROBE: passive flip-watch m.perabet.com — 18th cycle; `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 31/17 cycles; fleet signature, Kuma monitor set, gates, pending aliases all stable; no new attack surface or falsifier surfaced this cycle.
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 31st cycle GET 400 md5 `7e3a161d` byte-identical on gamdom.com + perabet.com + gamdom80009.com; host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status 1; no passive falsifier remains
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + Set-Cookie attr drift-watch across member hostnames; once a session exists, replay that cookie against sibling host (authorized scope)
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 17th consecutive cycle HTTP 500 + body `Fastly error: unknown domain: m.perabet.com` (edge cache-pao-kpao1770041-PAO 151.101.3.52); DNS still Fastly anycast; brand provably silences hostnames without removing DNS; no backing service after 17 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium
+testability: HUMAN_ONLY
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: 32nd cycle GET 400 md5 `7e3a161d` byte-identical (gamdom.com + perabet.com + gamdom80009.com verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth, Set-Cookie identical this cycle); POST returns identical GamdomClientMessage; Kuma {2,3,5,6,13,221,223} all status=1; no passive falsifier remains after 32 cycles
+evidence_needed: authenticated Set-Cookie on one member hostname re-accepted by sibling POST replay; Domain/SameSite drift post-auth
+verify_steps: AUTH_HELPED — per-cycle GET signature + Set-Cookie attr drift-watch across member hostnames; replay valid session cookie against sibling host once a session exists
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical
+testability: AUTH_HELPED
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 65
+reasoning: 18th consecutive cycle HTTP 500 + body `Fastly error: unknown domain: m.perabet.com` (271B verified this cycle); DNS still Fastly anycast (151.101.x); brand provably silences hostnames without de-provisioning DNS; no backing service after 18 cycles
+evidence_needed: 500→200/other-provider flip (claimed) or indefinite unknown-domain persistence (dangling confirmed, passive-only)
+verify_steps: PASSIVE per-cycle `curl -sk -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY)
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service
+testability: HUMAN_ONLY
+[NEXT] PROBE: passive flip-watch m.perabet.com — 19th cycle; `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223}.
+[RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 32/18 cycles; fleet signature, Kuma monitor set, gates, pending aliases, SEO hub all stable; no new falsifier or enabler; no new attack surface surfaced this cycle.
