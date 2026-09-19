@@ -4475,3 +4475,46 @@ impact: version/build disclosure only; medium if paired with an applicable Table
 testability: PASSIVE
 [NEXT] PROBE: `curl -sk -m 12 -H 'Accept: application/json' "https://giris.perabet.com/wp-json/mcp/"; curl -sk -m 12 -o /dev/null -w '%{http_code}\n' "https://tr.perabet.com:8083/api/v1/login/"` — re-audit MCP registration for schema/config drift and continue VestaCP guest-bootstrap flip-watch; only READ-only GET.
 [RISK] gamdom: 78 — 35th static cycle on the watched fleet; residual drivers unchanged: single identity/wallet origin across 4 brands/25+ hostnames with AUTH_HELPED-only falsifier; 20-day-dangling Fastly A-record on m.perabet.com (HUMAN_ONLY takeover); EOL VestaCP panel with pre-auth config leak on tr.perabet.com:8083; oauth2-proxy shared `Domain=teamgamdom.com` cookie bucket across 8+ internal services; no new exploitable surface this cycle (all MCP + Tableau gates hold).
+## 2026-09-19 19:09:19 UTC [target] (model bigpickle)
+[HYP] VestaCP 0.9.8 pre-auth guest bootstrap leaks full panel/OS service config
+class: MISCONFIG
+asset: tr.perabet.com:8083/api/v1/login/
+confidence: 78
+reasoning: 200 JSON pre-auth re-confirmed: rotating token + `session.VERSION=0.9.8`, `VESTA_CERTIFICATE=admin:giris.perabet.com`, complete service map (WEB_SYSTEM httpd, PROXY nginx, DB, MAIL, DNS, FIREWALL_SYSTEM, SOFTACULOUS, DB_PGA/DB_PMA_URL), `user_combined_ip` reflects requester IP; all other `/api/v1/*` session-gated; wp-json MCP route list still public.
+evidence_needed: drift of config fields; a second pre-auth route in `/api/v1/*`; chain to giris.perabet.com WP origin (same 217.23.12.109).
+verify_steps: `curl -sk -m 10 https://tr.perabet.com:8083/api/v1/login/ | jq -r '.session|{VERSION,VESTA_CERTIFICATE,FIREWALL_SYSTEM}'` — GET-only re-read.
+impact: full hosting-stack disclosure + admin/domain identity on EOL PHP panel; staging for 0.9.8 CVE chain; medium→high if paired with RCE.
+testability: PASSIVE
+[HYP] Cross-brand auth cookie replay via shared /client-api yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80003/80008/80009/4567)
+confidence: 76
+reasoning: 35th+ cycle GET 400 md5 7e3a161d re-confirmed on gamdom.com + perabet.com; POST → byte-identical GamdomClientMessage; auth transport = server-set same-origin cookie (credentials:"same-origin"); host-only gd-lang uniform; no passive falsifier exists.
+evidence_needed: authenticated Set-Cookie on one member host accepted by sibling POST; post-auth Domain/SameSite drift.
+verify_steps: AUTH_HELPED — per-cycle GET signature + cookie-attribute drift-watch; with authorized session replay cookie to sibling `/client-api` and diff GamdomClientMessage.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical.
+testability: AUTH_HELPED
+[HYP] m.perabet.com dangling Fastly A-record remains claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 85
+reasoning: 20th cycle identical `Fastly error: unknown domain` 500 on `/`+`/client-api`, edge anycast Pool A, no backing service for 20+ days; brand's retirement-by-redirect/stall pattern leaves A-records live.
+evidence_needed: 500→200/other-provider/attacker-SNI transition; indefinite identical 500 = confirmed dangling.
+verify_steps: `curl -sk -m 8 -w '%{http_code}' -o /dev/null https://m.perabet.com/client-api` + body grep `unknown domain` — any signature transition = reportable.
+impact: attacker-controlled HTTPS site on gambling-brand DNS (fake-login/phishing vs wallet brand); medium-high.
+testability: HUMAN_ONLY
+[HYP] Open dynamic OAuth client registration on giris.perabet.com MCP server enables auth-code ATO
+class: OATH
+asset: giris.perabet.com/wp-json/mcp/mcp-oauth-server
+confidence: 50
+reasoning: 200 route doc advertises GET/POST/DELETE on OAuth 2.1/CIMD server; GET → 401 mcp_unauthorized; if registration route (POST, e.g. /mcp/oauth/register) is unauthenticated, attacker registers malicious client → receives auth codes / tokens bound to WordPress user sessions (wp-media mcp-oauth plugin).
+evidence_needed: enumerate full /wp-json/mcp/ route list for unauthenticated POST/DELETE registration/consent endpoints; prior cycle confirmed authorize is allowlist fail-closed, but token/consent 405, no registration route tested.
+verify_steps: `curl -sk https://giris.perabet.com/wp-json/mcp/ | jq -r '.routes|keys[]'` then `curl -sk -o /dev/null -w '%{http_code}' https://giris.perabet.com/wp-json/mcp/mcp-oauth-server -X POST` — POST-only after confirming route doc; do not send OAuth params.
+impact: OAuth code interceptor → WP user ATO on brand domain (passwordless Client-Credentials/Authorization-Code ATO); high if open.
+testability: PASSIVE
+[NEXT] PROBE: `curl -sk https://giris.perabet.com/wp-json/mcp/ | jq -r '.routes|keys[]'` then `curl -sk -o /dev/null -w '%{http_code}\n' -X POST https://giris.perabet.com/wp-json/mcp/mcp-oauth-server` — enumerate all MCP/OAuth routes and check registration endpoint gating; plus `curl -sk https://tr.perabet.com:8083/api/v1/login/ | jq -r '.session.VERSION'` flip-watch (GET only).
+[LEARN] ACCEPTED watch @ m.perabet.com: 20th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip; confidence 85 maintained.
+[LEARN] ACCEPTED recon @ tr.perabet.com:8083/api/v1/login/: guest bootstrap config verified under `session` key (VERSION=0.9.8, VESTA_CERTIFICATE=admin:giris.perabet.com, full service map, user_combined_ip echo) — stable, no drift to live data.
+[LEARN] ACCEPTED recon @ giris.perabet.com/wp-json/mcp/mcp-oauth-server: GET → 401 `mcp_unauthorized` — OAuth 2.1/CIMD adapter fail-closed persists; registration/consent routes untested (queued).
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: 200 2025.1.11, daysLeftForMaintenanceExpiring 229 — stable, informational only.
+[RISK] gamdom: 78 — 36th static fleet cycle; residual drivers unchanged: single identity/wallet origin across 4 brands/25+ hostnames (AUTH_HELPED ATO, no passive falsifier); 20-day-dangling Fastly A-record on m.perabet.com (HUMAN_ONLY takeover); EOL VestaCP panel pre-auth serving-stack leak on tr.perabet.com:8083; oauth2-proxy `Domain=teamgamdom.com` bucket across 8+ services; new passive angle this cycle = MCP OAuth registration gating on giris.perabet.com (unfalsified). No exploitable surface regression observed; all gates hold.

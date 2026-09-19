@@ -471,3 +471,7 @@
 - 2026-09-19 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-19 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
 - 2026-09-19 ACCEPTED recon @ m.perabet.com: 19th cycle, HTTP 500 + `Fastly error: unknown domain` on `/`+`/client-api`, DNS still Fastly anycast — dangling A-record persists unclaimed (HUMAN_ONLY takeover vector)
+- 2026-09-19 ACCEPTED watch @ m.perabet.com: 20th cycle Varnish 500 + `Fastly error: unknown domain` — dangling A-record persists, no claim/flip; confidence 85 maintained.
+- 2026-09-19 ACCEPTED recon @ tr.perabet.com:8083/api/v1/login/: guest bootstrap config verified under `session` key (VERSION=0.9.8, VESTA_CERTIFICATE=admin:giris.perabet.com, full service map, user_combined_ip echo) — stable, no drift to live data.
+- 2026-09-19 ACCEPTED recon @ giris.perabet.com/wp-json/mcp/mcp-oauth-server: GET → 401 `mcp_unauthorized` — OAuth 2.1/CIMD adapter fail-closed persists; registration/consent routes untested (queued).
+- 2026-09-19 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: 200 2025.1.11, daysLeftForMaintenanceExpiring 229 — stable, informational only.

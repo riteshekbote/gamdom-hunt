@@ -1089,3 +1089,11 @@ www.gamdom.com
 - CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
 - CHANGED gamdommirrors.com Kuma status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
 - CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
+
+## 2026-09-19 19:10:03 UTC
+- NEW m.perabet.com advanced from 13th to 19th consecutive cycle Varnish 500 "Fastly error: unknown domain" — dangling Fastly A-record persists unclaimed (HUMAN_ONLY takeover vector)
+- NEW Starlette pool signature advanced from 22nd to 34th stable cycle — `/client-api` md5 `7e3a161d` + `/health` weak-ETag `W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"` byte-identical across Pool A + Pool B (4 brand
+- CHANGED Provisioning cycle 15 for 8 pending aliases (90472/90473/90475/90480/90482/90488/80001/80002): all 421/TLS-NOMATCH — cert ops stalled
+- CHANGED Cross-brand ATO hypothesis (confidence 76) remains AUTH_HELPED — single shared identity/wallet backend, auth transport = server-set same-origin cookie (no Bearer/localStorage), no passive falsifier
+- CHANGED gamdommirrors.com Kuma status page: 7 monitors (ids 2,3,5,6,13,221,223) all 100% uptime — no rotation
+- CHANGED SEO hub (gamdom-girisi.com): still 17× gamdom90471 only — no new alias advertised
