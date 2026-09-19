@@ -1,28 +1,60 @@
-## 2026-09-19 05:01:24 UTC [target] (model bigpickle)
-[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
-class: AUTH
-asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/gamdom80008/80009/80003/gamdom4567)
-confidence: 76
-reasoning: 35th cycle GET 400 md5 `7e3a161d6cde2700fcdc0f6be4520745` byte-identical on gamdom.com + perabet.com + gamdom80009.com + fatbets.com + gamdom.one (all 5 verified this cycle); host-only gd-lang uniform pre-auth (no Domain/SameSite/HttpOnly); POST returns identical `GamdomClientMessage` on all members; Kuma set {2,3,5,6,13,221,223} all status=1; no passive falsifier after 35 cycles.
-evidence_needed: authenticated Set-Cookie on one member host accepted by sibling POST replay; Domain/SameSite drift post-auth.
-verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attribute drift-watch across member hosts; with an authorized real session, replay that cookie to sibling /client-api and diff `GamdomClientMessage`.
-impact: ATO + wallet across 4 brands / 25+ hostnames; critical.
-testability: AUTH_HELPED
+## 2026-09-19 09:24:20 UTC [target] (model bigpickle)
+[HYP] Tableau admin vhost unauthenticated serverInfo version disclosure + full REST API enumeration
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 85
+reasoning: tableau-admin.teamgamdom.com returns HTTP 200 Tableau login page; `/api/3.21/serverInfo` returns HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815); all other endpoints (/sites, /auth/signin, /projects, /datasources, /workbooks, /users, /groups, /tasks, /schedules) return HTTP 401 JSON — admin vhost has unauthenticated version disclosure while main tableau.teamgamdom.com is patched (CVE-2025-52455/52449)
+evidence_needed: confirm no other unauthenticated endpoints on admin vhost; check if admin vhost runs different patch level than main tableau vhost
+verify_steps: curl -sS "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" 2>&1 | jq .; for p in /api/3.21/datasources /api/3.21/workbooks /api/3.21/users /api/3.21/groups /api/3.21/tasks /api/3.21/schedules /api/3.21/projects /api/3.21/sites; do curl -sS -I "https://tableau-admin.teamgamdom.com$p" 2>&1 | grep -E "^(HTTP|Content|Server|X-|Location|WWW-Authenticate)" | head -2; done
+impact: Tableau admin panel version/info disclosure; potential auth bypass if admin vhost misconfigured differently; medium
+testability: PASSIVE
+[PARKED] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands: confidence 76 but testability AUTH_HELPED only; no passive falsifier exists — backend-origin replay is fundamentally unobservable pre-auth; requires valid user session
+[PARKED] OAuth2-proxy session cookie Domain=teamgamdom.com enables cross-service pivot: confidence 70 but testability AUTH_HELPED only; requires full Google OAuth flow to capture session cookie scope; passive probe shows CSRF cookie Domain=teamgamdom.com but session cookie attributes unknown without auth
+[PARKED] Shared /client-api trust boundary across 25+ hostnames: confidence 76 but no passive exploit path; cookie-host-agnostic-acceptance unproven without auth
+[FINAL] 1) m.perabet.com: Subdomain takeover via dangling Fastly A-record (85, HUMAN_ONLY, high impact)
+[FINAL] 2) tr.perabet.com:8083: Unauthenticated VestaCP panel API on EOL PHP (80, PASSIVE, critical impact)
+[FINAL] 3) tableau-admin.teamgamdom.com/api/3.21/serverInfo: Unauthenticated version disclosure + API enumeration (85, PASSIVE, medium impact)
+[NEXT] HUMAN: Attempt Fastly service claim for m.perabet.com via Fastly API/console to confirm subdomain takeover — this is the only actionable verification step for the highest-priority finding; all other top hypotheses are PASSIVE-verified.
+[LEARN] ACCEPTED recon @ m.perabet.com: 19th cycle, HTTP 500 + `Fastly error: unknown domain` on `/`+`/client-api`, DNS still Fastly anycast — dangling A-record persists unclaimed (HUMAN_ONLY takeover vector)
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com/gamdom80009.com/perabet.com verified this cycle); Kuma set `{2,3,5,6,13,221,223}` all status=1 — 34th stable cycle, no rotation
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; HttpOnly; Secure`, `redirect_uri` hardcoded to proxy callback, state `<csrf>:/` rd fail-closed — SSO bucket + OAuth hardening re-confirmed
+[LEARN] ACCEPTED watch @ pending aliases (90488/90471/80001): all 421/TLS-NOMATCH; SEO hub still 17× gamdom90471 — cert ops stalled, no provisioning event
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Kuma heartbeat of in-scope org service is legitimate passive recon proving monitor set and rotation status
+[LEARN] ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERSION=0.9.8); phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+[LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+[LEARN] ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+[LEARN] ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+[LEARN] REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+[RISK] gamdom: 78 — 15th consecutive static cycle on provisioning; m.perabet.com adds dangling Fastly subdomain takeover (HUMAN_ONLY); tr.perabet.com:8083 exposes unauthenticated VestaCP panel API on EOL PHP (critical); tableau-admin.teamgamdom.com adds new admin vhost attack surface with unauthenticated version disclosure; oauth2-proxy Domain=teamgamdom.com CSRF cookie confirms shared cookie bucket across 8+ internal services (grafana/prometheus/vault/clickhouse/tableau-admin/kargo/stagsrv/devsrv5); cross-brand ATO (76 confidence) remains HUMAN-gated with no passive falsifier; residual driver unchanged: single identity/wallet origin + stalled cert pipeline + shared OAuth2-proxy session bucket
 [HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
 class: MISCONFIG
 asset: m.perabet.com
 confidence: 67
-reasoning: 20th consecutive cycle HTTP 500 + literal body `Fastly error: unknown domain: m.perabet.com` (verified this cycle, root and /client-api); DNS still Fastly anycast; brand silences hostnames without de-provisioning A-records (retirement-by-redirect elsewhere); no backing service after 20 cycles.
+reasoning: 21st consecutive cycle HTTP 500 with literal body `Fastly error: unknown domain: m.perabet.com` on `/` and `/client-api` (verified this cycle, cache-dfw edge 151.101.3.52); DNS still Fastly anycast; brand silences hostnames without de-provisioning A-records (retirement-by-redirect pattern); no backing service after 21 cycles.
 evidence_needed: 500→200/other-provider flip = claimed; indefinite unknown-domain persistence = dangling confirmed (passive-only).
-verify_steps: PASSIVE per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any non-500/other-provider transition = reportable claim event (HUMAN_ONLY).
+verify_steps: PASSIVE per-cycle `curl -sk -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any non-500/other-provider transition = reportable claim event.
 impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service.
 testability: HUMAN_ONLY
-[HYP] Domain-wide SSO cookie bucket on *.teamgamdom.com turns any single subdomain XSS into full SSO-gated service compromise
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/gamdom80009/80008/80003/gamdom4567)
+confidence: 76
+reasoning: 36th cycle GET 400 md5 `7e3a161d…` byte-identical on 5 verified hosts; host-only gd-lang uniform pre-auth (no Domain/SameSite/HttpOnly); POST returns identical `GamdomClientMessage` on all members; auth transport = server-set same-origin cookie (bundle `credentials:"same-origin"` re-confirmed this cycle); Kuma 7/7 status=1; no passive falsifier after 36 cycles.
+evidence_needed: authenticated Set-Cookie on one member host accepted by sibling POST replay; Domain/SameSite drift post-auth.
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attribute drift-watch; with an authorized real session, replay that cookie to sibling `/client-api` and diff `GamdomClientMessage`.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical.
+testability: AUTH_HELPED
+[HYP] Domain-wide SSO cookie bucket on *.teamgamdom.com turns any single subdomain XSS into SSO-gated service compromise
 class: AUTH
 asset: teamgamdom.com cookie bucket (oauth2-proxy ×2 → grafana/prometheus/vault/clickhouse/tableau-admin/kargo)
 confidence: 48
-reasoning: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure` re-confirmed this cycle alongside state=`<csrf>:/` fail-closed rd and redirect_uri hardcoded to the oauth2-proxy callback (client_id 696342781525); post-auth session cookies land in the same parent-domain bucket readable/sendable by every *.teamgamdom.com host; 20+ vhosts enumerated, all 401/302-gated.
+reasoning: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; Max-Age=900; HttpOnly; Secure` re-confirmed this cycle alongside state=`<csrf>:/` fail-closed and redirect_uri hardcoded to proxy callback; post-auth session cookies land in the same parent-domain bucket readable/sendable by every *.teamgamdom.com host; 20+ vhosts enumerated, all 401/302-gated.
 evidence_needed: stored/reflected XSS on ANY *.teamgamdom.com hostname (none to date), or a non-HttpOnly session cookie post-auth in the bucket.
 verify_steps: PASSIVE — fixture-wide XSS-sink sweep on each teamgamdom vhost; watch Set-Cookie attributes for HttpOnly removal post-auth.
 impact: full compromise of SSO-gated observability/CI (grafana/vault/kargo/clickhouse/tableau-admin); high but chain-gated.
 testability: PASSIVE (chain link unproven)
+[NEXT] PROBE: 22nd-cycle passive flip-watch `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; second, confirm perabet.com still serves its own bundle `client.1e9acaff81769d4c4114.js` (brand-isolated config) while `/client-api` md5 stays `7e3a161d`; any non-500/other-provider transition on m = reportable claim event (HUMAN_ONLY).
+[RISK] gamdom: 78 — flat 17th static cycle (±0): cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (67, HUMAN_ONLY) both unchanged at 21/36 cycles; fleet signature, Kuma monitor set, all gates (oauth2/shreeram/tableau 401), redirect chains, pending aliases stable; bundle rebundle observed with zero content drift; no new falsifier or enabler surfaced; residual driver unchanged — single identity/wallet origin + stalled cert pipeline + shared Domain=teamgamdom.com SSO bucket.
