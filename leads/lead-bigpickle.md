@@ -4214,3 +4214,38 @@ impact: full compromise of SSO-gated observability/CI (grafana/vault/kargo/click
 testability: PASSIVE (chain link unproven)
 [NEXT] PROBE: passive flip-watch m.perabet.com — 19th cycle; `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any 200/other-provider transition = reportable claim event (HUMAN_ONLY). Fleet spot-check gamdom.com + perabet.com `/client-api` md5 `7e3a161d` + Kuma heartbeat set {2,3,5,6,13,221,223} + oauth2-proxy `rd` fail-closed recheck.
 [RISK] gamdom: 78 — flat: cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (65, HUMAN_ONLY) both unchanged 18/33 cycles; fleet signature, Kuma monitor set, gates, redirect chains, pending aliases, SEO hub all stable; oauth2-proxy rd fail-closed removed the SSO open-redirect branch this cycle; no new falsifier was expected and none surfaced (restating prior cycle ± 0 given no new attack surface).
+## 2026-09-19 00:25:09 UTC [target] (model bigpickle)
+[HYP] Dangling Fastly A-record on m.perabet.com claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 66
+reasoning: 19th consecutive cycle HTTP 500 + `Fastly error: unknown domain: m.perabet.com` on root and `/client-api` (verified this cycle); DNS still Fastly anycast; brand silences hostnames without de-provisioning A-records (retirement-by-redirect pattern elsewhere); no backing service after 19 cycles.
+evidence_needed: 500→200/other-provider flip = claimed; indefinite unknown-domain persistence = dangling confirmed (passive-only).
+verify_steps: per-cycle `curl -sk -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; any non-500/other-provider transition = reportable claim event (HUMAN_ONLY).
+impact: attacker HTTPS site on trusted live-DNS brand hostname (fake login/phish); medium; requires attacker Fastly service.
+testability: HUMAN_ONLY
+[HYP] Cross-brand auth cookie replay via shared /client-api origin yields ATO across 4 brands
+class: AUTH
+asset: perabet.com/client-api (+gamdom/fatbets/gamdom.one/80008/80009/80003/gamdom4567)
+confidence: 76
+reasoning: /client-api GET 400 md5 `7e3a161d` byte-identical on gamdom.com+gamdom80009.com+perabet.com (verified this cycle); host-only gd-lang uniform (no Domain/SameSite/HttpOnly pre-auth); clone-bundle auth transport = server-set same-origin cookie; POST returns identical `GamdomClientMessage` on all member hosts; Kuma 7/7 status=1; no passive falsifier after 34 cycles.
+evidence_needed: authenticated Set-Cookie on one member re-accepted by sibling POST replay; Domain/SameSite drift post-auth.
+verify_steps: AUTH_HELPED — per-cycle GET signature + gd-lang/Set-Cookie attribute drift-watch across member hostnames; with an authorized real session, replay that cookie to sibling /client-api and diff GamdomClientMessage.
+impact: ATO + wallet across 4 brands / 25+ hostnames; critical.
+testability: AUTH_HELPED
+[HYP] Domain-wide SSO cookie bucket on *.teamgamdom.com turns any single subdomain XSS into SSO-gated service compromise
+class: AUTH
+asset: teamgamdom.com cookie bucket (oauth2-proxy ×2 → grafana/prometheus/vault/clickhouse/tableau-admin/kargo)
+confidence: 48
+reasoning: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; Path=/; Max-Age=900; HttpOnly; Secure` re-confirmed this cycle (client_id 696342781525, redirect_uri hardcoded to oauth2-proxy callback, state=`<csrf>:/` fail-closed on rd); post-auth session cookies land in same parent-domain bucket readable/sendable by every *.teamgamdom.com host; 20+ vhosts enumerated, all 401/302-gated.
+evidence_needed: stored/reflected XSS on ANY *.teamgamdom.com hostname (none to date), or a non-HttpOnly session cookie post-auth in the bucket.
+verify_steps: PASSIVE — fixture-wide XSS-sink check on each teamgamdom vhost; watch Set-Cookie attributes for HttpOnly removal post-auth.
+impact: full compromise of SSO-gated observability/CI (grafana/vault/kargo/clickhouse/tableau-admin); high but chain-gated; no enabler found.
+testability: PASSIVE (chain link unproven)
+[NEXT] PROBE: 20th-cycle passive flip-watch `curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}' https://m.perabet.com/client-api` + body grep `unknown domain`; second, drill fatbets.com + gamdom.one `/client-api` md5 to re-confirm 4-brand Pool A signature breadth after the 34-cycle plateau; any 200/other-provider transition on m = reportable claim event (HUMAN_ONLY).
+[LEARN] ACCEPTED recon @ m.perabet.com: 19th cycle, HTTP 500 + `Fastly error: unknown domain` on `/`+`/client-api`, DNS still Fastly anycast — dangling A-record persists, no claim/flip (HUMAN_ONLY takeover vector).
+[LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com/gamdom80009.com/perabet.com verified this cycle); Kuma set `{2,3,5,6,13,221,223}` all status=1 — 34th stable cycle, no rotation.
+[LEARN] ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; HttpOnly; Secure`, `redirect_uri` hardcoded to proxy callback, state `<csrf>:/` rd fail-closed — SSO bucket + OAuth hardening re-confirmed.
+[LEARN] ACCEPTED watch @ pending aliases (90488/90471/80001): all 421/TLS-NOMATCH; SEO hub still 17× gamdom90471 — cert ops stalled, no provisioning event.
+[LEARN] ACCEPTED inventory-leak @ gamdommirrors.com: public Kuma heartbeat of in-scope org service is legitimate passive recon proving monitor set and rotation status.
+[RISK] gamdom: 78 — flat 16th consecutive static cycle (±0, no new attack surface): cross-brand ATO (76, AUTH_HELPED) and m.perabet dangle (66, HUMAN_ONLY) both unchanged at 19/34 cycles; fleet signature, Kuma monitor set, gates (oauth2/shreeram/tableau 401), redirect chains, pending aliases all stable; no new falsifier surfaced; residual driver unchanged — single identity/wallet origin + stalled cert pipeline + shared Domain=teamgamdom.com SSO bucket.

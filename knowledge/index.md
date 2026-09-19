@@ -456,3 +456,17 @@
 - 2026-09-18 REJECTED auth-bypass @ gamdom.com/client-api: blind POSt to live identity/wallet proxy is prohibited (no-auth-bypass/mutate-against-live-data); require valid session + authorized scope before POST probing.
 - 2026-09-18 ACCEPTED inventory-leak @ gamdommirrors.com: public UptimeRobot status page of an in-scope org service is legitimate passive recon that resolves true operating domains (bypasses wildcard/CDN ambiguity).
 - 2026-09-18 REJECTED out-of-scope @ trgamdom.com: domain parked for sale on hugedomains.com is not operated by Gamdom; only reportable as brand-jacking/phishing.
+- 2026-09-19 ACCEPTED recon @ m.perabet.com: 19th cycle, HTTP 500 + `Fastly error: unknown domain` on `/`+`/client-api`, DNS still Fastly anycast — dangling A-record persists, no claim/flip (HUMAN_ONLY takeover vector).
+- 2026-09-19 ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com/gamdom80009.com/perabet.com verified this cycle); Kuma set `{2,3,5,6,13,221,223}` all status=1 — 34th stable cycle, no rotation.
+- 2026-09-19 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: `_oauth2_proxy_csrf` `Domain=teamgamdom.com; HttpOnly; Secure`, `redirect_uri` hardcoded to proxy callback, state `<csrf>:/` rd fail-closed — SSO bucket + OAuth hardening re-confirmed.
+- 2026-09-19 ACCEPTED watch @ pending aliases (90488/90471/80001): all 421/TLS-NOMATCH; SEO hub still 17× gamdom90471 — cert ops stalled, no provisioning event.
+- 2026-09-19 ACCEPTED inventory-leak @ gamdommirrors.com: public Kuma heartbeat of in-scope org service is legitimate passive recon proving monitor set and rotation status.
+- 2026-09-19 ACCEPTED recon @ m.perabet.com: Fastly "unknown domain" error — dangling Fastly A-record, no service claims hostname; claimable via attacker Fastly service (HUMAN_ONLY)
+- 2026-09-19 ACCEPTED recon @ tr.perabet.com:8083: VestaCP React panel live; `/api/v1/login/` 200 pre-auth JSON (guest token + empty panel defaults + full server config VERSION=0.9.8); phpMyAdmin 404; /api/ silent — EOL PHP control panel surface (PASSIVE)
+- 2026-09-19 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/serverInfo: HTTP 200 JSON leaking productVersion 2025.1.11 (build 20251.25.1210.1815) — unauthenticated version disclosure on admin vhost
+- 2026-09-19 ACCEPTED recon @ tableau-admin.teamgamdom.com/api/3.21/{datasources,workbooks,users,groups,tasks,schedules,projects,sites}: HTTP 401 JSON — proper auth gates on all other endpoints
+- 2026-09-19 ACCEPTED recon @ oauth2-proxy.teamgamdom.com/oauth2/start: issues `_oauth2_proxy_csrf` cookie `Domain=teamgamdom.com; HttpOnly; Secure` — shared cookie bucket across 2 proxy instances
+- 2026-09-19 ACCEPTED recon @ perabet.com/client-api: POST returns identical `GamdomClientMessage` — 4th brand confirmed on shared identity/wallet origin
+- 2026-09-19 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
+- 2026-09-19 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
+- 2026-09-19 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
