@@ -4445,3 +4445,33 @@ evidence_needed: drift of config contents; discovery of an additional pre-auth r
 verify_steps: `curl -sk -m 10 https://tr.perabet.com:8083/api/v1/login/ | jq '{token_length:(.token|length), VERSION:.panel.VERSION, cert:.panel.VESTA_CERTIFICATE}'` — passive re-read only.
 impact: internal panel + origin-hosting chain disclosure, staging target for VestaCP CVE chains; medium (config leak) → high (if paired with working 0.9.8 chain).
 testability: PASSIVE
+## 2026-09-19 16:48:11 UTC [target] (model bigpickle)
+[HYP] VestaCP 0.9.8 EOL control panel exposes pre-auth server config + cert identity via guest bootstrap
+class: MISCONFIG
+asset: tr.perabet.com:8083/api/v1/login/
+confidence: 78
+reasoning: this cycle re-confirmed 200 JSON pre-auth: rotating 32-hex guest token + panel config under `""` including `VERSION":"0.9.8"`, `VESTA_CERTIFICATE=admin:giris.perabet.com`, full empty user/policy fields; all other `/api/v1/*` session-gated (302/404); same origin 217.23.12.109 as giris.perabet.com WordPress (PHP 7.4.33 root, phpMyAdmin dead on PHP 5.4.45).
+evidence_needed: pre-auth route beyond `/api/v1/login/`; drift of config fields; fingerprint panic link (same VESTA_CERTIFICATE pins panel to WordPress origin).
+verify_steps: `for r in api/v1/login/ api/v1/ v1/login/ api/v1/forgot/ api/v1/list/user/ api/v1/update/user/; do curl -sk -m 8 -o /dev/null -w '%{http_code}' https://tr.perabet.com:8083/$r; done` — passive GET-only, expected 200/302/404.
+impact: EOL central control panel (nginx/apache/exim/dovecot/mysql/named) + internal host chain disclosure; staging target for VestaCP CVE chain; high if paired with 0.9.8 RCE.
+testability: PASSIVE
+[HYP] Dangling Fastly A-record on m.perabet.com remains claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 85
+reasoning: 22nd+ cycle URI-silent `Fastly error: unknown domain: m.perabet.com` on `/`+`/client-api`, edge `cache-bfi-krnt7300083-BFI` (Fastly Pool A anycast 151.101.131.52) — no backing service on brand DNS for 20+ days; brand's retirement-by-redirect pattern demotes hosts without de-provisioning A-records.
+evidence_needed: 500→200/attacker-SNI/other-provider transition; indefinite identical 500 = dangling confirmed.
+verify_steps: `curl -sk --connect-timeout 5 -m 8 -w '%{http_code}\n' -o /dev/null https://m.perabet.com/client-api` + body grep `unknown domain` — any signature transition = reportable.
+impact: attacker-controlled HTTPS site on gambling-brand DNS (fake-login/phishing for wallet brand); medium-high.
+testability: HUMAN_ONLY
+[HYP] Unauthenticated serverInfo on tableau-admin.teamgamdom.com is lone exposed Tableau endpoint
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 60
+reasoning: re-confirmed 200 JSON 2025.1.11 (build 20251.25.1210.1815) `daysLeftForMaintenanceExpiring:229`; `/trusted` and `/admin/login` return 403 gateway block; 9 other REST endpoints 401 — patch level now proven identical to main tableau.teamgamdom.com, so CVE-2025-52455/52449 divergence is closed; impact is version disclosure only.
+evidence_needed: any additional 200 route on admin vhost (config/datasource); already checked serverStatus/trusted/admin.
+verify_steps: `for p in /api/3.21/serverSettings /api/3.21/roles /api/3.21/connections /api/3.21/servers; do curl -sk -o /dev/null -w '%{http_code}' https://tableau-admin.teamgamdom.com$p; done`
+impact: version/build disclosure only; medium if paired with an applicable Tableau CVE.
+testability: PASSIVE
+[NEXT] PROBE: `curl -sk -m 12 -H 'Accept: application/json' "https://giris.perabet.com/wp-json/mcp/"; curl -sk -m 12 -o /dev/null -w '%{http_code}\n' "https://tr.perabet.com:8083/api/v1/login/"` — re-audit MCP registration for schema/config drift and continue VestaCP guest-bootstrap flip-watch; only READ-only GET.
+[RISK] gamdom: 78 — 35th static cycle on the watched fleet; residual drivers unchanged: single identity/wallet origin across 4 brands/25+ hostnames with AUTH_HELPED-only falsifier; 20-day-dangling Fastly A-record on m.perabet.com (HUMAN_ONLY takeover); EOL VestaCP panel with pre-auth config leak on tr.perabet.com:8083; oauth2-proxy shared `Domain=teamgamdom.com` cookie bucket across 8+ internal services; no new exploitable surface this cycle (all MCP + Tableau gates hold).

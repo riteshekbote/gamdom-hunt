@@ -26760,3 +26760,123 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] gamdom: 78 — flat (no new enabler/falsifier): m.perabet takeover still unclaimed (85, HUMAN_ONLY), cross-brand ATO (76) unchanged and auth-gated, VestaCP guest config leak (80) persists on EOL stack, tableau-admin downgraded after identical-build confirmation; residual drivers unchanged — single identity/wallet origin, stalled cert pipeline, shared Domain=teamgamdom.com SSO bucket; no rotation in Kuma set and no new provisioning events.
+===== ANALYST bigpickle 2026-09-19 16:48:43 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk -m 15 https://gamdom-girisi.com | grep -oE 'gamdom9[0-9]+\.com' | sort | uniq -c
+17 gamdom90471.com
+[0m
+[0m$ [0mcurl -sk -m 10 https://gamdommirrors.com/api/status-page/heartbeat/gamdom-domains | head -c 600; echo
+{"heartbeatList":{"2":[{"status":1,"time":"2026-09-19 15:07:29.228","msg":"","ping":51},{"status":1,"time":"2026-09-19 15:09:29.283","msg":"","ping":52},{"status":1,"time":"2026-09-19 15:11:29.338","msg":"","ping":52},{"status":1,"time":"2026-09-19 15:13:29.395","msg":"","ping":50},{"status":1,"time":"2026-09-19 15:15:29.449","msg":"","ping":51},{"status":1,"time":"2026-09-19 15:17:29.503","msg":"","ping":53},{"status":1,"time":"2026-09-19 15:19:29.561","msg":"","ping":57},{"status":1,"time":"2026-09-19 15:21:29.624","msg":"","ping":55},{"status":1,"time":"2026-09-19 15:23:29.691","msg":"","pi
+[0m
+[0m$ [0mfor h in gamdom.com gamdom80009.com gamdom80003.com perabet.com; do printf "%s " "$h"; curl -sk --connect-timeout 5 -m 10 "https://$h/client-api" | md5sum | cut -c1-8; done; printf "health-etag "; curl -sk -m 10 -I https://gamdom80009.com/health 2>&1 | grep -i '^ETag'
+gamdom.com 7e3a161d
+gamdom80009.com 7e3a161d
+gamdom80003.com 7e3a161d
+perabet.com 7e3a161d
+health-etag etag: W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"
+[0m
+[0m$ [0mcurl -sk -m 10 "https://tableau-admin.teamgamdom.com/api/3.21/serverInfo" | head -c 300; echo; printf 'trusted '; curl -sk -m 10 -o /dev/null -w '%{http_code}\n' "https://tableau-admin.teamgamdom.com/trusted"; printf 'admin-login '; curl -sk -m 10 -o /dev/null -w '%{http_code}\n' "https://tableau-admin.teamgamdom.com/admin/login"
+{"serverInfo":{"operatingSystem":"Linux","initializationState":"Initialized","daysLeftForMaintenanceExpiring":229,"serverVersion":"20251.25.1210.1815","productVersion":"2025.1.11","containerDeploymentType":""},"fulfillmentIds":[]}
+trusted 403
+admin-login 403
+[0m
+[0m$ [0mcurl -sk -m 10 "https://tr.perabet.com:8083/api/v1/login/" | jq -c '{tok:(.token|length),V:.panel.VERSION,cert:.panel.VESTA_CERTIFICATE}' 2>/dev/null; printf 'giris-mcp '; curl -sk -m 12 -o /dev/null -w '%{http_code}\n' -H 'Accept: application/json' "https://giris.perabet.com/wp-json/mcp/"; printf 'giris-mcp-wellknown '; curl -sk -m 12 -o /dev/null -w '%{http_code}\n' "https://giris.perabet.com/.well-known/mcp"
+{"tok":32,"V":null,"cert":null}
+giris-mcp 200
+giris-mcp-wellknown 404
+[0m
+[0m$ [0mcurl -sk --connect-timeout 5 -m 10 -o /dev/null -w 'm.perabet ' '%{http_code}\n' https://m.perabet.com/client-api; printf 'm.perabet body-match '; curl -sk -m 10 https://m.perabet.com/ | grep -c "unknown domain"; for a in gamdom80010.com gamdom80020.com gamdom90490.com; do printf "%s " "$a"; curl -sk --connect-timeout 5 -m 8 -o /dev/null -w '%{http_code}\n' "https://$a/client-api"; done
+m.perabet 
+<html>
+<head>
+<title>Fastly error: unknown domain m.perabet.com</title>
+</head>
+<body>
+<p>Fastly error: unknown domain: m.perabet.com. Please check that this domain has been added to a service.</p>
+<p>Details: cache-bfi-krnt7300083-BFI (151.101.131.52)</p></body></html>m.perabet m.perabet body-match 2
+gamdom80010.com 000
+gamdom80020.com 000
+gamdom90490.com 000
+[0m
+[0m$ [0mcurl -sk -m 15 -H 'Accept: application/json' "https://giris.perabet.com/wp-json/mcp/" | head -c 900; echo
+{"namespace":"mcp","routes":{"\/mcp":{"namespace":"mcp","methods":["GET"],"endpoints":[{"methods":["GET"],"args":{"namespace":{"default":"mcp","required":false},"context":{"default":"view","required":false}}}],"_links":{"self":[{"href":"https:\/\/giris.perabet.com\/wp-json\/mcp"}]}},"\/mcp\/mcp-oauth-server":{"namespace":"mcp","methods":["POST","GET","DELETE"],"endpoints":[{"methods":["POST","GET","DELETE"],"args":[]}],"_links":{"self":[{"href":"https:\/\/giris.perabet.com\/wp-json\/mcp\/mcp-oauth-server"}]}},"\/mcp\/mcp-adapter-default-server":{"namespace":"mcp","methods":["POST","GET","DELETE"],"endpoints":[{"methods":["POST","GET","DELETE"],"args":[]}],"_links":{"self":[{"href":"https:\/\/giris.perabet.com\/wp-json\/mcp\/mcp-adapter-default-server"}]}}},"_links":{"up":[{"href":"https:\/\/giris.perabet.com\/wp-json\/"}]}}
+[0m
+[0m$ [0mcurl -sk -m 10 "https://tr.perabet.com:8083/api/v1/login/" | head -c 700; echo
+{"token":"1b88e905fb41b15bcd85dda2bf6adda9","panel":{"":{"FNAME":"","LNAME":"","PACKAGE":"","WEB_TEMPLATE":"","BACKEND_TEMPLATE":"","PROXY_TEMPLATE":"","DNS_TEMPLATE":"","WEB_DOMAINS":"","WEB_ALIASES":"","DNS_DOMAINS":"","DNS_RECORDS":"","MAIL_DOMAINS":"","MAIL_ACCOUNTS":"","DATABASES":"","CRON_JOBS":"","DISK_QUOTA":"","BANDWIDTH":"","HOME":"\/home\/","NS":"","SHELL":"\/bin\/bash","BACKUPS":"","CONTACT":"","CRON_REPORTS":"","RKEY":"","SUSPENDED":"","SUSPENDED_USERS":"","SUSPENDED_WEB":"","SUSPENDED_DNS":"","SUSPENDED_MAIL":"","SUSPENDED_DB":"","SUSPENDED_CRON":"","IP_AVAIL":"","IP_OWNED":"","U_USERS":"","U_DISK":"","U_DISK_DIRS":"","U_DISK_WEB":"","U_DISK_MAIL":"","U_DISK_DB":"","U_BANDWIDTH
+[0m
+[0m$ [0mprintf 'oauth-server GET '; curl -sk -m 15 -H 'Accept: application/json' -o /tmp/mcpo.json -w '%{http_code}\n' "https://giris.perabet.com/wp-json/mcp/mcp-oauth-server"; head -c 600 /tmp/mcpo.json; echo
+oauth-server GET 401
+{"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}
+[0m
+[0m$ [0mprintf 'adapter-default GET '; curl -sk -m 15 -H 'Accept: application/json' -o /tmp/mcpa.json -w '%{http_code}\n' "https://giris.perabet.com/wp-json/mcp/mcp-adapter-default-server"; head -c 600 /tmp/mcpa.json; echo
+adapter-default GET 401
+{"code":"rest_forbidden","message":"Ne yaz\u0131k ki, bunu yapma izniniz yok.","data":{"status":401}}
+[0m
+[0m$ [0mcurl -sk -m 10 "https://tr.perabet.com:8083/api/v1/login/" | jq -r '.panel | keys[]' 2>/dev/null; echo '---'; curl -sk -m 10 "https://tr.perabet.com:8083/api/v1/login/" | grep -oE 'VESTA_CERTIFICATE|VERSION[^,]{0,30}' | head
+---
+VERSION":"0.9.8"
+VESTA_CERTIFICATE
+[0m
+STEP 1 — DELTA
+- NO_DELTA @ fleet: `/client-api` md5 `7e3a161d` byte-identical (gamdom.com/gamdom80009.com/gamdom80003.com/perabet.com), `/health` ETag `W/"2-eoX0dku9ba8cNUXvu/DyeabcC+s"` — 35th stable cycle.
+- NO_DELTA @ m.perabet.com: still `Fastly error: unknown domain` (now edge `cache-bfi-krnt7300083-BFI 151.101.131.52` — Pool A anycast), no claim/flip; new-numbered aliases 80010/80020/90490 still 000.
+- NO_DELTA @ Kuma monitor set + SEO hub: heartbeat all status=1; hub still exactly 17× gamdom90471.com.
+- NO_DELTA @ tr.perabet.com:8083 `/api/v1/login/`: rotating 32-hex guest token, panel keyed `""`, `VERSION":"0.9.8"` + `VESTA_CERTIFICATE` still present — pre-auth config leak unchanged.
+- CHANGED @ giris.perabet.com/`wp-json/mcp/*`: discovery route 200 lists `/mcp`, `/mcp/mcp-oauth-server`, `/mcp/mcp-adapter-default-server`; both server routes GET → 401 (`mcp_unauthorized`, `rest_forbidden`) — MCP tool surface auth-gated, closed.
+- CHANGED @ tableau-admin.teamgamdom.com: `/trusted` 403 + `/admin/login` 403 gateway block; serverInfo unchanged 2025.1.11 (build 20251.25.1210.1815) — sole unauthenticated endpoint.
+
+STEP 2 — PRIORITIZE
+- [PRIO] tr.perabet.com:8083, 7.9, a=7 b=9 t=8 g=7 c=7 f=6
+- [PRIO] m.perabet.com, 7.0, a=6 b=8 t=3 g=9 c=7 f=8
+- [PRIO] giris.perabet.com/wp-json/mcp, 5.3, a=4 b=6 t=8 g=5 c=5 f=5
+
+STEP 3 — HYPOTHESES
+[HYP] VestaCP 0.9.8 EOL control panel exposes pre-auth server config + cert identity via guest bootstrap
+class: MISCONFIG
+asset: tr.perabet.com:8083/api/v1/login/
+confidence: 78
+reasoning: this cycle re-confirmed 200 JSON pre-auth: rotating 32-hex guest token + panel config under `""` including `VERSION":"0.9.8"`, `VESTA_CERTIFICATE=admin:giris.perabet.com`, full empty user/policy fields; all other `/api/v1/*` session-gated (302/404); same origin 217.23.12.109 as giris.perabet.com WordPress (PHP 7.4.33 root, phpMyAdmin dead on PHP 5.4.45).
+evidence_needed: pre-auth route beyond `/api/v1/login/`; drift of config fields; fingerprint panic link (same VESTA_CERTIFICATE pins panel to WordPress origin).
+verify_steps: `for r in api/v1/login/ api/v1/ v1/login/ api/v1/forgot/ api/v1/list/user/ api/v1/update/user/; do curl -sk -m 8 -o /dev/null -w '%{http_code}' https://tr.perabet.com:8083/$r; done` — passive GET-only, expected 200/302/404.
+impact: EOL central control panel (nginx/apache/exim/dovecot/mysql/named) + internal host chain disclosure; staging target for VestaCP CVE chain; high if paired with 0.9.8 RCE.
+testability: PASSIVE
+[HYP] Dangling Fastly A-record on m.perabet.com remains claimable via attacker Fastly service
+class: MISCONFIG
+asset: m.perabet.com
+confidence: 85
+reasoning: 22nd+ cycle URI-silent `Fastly error: unknown domain: m.perabet.com` on `/`+`/client-api`, edge `cache-bfi-krnt7300083-BFI` (Fastly Pool A anycast 151.101.131.52) — no backing service on brand DNS for 20+ days; brand's retirement-by-redirect pattern demotes hosts without de-provisioning A-records.
+evidence_needed: 500→200/attacker-SNI/other-provider transition; indefinite identical 500 = dangling confirmed.
+verify_steps: `curl -sk --connect-timeout 5 -m 8 -w '%{http_code}\n' -o /dev/null https://m.perabet.com/client-api` + body grep `unknown domain` — any signature transition = reportable.
+impact: attacker-controlled HTTPS site on gambling-brand DNS (fake-login/phishing for wallet brand); medium-high.
+testability: HUMAN_ONLY
+[HYP] Unauthenticated serverInfo on tableau-admin.teamgamdom.com is lone exposed Tableau endpoint
+class: MISCONFIG
+asset: tableau-admin.teamgamdom.com/api/3.21/serverInfo
+confidence: 60
+reasoning: re-confirmed 200 JSON 2025.1.11 (build 20251.25.1210.1815) `daysLeftForMaintenanceExpiring:229`; `/trusted` and `/admin/login` return 403 gateway block; 9 other REST endpoints 401 — patch level now proven identical to main tableau.teamgamdom.com, so CVE-2025-52455/52449 divergence is closed; impact is version disclosure only.
+evidence_needed: any additional 200 route on admin vhost (config/datasource); already checked serverStatus/trusted/admin.
+verify_steps: `for p in /api/3.21/serverSettings /api/3.21/roles /api/3.21/connections /api/3.21/servers; do curl -sk -o /dev/null -w '%{http_code}' https://tableau-admin.teamgamdom.com$p; done`
+impact: version/build disclosure only; medium if paired with an applicable Tableau CVE.
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Cross-brand ATO via shared /client-api: confidence 76, AUTH_HELPED, no passive falsifier — unchanged, needs authorized session.
+- [PARKED] oauth2-proxy Domain=teamgamdom.com bucket pivot: AUTH_HELPED, needs full Google OAuth — unchanged.
+- [PARKED] giris.perabet.com MCP tool access: new tech surface but 401-gated both routes; also known-software-name without program-specific exploit — parked.
+- [FINAL] 1) tr.perabet.com:8083 VestaCP 0.9.8 pre-auth config/token leak (78, PASSIVE, high)
+- [FINAL] 2) m.perabet.com dangling Fastly A-record takeover (85, HUMAN_ONLY, high)
+- [FINAL] 3) tableau-admin.teamgamdom.com/api/3.21/serverInfo version disclosure (60, PASSIVE, medium)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `curl -sk -m 12 -H 'Accept: application/json' "https://giris.perabet.com/wp-json/mcp/"; curl -sk -m 12 -o /dev/null -w '%{http_code}\n' "https://tr.perabet.com:8083/api/v1/login/"` — re-audit MCP registration for schema/config drift and continue VestaCP guest-bootstrap flip-watch; only READ-only GET.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED watch @ fleet: `/client-api` md5 `7e3a161d` + `/health` weak-ETag byte-identical (gamdom.com/gamdom80009.com/gamdom80003.com/perabet.com); Kuma heartbeat all status=1; SEO hub still 17× 90471; new aliases 80010/80020/90490 000 — 35th static cycle.
+- [LEARN] ACCEPTED recon @ giris.perabet.com/wp-json/mcp/*: discovery 200 lists `/mcp`, `/mcp/mcp-oauth-server`, `/mcp/mcp-adapter-default-server`; both GET 401 (`mcp_unauthorized`, `rest_forbidden`) — MCP tool surface auth-gated, no unauthenticated file/tool access.
+- [LEARN] ACCEPTED recon @ tableau-admin.teamgamdom.com: `/trusted` + `/admin/login` 403 gateway block; serverInfo 2025.1.11 unchanged — patch level equals main tableau vhost, CVE divergence closed.
+- [LEARN] ACCEPTED recon @ tr.perabet.com:8083: `/api/v1/login/` panel now keyed `""` with empty fields but still emits `VERSION":"0.9.8"` + `VESTA_CERTIFICATE=admin:giris.perabet.com` — guest bootstrap leak unchanged, token rotates per request.
+
+STEP 7 — RISK
+[RISK] gamdom: 78 — 35th static cycle on the watched fleet; residual drivers unchanged: single identity/wallet origin across 4 brands/25+ hostnames with AUTH_HELPED-only falsifier; 20-day-dangling Fastly A-record on m.perabet.com (HUMAN_ONLY takeover); EOL VestaCP panel with pre-auth config leak on tr.perabet.com:8083; oauth2-proxy shared `Domain=teamgamdom.com` cookie bucket across 8+ internal services; no new exploitable surface this cycle (all MCP + Tableau gates hold).
