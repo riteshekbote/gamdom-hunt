@@ -470,3 +470,4 @@
 - 2026-09-19 ACCEPTED recon @ perabet.com/api/auth: HTTP 404 SPA with identical host-only `gd-lang` cookie — uniform cookie policy confirmed across 4 brands
 - 2026-09-19 REJECTED auth-bypass @ gamdom.com/client-api: blind POST to live identity/wallet proxy prohibited (no-auth-bypass/mutate-against-live-data)
 - 2026-09-19 ACCEPTED inventory-leak @ gamdommirrors.com: public Uptime Kuma status page is legitimate passive recon resolving true operating domains
+- 2026-09-19 ACCEPTED recon @ m.perabet.com: 19th cycle, HTTP 500 + `Fastly error: unknown domain` on `/`+`/client-api`, DNS still Fastly anycast — dangling A-record persists unclaimed (HUMAN_ONLY takeover vector)
